@@ -1,0 +1,140 @@
+using System.Threading;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CodeRefactorings;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
+namespace RefactoringEssentials.CSharp.CodeRefactorings
+{
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "put inside 'using'")]
+    [NotPortedYet]
+    public class PutInsideUsingAction : SpecializedCodeRefactoringProvider<VariableDeclaratorSyntax>
+    {
+        protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, VariableDeclaratorSyntax node, CancellationToken cancellationToken)
+        {
+            yield break;
+        }
+        //		static readonly FindReferences refFinder = new FindReferences ();
+        //		protected override CodeAction GetAction (SemanticModel context, VariableInitializer node)
+        //		{
+        //			if (node.Initializer.IsNull)
+        //				return null;
+        //
+        //			var variableDecl = node.Parent as VariableDeclarationStatement;
+        //			if (variableDecl == null || !(variableDecl.Parent is BlockStatement))
+        //				return null;
+        //
+        //			var type = context.ResolveType (variableDecl.Type);
+        //			if (!IsIDisposable (type))
+        //				return null;
+        //
+        //			var unit = context.RootNode as SyntaxTree;
+        //			if (unit == null)
+        //				return null;
+        //
+        //			var resolveResult = (LocalResolveResult)context.Resolve (node);
+        //
+        //			return new CodeAction (context.TranslateString ("put inside 'using'"),
+        //				script =>
+        //				{
+        //					var lastReference = GetLastReference (resolveResult.Variable, context, unit);
+        //
+        //					var body = new BlockStatement ();
+        //					var variableToMoveOutside = new List<VariableDeclarationStatement> ();
+        //
+        //					if (lastReference != node) {
+        //						var statements = CollectStatements (variableDecl.GetNextSibling (n => n is Statement) as Statement, 
+        //															lastReference.EndLocation).ToArray();
+        //
+        //						// collect statements to put inside 'using' and variable declaration to move outside 'using'
+        //						foreach (var statement in statements) {
+        //							script.Remove (statement);
+        //
+        //							var decl = statement as VariableDeclarationStatement;
+        //							if (decl == null) {
+        //								body.Statements.Add (statement.Clone ());
+        //								continue;
+        //							}
+        //
+        //							var outsideDecl = (VariableDeclarationStatement)decl.Clone ();
+        //							outsideDecl.Variables.Clear ();
+        //							var insideDecl = (VariableDeclarationStatement)outsideDecl.Clone ();
+        //
+        //							foreach (var variable in decl.Variables) {
+        //								var reference = GetLastReference (
+        //									((LocalResolveResult)context.Resolve (variable)).Variable, context, unit);
+        //								if (reference.StartLocation > lastReference.EndLocation)
+        //									outsideDecl.Variables.Add ((VariableInitializer)variable.Clone ());
+        //								else
+        //									insideDecl.Variables.Add ((VariableInitializer)variable.Clone ());
+        //							}
+        //							if (outsideDecl.Variables.Count > 0)
+        //								variableToMoveOutside.Add (outsideDecl);
+        //							if (insideDecl.Variables.Count > 0)
+        //								body.Statements.Add (insideDecl);
+        //						}
+        //					}
+        //
+        //					foreach (var decl in variableToMoveOutside)
+        //						script.InsertBefore (variableDecl, decl);
+        //
+        //					if (body.Statements.Count > 0) {
+        //						var lastStatement = body.Statements.Last ();
+        //						if (IsDisposeInvocation (resolveResult.Variable.Name, lastStatement))
+        //							lastStatement.Remove ();
+        //					}
+        //					var usingStatement = new UsingStatement
+        //					{
+        //						ResourceAcquisition = new VariableDeclarationStatement (variableDecl.Type.Clone (), node.Name,
+        //																				node.Initializer.Clone ()),
+        //						EmbeddedStatement = body
+        //					};
+        //					script.Replace (variableDecl, usingStatement);
+        //
+        //					if (variableDecl.Variables.Count == 1)
+        //						return;
+        //					// other variables in the same declaration statement
+        //					var remainingVariables = (VariableDeclarationStatement)variableDecl.Clone ();
+        //					remainingVariables.Variables.Remove (
+        //						remainingVariables.Variables.FirstOrDefault (v => v.Name == node.Name));
+        //					script.InsertBefore (usingStatement, remainingVariables);
+        //				}, node.NameToken);
+        //		}
+        //
+        //		static bool IsIDisposable (IType type)
+        //		{
+        //			return type.GetAllBaseTypeDefinitions ().Any (t => t.KnownTypeCode == KnownTypeCode.IDisposable);
+        //		}
+        //	
+        //		static IEnumerable<Statement> CollectStatements (Statement statement, TextLocation end)
+        //		{
+        //			while (statement != null) {
+        //				yield return statement;
+        //				if (statement.Contains (end))
+        //					break;
+        //				statement = statement.GetNextSibling (n => n is Statement) as Statement;
+        //			}
+        //		}
+        //
+        //		static AstNode GetLastReference (IVariable variable, SemanticModel context, SyntaxTree unit)
+        //		{
+        //			AstNode lastReference = null;
+        //			refFinder.FindLocalReferences (variable, context.UnresolvedFile, unit, context.Compilation,
+        //				(v, r) =>
+        //				{
+        //					if (lastReference == null || v.EndLocation > lastReference.EndLocation)
+        //						lastReference = v;
+        //				}, context.CancellationToken);
+        //			return lastReference;
+        //		}
+        //
+        //		static bool IsDisposeInvocation (string variableName, Statement statement)
+        //		{
+        //			var memberReferenceExpr = new MemberReferenceExpression (new IdentifierExpression (variableName), "Dispose");
+        //			var pattern = new ExpressionStatement (new InvocationExpression (memberReferenceExpr));
+        //			return pattern.Match (statement).Success;
+        //		}
+    }
+}

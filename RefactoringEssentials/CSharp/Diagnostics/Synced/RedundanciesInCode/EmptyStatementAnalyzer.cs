@@ -1,0 +1,57 @@
+using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
+
+namespace RefactoringEssentials.CSharp.Diagnostics
+{
+    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    public class EmptyStatementAnalyzer : DiagnosticAnalyzer
+    {
+        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+            NRefactoryDiagnosticIDs.EmptyStatementAnalyzerID,
+            GettextCatalog.GetString("Empty statement is redundant"),
+            GettextCatalog.GetString("Empty statement is redundant"),
+            DiagnosticAnalyzerCategories.RedundanciesInCode,
+            DiagnosticSeverity.Warning,
+            isEnabledByDefault: true,
+            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.EmptyStatementAnalyzerID),
+            customTags: DiagnosticCustomTags.Unnecessary
+        );
+
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
+
+        public override void Initialize(AnalysisContext context)
+        {
+            context.RegisterSyntaxNodeAction(
+                nodeContext =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                new SyntaxKind[] { SyntaxKind.EmptyStatement }
+            );
+        }
+
+        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        {
+            diagnostic = default(Diagnostic);
+            if (nodeContext.IsFromGeneratedCode())
+                return false;
+
+            var node = nodeContext.Node as Microsoft.CodeAnalysis.CSharp.Syntax.EmptyStatementSyntax;
+            if (IsEmbeddedStatement(node))
+                return false;
+            diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
+            return true;
+        }
+
+        internal static bool IsEmbeddedStatement(SyntaxNode stmt)
+        {
+            return !stmt.Parent.IsKind(SyntaxKind.Block);
+        }
+    }
+}
