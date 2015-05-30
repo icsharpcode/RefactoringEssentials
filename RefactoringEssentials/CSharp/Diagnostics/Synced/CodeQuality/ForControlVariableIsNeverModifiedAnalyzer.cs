@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ForControlVariableIsNeverModifiedAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ForControlVariableIsNeverModifiedAnalyzerID,
+            DiagnosticIDs.ForControlVariableIsNeverModifiedAnalyzerID,
             GettextCatalog.GetString("'for' loop control variable is never modified"),
             GettextCatalog.GetString("'for' loop control variable is never modified"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ForControlVariableIsNeverModifiedAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ForControlVariableIsNeverModifiedAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

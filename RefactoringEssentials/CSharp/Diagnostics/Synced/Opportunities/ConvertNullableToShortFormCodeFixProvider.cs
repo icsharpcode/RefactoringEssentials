@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.ConvertNullableToShortFormAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.ConvertNullableToShortFormAnalyzerID);
             }
         }
 

@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ReplaceWithSingleCallToCountAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ReplaceWithSingleCallToCountAnalyzerID,
+            DiagnosticIDs.ReplaceWithSingleCallToCountAnalyzerID,
             GettextCatalog.GetString("Redundant Where() call with predicate followed by Count()"),
             GettextCatalog.GetString("Replace with single call to 'Count()'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ReplaceWithSingleCallToCountAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReplaceWithSingleCallToCountAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

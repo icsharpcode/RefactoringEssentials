@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ReplaceWithOfTypeWhereAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ReplaceWithOfTypeWhereAnalyzerID,
+            DiagnosticIDs.ReplaceWithOfTypeWhereAnalyzerID,
             GettextCatalog.GetString("Replace with call to OfType<T>().Where()"),
             GettextCatalog.GetString("Replace with 'OfType<T>().Where()'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ReplaceWithOfTypeWhereAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReplaceWithOfTypeWhereAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

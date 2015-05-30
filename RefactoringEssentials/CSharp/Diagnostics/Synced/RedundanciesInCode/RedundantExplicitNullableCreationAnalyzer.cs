@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantExplicitNullableCreationAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantExplicitNullableCreationAnalyzerID,
+            DiagnosticIDs.RedundantExplicitNullableCreationAnalyzerID,
             GettextCatalog.GetString("Value types are implicitly convertible to nullables"),
             GettextCatalog.GetString("Redundant explicit nullable type creation"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantExplicitNullableCreationAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantExplicitNullableCreationAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

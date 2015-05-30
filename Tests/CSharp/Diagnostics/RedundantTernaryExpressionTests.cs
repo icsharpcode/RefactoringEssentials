@@ -36,7 +36,7 @@ class Foo
 {
 	void Bar ()
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.RedundantTernaryExpressionAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.RedundantTernaryExpressionAnalyzerID + @"
 		var a = 1 < 2 ? true : false;
 	}
 }

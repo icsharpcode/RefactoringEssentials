@@ -122,7 +122,7 @@ namespace resharper_test
 	{
 		private readonly int fooval;
 		private int tmpval;
-#pragma warning disable " + NRefactoryDiagnosticIDs.NonReadonlyReferencedInGetHashCodeAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.NonReadonlyReferencedInGetHashCodeAnalyzerID + @"
 		public override int GetHashCode()
 		{
 			int a = 6;

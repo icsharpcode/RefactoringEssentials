@@ -80,7 +80,7 @@ namespace Foo
         public void TestDisable()
         {
             Analyze<EmptyNamespaceAnalyzer>(@"
-#pragma warning disable " + NRefactoryDiagnosticIDs.EmptyNamespaceAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.EmptyNamespaceAnalyzerID + @"
 namespace Foo
 {
 }");

@@ -72,7 +72,7 @@ class Test
 		case 0:
 			System.Console.WriteLine();
 			break;
-#pragma warning disable " + NRefactoryDiagnosticIDs.RedundantEmptyDefaultSwitchBranchAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.RedundantEmptyDefaultSwitchBranchAnalyzerID + @"
 		default:
 			break;
 		}

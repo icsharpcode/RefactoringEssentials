@@ -42,7 +42,7 @@ class Foo
 {
 	void Bar ()
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.ObjectCreationAsStatementAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ObjectCreationAsStatementAnalyzerID + @"
 		new Foo();
 	}
 }

@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class UseMethodAnyAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.UseMethodAnyAnalyzerID,
+            DiagnosticIDs.UseMethodAnyAnalyzerID,
             GettextCatalog.GetString("Replace usages of 'Count()' with call to 'Any()'"),
             GettextCatalog.GetString("Use '{0}' for increased performance"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.UseMethodAnyAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.UseMethodAnyAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

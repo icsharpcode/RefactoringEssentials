@@ -93,7 +93,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 				{
 					F ();
 				}
-#pragma warning disable " + NRefactoryDiagnosticIDs.EmptyGeneralCatchClauseAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.EmptyGeneralCatchClauseAnalyzerID + @"
 				catch (Exception e)
 				{
 				}

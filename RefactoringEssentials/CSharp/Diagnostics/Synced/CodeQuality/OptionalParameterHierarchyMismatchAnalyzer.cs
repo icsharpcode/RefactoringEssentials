@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class OptionalParameterHierarchyMismatchAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.OptionalParameterHierarchyMismatchAnalyzerID,
+            DiagnosticIDs.OptionalParameterHierarchyMismatchAnalyzerID,
             GettextCatalog.GetString("The value of an optional parameter in a method does not match the base method"),
             GettextCatalog.GetString("Optional parameter value {0} differs from base {1} '{2}'"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.OptionalParameterHierarchyMismatchAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.OptionalParameterHierarchyMismatchAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

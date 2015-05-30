@@ -105,7 +105,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 	static int Bar (int x)
 	{
 		int result;
-#pragma warning disable " + NRefactoryDiagnosticIDs.ConvertIfStatementToConditionalTernaryExpressionAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ConvertIfStatementToConditionalTernaryExpressionAnalyzerID + @"
 		if (x > 10)
 			result = 10;
 		else

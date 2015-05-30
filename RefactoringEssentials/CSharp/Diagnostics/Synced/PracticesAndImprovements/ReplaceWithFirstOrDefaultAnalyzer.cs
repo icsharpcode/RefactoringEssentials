@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ReplaceWithFirstOrDefaultAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ReplaceWithFirstOrDefaultAnalyzerID,
+            DiagnosticIDs.ReplaceWithFirstOrDefaultAnalyzerID,
             GettextCatalog.GetString("Replace with call to FirstOrDefault<T>()"),
             GettextCatalog.GetString("Expression can be simlified to 'FirstOrDefault<T>()'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ReplaceWithFirstOrDefaultAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReplaceWithFirstOrDefaultAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

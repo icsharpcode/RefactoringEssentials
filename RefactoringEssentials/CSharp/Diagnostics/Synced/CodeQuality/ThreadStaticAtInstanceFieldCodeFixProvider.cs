@@ -17,7 +17,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.ThreadStaticAtInstanceFieldAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.ThreadStaticAtInstanceFieldAnalyzerID);
             }
         }
 

@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class NegativeRelationalExpressionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.NegativeRelationalExpressionAnalyzerID,
+            DiagnosticIDs.NegativeRelationalExpressionAnalyzerID,
             GettextCatalog.GetString("Simplify negative relational expression"),
             GettextCatalog.GetString("Simplify negative relational expression"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.NegativeRelationalExpressionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.NegativeRelationalExpressionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

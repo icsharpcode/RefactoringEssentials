@@ -13,13 +13,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class FieldCanBeMadeReadOnlyAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.FieldCanBeMadeReadOnlyAnalyzerID,
+            DiagnosticIDs.FieldCanBeMadeReadOnlyAnalyzerID,
             GettextCatalog.GetString("Convert field to readonly"),
             GettextCatalog.GetString("Convert field to readonly"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.FieldCanBeMadeReadOnlyAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.FieldCanBeMadeReadOnlyAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

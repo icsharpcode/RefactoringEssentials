@@ -15,13 +15,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class SuggestUseVarKeywordEvidentAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.SuggestUseVarKeywordEvidentAnalyzerID,
+            DiagnosticIDs.SuggestUseVarKeywordEvidentAnalyzerID,
             GettextCatalog.GetString("Use 'var' keyword when possible"),
             GettextCatalog.GetString("Use 'var' keyword"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.SuggestUseVarKeywordEvidentAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.SuggestUseVarKeywordEvidentAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

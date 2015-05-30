@@ -216,7 +216,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 	int Bar(int o)
 	{
 		bool b = o > 10;
-#pragma warning disable " + NRefactoryDiagnosticIDs.ConvertIfToOrExpressionAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ConvertIfToOrExpressionAnalyzerID + @"
 		if (o < 10)
 			b = true;
 	}

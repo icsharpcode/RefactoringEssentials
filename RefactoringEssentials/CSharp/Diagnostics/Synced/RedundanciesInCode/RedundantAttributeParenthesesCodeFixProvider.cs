@@ -14,7 +14,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.RedundantAttributeParenthesesAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.RedundantAttributeParenthesesAnalyzerID);
             }
         }
 

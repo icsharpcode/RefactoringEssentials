@@ -12,13 +12,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantExtendsListEntryAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantExtendsListEntryAnalyzerID,
+            DiagnosticIDs.RedundantExtendsListEntryAnalyzerID,
             GettextCatalog.GetString("Type is either mentioned in the base type list of another part or in another base type"),
             "{0}",
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantExtendsListEntryAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantExtendsListEntryAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

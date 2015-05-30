@@ -206,7 +206,7 @@ class Test
 {
 	void Foo()
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.StringCompareIsCultureSpecificAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.StringCompareIsCultureSpecificAnalyzerID + @"
 		Console.WriteLine(string.Compare(""Foo"", ""Bar""));
 	}
 }");

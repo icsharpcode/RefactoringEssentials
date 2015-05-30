@@ -16,7 +16,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID);
             }
         }
 

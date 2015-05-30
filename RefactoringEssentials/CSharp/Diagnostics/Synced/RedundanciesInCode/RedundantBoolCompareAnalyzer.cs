@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantBoolCompareAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantBoolCompareAnalyzerID,
+            DiagnosticIDs.RedundantBoolCompareAnalyzerID,
             GettextCatalog.GetString("Comparison of a boolean value with 'true' or 'false' constant"),
             GettextCatalog.GetString("Comparison with '{0}' is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantBoolCompareAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantBoolCompareAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

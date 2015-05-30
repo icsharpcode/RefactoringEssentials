@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class CompareOfFloatsByEqualityOperatorAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.CompareOfFloatsByEqualityOperatorAnalyzerID,
+            DiagnosticIDs.CompareOfFloatsByEqualityOperatorAnalyzerID,
             GettextCatalog.GetString("Comparison of floating point numbers with equality operator"),
             GettextCatalog.GetString("{0}"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.CompareOfFloatsByEqualityOperatorAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.CompareOfFloatsByEqualityOperatorAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

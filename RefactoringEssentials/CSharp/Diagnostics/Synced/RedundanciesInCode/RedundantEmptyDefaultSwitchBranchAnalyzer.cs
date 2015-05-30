@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantEmptyDefaultSwitchBranchAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantEmptyDefaultSwitchBranchAnalyzerID,
+            DiagnosticIDs.RedundantEmptyDefaultSwitchBranchAnalyzerID,
             GettextCatalog.GetString("Redundant empty 'default' switch branch"),
             GettextCatalog.GetString("Redundant empty 'default' switch branch"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantEmptyDefaultSwitchBranchAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantEmptyDefaultSwitchBranchAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

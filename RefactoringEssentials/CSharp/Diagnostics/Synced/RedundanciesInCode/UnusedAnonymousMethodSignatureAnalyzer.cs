@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class UnusedAnonymousMethodSignatureAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.UnusedAnonymousMethodSignatureAnalyzerID,
+            DiagnosticIDs.UnusedAnonymousMethodSignatureAnalyzerID,
             GettextCatalog.GetString("Detects when no delegate parameter is used in the anonymous method body"),
             GettextCatalog.GetString("Specifying signature is redundant because no parameter is used"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.UnusedAnonymousMethodSignatureAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.UnusedAnonymousMethodSignatureAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

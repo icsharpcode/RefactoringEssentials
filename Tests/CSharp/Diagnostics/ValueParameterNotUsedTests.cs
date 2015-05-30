@@ -40,7 +40,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     }
     int Property2
     {
-#pragma warning disable " + NRefactoryDiagnosticIDs.ValueParameterNotUsedAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ValueParameterNotUsedAnalyzerID + @"
         set
         {
         }

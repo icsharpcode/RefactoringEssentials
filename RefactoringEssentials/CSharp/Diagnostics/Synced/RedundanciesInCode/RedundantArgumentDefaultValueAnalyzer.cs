@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantArgumentDefaultValueAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantArgumentDefaultValueAnalyzerID,
+            DiagnosticIDs.RedundantArgumentDefaultValueAnalyzerID,
             GettextCatalog.GetString("Default argument value is redundant"),
             GettextCatalog.GetString("The parameter is optional with the same default value"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantArgumentDefaultValueAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantArgumentDefaultValueAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

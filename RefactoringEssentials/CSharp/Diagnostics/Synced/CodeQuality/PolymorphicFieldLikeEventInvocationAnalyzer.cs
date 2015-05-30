@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class PolymorphicFieldLikeEventInvocationAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.PolymorphicFieldLikeEventInvocationAnalyzerID,
+            DiagnosticIDs.PolymorphicFieldLikeEventInvocationAnalyzerID,
             GettextCatalog.GetString("Invocation of polymorphic field event leads to unpredictable result since invocation lists are not virtual"),
             GettextCatalog.GetString("The event `{0}' can only appear on the left hand side of `+=' or `-=' operator"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.PolymorphicFieldLikeEventInvocationAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.PolymorphicFieldLikeEventInvocationAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

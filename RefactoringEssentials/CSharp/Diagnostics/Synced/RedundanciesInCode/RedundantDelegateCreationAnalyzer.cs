@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantDelegateCreationAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantDelegateCreationAnalyzerID,
+            DiagnosticIDs.RedundantDelegateCreationAnalyzerID,
             GettextCatalog.GetString("Explicit delegate creation expression is redundant"),
             GettextCatalog.GetString("Redundant explicit delegate declaration"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantDelegateCreationAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantDelegateCreationAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

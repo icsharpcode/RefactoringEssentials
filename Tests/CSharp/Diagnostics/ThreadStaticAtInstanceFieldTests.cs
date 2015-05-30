@@ -59,7 +59,7 @@ class Foo
             Analyze<ThreadStaticAtInstanceFieldAnalyzer>(@"using System;
 class Foo
 {
-#pragma warning disable " + NRefactoryDiagnosticIDs.ThreadStaticAtInstanceFieldAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ThreadStaticAtInstanceFieldAnalyzerID + @"
 
 	[ThreadStatic]
 	int bar;

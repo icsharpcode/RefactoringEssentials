@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class OptionalParameterRefOutAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.OptionalParameterRefOutAnalyzerID,
+            DiagnosticIDs.OptionalParameterRefOutAnalyzerID,
             GettextCatalog.GetString("C# doesn't support optional 'ref' or 'out' parameters"),
             GettextCatalog.GetString("C# doesn't support optional 'ref' or 'out' parameters"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.OptionalParameterRefOutAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.OptionalParameterRefOutAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

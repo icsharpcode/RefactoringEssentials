@@ -17,7 +17,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.StringCompareToIsCultureSpecificAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.StringCompareToIsCultureSpecificAnalyzerID);
             }
         }
 

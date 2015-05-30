@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ValueParameterNotUsedAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ValueParameterNotUsedAnalyzerID,
+            DiagnosticIDs.ValueParameterNotUsedAnalyzerID,
             GettextCatalog.GetString("Warns about property or indexer setters and event adders or removers that do not use the value parameter"),
             GettextCatalog.GetString("The {0} does not use the 'value' parameter"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ValueParameterNotUsedAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ValueParameterNotUsedAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

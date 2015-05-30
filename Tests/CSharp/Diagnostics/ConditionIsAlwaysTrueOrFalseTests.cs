@@ -115,7 +115,7 @@ class Test
 {
 	void Foo(int i)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.ConditionIsAlwaysTrueOrFalseAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ConditionIsAlwaysTrueOrFalseAnalyzerID + @"
 		if (i == null) {
 		}
 	}

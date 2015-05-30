@@ -22,13 +22,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         //			);
 
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.AdditionalOfTypeAnalyzerID,
+            DiagnosticIDs.AdditionalOfTypeAnalyzerID,
             GettextCatalog.GetString("Replace with call to OfType<T> (extended cases)"),
             GettextCatalog.GetString("Replace with 'OfType<T>'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.AdditionalOfTypeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.AdditionalOfTypeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

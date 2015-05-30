@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class UseArrayCreationExpressionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.UseArrayCreationExpressionAnalyzerID,
+            DiagnosticIDs.UseArrayCreationExpressionAnalyzerID,
             GettextCatalog.GetString("Use array creation expression"),
             GettextCatalog.GetString("Use array create expression"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.UseArrayCreationExpressionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.UseArrayCreationExpressionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertToAutoPropertyAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ConvertToAutoPropertyAnalyzerID,
+            DiagnosticIDs.ConvertToAutoPropertyAnalyzerID,
             GettextCatalog.GetString("Convert property to auto property"),
             GettextCatalog.GetString("Convert to auto property"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConvertToAutoPropertyAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertToAutoPropertyAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

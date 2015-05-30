@@ -22,7 +22,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         public void TestResharperDisable()
         {
             Analyze<EmptyConstructorAnalyzer>(@"using System;
-#pragma warning disable " + NRefactoryDiagnosticIDs.EmptyConstructorAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.EmptyConstructorAnalyzerID + @"
 class Test {
 	public Test(){
 	}

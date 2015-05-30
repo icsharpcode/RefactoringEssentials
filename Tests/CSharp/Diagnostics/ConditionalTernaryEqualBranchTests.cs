@@ -64,7 +64,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 	void Bar (string str)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.ConditionalTernaryEqualBranchAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ConditionalTernaryEqualBranchAnalyzerID + @"
 		string c = str != null ? ""default"" : ""default"";
 	}
 }");

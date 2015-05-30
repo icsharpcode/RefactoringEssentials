@@ -167,7 +167,7 @@ class Bar
 {
 	public Bar Baz (object foo)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID + @"
 		if (foo is Bar) {
 			Baz ((Bar)foo);
 			return (Bar)foo;

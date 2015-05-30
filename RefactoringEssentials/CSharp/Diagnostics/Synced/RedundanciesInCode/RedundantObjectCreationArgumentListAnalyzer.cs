@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantObjectCreationArgumentListAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantObjectCreationArgumentListAnalyzerID,
+            DiagnosticIDs.RedundantObjectCreationArgumentListAnalyzerID,
             GettextCatalog.GetString("When object creation uses object or collection initializer, empty argument list is redundant"),
             GettextCatalog.GetString("Empty argument list is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantObjectCreationArgumentListAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantObjectCreationArgumentListAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

@@ -117,7 +117,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-#pragma warning disable " + NRefactoryDiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID + @"
 	[Test]
 	void NonPublicMethod()
 	{

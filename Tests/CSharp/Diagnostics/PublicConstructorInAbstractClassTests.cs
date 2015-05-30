@@ -80,7 +80,7 @@ abstract class TestClass
         public void TestDisable()
         {
             Analyze<PublicConstructorInAbstractClassAnalyzer>(@"
-#pragma warning disable " + NRefactoryDiagnosticIDs.PublicConstructorInAbstractClassAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.PublicConstructorInAbstractClassAnalyzerID + @"
 abstract class TestClass
 {
 	public TestClass ()

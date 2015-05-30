@@ -114,7 +114,7 @@ class TestClass
     void TestMethod()
     {
 	    var x = TestEnum.Item1;
-#pragma warning disable " + NRefactoryDiagnosticIDs.BitwiseOperatorOnEnumWithoutFlagsAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.BitwiseOperatorOnEnumWithoutFlagsAnalyzerID + @"
         x = x ^ TestEnum.Item2;
     }
 }

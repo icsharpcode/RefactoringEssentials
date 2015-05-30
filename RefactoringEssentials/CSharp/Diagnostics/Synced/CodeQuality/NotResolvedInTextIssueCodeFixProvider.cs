@@ -18,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.NotResolvedInTextAnalyzerID, NRefactoryDiagnosticIDs.NotResolvedInTextAnalyzer_SwapID);
+                return ImmutableArray.Create(DiagnosticIDs.NotResolvedInTextAnalyzerID, DiagnosticIDs.NotResolvedInTextAnalyzer_SwapID);
             }
         }
 
@@ -46,7 +46,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             NotResolvedInTextAnalyzer.CheckExceptionType(model, objectCreateExpression, out paramNode, out altParamNode, out canAddParameterName);
 
-            if (diagnostic.Id == NRefactoryDiagnosticIDs.NotResolvedInTextAnalyzer_SwapID)
+            if (diagnostic.Id == DiagnosticIDs.NotResolvedInTextAnalyzer_SwapID)
             {
                 context.RegisterCodeFix(
                     CodeActionFactory.Create(
@@ -78,7 +78,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     diagnostic
                 );
             }
-            else if (diagnostic.Id == NRefactoryDiagnosticIDs.NotResolvedInTextAnalyzerID)
+            else if (diagnostic.Id == DiagnosticIDs.NotResolvedInTextAnalyzerID)
             {
                 var fixes = new List<CodeAction>();
                 if (canAddParameterName)

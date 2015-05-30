@@ -14,7 +14,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.AccessToStaticMemberViaDerivedTypeAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.AccessToStaticMemberViaDerivedTypeAnalyzerID);
             }
         }
 

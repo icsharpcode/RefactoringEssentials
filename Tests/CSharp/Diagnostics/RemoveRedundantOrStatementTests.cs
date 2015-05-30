@@ -62,7 +62,7 @@ class MainClass
 	static bool bb { get; set; }
 	public static void Main(string[] args)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.RemoveRedundantOrStatementAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.RemoveRedundantOrStatementAnalyzerID + @"
 		MainClass.bb |= false;
 	}
 }

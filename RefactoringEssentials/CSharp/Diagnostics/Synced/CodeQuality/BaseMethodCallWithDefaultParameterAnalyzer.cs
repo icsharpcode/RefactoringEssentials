@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class BaseMethodCallWithDefaultParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.BaseMethodCallWithDefaultParameterDiagnosticID,
+            DiagnosticIDs.BaseMethodCallWithDefaultParameterDiagnosticID,
             GettextCatalog.GetString("Call to base member with implicit default parameters"),
             GettextCatalog.GetString("Call to base member with implicit default parameters"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConvertClosureToMethodDiagnosticID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertClosureToMethodDiagnosticID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

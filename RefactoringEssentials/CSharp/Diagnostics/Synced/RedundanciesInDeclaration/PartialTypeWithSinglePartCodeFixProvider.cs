@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.PartialTypeWithSinglePartDiagnosticID);
+                return ImmutableArray.Create(DiagnosticIDs.PartialTypeWithSinglePartDiagnosticID);
             }
         }
 

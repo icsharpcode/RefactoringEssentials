@@ -12,13 +12,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class StringCompareIsCultureSpecificAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.StringCompareIsCultureSpecificAnalyzerID,
+            DiagnosticIDs.StringCompareIsCultureSpecificAnalyzerID,
             GettextCatalog.GetString("Warns when a culture-aware 'Compare' call is used by default"),
             GettextCatalog.GetString("'string.Compare' is culture-aware"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.StringCompareIsCultureSpecificAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.StringCompareIsCultureSpecificAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

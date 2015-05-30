@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.OptionalParameterHierarchyMismatchAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.OptionalParameterHierarchyMismatchAnalyzerID);
             }
         }
 

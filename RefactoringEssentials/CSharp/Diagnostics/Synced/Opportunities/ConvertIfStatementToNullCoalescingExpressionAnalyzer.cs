@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertIfStatementToNullCoalescingExpressionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ConvertIfStatementToNullCoalescingExpressionAnalyzerID,
+            DiagnosticIDs.ConvertIfStatementToNullCoalescingExpressionAnalyzerID,
             GettextCatalog.GetString("Convert 'if' to '??'"),
             GettextCatalog.GetString("Convert to '??' expresssion"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConvertIfStatementToNullCoalescingExpressionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertIfStatementToNullCoalescingExpressionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

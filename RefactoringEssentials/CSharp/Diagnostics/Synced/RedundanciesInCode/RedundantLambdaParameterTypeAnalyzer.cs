@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantLambdaParameterTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantLambdaParameterTypeAnalyzerID,
+            DiagnosticIDs.RedundantLambdaParameterTypeAnalyzerID,
             GettextCatalog.GetString("Explicit type specification can be removed as it can be implicitly inferred"),
             GettextCatalog.GetString("Redundant lambda explicit type specification"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantLambdaParameterTypeAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantLambdaParameterTypeAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

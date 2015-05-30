@@ -18,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.CompareOfFloatsByEqualityOperatorAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.CompareOfFloatsByEqualityOperatorAnalyzerID);
             }
         }
 

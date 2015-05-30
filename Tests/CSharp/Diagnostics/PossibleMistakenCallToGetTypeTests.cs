@@ -57,7 +57,7 @@ public class Bar
 {
 	public void FooBar(Type a)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.PossibleMistakenCallToGetTypeAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.PossibleMistakenCallToGetTypeAnalyzerID + @"
 		Console.WriteLine(a.GetType());
 	}
 }

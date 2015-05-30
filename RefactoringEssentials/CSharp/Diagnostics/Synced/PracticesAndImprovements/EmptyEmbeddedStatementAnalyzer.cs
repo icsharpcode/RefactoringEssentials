@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EmptyEmbeddedStatementAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.EmptyEmbeddedStatementAnalyzerID,
+            DiagnosticIDs.EmptyEmbeddedStatementAnalyzerID,
             GettextCatalog.GetString("Empty control statement body"),
             GettextCatalog.GetString("';' should be avoided. Use '{}' instead"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.EmptyEmbeddedStatementAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EmptyEmbeddedStatementAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

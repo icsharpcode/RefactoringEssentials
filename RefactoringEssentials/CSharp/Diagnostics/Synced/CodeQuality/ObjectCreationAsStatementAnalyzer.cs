@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ObjectCreationAsStatementAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ObjectCreationAsStatementAnalyzerID,
+            DiagnosticIDs.ObjectCreationAsStatementAnalyzerID,
             GettextCatalog.GetString("Possible unassigned object created by 'new'"),
             GettextCatalog.GetString("Possible unassigned object created by 'new' expression"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ObjectCreationAsStatementAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ObjectCreationAsStatementAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

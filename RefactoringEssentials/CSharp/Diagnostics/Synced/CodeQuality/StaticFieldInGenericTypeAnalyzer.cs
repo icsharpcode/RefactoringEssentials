@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class StaticFieldInGenericTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.StaticFieldInGenericTypeAnalyzerID,
+            DiagnosticIDs.StaticFieldInGenericTypeAnalyzerID,
             GettextCatalog.GetString("Warns about static fields in generic types"),
             GettextCatalog.GetString("Static field in generic type"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.StaticFieldInGenericTypeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.StaticFieldInGenericTypeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

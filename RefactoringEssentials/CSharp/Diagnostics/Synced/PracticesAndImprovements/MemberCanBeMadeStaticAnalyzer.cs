@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class MemberCanBeMadeStaticAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.MemberCanBeMadeStaticAnalyzerID,
+            DiagnosticIDs.MemberCanBeMadeStaticAnalyzerID,
             GettextCatalog.GetString("A member doesn't use 'this' object neither explicit nor implicit. It can be made static"),
             GettextCatalog.GetString("Member can be made static"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.MemberCanBeMadeStaticAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.MemberCanBeMadeStaticAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

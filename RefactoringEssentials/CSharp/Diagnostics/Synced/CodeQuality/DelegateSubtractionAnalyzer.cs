@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class DelegateSubtractionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.DelegateSubtractionAnalyzerID,
+            DiagnosticIDs.DelegateSubtractionAnalyzerID,
             GettextCatalog.GetString("Delegate subtraction has unpredictable result"),
             GettextCatalog.GetString("Delegate subtraction has unpredictable result"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.DelegateSubtractionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.DelegateSubtractionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class CallToObjectEqualsViaBaseAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.CallToObjectEqualsViaBaseAnalyzerID,
+            DiagnosticIDs.CallToObjectEqualsViaBaseAnalyzerID,
             GettextCatalog.GetString("Finds potentially erroneous calls to Object.Equals"),
             GettextCatalog.GetString("Call to base.Equals resolves to Object.Equals, which is reference equality"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.CallToObjectEqualsViaBaseAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.CallToObjectEqualsViaBaseAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

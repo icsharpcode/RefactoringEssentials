@@ -1,6 +1,6 @@
-namespace RefactoringEssentials.CSharp.Diagnostics
+namespace RefactoringEssentials
 {
-    public static class NRefactoryDiagnosticIDs
+    public static class DiagnosticIDs
     {
         public const string PartialTypeWithSinglePartDiagnosticID = "NR0001";
         public const string ConvertClosureToMethodDiagnosticID = "NR0002";

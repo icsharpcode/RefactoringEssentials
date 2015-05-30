@@ -40,7 +40,7 @@ class Bar
 using System.Runtime.InteropServices;
 class Bar
 {
-#pragma warning disable " + NRefactoryDiagnosticIDs.OptionalParameterRefOutAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.OptionalParameterRefOutAnalyzerID + @"
 	public void Foo([Optional] ref int test)
 	{
 	}

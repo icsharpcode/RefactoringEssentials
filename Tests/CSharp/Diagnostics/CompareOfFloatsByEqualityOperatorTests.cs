@@ -154,7 +154,7 @@ class TestClass
 {
 	void TestMethod (double x, float y)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.CompareOfFloatsByEqualityOperatorAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.CompareOfFloatsByEqualityOperatorAnalyzerID + @"
 		if (x == y)
 			System.Console.WriteLine (x);
 	}

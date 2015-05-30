@@ -35,7 +35,7 @@ class Test
 {
 	public void Foo ()
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.EmptyStatementAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.EmptyStatementAnalyzerID + @"
 		;
 	}
 }

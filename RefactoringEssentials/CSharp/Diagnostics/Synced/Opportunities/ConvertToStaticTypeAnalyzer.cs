@@ -12,13 +12,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertToStaticTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ConvertToStaticTypeAnalyzerID,
+            DiagnosticIDs.ConvertToStaticTypeAnalyzerID,
             GettextCatalog.GetString("If all fields, properties and methods members are static, the class can be made static."),
             GettextCatalog.GetString("This class is recommended to be defined as static"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConvertToStaticTypeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertToStaticTypeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantOverriddenMemberAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantOverriddenMemberAnalyzerID,
+            DiagnosticIDs.RedundantOverriddenMemberAnalyzerID,
             GettextCatalog.GetString("The override of a virtual member is redundant because it consists of only a call to the base"),
             GettextCatalog.GetString("Redundant method override"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantOverriddenMemberAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantOverriddenMemberAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

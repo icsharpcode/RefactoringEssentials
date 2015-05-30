@@ -16,7 +16,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.SuggestUseVarKeywordEvidentAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.SuggestUseVarKeywordEvidentAnalyzerID);
             }
         }
 

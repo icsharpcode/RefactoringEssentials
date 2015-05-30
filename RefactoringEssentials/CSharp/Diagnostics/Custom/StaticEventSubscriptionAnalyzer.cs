@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class StaticEventSubscriptionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.StaticEventSubscriptionAnalyzerID,
+            DiagnosticIDs.StaticEventSubscriptionAnalyzerID,
             GettextCatalog.GetString("Checks if static events are removed"),
             GettextCatalog.GetString("Subscription to static events without unsubscription may cause memory leaks"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.StaticEventSubscriptionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.StaticEventSubscriptionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

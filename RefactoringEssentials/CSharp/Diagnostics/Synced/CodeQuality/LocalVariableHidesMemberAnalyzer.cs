@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class LocalVariableHidesMemberAnalyzer : VariableHidesMemberAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.LocalVariableHidesMemberAnalyzerID,
+            DiagnosticIDs.LocalVariableHidesMemberAnalyzerID,
             GettextCatalog.GetString("Local variable has the same name as a member and hides it"),
             GettextCatalog.GetString("Local variable '{0}' hides {1} '{2}'"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.LocalVariableHidesMemberAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.LocalVariableHidesMemberAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

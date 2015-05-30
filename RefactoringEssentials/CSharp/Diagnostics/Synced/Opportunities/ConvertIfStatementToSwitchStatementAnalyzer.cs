@@ -13,13 +13,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertIfStatementToSwitchStatementAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ConvertIfStatementToSwitchStatementAnalyzerID,
+            DiagnosticIDs.ConvertIfStatementToSwitchStatementAnalyzerID,
             GettextCatalog.GetString("'if' statement can be re-written as 'switch' statement"),
             GettextCatalog.GetString("Convert to 'switch' statement"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConvertIfStatementToSwitchStatementAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertIfStatementToSwitchStatementAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

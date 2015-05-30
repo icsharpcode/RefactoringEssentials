@@ -33,7 +33,7 @@ partial class TestClass
         public void TestDisable()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>(@"
-#pragma warning disable " + NRefactoryDiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
+#pragma warning disable " + DiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
 partial class TestClass
 {
 }");
@@ -85,19 +85,19 @@ class TestClass
         public void TestRedundantNestedPartialDisable()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>(@"
-#pragma warning disable " + NRefactoryDiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
+#pragma warning disable " + DiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
 partial class TestClass
 {
-	#pragma warning restore " + NRefactoryDiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
+	#pragma warning restore " + DiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
 	$partial$ class Nested
 	{
 	}
 }
 ", @"
-#pragma warning disable " + NRefactoryDiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
+#pragma warning disable " + DiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
 partial class TestClass
 {
-	#pragma warning restore " + NRefactoryDiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
+	#pragma warning restore " + DiagnosticIDs.PartialTypeWithSinglePartDiagnosticID + @"
 	class Nested
 	{
 	}

@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class PartialTypeWithSinglePartAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.PartialTypeWithSinglePartDiagnosticID,
+            DiagnosticIDs.PartialTypeWithSinglePartDiagnosticID,
             GettextCatalog.GetString("Class is declared partial but has only one part"),
             GettextCatalog.GetString("Partial class with single part"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.PartialTypeWithSinglePartDiagnosticID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.PartialTypeWithSinglePartDiagnosticID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

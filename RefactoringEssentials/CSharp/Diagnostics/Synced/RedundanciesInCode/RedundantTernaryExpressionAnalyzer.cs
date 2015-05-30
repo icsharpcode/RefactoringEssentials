@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantTernaryExpressionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantTernaryExpressionAnalyzerID,
+            DiagnosticIDs.RedundantTernaryExpressionAnalyzerID,
             GettextCatalog.GetString("Redundant conditional expression"),
             GettextCatalog.GetString("Redundant conditional expression"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantTernaryExpressionAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantTernaryExpressionAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

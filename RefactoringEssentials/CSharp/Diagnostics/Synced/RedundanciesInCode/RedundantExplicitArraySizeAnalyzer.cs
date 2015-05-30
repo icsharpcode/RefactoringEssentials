@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantExplicitArraySizeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantExplicitArraySizeAnalyzerID,
+            DiagnosticIDs.RedundantExplicitArraySizeAnalyzerID,
             GettextCatalog.GetString("Redundant explicit size in array creation"),
             GettextCatalog.GetString("Redundant explicit size in array creation"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantExplicitArraySizeAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantExplicitArraySizeAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

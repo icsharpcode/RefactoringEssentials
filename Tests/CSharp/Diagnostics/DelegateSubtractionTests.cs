@@ -45,7 +45,7 @@ class Foo
 {
 	void Bar (Action a, Action b)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.DelegateSubtractionAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.DelegateSubtractionAnalyzerID + @"
 		(a - b) ();
 	}
 }

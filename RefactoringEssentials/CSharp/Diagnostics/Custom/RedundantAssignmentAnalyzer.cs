@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantAssignmentAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantAssignmentAnalyzerID,
+            DiagnosticIDs.RedundantAssignmentAnalyzerID,
             GettextCatalog.GetString("Value assigned to a variable or parameter is not used in all execution path"),
             GettextCatalog.GetString("Assignment is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantAssignmentAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantAssignmentAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

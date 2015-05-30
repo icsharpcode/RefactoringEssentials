@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class CheckNamespaceAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.CheckNamespaceAnalyzerID,
+            DiagnosticIDs.CheckNamespaceAnalyzerID,
             GettextCatalog.GetString("Check if a namespace corresponds to a file location"),
             "{0}",
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.CheckNamespaceAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.CheckNamespaceAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

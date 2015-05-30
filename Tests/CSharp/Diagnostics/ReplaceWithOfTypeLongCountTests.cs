@@ -54,7 +54,7 @@ class Test
 {
 	public void Foo(object[] obj)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.ReplaceWithOfTypeLongCountAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ReplaceWithOfTypeLongCountAnalyzerID + @"
 		obj.Select (q => q as Test).LongCount (q => q != null);
 	}
 }");

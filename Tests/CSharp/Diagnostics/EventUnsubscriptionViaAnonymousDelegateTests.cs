@@ -49,7 +49,7 @@ class Bar
 
 	void Test ()
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.EventUnsubscriptionViaAnonymousDelegateAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.EventUnsubscriptionViaAnonymousDelegateAnalyzerID + @"
 		Foo -= delegate { };
 	}
 }");

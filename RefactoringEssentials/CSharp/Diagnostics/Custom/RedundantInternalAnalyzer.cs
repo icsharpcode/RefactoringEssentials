@@ -15,13 +15,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantInternalAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantInternalAnalyzerID,
+            DiagnosticIDs.RedundantInternalAnalyzerID,
             GettextCatalog.GetString("Removes 'internal' modifiers that are not required"),
             GettextCatalog.GetString("'internal' modifier is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantInternalAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantInternalAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

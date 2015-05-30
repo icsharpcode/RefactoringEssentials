@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RewriteIfReturnToReturnAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RewriteIfReturnToReturnAnalyzerID,
+            DiagnosticIDs.RewriteIfReturnToReturnAnalyzerID,
             GettextCatalog.GetString("Convert 'if...return' to 'return'"),
             GettextCatalog.GetString("Convert to 'return' statement"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RewriteIfReturnToReturnAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RewriteIfReturnToReturnAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class SealedMemberInSealedClassAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.SealedMemberInSealedClassAnalyzerID,
+            DiagnosticIDs.SealedMemberInSealedClassAnalyzerID,
             GettextCatalog.GetString("'sealed' modifier is redundant in sealed classes"),
             GettextCatalog.GetString("'sealed' modifier is redundant in sealed classes"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.SealedMemberInSealedClassAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.SealedMemberInSealedClassAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

@@ -38,7 +38,7 @@ class TestClass { }");
         public void TestDisable()
         {
             Analyze<RedundantAttributeParenthesesAnalyzer>(@"
-#pragma warning disable " + NRefactoryDiagnosticIDs.RedundantAttributeParenthesesAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.RedundantAttributeParenthesesAnalyzerID + @"
 [Test ()]
 class TestClass { }");
         }

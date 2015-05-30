@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantLogicalConditionalExpressionOperandAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantLogicalConditionalExpressionOperandAnalyzerID,
+            DiagnosticIDs.RedundantLogicalConditionalExpressionOperandAnalyzerID,
             GettextCatalog.GetString("Redundant operand in logical conditional expression"),
             GettextCatalog.GetString("Redundant operand in logical conditional expression"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantLogicalConditionalExpressionOperandAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantLogicalConditionalExpressionOperandAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

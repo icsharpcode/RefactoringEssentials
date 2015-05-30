@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class LockThisAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.LockThisAnalyzerID,
+            DiagnosticIDs.LockThisAnalyzerID,
             GettextCatalog.GetString("Warns about using lock (this) or MethodImplOptions.Synchronized"),
             "{0}",
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.LockThisAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.LockThisAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

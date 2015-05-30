@@ -51,7 +51,7 @@ public class Test
 {
 	void Foo (string b)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.StringCompareToIsCultureSpecificAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.StringCompareToIsCultureSpecificAnalyzerID + @"
 		Console.WriteLine (""Foo"".CompareTo(b));
 	}
 }

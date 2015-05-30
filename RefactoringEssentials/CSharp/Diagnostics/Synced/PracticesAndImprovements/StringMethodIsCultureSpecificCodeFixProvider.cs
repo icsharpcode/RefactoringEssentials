@@ -18,10 +18,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             get
             {
                 return ImmutableArray.Create(
-                    NRefactoryDiagnosticIDs.StringIndexOfIsCultureSpecificAnalyzerID,
-                    NRefactoryDiagnosticIDs.StringEndsWithIsCultureSpecificAnalyzerID,
-                    NRefactoryDiagnosticIDs.StringLastIndexOfIsCultureSpecificAnalyzerID,
-                    NRefactoryDiagnosticIDs.StringStartsWithIsCultureSpecificAnalyzerID
+                    DiagnosticIDs.StringIndexOfIsCultureSpecificAnalyzerID,
+                    DiagnosticIDs.StringEndsWithIsCultureSpecificAnalyzerID,
+                    DiagnosticIDs.StringLastIndexOfIsCultureSpecificAnalyzerID,
+                    DiagnosticIDs.StringStartsWithIsCultureSpecificAnalyzerID
                 );
             }
         }

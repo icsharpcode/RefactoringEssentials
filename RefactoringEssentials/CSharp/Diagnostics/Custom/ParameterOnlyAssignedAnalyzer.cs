@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ParameterOnlyAssignedAnalyzer : VariableOnlyAssignedAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ParameterOnlyAssignedAnalyzerID,
+            DiagnosticIDs.ParameterOnlyAssignedAnalyzerID,
             GettextCatalog.GetString("Parameter is assigned but its value is never used"),
             GettextCatalog.GetString("Parameter is assigned but its value is never used"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ParameterOnlyAssignedAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ParameterOnlyAssignedAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

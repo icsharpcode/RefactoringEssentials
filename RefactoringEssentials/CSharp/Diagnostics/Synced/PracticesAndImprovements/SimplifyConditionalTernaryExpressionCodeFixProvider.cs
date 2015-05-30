@@ -16,7 +16,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.SimplifyConditionalTernaryExpressionAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.SimplifyConditionalTernaryExpressionAnalyzerID);
             }
         }
 

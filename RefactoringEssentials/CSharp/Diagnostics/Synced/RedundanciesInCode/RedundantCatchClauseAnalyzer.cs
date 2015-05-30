@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantCatchClauseAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantCatchClauseAnalyzerID,
+            DiagnosticIDs.RedundantCatchClauseAnalyzerID,
             GettextCatalog.GetString("Catch clause with a single 'throw' statement is redundant"),
             "{0}",
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantCatchClauseAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantCatchClauseAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

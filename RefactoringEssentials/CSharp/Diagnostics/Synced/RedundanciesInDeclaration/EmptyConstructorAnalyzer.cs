@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EmptyConstructorAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.EmptyConstructorAnalyzerID,
+            DiagnosticIDs.EmptyConstructorAnalyzerID,
             GettextCatalog.GetString("An empty public constructor without paramaters is redundant."),
             GettextCatalog.GetString("Empty constructor is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.EmptyConstructorAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EmptyConstructorAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

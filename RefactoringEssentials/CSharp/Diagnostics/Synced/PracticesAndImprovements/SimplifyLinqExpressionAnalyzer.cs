@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class SimplifyLinqExpressionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.SimplifyLinqExpressionAnalyzerID,
+            DiagnosticIDs.SimplifyLinqExpressionAnalyzerID,
             GettextCatalog.GetString("Simplify LINQ expression"),
             GettextCatalog.GetString("Simplify LINQ expression"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.SimplifyLinqExpressionAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.SimplifyLinqExpressionAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

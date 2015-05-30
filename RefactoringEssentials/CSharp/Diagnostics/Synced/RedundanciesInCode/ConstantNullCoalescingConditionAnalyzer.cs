@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConstantNullCoalescingConditionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ConstantNullCoalescingConditionAnalyzerID,
+            DiagnosticIDs.ConstantNullCoalescingConditionAnalyzerID,
             GettextCatalog.GetString("Finds redundant null coalescing expressions such as expr ?? expr"),
             "{0}",
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConstantNullCoalescingConditionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConstantNullCoalescingConditionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

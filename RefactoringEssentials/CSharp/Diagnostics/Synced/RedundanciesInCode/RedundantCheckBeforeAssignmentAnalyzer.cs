@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantCheckBeforeAssignmentAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID,
+            DiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID,
             GettextCatalog.GetString("Check for inequality before assignment is redundant if (x != value) x = value;"),
             GettextCatalog.GetString("Redundant condition check before assignment"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

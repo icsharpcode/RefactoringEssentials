@@ -60,7 +60,7 @@ class TestClass
 {
 	void TestMethod ()
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.DoubleNegationOperatorAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.DoubleNegationOperatorAnalyzerID + @"
 		var x = ~(~(123));
 	}
 }");

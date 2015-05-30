@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(NRefactoryDiagnosticIDs.EmptyNamespaceAnalyzerID);
+                return ImmutableArray.Create(DiagnosticIDs.EmptyNamespaceAnalyzerID);
             }
         }
 

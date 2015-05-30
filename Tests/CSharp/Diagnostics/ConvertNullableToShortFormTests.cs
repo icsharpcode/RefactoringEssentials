@@ -128,7 +128,7 @@ class Foo
 {
     void Bar()
     {
-#pragma warning disable " + NRefactoryDiagnosticIDs.ConvertNullableToShortFormAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ConvertNullableToShortFormAnalyzerID + @"
         System.Nullable<int> a;
     }
 }");

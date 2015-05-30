@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EqualExpressionComparisonAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.EqualExpressionComparisonAnalyzerID,
+            DiagnosticIDs.EqualExpressionComparisonAnalyzerID,
             GettextCatalog.GetString("Comparing equal expression for equality is usually useless"),
             GettextCatalog.GetString("Replace with '{0}'"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.EqualExpressionComparisonAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EqualExpressionComparisonAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

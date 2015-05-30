@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantIfElseBlockAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantIfElseBlockAnalyzerID,
+            DiagnosticIDs.RedundantIfElseBlockAnalyzerID,
             GettextCatalog.GetString("Redundant 'else' keyword"),
             GettextCatalog.GetString("Redundant 'else' keyword"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantIfElseBlockAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantIfElseBlockAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

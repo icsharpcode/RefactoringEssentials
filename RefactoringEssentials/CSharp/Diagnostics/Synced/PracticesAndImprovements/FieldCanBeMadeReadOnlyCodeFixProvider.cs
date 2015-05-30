@@ -14,7 +14,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class FieldCanBeMadeReadOnlyCodeFixProvider : CodeFixProvider
     {
-        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(NRefactoryDiagnosticIDs.FieldCanBeMadeReadOnlyAnalyzerID);
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(DiagnosticIDs.FieldCanBeMadeReadOnlyAnalyzerID);
 
         public override FixAllProvider GetFixAllProvider()
         {

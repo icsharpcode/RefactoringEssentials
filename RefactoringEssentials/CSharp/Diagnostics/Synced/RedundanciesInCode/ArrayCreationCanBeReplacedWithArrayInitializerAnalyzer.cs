@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ArrayCreationCanBeReplacedWithArrayInitializerAnalyzerID,
+            DiagnosticIDs.ArrayCreationCanBeReplacedWithArrayInitializerAnalyzerID,
             GettextCatalog.GetString("When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer."),
             GettextCatalog.GetString("Redundant array creation expression"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ArrayCreationCanBeReplacedWithArrayInitializerAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ArrayCreationCanBeReplacedWithArrayInitializerAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

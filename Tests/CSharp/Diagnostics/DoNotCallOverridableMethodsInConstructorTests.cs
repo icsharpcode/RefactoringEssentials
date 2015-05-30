@@ -30,7 +30,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 	Foo()
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.DoNotCallOverridableMethodsInConstructorAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.DoNotCallOverridableMethodsInConstructorAnalyzerID + @"
 		Bar();
 	}
 

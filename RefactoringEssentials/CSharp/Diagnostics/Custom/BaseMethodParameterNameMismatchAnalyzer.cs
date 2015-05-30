@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class BaseMethodParameterNameMismatchAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.BaseMethodParameterNameMismatchAnalyzerID,
+            DiagnosticIDs.BaseMethodParameterNameMismatchAnalyzerID,
             GettextCatalog.GetString("Parameter name differs in base declaration"),
             GettextCatalog.GetString("Parameter name differs in base declaration"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.BaseMethodParameterNameMismatchAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.BaseMethodParameterNameMismatchAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

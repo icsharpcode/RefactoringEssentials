@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ParameterHidesMemberAnalyzer : VariableHidesMemberAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ParameterHidesMemberAnalyzerID,
+            DiagnosticIDs.ParameterHidesMemberAnalyzerID,
             GettextCatalog.GetString("Parameter has the same name as a member and hides it"),
             "{0}",
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ParameterHidesMemberAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ParameterHidesMemberAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

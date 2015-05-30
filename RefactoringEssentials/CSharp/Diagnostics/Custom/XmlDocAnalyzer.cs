@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class XmlDocAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.XmlDocAnalyzerID,
+            DiagnosticIDs.XmlDocAnalyzerID,
             GettextCatalog.GetString("Validate Xml docs"),
             "{0}",
             DiagnosticAnalyzerCategories.CompilerWarnings,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.XmlDocAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.XmlDocAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

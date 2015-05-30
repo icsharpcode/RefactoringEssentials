@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConditionIsAlwaysTrueOrFalseAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ConditionIsAlwaysTrueOrFalseAnalyzerID,
+            DiagnosticIDs.ConditionIsAlwaysTrueOrFalseAnalyzerID,
             GettextCatalog.GetString("Expression is always 'true' or always 'false'"),
             GettextCatalog.GetString("Expression is always '{0}'"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConditionIsAlwaysTrueOrFalseAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConditionIsAlwaysTrueOrFalseAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

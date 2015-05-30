@@ -31,7 +31,7 @@ public class CSharpDemo {
 public class CSharpDemo {
 	public void Bla () {
 		int[] arr;
-#pragma warning disable " + NRefactoryDiagnosticIDs.ReplaceWithSingleCallToFirstAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ReplaceWithSingleCallToFirstAnalyzerID + @"
 		var bla = arr.Where (x => x < 4).First ();
 	}
 }");

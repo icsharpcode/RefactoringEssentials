@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantParamsAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantParamsAnalyzerID,
+            DiagnosticIDs.RedundantParamsAnalyzerID,
             GettextCatalog.GetString("'params' is ignored on overrides"),
             GettextCatalog.GetString("'params' is always ignored in overrides"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantParamsAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantParamsAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

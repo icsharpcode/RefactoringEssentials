@@ -54,7 +54,7 @@ class Test
 {
 	public void Foo(object[] obj)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.ReplaceWithOfTypeFirstAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ReplaceWithOfTypeFirstAnalyzerID + @"
 		obj.Select (q => q as Test).First (q => q != null);
 	}
 }");

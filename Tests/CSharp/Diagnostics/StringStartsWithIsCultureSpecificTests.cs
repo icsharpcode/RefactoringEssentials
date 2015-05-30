@@ -36,7 +36,7 @@ public class Test
 {
 	public void Foo (string bar)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.StringStartsWithIsCultureSpecificAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.StringStartsWithIsCultureSpecificAnalyzerID + @"
 		bar.StartsWith ("".com"");
 	}
 }

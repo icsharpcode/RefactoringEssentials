@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class FunctionNeverReturnsAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.FunctionNeverReturnsAnalyzerID,
+            DiagnosticIDs.FunctionNeverReturnsAnalyzerID,
             GettextCatalog.GetString("Function does not reach its end or a 'return' statement by any of possible execution paths"),
             GettextCatalog.GetString("{0} never reaches its end or a 'return' statement"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.FunctionNeverReturnsAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.FunctionNeverReturnsAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

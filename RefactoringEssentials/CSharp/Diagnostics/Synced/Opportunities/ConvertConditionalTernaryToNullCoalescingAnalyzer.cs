@@ -15,13 +15,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertConditionalTernaryToNullCoalescingAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ConvertConditionalTernaryToNullCoalescingAnalyzerID,
+            DiagnosticIDs.ConvertConditionalTernaryToNullCoalescingAnalyzerID,
             GettextCatalog.GetString("'?:' expression can be converted to '??' expression"),
             GettextCatalog.GetString("'?:' expression can be converted to '??' expression"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConvertConditionalTernaryToNullCoalescingAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertConditionalTernaryToNullCoalescingAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

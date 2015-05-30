@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ForStatementConditionIsTrueAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ForStatementConditionIsTrueAnalyzerID,
+            DiagnosticIDs.ForStatementConditionIsTrueAnalyzerID,
             GettextCatalog.GetString("'true' is redundant as for statement condition"),
             GettextCatalog.GetString("true is redundant as for statement condition, thus can be safely ommited"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ForStatementConditionIsTrueAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ForStatementConditionIsTrueAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class StringStartsWithIsCultureSpecificAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.StringStartsWithIsCultureSpecificAnalyzerID,
+            DiagnosticIDs.StringStartsWithIsCultureSpecificAnalyzerID,
             GettextCatalog.GetString("Warns when a culture-aware 'StartsWith' call is used by default."),
             GettextCatalog.GetString("'StartsWith' is culture-aware and missing a StringComparison argument"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.StringStartsWithIsCultureSpecificAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.StringStartsWithIsCultureSpecificAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

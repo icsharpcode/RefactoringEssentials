@@ -70,7 +70,7 @@ class Test
             Analyze<LongLiteralEndingLowerLAnalyzer>(@"
 class Test
 {
-#pragma warning disable " + NRefactoryDiagnosticIDs.LongLiteralEndingLowerLAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.LongLiteralEndingLowerLAnalyzerID + @"
 	public long x = 3l;
 }");
         }

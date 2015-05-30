@@ -9,24 +9,24 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantToStringCallAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor1 = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantToStringCallAnalyzerID,
+            DiagnosticIDs.RedundantToStringCallAnalyzerID,
             GettextCatalog.GetString("Finds calls to ToString() which would be generated automatically by the compiler"),
             GettextCatalog.GetString("Redundant 'ToString()' call"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantToStringCallAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantToStringCallAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 
         static readonly DiagnosticDescriptor descriptor2 = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantToStringCallAnalyzer_ValueTypesID,
+            DiagnosticIDs.RedundantToStringCallAnalyzer_ValueTypesID,
             GettextCatalog.GetString("Finds calls to ToString() which would be generated automatically by the compiler"),
             GettextCatalog.GetString("Redundant 'ToString()' call"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantToStringCallAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantToStringCallAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

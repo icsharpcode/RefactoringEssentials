@@ -54,7 +54,7 @@ class Test
 {
 	public void Foo(object[] obj)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.ReplaceWithOfTypeCountAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ReplaceWithOfTypeCountAnalyzerID + @"
 		obj.Select (q => q as Test).Count (q => q != null);
 	}
 }");

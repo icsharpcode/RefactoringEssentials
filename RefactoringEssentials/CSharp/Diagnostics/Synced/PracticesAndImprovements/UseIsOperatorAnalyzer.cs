@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class UseIsOperatorAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.UseIsOperatorAnalyzerID,
+            DiagnosticIDs.UseIsOperatorAnalyzerID,
             GettextCatalog.GetString("'is' operator can be used"),
             GettextCatalog.GetString("Use 'is' operator"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.UseIsOperatorAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.UseIsOperatorAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

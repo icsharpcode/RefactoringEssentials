@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantEnumerableCastCallAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantEnumerableCastCallAnalyzerID,
+            DiagnosticIDs.RedundantEnumerableCastCallAnalyzerID,
             GettextCatalog.GetString("Redundant 'IEnumerable.Cast<T>' or 'IEnumerable.OfType<T>' call"),
             GettextCatalog.GetString("Redundant '{0}' call"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantEnumerableCastCallAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantEnumerableCastCallAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

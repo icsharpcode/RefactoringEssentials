@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ThreadStaticAtInstanceFieldAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ThreadStaticAtInstanceFieldAnalyzerID,
+            DiagnosticIDs.ThreadStaticAtInstanceFieldAnalyzerID,
             GettextCatalog.GetString("[ThreadStatic] doesn't work with instance fields"),
             GettextCatalog.GetString("ThreadStatic does nothing on instance fields"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ThreadStaticAtInstanceFieldAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ThreadStaticAtInstanceFieldAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

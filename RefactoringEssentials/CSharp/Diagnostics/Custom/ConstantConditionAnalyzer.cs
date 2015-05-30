@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConstantConditionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.ConstantConditionAnalyzerID,
+            DiagnosticIDs.ConstantConditionAnalyzerID,
             GettextCatalog.GetString("Condition is always 'true' or always 'false'"),
             GettextCatalog.GetString("Condition is always '{0}'"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.ConstantConditionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConstantConditionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

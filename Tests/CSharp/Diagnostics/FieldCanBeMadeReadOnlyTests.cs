@@ -59,7 +59,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
 {
-#pragma warning disable " + NRefactoryDiagnosticIDs.FieldCanBeMadeReadOnlyAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.FieldCanBeMadeReadOnlyAnalyzerID + @"
     object fooBar = new object();
     public static void Main(string[] args)
     {

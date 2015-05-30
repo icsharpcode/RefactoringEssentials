@@ -74,7 +74,7 @@ class Bar
 {
 	public void FooBar(string[] args)
 	{
-#pragma warning disable " + NRefactoryDiagnosticIDs.ReplaceWithLastOrDefaultAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.ReplaceWithLastOrDefaultAnalyzerID + @"
 		var first = args.Any() ? args.Last() : null;
 	}
 }");

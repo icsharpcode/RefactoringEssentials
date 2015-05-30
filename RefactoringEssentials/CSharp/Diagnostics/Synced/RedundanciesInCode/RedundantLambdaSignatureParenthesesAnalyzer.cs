@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantLambdaSignatureParenthesesAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.RedundantLambdaSignatureParenthesesAnalyzerID,
+            DiagnosticIDs.RedundantLambdaSignatureParenthesesAnalyzerID,
             GettextCatalog.GetString("Redundant lambda signature parentheses"),
             GettextCatalog.GetString("Redundant lambda signature parentheses"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.RedundantLambdaSignatureParenthesesAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantLambdaSignatureParenthesesAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

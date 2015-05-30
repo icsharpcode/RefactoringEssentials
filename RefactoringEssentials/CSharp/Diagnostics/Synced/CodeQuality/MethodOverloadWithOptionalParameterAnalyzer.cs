@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class MethodOverloadWithOptionalParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.MethodOverloadWithOptionalParameterAnalyzerID,
+            DiagnosticIDs.MethodOverloadWithOptionalParameterAnalyzerID,
             GettextCatalog.GetString("Method with optional parameter is hidden by overload"),
             GettextCatalog.GetString("{0} with optional parameter is hidden by overload"),  // Method/Indexer
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.MethodOverloadWithOptionalParameterAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.MethodOverloadWithOptionalParameterAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

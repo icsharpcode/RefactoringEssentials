@@ -58,7 +58,7 @@ class TestClass
 {
     void TestMethod (int i)
     {
-#pragma warning disable " + NRefactoryDiagnosticIDs.EmptyEmbeddedStatementAnalyzerID + @"
+#pragma warning disable " + DiagnosticIDs.EmptyEmbeddedStatementAnalyzerID + @"
         if (i > 0);
     }
 }");

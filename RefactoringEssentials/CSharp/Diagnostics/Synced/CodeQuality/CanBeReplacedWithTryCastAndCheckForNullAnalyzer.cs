@@ -13,13 +13,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class CanBeReplacedWithTryCastAndCheckForNullAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            NRefactoryDiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID,
+            DiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID,
             GettextCatalog.GetString("Type check and casts can be replaced with 'as' and null check"),
             GettextCatalog.GetString("Type check and casts can be replaced with 'as' and null check"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(NRefactoryDiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
