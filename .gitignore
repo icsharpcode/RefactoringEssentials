@@ -1,6 +1,7 @@
 bin
 obj
 *.suo
+*.csproj.user
 /lib/*.dll
 _ReSharper*/*
 /Vsix/source.extension.vsixmanifest
