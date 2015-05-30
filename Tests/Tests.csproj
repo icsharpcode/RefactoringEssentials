@@ -381,6 +381,7 @@
     <Compile Include="CSharp\CodeRefactorings\ConvertStringFormatToInterpolatedStringTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ConvertInterpolatedStringToStringFormatTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VB\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -395,9 +396,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="VB\Diagnostics\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
