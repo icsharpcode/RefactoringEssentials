@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class LocalVariableNotUsedAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.LocalVariableNotUsedAnalyzerID,
+            CSharpDiagnosticIDs.LocalVariableNotUsedAnalyzerID,
             GettextCatalog.GetString("Local variable is never used"),
             GettextCatalog.GetString("Local variable is never used"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.LocalVariableNotUsedAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.LocalVariableNotUsedAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

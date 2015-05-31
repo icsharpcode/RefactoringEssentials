@@ -331,7 +331,7 @@
     <Compile Include="CSharp\CodeRefactorings\Custom\AddOptionalParameterToInvocationCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\SplitStringCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ReverseDirectionForForLoopCodeRefactoringProvider.cs" />
-    <Compile Include="Common\DiagnosticIDs.cs" />
+    <Compile Include="CSharp\Diagnostics\CSharpDiagnosticIDs.cs" />
     <Compile Include="CSharp\Diagnostics\DiagnosticCustomTags.cs" />
     <Compile Include="CSharp\CodeFixes\Custom\CS1105ExtensionMethodMustBeDeclaredStaticCodeFixProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\InitializeFieldFromConstructorParameterCodeRefactoringProvider.cs" />
@@ -535,6 +535,7 @@
     <Compile Include="Util\TypeSyntaxComparer.cs" />
     <Compile Include="Util\TokenComparer.cs" />
     <Compile Include="Util\NamespaceDeclarationSyntaxExtensions.cs" />
+    <Compile Include="VB\Diagnostics\VBDiagnosticIDs.cs" />
     <Compile Include="VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs" />
     <Compile Include="VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />
   </ItemGroup>

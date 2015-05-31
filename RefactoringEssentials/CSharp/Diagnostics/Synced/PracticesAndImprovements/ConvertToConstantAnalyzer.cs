@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertToConstantAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ConvertToConstantAnalyzerID,
+            CSharpDiagnosticIDs.ConvertToConstantAnalyzerID,
             GettextCatalog.GetString("Convert local variable or field to constant"),
             GettextCatalog.GetString("Convert to constant"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertToConstantAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ConvertToConstantAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

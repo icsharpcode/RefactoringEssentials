@@ -113,7 +113,7 @@ public class MyClass : MyBase
 {
 	public override void FooBar(int x = 12)
 	{
-#pragma warning disable " + DiagnosticIDs.BaseMethodCallWithDefaultParameterDiagnosticID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.BaseMethodCallWithDefaultParameterDiagnosticID + @"
 		base.FooBar();
 	}
 }

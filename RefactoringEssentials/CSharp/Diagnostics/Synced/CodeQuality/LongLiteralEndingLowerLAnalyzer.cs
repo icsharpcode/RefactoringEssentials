@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class LongLiteralEndingLowerLAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.LongLiteralEndingLowerLAnalyzerID,
+            CSharpDiagnosticIDs.LongLiteralEndingLowerLAnalyzerID,
             GettextCatalog.GetString("Lowercase 'l' is often confused with '1'"),
             GettextCatalog.GetString("Long literal ends with 'l' instead of 'L'"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.LongLiteralEndingLowerLAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.LongLiteralEndingLowerLAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

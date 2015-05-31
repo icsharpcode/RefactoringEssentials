@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ReplaceWithSingleCallToLongCountAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ReplaceWithSingleCallToLongCountAnalyzerID,
+            CSharpDiagnosticIDs.ReplaceWithSingleCallToLongCountAnalyzerID,
             GettextCatalog.GetString("Redundant Where() call with predicate followed by LongCount()"),
             GettextCatalog.GetString("Replace with single call to 'LongCount()'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReplaceWithSingleCallToLongCountAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ReplaceWithSingleCallToLongCountAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

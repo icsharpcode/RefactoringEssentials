@@ -83,7 +83,7 @@ class C
 {
 	void Main()
 	{
-#pragma warning disable " + DiagnosticIDs.AccessToStaticMemberViaDerivedTypeAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.AccessToStaticMemberViaDerivedTypeAnalyzerID + @"
 		B.F ();
 	}
 }");

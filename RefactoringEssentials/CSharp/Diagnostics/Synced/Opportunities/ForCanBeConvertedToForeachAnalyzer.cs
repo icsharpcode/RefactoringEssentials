@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ForCanBeConvertedToForeachAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ForCanBeConvertedToForeachAnalyzerID,
+            CSharpDiagnosticIDs.ForCanBeConvertedToForeachAnalyzerID,
             GettextCatalog.GetString("Foreach loops are more efficient"),
             GettextCatalog.GetString("'for' loop can be converted to 'foreach'"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ForCanBeConvertedToForeachAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ForCanBeConvertedToForeachAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

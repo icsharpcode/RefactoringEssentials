@@ -160,7 +160,7 @@ class Foo
 {
 	void Bar ()
 	{
-#pragma warning disable " + DiagnosticIDs.SimplifyConditionalTernaryExpressionAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.SimplifyConditionalTernaryExpressionAnalyzerID + @"
 		var a = 1 < 2 ? false : true;
 	}
 }

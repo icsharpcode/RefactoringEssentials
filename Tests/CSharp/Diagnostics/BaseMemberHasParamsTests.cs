@@ -69,7 +69,7 @@ class FooBar2 : FooBar
 
 class FooBar2 : FooBar
 {
-#pragma warning disable " + DiagnosticIDs.BaseMemberHasParamsAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.BaseMemberHasParamsAnalyzerID + @"
 	public override void Foo(string fmt, object[] args)
 	{
 		System.Console.WriteLine(fmt, args);

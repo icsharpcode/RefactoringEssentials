@@ -24,7 +24,7 @@ public enum Foo
         public void TestDisable()
         {
             Analyze<EnumUnderlyingTypeIsIntAnalyzer>(@"
-#pragma warning disable " + DiagnosticIDs.EnumUnderlyingTypeIsIntAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.EnumUnderlyingTypeIsIntAnalyzerID + @"
 public enum Foo : int
 {
     Bar

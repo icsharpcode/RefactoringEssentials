@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EmptyDestructorAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.EmptyDestructorAnalyzerID,
+            CSharpDiagnosticIDs.EmptyDestructorAnalyzerID,
             GettextCatalog.GetString("Empty destructor is redundant"),
             GettextCatalog.GetString("Empty destructor is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EmptyDestructorAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EmptyDestructorAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

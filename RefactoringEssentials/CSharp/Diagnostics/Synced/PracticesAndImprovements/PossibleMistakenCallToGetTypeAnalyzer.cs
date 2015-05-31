@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class PossibleMistakenCallToGetTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.PossibleMistakenCallToGetTypeAnalyzerID,
+            CSharpDiagnosticIDs.PossibleMistakenCallToGetTypeAnalyzerID,
             GettextCatalog.GetString("Possible mistaken call to 'object.GetType()'"),
             GettextCatalog.GetString("Possible mistaken call to 'object.GetType()'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.PossibleMistakenCallToGetTypeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.PossibleMistakenCallToGetTypeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

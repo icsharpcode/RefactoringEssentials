@@ -54,7 +54,7 @@ class Test
 {
 	public void Foo(object[] obj)
 	{
-#pragma warning disable " + DiagnosticIDs.ReplaceWithOfTypeCountAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ReplaceWithOfTypeCountAnalyzerID + @"
 		obj.Select (q => q as Test).Count (q => q != null);
 	}
 }");

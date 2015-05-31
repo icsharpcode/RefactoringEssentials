@@ -14,13 +14,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class NotImplementedExceptionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.NotImplementedExceptionAnalyzerID,
+            CSharpDiagnosticIDs.NotImplementedExceptionAnalyzerID,
             GettextCatalog.GetString("Shows NotImplementedException throws in the quick task bar"),
             GettextCatalog.GetString("Not implemented"),
             DiagnosticAnalyzerCategories.Notifications,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.NotImplementedExceptionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.NotImplementedExceptionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

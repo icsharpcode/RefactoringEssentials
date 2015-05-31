@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ReplaceWithOfTypeSingleOrDefaultAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ReplaceWithOfTypeSingleOrDefaultAnalyzerID,
+            CSharpDiagnosticIDs.ReplaceWithOfTypeSingleOrDefaultAnalyzerID,
             GettextCatalog.GetString("Replace with call to OfType<T>().SingleOrDefault()"),
             GettextCatalog.GetString("Replace with 'OfType<T>().SingleOrDefault()'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReplaceWithOfTypeSingleOrDefaultAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ReplaceWithOfTypeSingleOrDefaultAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

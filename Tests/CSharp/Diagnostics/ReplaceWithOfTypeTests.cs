@@ -184,7 +184,7 @@ class Test
 {
 	public void Foo(object[] obj)
 	{
-#pragma warning disable " + DiagnosticIDs.ReplaceWithOfTypeAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ReplaceWithOfTypeAnalyzerID + @"
 		obj.Where(o => o is Test).Select (o => o as Test);
 	}
 }");

@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConditionalTernaryEqualBranchAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ConditionalTernaryEqualBranchAnalyzerID,
+            CSharpDiagnosticIDs.ConditionalTernaryEqualBranchAnalyzerID,
             GettextCatalog.GetString("'?:' expression has identical true and false branches"),
             GettextCatalog.GetString("'?:' expression has identical true and false branches"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConditionalTernaryEqualBranchAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ConditionalTernaryEqualBranchAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

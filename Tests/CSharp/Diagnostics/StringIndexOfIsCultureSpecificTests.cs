@@ -74,7 +74,7 @@ using System.Collections.Generic;
 class Test {
 	public void StringIndexOfStringCalls(List<string> list)
 	{
-#pragma warning disable " + DiagnosticIDs.StringIndexOfIsCultureSpecificAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.StringIndexOfIsCultureSpecificAnalyzerID + @"
 		list[0].IndexOf("".com"");
 	}
 }");

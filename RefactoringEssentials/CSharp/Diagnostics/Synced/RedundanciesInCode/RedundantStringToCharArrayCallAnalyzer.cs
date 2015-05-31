@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantStringToCharArrayCallAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantStringToCharArrayCallAnalyzerID,
+            CSharpDiagnosticIDs.RedundantStringToCharArrayCallAnalyzerID,
             GettextCatalog.GetString("Redundant 'string.ToCharArray()' call"),
             GettextCatalog.GetString("Redundant 'string.ToCharArray()' call"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantStringToCharArrayCallAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantStringToCharArrayCallAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

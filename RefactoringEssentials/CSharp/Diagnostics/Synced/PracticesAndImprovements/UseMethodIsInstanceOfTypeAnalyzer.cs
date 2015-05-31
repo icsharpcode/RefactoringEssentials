@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class UseMethodIsInstanceOfTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.UseMethodIsInstanceOfTypeAnalyzerID,
+            CSharpDiagnosticIDs.UseMethodIsInstanceOfTypeAnalyzerID,
             GettextCatalog.GetString("Use method IsInstanceOfType"),
             GettextCatalog.GetString("Use method IsInstanceOfType (...)"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.UseMethodIsInstanceOfTypeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.UseMethodIsInstanceOfTypeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

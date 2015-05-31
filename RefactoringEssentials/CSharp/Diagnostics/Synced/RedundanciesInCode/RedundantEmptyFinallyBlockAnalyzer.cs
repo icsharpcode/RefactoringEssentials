@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantEmptyFinallyBlockAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantEmptyFinallyBlockAnalyzerID,
+            CSharpDiagnosticIDs.RedundantEmptyFinallyBlockAnalyzerID,
             GettextCatalog.GetString("Redundant empty finally block"),
             GettextCatalog.GetString("Redundant empty finally block"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantEmptyFinallyBlockAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantEmptyFinallyBlockAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

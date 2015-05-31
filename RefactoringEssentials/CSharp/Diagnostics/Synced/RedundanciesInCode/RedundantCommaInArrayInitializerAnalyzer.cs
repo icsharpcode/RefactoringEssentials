@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantCommaInArrayInitializerAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID,
+            CSharpDiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID,
             GettextCatalog.GetString("Redundant comma in array initializer"),
             GettextCatalog.GetString("Redundant comma in {0}"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

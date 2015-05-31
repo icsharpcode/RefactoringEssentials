@@ -194,7 +194,7 @@ class C
 	void F()
 	{
 		A a = new A();
-#pragma warning disable " + DiagnosticIDs.InvokeAsExtensionMethodAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.InvokeAsExtensionMethodAnalyzerID + @"
 		B.Ext (a, 1);
 	}
 }");

@@ -12,13 +12,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class UnassignedReadonlyFieldAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.UnassignedReadonlyFieldAnalyzerID,
+            CSharpDiagnosticIDs.UnassignedReadonlyFieldAnalyzerID,
             GettextCatalog.GetString("Unassigned readonly field"),
             GettextCatalog.GetString("Readonly field is never assigned"),
             DiagnosticAnalyzerCategories.CompilerWarnings,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.UnassignedReadonlyFieldAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.UnassignedReadonlyFieldAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
@@ -137,7 +137,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(DiagnosticIDs.UnassignedReadonlyFieldAnalyzerID);
+                return ImmutableArray.Create(CSharpDiagnosticIDs.UnassignedReadonlyFieldAnalyzerID);
             }
         }
 

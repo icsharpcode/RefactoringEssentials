@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ReplaceWithOfTypeLongCountAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ReplaceWithOfTypeLongCountAnalyzerID,
+            CSharpDiagnosticIDs.ReplaceWithOfTypeLongCountAnalyzerID,
             GettextCatalog.GetString("Replace with call to OfType<T>().LongCount()"),
             GettextCatalog.GetString("Replace with 'OfType<T>().LongCount()'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReplaceWithOfTypeLongCountAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ReplaceWithOfTypeLongCountAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

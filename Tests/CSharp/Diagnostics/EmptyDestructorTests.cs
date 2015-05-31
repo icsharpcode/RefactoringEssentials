@@ -57,7 +57,7 @@ class Foo
             Analyze<EmptyDestructorAnalyzer>(@"
 class Foo
 {
-#pragma warning disable " + DiagnosticIDs.EmptyDestructorAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.EmptyDestructorAnalyzerID + @"
 	~Foo()
 	{
 	}

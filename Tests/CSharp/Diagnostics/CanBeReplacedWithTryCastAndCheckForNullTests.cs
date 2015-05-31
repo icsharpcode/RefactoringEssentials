@@ -167,7 +167,7 @@ class Bar
 {
 	public Bar Baz (object foo)
 	{
-#pragma warning disable " + DiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.CanBeReplacedWithTryCastAndCheckForNullAnalyzerID + @"
 		if (foo is Bar) {
 			Baz ((Bar)foo);
 			return (Bar)foo;

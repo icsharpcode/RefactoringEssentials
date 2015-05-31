@@ -204,7 +204,7 @@ namespace Demo
 		public static void main(string[] args)
 		{
 			int a = 1;
-#pragma warning disable " + DiagnosticIDs.OperatorIsCanBeUsedAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.OperatorIsCanBeUsedAnalyzerID + @"
 			if ((typeof (int) == a.GetType())) {
 			}
 		}

@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantObjectOrCollectionInitializerAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantObjectOrCollectionInitializerAnalyzerID,
+            CSharpDiagnosticIDs.RedundantObjectOrCollectionInitializerAnalyzerID,
             GettextCatalog.GetString("Redundant empty object or collection initializer"),
             GettextCatalog.GetString("Empty object or collection initializer is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantObjectOrCollectionInitializerAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantObjectOrCollectionInitializerAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

@@ -13,13 +13,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertClosureToMethodGroupAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ConvertClosureToMethodDiagnosticID,
+            CSharpDiagnosticIDs.ConvertClosureToMethodDiagnosticID,
             GettextCatalog.GetString("Convert anonymous method to method group"),
             GettextCatalog.GetString("{0}"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,//"Anonymous method or lambda expression can be simplified to method group"
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertClosureToMethodDiagnosticID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ConvertClosureToMethodDiagnosticID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

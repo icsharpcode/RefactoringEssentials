@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EmptyStatementAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.EmptyStatementAnalyzerID,
+            CSharpDiagnosticIDs.EmptyStatementAnalyzerID,
             GettextCatalog.GetString("Empty statement is redundant"),
             GettextCatalog.GetString("Empty statement is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EmptyStatementAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EmptyStatementAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

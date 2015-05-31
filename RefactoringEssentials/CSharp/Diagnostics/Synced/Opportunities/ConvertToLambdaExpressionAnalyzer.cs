@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertToLambdaExpressionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ConvertToLambdaExpressionAnalyzerID,
+            CSharpDiagnosticIDs.ConvertToLambdaExpressionAnalyzerID,
             GettextCatalog.GetString("Convert to lambda with expression"),
             GettextCatalog.GetString("Can be converted to expression"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertToLambdaExpressionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ConvertToLambdaExpressionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

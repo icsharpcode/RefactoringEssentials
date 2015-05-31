@@ -122,7 +122,7 @@ namespace RefactoringEssentials.DocGenerator
             var codeFixInstance = Activator.CreateInstance(codeFixType) as CodeFixProvider;
             if (codeFixInstance != null)
             {
-                if (!codeFixInstance.FixableDiagnosticIds.Any(id => id.StartsWith("NR")))
+                if (!codeFixInstance.FixableDiagnosticIds.Any(id => id.StartsWith("RE")))
                 {
                     // Try to find an appropriate analyzer class in NR6Pack
                     string analyzerClassName = codeFixType.FullName.Replace("CodeFixProvider", "Analyzer");

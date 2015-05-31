@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class PossibleAssignmentToReadonlyFieldAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.PossibleAssignmentToReadonlyFieldAnalyzerID,
+            CSharpDiagnosticIDs.PossibleAssignmentToReadonlyFieldAnalyzerID,
             GettextCatalog.GetString("Check if a readonly field is used as assignment target"),
             "{0}",
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.PossibleAssignmentToReadonlyFieldAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.PossibleAssignmentToReadonlyFieldAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

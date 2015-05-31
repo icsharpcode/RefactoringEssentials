@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class AccessToStaticMemberViaDerivedTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.AccessToStaticMemberViaDerivedTypeAnalyzerID,
+            CSharpDiagnosticIDs.AccessToStaticMemberViaDerivedTypeAnalyzerID,
             GettextCatalog.GetString("Suggests using the class declaring a static function when calling it"),
             GettextCatalog.GetString("Call to static member via a derived class"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.AccessToStaticMemberViaDerivedTypeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.AccessToStaticMemberViaDerivedTypeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

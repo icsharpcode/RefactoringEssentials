@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantUnsafeContextAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantUnsafeContextAnalyzerID,
+            CSharpDiagnosticIDs.RedundantUnsafeContextAnalyzerID,
             GettextCatalog.GetString("Unsafe modifier in redundant in unsafe context or when no unsafe constructs are used"),
             GettextCatalog.GetString("'unsafe' modifier is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantUnsafeContextAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantUnsafeContextAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

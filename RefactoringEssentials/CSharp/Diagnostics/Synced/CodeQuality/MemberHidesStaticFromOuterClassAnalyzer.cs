@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class MemberHidesStaticFromOuterClassAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.MemberHidesStaticFromOuterClassAnalyzerID,
+            CSharpDiagnosticIDs.MemberHidesStaticFromOuterClassAnalyzerID,
             GettextCatalog.GetString("Member hides static member from outer class"),
             GettextCatalog.GetString("{0} '{1}' hides {2} from outer class"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.MemberHidesStaticFromOuterClassAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.MemberHidesStaticFromOuterClassAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

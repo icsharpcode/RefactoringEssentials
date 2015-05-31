@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class UnusedParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.UnusedParameterAnalyzerID,
+            CSharpDiagnosticIDs.UnusedParameterAnalyzerID,
             GettextCatalog.GetString("Parameter is never used"),
             GettextCatalog.GetString("Parameter is never used"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.UnusedParameterAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.UnusedParameterAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

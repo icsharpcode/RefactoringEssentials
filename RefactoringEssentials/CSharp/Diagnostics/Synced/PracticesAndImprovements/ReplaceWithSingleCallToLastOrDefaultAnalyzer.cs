@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ReplaceWithSingleCallToLastOrDefaultAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ReplaceWithSingleCallToLastOrDefaultAnalyzerID,
+            CSharpDiagnosticIDs.ReplaceWithSingleCallToLastOrDefaultAnalyzerID,
             GettextCatalog.GetString("Redundant Where() call with predicate followed by LastOrDefault()"),
             GettextCatalog.GetString("Replace with single call to 'LastOrDefault()'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReplaceWithSingleCallToLastOrDefaultAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ReplaceWithSingleCallToLastOrDefaultAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertNullableToShortFormAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ConvertNullableToShortFormAnalyzerID,
+            CSharpDiagnosticIDs.ConvertNullableToShortFormAnalyzerID,
             GettextCatalog.GetString("Convert 'Nullable<T>' to the short form 'T?'"),
             GettextCatalog.GetString("Nullable type can be simplified"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertNullableToShortFormAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ConvertNullableToShortFormAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class SimplifyConditionalTernaryExpressionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.SimplifyConditionalTernaryExpressionAnalyzerID,
+            CSharpDiagnosticIDs.SimplifyConditionalTernaryExpressionAnalyzerID,
             GettextCatalog.GetString("Conditional expression can be simplified"),
             GettextCatalog.GetString("Simplify conditional expression"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.SimplifyConditionalTernaryExpressionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.SimplifyConditionalTernaryExpressionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

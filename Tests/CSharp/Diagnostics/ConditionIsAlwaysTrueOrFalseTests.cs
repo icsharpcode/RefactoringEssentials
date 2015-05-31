@@ -115,7 +115,7 @@ class Test
 {
 	void Foo(int i)
 	{
-#pragma warning disable " + DiagnosticIDs.ConditionIsAlwaysTrueOrFalseAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ConditionIsAlwaysTrueOrFalseAnalyzerID + @"
 		if (i == null) {
 		}
 	}

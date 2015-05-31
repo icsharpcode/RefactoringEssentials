@@ -68,7 +68,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 	public void Foo<T> (T t)
 	{
-#pragma warning disable " + DiagnosticIDs.CompareNonConstrainedGenericWithNullAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.CompareNonConstrainedGenericWithNullAnalyzerID + @"
 		if (t == null) {
 		}
 	}

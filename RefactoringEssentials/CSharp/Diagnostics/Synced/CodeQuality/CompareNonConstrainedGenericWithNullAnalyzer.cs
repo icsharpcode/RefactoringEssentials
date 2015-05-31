@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class CompareNonConstrainedGenericWithNullAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.CompareNonConstrainedGenericWithNullAnalyzerID,
+            CSharpDiagnosticIDs.CompareNonConstrainedGenericWithNullAnalyzerID,
             GettextCatalog.GetString("Possible compare of value type with 'null'"),
             GettextCatalog.GetString("Possible compare of value type with 'null'"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.CompareNonConstrainedGenericWithNullAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.CompareNonConstrainedGenericWithNullAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

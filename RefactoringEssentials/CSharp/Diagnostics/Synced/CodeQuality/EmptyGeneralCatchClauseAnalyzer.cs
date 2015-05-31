@@ -13,13 +13,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EmptyGeneralCatchClauseAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.EmptyGeneralCatchClauseAnalyzerID,
+            CSharpDiagnosticIDs.EmptyGeneralCatchClauseAnalyzerID,
             GettextCatalog.GetString("A catch clause that catches System.Exception and has an empty body"),
             GettextCatalog.GetString("Empty general catch clause suppresses any error"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EmptyGeneralCatchClauseAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EmptyGeneralCatchClauseAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

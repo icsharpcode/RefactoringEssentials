@@ -62,7 +62,7 @@ public class Test
 {
 	public void Foo (string bar)
 	{
-#pragma warning disable " + DiagnosticIDs.StringLastIndexOfIsCultureSpecificAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.StringLastIndexOfIsCultureSpecificAnalyzerID + @"
 		bar.LastIndexOf ("".com"");
 	}
 }

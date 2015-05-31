@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertIfStatementToConditionalTernaryExpressionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ConvertIfStatementToConditionalTernaryExpressionAnalyzerID,
+            CSharpDiagnosticIDs.ConvertIfStatementToConditionalTernaryExpressionAnalyzerID,
             GettextCatalog.GetString("Convert 'if' to '?:'"),
             GettextCatalog.GetString("Convert to '?:' expression"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertIfStatementToConditionalTernaryExpressionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ConvertIfStatementToConditionalTernaryExpressionAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

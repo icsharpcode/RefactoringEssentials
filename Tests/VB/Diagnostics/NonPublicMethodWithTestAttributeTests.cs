@@ -104,7 +104,7 @@ End Class");
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses + @"
 <TestFixture>
 Class Tests 
-#Disable Warning " + DiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID + @"
+#Disable Warning " + VBDiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID + @"
 	<Test>
 	Friend Sub NonPublicMethod()
 	End Sub

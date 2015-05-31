@@ -17,7 +17,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(DiagnosticIDs.RedundantInternalAnalyzerID);
+                return ImmutableArray.Create(CSharpDiagnosticIDs.RedundantInternalAnalyzerID);
             }
         }
 

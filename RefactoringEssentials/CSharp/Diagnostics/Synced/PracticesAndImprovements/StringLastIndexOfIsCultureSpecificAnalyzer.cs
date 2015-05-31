@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class StringLastIndexOfIsCultureSpecificAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.StringLastIndexOfIsCultureSpecificAnalyzerID,
+            CSharpDiagnosticIDs.StringLastIndexOfIsCultureSpecificAnalyzerID,
             GettextCatalog.GetString("Warns when a culture-aware 'LastIndexOf' call is used by default."),
             GettextCatalog.GetString("'LastIndexOf' is culture-aware and missing a StringComparison argument"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.StringLastIndexOfIsCultureSpecificAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.StringLastIndexOfIsCultureSpecificAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

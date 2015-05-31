@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class StringEndsWithIsCultureSpecificAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.StringEndsWithIsCultureSpecificAnalyzerID,
+            CSharpDiagnosticIDs.StringEndsWithIsCultureSpecificAnalyzerID,
             GettextCatalog.GetString("Warns when a culture-aware 'EndsWith' call is used by default."),
             GettextCatalog.GetString("'EndsWith' is culture-aware and missing a StringComparison argument"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.StringEndsWithIsCultureSpecificAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.StringEndsWithIsCultureSpecificAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ReferenceEqualsWithValueTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ReferenceEqualsWithValueTypeAnalyzerID,
+            CSharpDiagnosticIDs.ReferenceEqualsWithValueTypeAnalyzerID,
             GettextCatalog.GetString("Check for reference equality instead"),
             GettextCatalog.GetString("'Object.ReferenceEquals' is always false because it is called with value type"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReferenceEqualsWithValueTypeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ReferenceEqualsWithValueTypeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

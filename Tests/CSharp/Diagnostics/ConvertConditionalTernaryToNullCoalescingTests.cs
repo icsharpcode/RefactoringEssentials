@@ -86,7 +86,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 	void Bar (string str)
 	{
-#pragma warning disable " + DiagnosticIDs.ConvertConditionalTernaryToNullCoalescingAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ConvertConditionalTernaryToNullCoalescingAnalyzerID + @"
 		string c = str != null ? str : ""default"";
 	}
 }");

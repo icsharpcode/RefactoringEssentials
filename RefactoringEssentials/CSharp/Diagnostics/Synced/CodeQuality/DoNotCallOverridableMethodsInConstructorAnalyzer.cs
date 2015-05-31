@@ -12,13 +12,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class DoNotCallOverridableMethodsInConstructorAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.DoNotCallOverridableMethodsInConstructorAnalyzerID,
+            CSharpDiagnosticIDs.DoNotCallOverridableMethodsInConstructorAnalyzerID,
             GettextCatalog.GetString("Warns about calls to virtual member functions occuring in the constructor"),
             GettextCatalog.GetString("Virtual member call in constructor"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.DoNotCallOverridableMethodsInConstructorAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.DoNotCallOverridableMethodsInConstructorAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

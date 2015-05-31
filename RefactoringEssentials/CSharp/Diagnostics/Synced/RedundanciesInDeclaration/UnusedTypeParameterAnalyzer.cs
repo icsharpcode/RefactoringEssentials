@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class UnusedTypeParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.UnusedTypeParameterAnalyzerID,
+            CSharpDiagnosticIDs.UnusedTypeParameterAnalyzerID,
             GettextCatalog.GetString("Type parameter is never used"),
             GettextCatalog.GetString("Type parameter '{0}' is never used"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.UnusedTypeParameterAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.UnusedTypeParameterAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

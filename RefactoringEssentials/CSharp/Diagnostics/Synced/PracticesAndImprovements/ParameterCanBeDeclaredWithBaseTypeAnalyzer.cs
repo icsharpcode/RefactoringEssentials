@@ -20,13 +20,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         }
 
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ParameterCanBeDeclaredWithBaseTypeAnalyzerID,
+            CSharpDiagnosticIDs.ParameterCanBeDeclaredWithBaseTypeAnalyzerID,
             GettextCatalog.GetString("Finds parameters that can be demoted to a base class"),
             GettextCatalog.GetString("Parameter can be declared with base type"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ParameterCanBeDeclaredWithBaseTypeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ParameterCanBeDeclaredWithBaseTypeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

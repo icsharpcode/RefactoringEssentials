@@ -13,23 +13,23 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class NotResolvedInTextAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.NotResolvedInTextAnalyzerID,
+            CSharpDiagnosticIDs.NotResolvedInTextAnalyzerID,
             GettextCatalog.GetString("Cannot resolve symbol in text argument"),
             GettextCatalog.GetString("The parameter '{0}' can't be resolved"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.NotResolvedInTextAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.NotResolvedInTextAnalyzerID)
         );
 
         static readonly DiagnosticDescriptor descriptor2 = new DiagnosticDescriptor(
-            DiagnosticIDs.NotResolvedInTextAnalyzer_SwapID,
+            CSharpDiagnosticIDs.NotResolvedInTextAnalyzer_SwapID,
             GettextCatalog.GetString("The parameter name is on the wrong argument"),
             GettextCatalog.GetString("The parameter name is on the wrong argument"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.NotResolvedInTextAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.NotResolvedInTextAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor, descriptor2);

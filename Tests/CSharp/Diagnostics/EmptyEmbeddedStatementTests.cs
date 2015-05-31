@@ -58,7 +58,7 @@ class TestClass
 {
     void TestMethod (int i)
     {
-#pragma warning disable " + DiagnosticIDs.EmptyEmbeddedStatementAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.EmptyEmbeddedStatementAnalyzerID + @"
         if (i > 0);
     }
 }");

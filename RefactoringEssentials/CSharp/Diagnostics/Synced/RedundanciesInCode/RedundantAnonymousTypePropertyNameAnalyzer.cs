@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantAnonymousTypePropertyNameAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantAnonymousTypePropertyNameAnalyzerID,
+            CSharpDiagnosticIDs.RedundantAnonymousTypePropertyNameAnalyzerID,
             GettextCatalog.GetString("Redundant explicit property name"),
             GettextCatalog.GetString("The name can be inferred from the initializer expression"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantAnonymousTypePropertyNameAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantAnonymousTypePropertyNameAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

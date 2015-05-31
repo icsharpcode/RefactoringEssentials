@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RemoveRedundantOrStatementAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RemoveRedundantOrStatementAnalyzerID,
+            CSharpDiagnosticIDs.RemoveRedundantOrStatementAnalyzerID,
             GettextCatalog.GetString("Remove redundant statement"),
             GettextCatalog.GetString("Statement is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RemoveRedundantOrStatementAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RemoveRedundantOrStatementAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

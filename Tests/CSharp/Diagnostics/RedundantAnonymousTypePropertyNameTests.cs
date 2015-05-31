@@ -68,7 +68,7 @@ class TestClass
 {
 	public void Test(FooBar f)
 	{
-#pragma warning disable " + DiagnosticIDs.RedundantAnonymousTypePropertyNameAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantAnonymousTypePropertyNameAnalyzerID + @"
 		var n = new { Foo = f.Foo, b = 12 };
 	}
 }");

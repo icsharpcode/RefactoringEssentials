@@ -128,7 +128,7 @@ class Foo
 {
     void Bar()
     {
-#pragma warning disable " + DiagnosticIDs.ConvertNullableToShortFormAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ConvertNullableToShortFormAnalyzerID + @"
         System.Nullable<int> a;
     }
 }");

@@ -18,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(DiagnosticIDs.ConstantConditionAnalyzerID);
+                return ImmutableArray.Create(CSharpDiagnosticIDs.ConstantConditionAnalyzerID);
             }
         }
 

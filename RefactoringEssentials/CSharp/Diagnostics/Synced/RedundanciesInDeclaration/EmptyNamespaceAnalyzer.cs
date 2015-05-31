@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EmptyNamespaceAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.EmptyNamespaceAnalyzerID,
+            CSharpDiagnosticIDs.EmptyNamespaceAnalyzerID,
             GettextCatalog.GetString("Empty namespace declaration is redundant"),
             GettextCatalog.GetString("Empty namespace declaration is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EmptyNamespaceAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EmptyNamespaceAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

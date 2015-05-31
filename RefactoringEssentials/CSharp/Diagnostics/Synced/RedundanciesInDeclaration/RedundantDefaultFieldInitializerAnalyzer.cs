@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantDefaultFieldInitializerAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantDefaultFieldInitializerAnalyzerID,
+            CSharpDiagnosticIDs.RedundantDefaultFieldInitializerAnalyzerID,
             GettextCatalog.GetString("Initializing field with default value is redundant"),
             GettextCatalog.GetString("Initializing field by default value is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantDefaultFieldInitializerAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantDefaultFieldInitializerAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

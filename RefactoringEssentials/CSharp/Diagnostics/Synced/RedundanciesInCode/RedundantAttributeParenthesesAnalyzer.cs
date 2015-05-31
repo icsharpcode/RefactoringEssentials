@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantAttributeParenthesesAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantAttributeParenthesesAnalyzerID,
+            CSharpDiagnosticIDs.RedundantAttributeParenthesesAnalyzerID,
             GettextCatalog.GetString("Parentheses are redundant if attribute has no arguments"),
             GettextCatalog.GetString("Parentheses are redundant if attribute has no arguments"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantAttributeParenthesesAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantAttributeParenthesesAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

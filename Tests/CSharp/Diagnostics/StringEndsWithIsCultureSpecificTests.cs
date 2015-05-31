@@ -36,7 +36,7 @@ public class Test
 {
 	public void Foo (string bar)
 	{
-#pragma warning disable " + DiagnosticIDs.StringEndsWithIsCultureSpecificAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.StringEndsWithIsCultureSpecificAnalyzerID + @"
 		bar.EndsWith ("".com"");
 	}
 }

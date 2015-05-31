@@ -54,7 +54,7 @@ class Test
 {
 	public void Foo(object[] obj)
 	{
-#pragma warning disable " + DiagnosticIDs.ReplaceWithOfTypeSingleAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ReplaceWithOfTypeSingleAnalyzerID + @"
 		obj.Select (q => q as Test).Single (q => q != null);
 	}
 }");

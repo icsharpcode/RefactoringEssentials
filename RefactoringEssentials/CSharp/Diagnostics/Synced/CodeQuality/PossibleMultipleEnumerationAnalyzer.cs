@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class PossibleMultipleEnumerationAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.PossibleMultipleEnumerationAnalyzerID,
+            CSharpDiagnosticIDs.PossibleMultipleEnumerationAnalyzerID,
             GettextCatalog.GetString("Possible multiple enumeration of IEnumerable"),
             GettextCatalog.GetString("Possible multiple enumeration of IEnumerable"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.PossibleMultipleEnumerationAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.PossibleMultipleEnumerationAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

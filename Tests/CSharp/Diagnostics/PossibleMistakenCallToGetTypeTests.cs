@@ -57,7 +57,7 @@ public class Bar
 {
 	public void FooBar(Type a)
 	{
-#pragma warning disable " + DiagnosticIDs.PossibleMistakenCallToGetTypeAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.PossibleMistakenCallToGetTypeAnalyzerID + @"
 		Console.WriteLine(a.GetType());
 	}
 }

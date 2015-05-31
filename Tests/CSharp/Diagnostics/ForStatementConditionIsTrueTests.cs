@@ -77,7 +77,7 @@ namespace resharper_test
 	{
 		public void method()
 		{
-#pragma warning disable " + DiagnosticIDs.ForStatementConditionIsTrueAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ForStatementConditionIsTrueAnalyzerID + @"
 			for (; true ;)
 			{}
 		}

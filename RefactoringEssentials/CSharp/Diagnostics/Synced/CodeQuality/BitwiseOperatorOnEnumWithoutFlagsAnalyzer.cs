@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class BitwiseOperatorOnEnumWithoutFlagsAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.BitwiseOperatorOnEnumWithoutFlagsAnalyzerID,
+            CSharpDiagnosticIDs.BitwiseOperatorOnEnumWithoutFlagsAnalyzerID,
             GettextCatalog.GetString("Bitwise operation on enum which has no [Flags] attribute"),
             GettextCatalog.GetString("Bitwise operation on enum not marked with [Flags] attribute"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.BitwiseOperatorOnEnumWithoutFlagsAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.BitwiseOperatorOnEnumWithoutFlagsAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

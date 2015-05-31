@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class ConvertIfDoToWhileAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ConvertIfDoToWhileAnalyzerID,
+            CSharpDiagnosticIDs.ConvertIfDoToWhileAnalyzerID,
             GettextCatalog.GetString("Convert 'if-do-while' to 'while' statement"),
             GettextCatalog.GetString("Statement can be simplified to 'while' statement"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ConvertIfDoToWhileAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ConvertIfDoToWhileAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

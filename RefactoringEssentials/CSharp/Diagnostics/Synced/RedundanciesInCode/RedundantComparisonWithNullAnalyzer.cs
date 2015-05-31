@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantComparisonWithNullAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantComparisonWithNullAnalyzerID,
+            CSharpDiagnosticIDs.RedundantComparisonWithNullAnalyzerID,
             GettextCatalog.GetString("When 'is' keyword is used, which implicitly check null"),
             GettextCatalog.GetString("Redundant comparison with 'null'"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantComparisonWithNullAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantComparisonWithNullAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

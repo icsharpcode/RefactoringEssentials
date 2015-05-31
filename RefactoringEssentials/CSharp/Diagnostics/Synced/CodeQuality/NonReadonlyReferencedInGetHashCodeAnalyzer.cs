@@ -13,13 +13,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class NonReadonlyReferencedInGetHashCodeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.NonReadonlyReferencedInGetHashCodeAnalyzerID,
+            CSharpDiagnosticIDs.NonReadonlyReferencedInGetHashCodeAnalyzerID,
             GettextCatalog.GetString("Non-readonly field referenced in 'GetHashCode()'"),
             GettextCatalog.GetString("Non-readonly field referenced in 'GetHashCode()'"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.NonReadonlyReferencedInGetHashCodeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.NonReadonlyReferencedInGetHashCodeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

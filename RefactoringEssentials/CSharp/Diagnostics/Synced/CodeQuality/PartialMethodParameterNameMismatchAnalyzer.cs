@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class PartialMethodParameterNameMismatchAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.PartialMethodParameterNameMismatchAnalyzerID,
+            CSharpDiagnosticIDs.PartialMethodParameterNameMismatchAnalyzerID,
             GettextCatalog.GetString("Parameter name differs in partial method declaration"),
             GettextCatalog.GetString("Parameter name differs in partial method declaration"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.PartialMethodParameterNameMismatchAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.PartialMethodParameterNameMismatchAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

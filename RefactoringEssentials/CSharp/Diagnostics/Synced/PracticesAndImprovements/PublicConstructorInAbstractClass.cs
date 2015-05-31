@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class PublicConstructorInAbstractClassAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.PublicConstructorInAbstractClassAnalyzerID,
+            CSharpDiagnosticIDs.PublicConstructorInAbstractClassAnalyzerID,
             GettextCatalog.GetString("Constructor in abstract class should not be public"),
             GettextCatalog.GetString("Constructor in abstract class should not be public"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.PublicConstructorInAbstractClassAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.PublicConstructorInAbstractClassAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

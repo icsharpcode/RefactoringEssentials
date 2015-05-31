@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class NameOfSuggestionAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.NameOfSuggestionAnalyzerID,
+            CSharpDiagnosticIDs.NameOfSuggestionAnalyzerID,
             GettextCatalog.GetString("Suggest the usage of the nameof operator"),
             GettextCatalog.GetString("Use 'nameof({0})' expression instead."),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.NameOfSuggestionAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.NameOfSuggestionAnalyzerID)
         );
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
 

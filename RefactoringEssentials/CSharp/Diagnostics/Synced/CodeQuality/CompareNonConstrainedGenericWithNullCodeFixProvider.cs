@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(DiagnosticIDs.CompareNonConstrainedGenericWithNullAnalyzerID);
+                return ImmutableArray.Create(CSharpDiagnosticIDs.CompareNonConstrainedGenericWithNullAnalyzerID);
             }
         }
 

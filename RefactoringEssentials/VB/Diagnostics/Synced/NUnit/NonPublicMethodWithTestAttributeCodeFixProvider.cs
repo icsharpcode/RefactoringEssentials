@@ -16,7 +16,7 @@ namespace RefactoringEssentials.VB.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(DiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID);
+                return ImmutableArray.Create(VBDiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID);
             }
         }
 

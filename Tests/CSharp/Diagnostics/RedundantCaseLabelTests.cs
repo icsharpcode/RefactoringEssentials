@@ -76,7 +76,7 @@ class TestClass
 	void TestMethod (int i)
 	{
 		switch (i) {
-#pragma warning disable " + DiagnosticIDs.RedundantCaseLabelAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantCaseLabelAnalyzerID + @"
 			case 1:
 			default:
 				break;

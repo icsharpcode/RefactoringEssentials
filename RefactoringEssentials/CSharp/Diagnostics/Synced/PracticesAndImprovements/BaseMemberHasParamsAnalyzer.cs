@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class BaseMemberHasParamsAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.BaseMemberHasParamsAnalyzerID,
+            CSharpDiagnosticIDs.BaseMemberHasParamsAnalyzerID,
             GettextCatalog.GetString("Base parameter has 'params' modifier, but missing in overrider"),
             GettextCatalog.GetString("Base method '{0}' has a 'params' modifier"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.BaseMemberHasParamsAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.BaseMemberHasParamsAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

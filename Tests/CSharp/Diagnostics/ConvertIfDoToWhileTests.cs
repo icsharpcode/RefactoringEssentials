@@ -78,7 +78,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 	public void FooFoo (int x)
 	{
-#pragma warning disable " + DiagnosticIDs.ConvertIfDoToWhileAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ConvertIfDoToWhileAnalyzerID + @"
 		if (x < 10) {
 			do {
 				Console.WriteLine (x++);

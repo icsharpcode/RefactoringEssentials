@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(DiagnosticIDs.ConvertToStaticTypeAnalyzerID);
+                return ImmutableArray.Create(CSharpDiagnosticIDs.ConvertToStaticTypeAnalyzerID);
             }
         }
 

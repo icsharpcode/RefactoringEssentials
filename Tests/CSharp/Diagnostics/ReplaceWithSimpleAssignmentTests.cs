@@ -58,7 +58,7 @@ class Test
 {
 	void Foo (bool b)
 	{
-#pragma warning disable " + DiagnosticIDs.ReplaceWithSimpleAssignmentAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.ReplaceWithSimpleAssignmentAnalyzerID + @"
 		b |= true;
 	}
 }

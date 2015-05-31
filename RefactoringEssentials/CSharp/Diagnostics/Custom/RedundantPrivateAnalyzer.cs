@@ -14,13 +14,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantPrivateAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantPrivateAnalyzerID,
+            CSharpDiagnosticIDs.RedundantPrivateAnalyzerID,
             GettextCatalog.GetString("Removes 'private' modifiers that are not required"),
             GettextCatalog.GetString("'private' modifier is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantPrivateAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantPrivateAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

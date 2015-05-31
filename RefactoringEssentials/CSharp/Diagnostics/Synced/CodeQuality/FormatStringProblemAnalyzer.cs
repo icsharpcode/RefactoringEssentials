@@ -9,13 +9,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class FormatStringProblemAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.FormatStringProblemAnalyzerID,
+            CSharpDiagnosticIDs.FormatStringProblemAnalyzerID,
             GettextCatalog.GetString("The string format index is out of bounds of the passed arguments"),
             GettextCatalog.GetString("The index '{0}' is out of bounds of the passed arguments"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.FormatStringProblemAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.FormatStringProblemAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

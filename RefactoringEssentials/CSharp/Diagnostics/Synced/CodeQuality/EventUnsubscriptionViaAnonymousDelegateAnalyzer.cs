@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EventUnsubscriptionViaAnonymousDelegateAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.EventUnsubscriptionViaAnonymousDelegateAnalyzerID,
+            CSharpDiagnosticIDs.EventUnsubscriptionViaAnonymousDelegateAnalyzerID,
             GettextCatalog.GetString("Event unsubscription via anonymous delegate is useless"),
             GettextCatalog.GetString("Event unsubscription via anonymous delegate is useless"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EventUnsubscriptionViaAnonymousDelegateAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EventUnsubscriptionViaAnonymousDelegateAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class InvokeAsExtensionMethodAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.InvokeAsExtensionMethodAnalyzerID,
+            CSharpDiagnosticIDs.InvokeAsExtensionMethodAnalyzerID,
             GettextCatalog.GetString("If an extension method is called as static method convert it to method syntax"),
             GettextCatalog.GetString("Convert static method call to extension method call"),
             DiagnosticAnalyzerCategories.Opportunities,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.InvokeAsExtensionMethodAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.InvokeAsExtensionMethodAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

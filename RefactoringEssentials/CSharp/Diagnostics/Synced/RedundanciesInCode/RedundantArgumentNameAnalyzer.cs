@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantArgumentNameAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantArgumentNameAnalyzerID,
+            CSharpDiagnosticIDs.RedundantArgumentNameAnalyzerID,
             GettextCatalog.GetString("Redundant explicit argument name specification"),
             GettextCatalog.GetString("Redundant argument name specification"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantArgumentNameAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantArgumentNameAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

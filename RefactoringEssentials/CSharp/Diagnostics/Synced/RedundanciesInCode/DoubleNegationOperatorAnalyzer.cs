@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class DoubleNegationOperatorAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.DoubleNegationOperatorAnalyzerID,
+            CSharpDiagnosticIDs.DoubleNegationOperatorAnalyzerID,
             GettextCatalog.GetString("Double negation is redundant"),
             GettextCatalog.GetString("Double negation is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.DoubleNegationOperatorAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.DoubleNegationOperatorAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

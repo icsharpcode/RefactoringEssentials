@@ -60,7 +60,7 @@ class Foo
             Analyze<SealedMemberInSealedClassAnalyzer>(@"
 sealed class Foo
 {
-#pragma warning disable " + DiagnosticIDs.SealedMemberInSealedClassAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.SealedMemberInSealedClassAnalyzerID + @"
 	public sealed override string ToString()
 	{
 		return ""''"";

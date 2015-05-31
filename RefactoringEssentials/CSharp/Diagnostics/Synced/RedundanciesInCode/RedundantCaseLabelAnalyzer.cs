@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantCaseLabelAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantCaseLabelAnalyzerID,
+            CSharpDiagnosticIDs.RedundantCaseLabelAnalyzerID,
             GettextCatalog.GetString("Redundant case label"),
             GettextCatalog.GetString("'case' label is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantCaseLabelAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantCaseLabelAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

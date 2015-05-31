@@ -11,13 +11,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class NonPublicMethodWithTestAttributeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID,
+            CSharpDiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID,
             GettextCatalog.GetString("Non public methods are not found by NUnit"),
             GettextCatalog.GetString("NUnit test methods should be public"),
             DiagnosticAnalyzerCategories.NUnit,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

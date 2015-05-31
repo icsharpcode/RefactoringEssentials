@@ -117,7 +117,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-#pragma warning disable " + DiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID + @"
+#pragma warning disable " + CSharpDiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID + @"
 	[Test]
 	void NonPublicMethod()
 	{

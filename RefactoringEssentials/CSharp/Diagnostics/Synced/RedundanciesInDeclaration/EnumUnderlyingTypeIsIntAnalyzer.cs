@@ -10,13 +10,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class EnumUnderlyingTypeIsIntAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.EnumUnderlyingTypeIsIntAnalyzerID,
+            CSharpDiagnosticIDs.EnumUnderlyingTypeIsIntAnalyzerID,
             GettextCatalog.GetString("The default underlying type of enums is int, so defining it explicitly is redundant."),
             GettextCatalog.GetString("Default underlying type of enums is already int"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.EnumUnderlyingTypeIsIntAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EnumUnderlyingTypeIsIntAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 

@@ -76,13 +76,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         //		};
 
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.ReplaceWithStringIsNullOrEmptyAnalyzerID,
+            CSharpDiagnosticIDs.ReplaceWithStringIsNullOrEmptyAnalyzerID,
             GettextCatalog.GetString("Uses shorter string.IsNullOrEmpty call instead of a longer condition"),
             GettextCatalog.GetString("Expression can be replaced with '{0}'"),
             DiagnosticAnalyzerCategories.PracticesAndImprovements,
             DiagnosticSeverity.Info,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.ReplaceWithStringIsNullOrEmptyAnalyzerID)
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ReplaceWithStringIsNullOrEmptyAnalyzerID)
         );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);

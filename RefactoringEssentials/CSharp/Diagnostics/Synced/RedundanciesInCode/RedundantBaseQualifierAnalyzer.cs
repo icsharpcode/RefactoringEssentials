@@ -14,13 +14,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     public class RedundantBaseQualifierAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            DiagnosticIDs.RedundantBaseQualifierAnalyzerID,
+            CSharpDiagnosticIDs.RedundantBaseQualifierAnalyzerID,
             GettextCatalog.GetString("'base.' is redundant and can safely be removed"),
             GettextCatalog.GetString("'base.' is redundant and can safely be removed"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(DiagnosticIDs.RedundantBaseQualifierAnalyzerID),
+            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantBaseQualifierAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
         );
 
