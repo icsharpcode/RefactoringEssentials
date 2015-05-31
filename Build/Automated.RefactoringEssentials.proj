@@ -7,10 +7,9 @@
 	<PropertyGroup>
 		<ProjectDir Condition=" '$(ProjectDir)' == '' ">$(MSBuildProjectDirectory)\..</ProjectDir>
 
-		<SharpDevelopSrc>$(ProjectDir)\src</SharpDevelopSrc>
-		<NRefactoryBin>$(ProjectDir)\bin</NRefactoryBin>
+		<RefactoringEssentialsBin>$(ProjectDir)\bin</RefactoringEssentialsBin>
 		<NUnitToolPath>$(MSBuildProjectDirectory)\Tools\NUnit</NUnitToolPath>
-		<NUnitTempToolPath>$(NRefactoryBin)\Tools\x86NUnit</NUnitTempToolPath>
+		<NUnitTempToolPath>$(RefactoringEssentialsBin)\Tools\x86NUnit</NUnitTempToolPath>
 		
 		<MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\Tools\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
 		
@@ -42,11 +41,11 @@
 	
 	<Target Name="build">
 		<Exec WorkingDirectory="$(ProjectDir)"
-		      Command="$(MSBuildExecutable) RefactoringEssentials.sln $(BuildProperties)"/>
+		      Command="$(MSBuildExecutable) RefactoringEssentials.BuildAutomation.sln $(BuildProperties)"/>
 	</Target>
 	
 	<Target Name="rununittests">
-		<CreateItem Include="$(NRefactoryBin)\Release\**\*.Tests.dll;">
+		<CreateItem Include="$(RefactoringEssentialsBin)\Release\**\*.Tests.dll;">
 			<Output TaskParameter="Include" ItemName="UnitTestAssemblies"/>
 		</CreateItem>
 		
@@ -64,18 +63,18 @@
 		<!-- the %() portion is important; otherwise a single NUnit-console process is used for all tests -->
 		<NUnit Assemblies="@(UnitTestAssemblies)"
 		       OutputXmlFile="$(TestReportsDir)\%(UnitTestAssemblies.FileName).xml"
-		       WorkingDirectory="$(NRefactoryBin)\Release"
+		       WorkingDirectory="$(RefactoringEssentialsBin)\Release"
 		       ToolPath="$(NUnitTempToolPath)"/>
 	</Target>
 	
 	<!-- Yes, apparently we really need two identical clean tasks. MSBuild won't run the same task twice. -->
 	<Target Name="clean1">
 		<Exec WorkingDirectory="$(ProjectDir)"
-		      Command="$(MSBuildExecutable) RefactoringEssentials.sln /t:Clean $(BuildProperties)"/>
+		      Command="$(MSBuildExecutable) RefactoringEssentials.BuildAutomation.sln /t:Clean $(BuildProperties)"/>
 	</Target>
 	<Target Name="clean2">
 		<Exec WorkingDirectory="$(ProjectDir)"
-		      Command="$(MSBuildExecutable) RefactoringEssentials.sln /t:Clean $(BuildProperties)"/>
+		      Command="$(MSBuildExecutable) RefactoringEssentials.BuildAutomation.sln /t:Clean $(BuildProperties)"/>
 	</Target>
 	
 </Project>
