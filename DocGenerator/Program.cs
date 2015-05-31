@@ -66,7 +66,7 @@ namespace RefactoringEssentials.DocGenerator
                 codeRefactoringsCountNode.Value = string.Format("{0} code refactorings available!", codeRefactoringsCount);
 
                 missingMDWriter.WriteLine("");
-                codeRefactoringsDocument.Save(Path.Combine(BasePath, "CodeRefactorings.html"));
+                codeRefactoringsDocument.Save(Path.Combine(BasePath, "CodeRefactorings.CSharp.html"));
 
                 missingMDWriter.WriteLine("*Analyzers*");
                 missingMDWriter.WriteLine("");
@@ -94,7 +94,7 @@ namespace RefactoringEssentials.DocGenerator
                 codeAnalyzersCountNode.Value = string.Format("{0} code analyzers available!", codeAnalyzersCount);
 
                 missingMDWriter.WriteLine("");
-                codeAnalyzersDocument.Save(Path.Combine(BasePath, "CodeAnalyzers.html"));
+                codeAnalyzersDocument.Save(Path.Combine(BasePath, "CodeAnalyzers.CSharp.html"));
 
                 var codeFixesDocument = XDocument.Load(Path.Combine(BasePath, "CodeFixes.html.template"));
                 var codeFixesNode = codeFixesDocument.Descendants("{http://www.w3.org/1999/xhtml}ul").First();
@@ -115,7 +115,7 @@ namespace RefactoringEssentials.DocGenerator
 
                 codeFixesCountNode.Value = string.Format("{0} code fixes available!", codeFixesCount);
 
-                codeFixesDocument.Save(Path.Combine(BasePath, "CodeFixes.html"));
+                codeFixesDocument.Save(Path.Combine(BasePath, "CodeFixes.CSharp.html"));
             }
         }
 
