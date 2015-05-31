@@ -203,7 +203,7 @@ namespace RefactoringEssentials.Tests
             return TextSpan.FromBounds(start, end);
         }
 
-        protected static void Analyze<T>(Func<string, SyntaxTree> parseTextFunc, Func<SyntaxTree[], Compilation> createCompilationFunc, string input, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
+        protected static void Analyze<T>(Func<string, SyntaxTree> parseTextFunc, Func<SyntaxTree[], Compilation> createCompilationFunc, string language, string input, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
         {
             var text = new StringBuilder();
 
@@ -268,7 +268,7 @@ namespace RefactoringEssentials.Tests
             workspace.Open(ProjectInfo.Create(
                 projectId,
                 VersionStamp.Create(),
-                "a", "a.exe", LanguageNames.CSharp, null, null, null, null,
+                "a", "a.exe", language, null, null, null, null,
                 new[] {
                     DocumentInfo.Create(
                         documentId,
@@ -317,7 +317,7 @@ namespace RefactoringEssentials.Tests
             }
         }
 
-        protected static void AnalyzeWithRule<T>(Func<string, SyntaxTree> parseTextFunc, Func<SyntaxTree[], Compilation> createCompilationFunc, string input, string ruleId, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
+        protected static void AnalyzeWithRule<T>(Func<string, SyntaxTree> parseTextFunc, Func<SyntaxTree[], Compilation> createCompilationFunc, string language, string input, string ruleId, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
         {
             var text = new StringBuilder();
 
@@ -382,7 +382,7 @@ namespace RefactoringEssentials.Tests
             workspace.Open(ProjectInfo.Create(
                 projectId,
                 VersionStamp.Create(),
-                "", "", LanguageNames.CSharp, null, null, null, null,
+                "", "", language, null, null, null, null,
                 new[] {
                     DocumentInfo.Create(
                         documentId,

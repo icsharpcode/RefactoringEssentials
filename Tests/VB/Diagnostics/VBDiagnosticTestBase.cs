@@ -1,25 +1,25 @@
 using System;
-using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.VisualBasic;
 
-namespace RefactoringEssentials.Tests.CSharp.Diagnostics
+namespace RefactoringEssentials.Tests.VB.Diagnostics
 {
-    public class CSharpDiagnosticTestBase : DiagnosticTestBase
+    public class VBDiagnosticTestBase : DiagnosticTestBase
     {
-        public static CSharpCompilation CreateCompilation(
+        public static VisualBasicCompilation CreateCompilation(
             IEnumerable<SyntaxTree> trees,
             IEnumerable<MetadataReference> references = null,
-            CSharpCompilationOptions compOptions = null,
+            VisualBasicCompilationOptions compOptions = null,
             string assemblyName = "")
         {
             if (compOptions == null)
             {
-                compOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, "a.dll");
+                compOptions = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary, "a.dll");
             }
 
-            return CSharpCompilation.Create(
+            return VisualBasicCompilation.Create(
                 string.IsNullOrEmpty(assemblyName) ? GetUniqueName() : assemblyName,
                 trees,
                 references,
@@ -27,10 +27,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        public static CSharpCompilation CreateCompilationWithMscorlib(
+        public static VisualBasicCompilation CreateCompilationWithMscorlib(
             IEnumerable<SyntaxTree> source,
             IEnumerable<MetadataReference> references = null,
-            CSharpCompilationOptions compOptions = null,
+            VisualBasicCompilationOptions compOptions = null,
             string assemblyName = "")
         {
             var refs = new List<MetadataReference>();
@@ -47,9 +47,9 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         protected static void Analyze<T>(string input, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
         {
             Analyze<T>(
-                t => CSharpSyntaxTree.ParseText(t),
+                t => VisualBasicSyntaxTree.ParseText(t),
                 s => CreateCompilationWithMscorlib(s),
-                LanguageNames.CSharp,
+                LanguageNames.VisualBasic,
                 input, output, issueToFix, actionToRun, diagnosticCheck
                 );
         }
@@ -57,9 +57,9 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         protected static void AnalyzeWithRule<T>(string input, string ruleId, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
         {
             AnalyzeWithRule<T>(
-                t => CSharpSyntaxTree.ParseText(t),
+                t => VisualBasicSyntaxTree.ParseText(t),
                 s => CreateCompilationWithMscorlib(s),
-                LanguageNames.CSharp,
+                LanguageNames.VisualBasic,
                 input, ruleId, output, issueToFix, actionToRun, diagnosticCheck
                 );
         }

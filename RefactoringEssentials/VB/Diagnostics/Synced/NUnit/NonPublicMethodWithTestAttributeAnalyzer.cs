@@ -8,7 +8,6 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 namespace RefactoringEssentials.VB.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.VisualBasic)]
-    [NotPortedYet]
     public class NonPublicMethodWithTestAttributeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -25,17 +24,17 @@ namespace RefactoringEssentials.VB.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //    nodeContext =>
-            //    {
-            //        Diagnostic diagnostic;
-            //        if (TryAnalyzeMethod(nodeContext, out diagnostic))
-            //        {
-            //            nodeContext.ReportDiagnostic(diagnostic);
-            //        }
-            //    },
-            //    new SyntaxKind[] { SyntaxKind.FunctionStatement }
-            //);
+            context.RegisterSyntaxNodeAction(
+                nodeContext =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryAnalyzeMethod(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                new SyntaxKind[] { SyntaxKind.SubStatement }
+            );
         }
 
         static bool TryAnalyzeMethod(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
