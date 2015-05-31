@@ -3,6 +3,8 @@
 
 *Refactorings*
 
+**C#**
+
 * AutoLinqSumAction
 * ChangeAccessModifierAction
 * ConvertStatementBodyToExpressionBodyCodeRefactoringProvider
@@ -22,6 +24,8 @@
 * UseStringFormatAction
 
 *Analyzers*
+
+**C#**
 
 * AdditionalOfTypeAnalyzer
 * CheckNamespaceAnalyzer
@@ -52,7 +56,6 @@
 * MethodOverloadWithOptionalParameterAnalyzer
 * MissingInterfaceMemberImplementationAnalyzer
 * NegativeRelationalExpressionAnalyzer
-* NonPublicMethodWithTestAttributeAnalyzer
 * NonReadonlyReferencedInGetHashCodeAnalyzer
 * OptionalParameterHierarchyMismatchAnalyzer
 * ParameterCanBeDeclaredWithBaseTypeAnalyzer

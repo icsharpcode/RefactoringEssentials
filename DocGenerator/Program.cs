@@ -27,96 +27,77 @@ namespace RefactoringEssentials.DocGenerator
 
                 var codeRefactorings = typeof(NotPortedYetAttribute).Assembly.GetTypes()
                     .Where(t => t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(ExportCodeRefactoringProviderAttribute).FullName))
-                    .OrderBy(t => t.Name)
-                    .ToArray();
+                    .OrderBy(t => t.Name);
 
                 var codeAnalyzers = typeof(NotPortedYetAttribute).Assembly.GetTypes()
                     .Where(t => t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(DiagnosticAnalyzerAttribute).FullName))
-                    .OrderBy(t => t.Name)
-                    .ToArray();
+                    .OrderBy(t => t.Name);
 
                 var codeFixes = typeof(NotPortedYetAttribute).Assembly.GetTypes()
-                    .Where(t => t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(ExportCodeFixProviderAttribute).FullName))
-                    .OrderBy(t => t.Name)
-                    .ToArray();
+                    .Where(t => t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(ExportCodeFixProviderAttribute).FullName) && CodeFixUnrelatedToNRAnalyzer(t))
+                    .OrderBy(t => t.Name);
 
+                // Code Refactorings
                 missingMDWriter.WriteLine("*Refactorings*");
                 missingMDWriter.WriteLine("");
-
-                var codeRefactoringsDocument = XDocument.Load(Path.Combine(BasePath, "CodeRefactorings.html.template"));
-                var codeRefactoringsNode = codeRefactoringsDocument.Descendants("{http://www.w3.org/1999/xhtml}ul").First();
-                var codeRefactoringsCountNode = codeRefactoringsDocument.Descendants("{http://www.w3.org/1999/xhtml}p").First();
-                int codeRefactoringsCount = 0;
-
-                foreach (var codeRefactoring in codeRefactorings)
-                {
-                    if (codeRefactoring.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(NotPortedYetAttribute).FullName))
-                    {
-                        missingMDWriter.WriteLine(string.Format("* {0}", codeRefactoring.Name));
-                    }
-                    else
-                    {
-                        var description = GetRefactoringDescription(codeRefactoring);
-                        var line = (description == null) ? string.Format("{0}", codeRefactoring.Name) : string.Format("{0} ({1})", description, codeRefactoring.Name);
-                        codeRefactoringsNode.Add(new XElement("{http://www.w3.org/1999/xhtml}li", line));
-                        codeRefactoringsCount++;
-                    }
-                }
-
-                codeRefactoringsCountNode.Value = string.Format("{0} code refactorings available!", codeRefactoringsCount);
-
+                missingMDWriter.WriteLine("**C#**");
                 missingMDWriter.WriteLine("");
-                codeRefactoringsDocument.Save(Path.Combine(BasePath, "CodeRefactorings.CSharp.html"));
+                WriteTypeList(BasePath, "CodeRefactorings.html.template", "CodeRefactorings.CSharp.html", "{0} code refactorings for C#",
+                    codeRefactorings.Where(t => IsCSharpRelatedElement(t)),
+                    GetRefactoringDescription, missingMDWriter);
+                missingMDWriter.WriteLine("");
+                WriteTypeList(BasePath, "CodeRefactorings.html.template", "CodeRefactorings.VB.html", "{0} code refactorings for Visual Basic",
+                    codeRefactorings.Where(t => IsVBRelatedElement(t)),
+                    GetRefactoringDescription, null);
 
+                // Diagnostics (Analyzers)
                 missingMDWriter.WriteLine("*Analyzers*");
                 missingMDWriter.WriteLine("");
-
-                var codeAnalyzersDocument = XDocument.Load(Path.Combine(BasePath, "CodeAnalyzers.html.template"));
-                var codeAnalyzersNode = codeAnalyzersDocument.Descendants("{http://www.w3.org/1999/xhtml}ul").First();
-                var codeAnalyzersCountNode = codeAnalyzersDocument.Descendants("{http://www.w3.org/1999/xhtml}p").First();
-                int codeAnalyzersCount = 0;
-
-                foreach (var codeAnalyzer in codeAnalyzers)
-                {
-                    if (codeAnalyzer.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(NotPortedYetAttribute).FullName))
-                    {
-                        missingMDWriter.WriteLine(string.Format("* {0}", codeAnalyzer.Name));
-                    }
-                    else
-                    {
-                        var description = GetAnalyzerDescription(codeAnalyzer);
-                        var line = (description == null) ? string.Format("{0}", codeAnalyzer.Name) : string.Format("{0} ({1})", description, codeAnalyzer.Name);
-                        codeAnalyzersNode.Add(new XElement("{http://www.w3.org/1999/xhtml}li", line));
-                        codeAnalyzersCount++;
-                    }
-                }
-
-                codeAnalyzersCountNode.Value = string.Format("{0} code analyzers available!", codeAnalyzersCount);
-
+                missingMDWriter.WriteLine("**C#**");
                 missingMDWriter.WriteLine("");
-                codeAnalyzersDocument.Save(Path.Combine(BasePath, "CodeAnalyzers.CSharp.html"));
+                WriteTypeList(BasePath, "CodeAnalyzers.html.template", "CodeAnalyzers.CSharp.html", "{0} code analyzers for C#",
+                    codeAnalyzers.Where(t => IsCSharpRelatedElement(t)),
+                    GetAnalyzerDescription, missingMDWriter);
+                missingMDWriter.WriteLine("");
+                WriteTypeList(BasePath, "CodeAnalyzers.html.template", "CodeAnalyzers.VB.html", "{0} code analyzers for Visual Basic",
+                    codeAnalyzers.Where(t => IsVBRelatedElement(t)),
+                    GetAnalyzerDescription, null);
 
-                var codeFixesDocument = XDocument.Load(Path.Combine(BasePath, "CodeFixes.html.template"));
-                var codeFixesNode = codeFixesDocument.Descendants("{http://www.w3.org/1999/xhtml}ul").First();
-                var codeFixesCountNode = codeFixesDocument.Descendants("{http://www.w3.org/1999/xhtml}p").First();
-                int codeFixesCount = 0;
-
-                foreach (var codeFix in codeFixes)
-                {
-                    if (!codeFix.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(NotPortedYetAttribute).FullName))
-                    {
-                        if (CodeFixRelatesToNRAnalyzer(codeFix))
-                        {
-                            codeFixesNode.Add(new XElement("{http://www.w3.org/1999/xhtml}li", string.Format("{0}", codeFix.Name)));
-                            codeFixesCount++;
-                        }
-                    }
-                }
-
-                codeFixesCountNode.Value = string.Format("{0} code fixes available!", codeFixesCount);
-
-                codeFixesDocument.Save(Path.Combine(BasePath, "CodeFixes.CSharp.html"));
+                // Code Fixes
+                WriteTypeList(BasePath, "CodeFixes.html.template", "CodeFixes.CSharp.html", "{0} code fixes for C#",
+                    codeFixes.Where(t => IsCSharpRelatedElement(t)),
+                    NoDescription, missingMDWriter);
+                WriteTypeList(BasePath, "CodeFixes.html.template", "CodeFixes.VB.html", "{0} code fixes for Visual Basic",
+                    codeFixes.Where(t => IsVBRelatedElement(t)),
+                    NoDescription, null);
             }
+        }
+
+        static void WriteTypeList(string basePath, string templateFile, string targetFile, string titleFormat, IEnumerable<Type> types, Func<Type, string> descriptionGetter, StreamWriter missingMDWriter)
+        {
+            var document = XDocument.Load(Path.Combine(basePath, templateFile));
+            var node = document.Descendants("{http://www.w3.org/1999/xhtml}ul").First();
+            var countNode = document.Descendants("{http://www.w3.org/1999/xhtml}p").First();
+            int count = 0;
+
+            foreach (var type in types)
+            {
+                if (type.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(NotPortedYetAttribute).FullName))
+                {
+                    if (missingMDWriter != null)
+                        missingMDWriter.WriteLine(string.Format("* {0}", type.Name));
+                }
+                else
+                {
+                    var description = descriptionGetter(type);
+                    var line = (description == null) ? string.Format("{0}", type.Name) : string.Format("{0} ({1})", description, type.Name);
+                    node.Add(new XElement("{http://www.w3.org/1999/xhtml}li", line));
+                    count++;
+                }
+            }
+
+            countNode.Value = string.Format(titleFormat, count);
+            document.Save(Path.Combine(basePath, targetFile));
         }
 
         static string GetRefactoringDescription(Type t)
@@ -131,7 +112,12 @@ namespace RefactoringEssentials.DocGenerator
             return descriptor?.Title.ToString();
         }
 
-        static bool CodeFixRelatesToNRAnalyzer(Type codeFixType)
+        static string NoDescription(Type t)
+        {
+            return null;
+        }
+
+        static bool CodeFixUnrelatedToNRAnalyzer(Type codeFixType)
         {
             var codeFixInstance = Activator.CreateInstance(codeFixType) as CodeFixProvider;
             if (codeFixInstance != null)
@@ -146,6 +132,16 @@ namespace RefactoringEssentials.DocGenerator
             }
 
             return false;
+        }
+
+        static bool IsCSharpRelatedElement(Type type)
+        {
+            return type.FullName.Contains("RefactoringEssentials.CSharp.");
+        }
+
+        static bool IsVBRelatedElement(Type type)
+        {
+            return type.FullName.Contains("RefactoringEssentials.VB.");
         }
     }
 }
