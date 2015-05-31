@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ValueParameterNotUsedTests : InspectionActionTestBase
+    public class ValueParameterNotUsedTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestPropertySetter()

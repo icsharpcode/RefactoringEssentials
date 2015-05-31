@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class NotResolvedInTextTests : InspectionActionTestBase
+    public class NotResolvedInTextTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBadExamples()

@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class CS1573ParameterHasNoMatchingParamTagTests : InspectionActionTestBase
+    public class CS1573ParameterHasNoMatchingParamTagTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestMethodMissesParameter()

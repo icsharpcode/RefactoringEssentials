@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class DoubleNegationOperatorTests : InspectionActionTestBase
+    public class DoubleNegationOperatorTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestLogicalNot()

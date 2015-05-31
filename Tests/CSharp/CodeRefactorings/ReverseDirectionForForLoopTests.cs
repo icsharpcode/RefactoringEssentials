@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ReverseDirectionForForLoopTests : ContextActionTestBase
+    public class ReverseDirectionForForLoopTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestPrimitveExpression()

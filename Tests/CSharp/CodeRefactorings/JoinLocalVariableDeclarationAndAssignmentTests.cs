@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class JoinLocalVariableDeclarationAndAssignmentTests : ContextActionTestBase
+    public class JoinLocalVariableDeclarationAndAssignmentTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void Test()

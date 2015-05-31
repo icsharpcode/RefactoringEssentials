@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class FieldCanBeMadeReadOnlyTests : InspectionActionTestBase
+    public class FieldCanBeMadeReadOnlyTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestInitializedField()

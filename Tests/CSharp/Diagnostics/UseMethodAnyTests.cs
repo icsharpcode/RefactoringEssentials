@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class UseMethodAnyTests : InspectionActionTestBase
+    public class UseMethodAnyTests : CSharpDiagnosticTestBase
     {
         static string ConstructExpression(string expr)
         {

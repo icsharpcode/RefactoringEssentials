@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConvertIfToOrExpressionTests : InspectionActionTestBase
+    public class ConvertIfToOrExpressionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestVariableDeclarationCase()

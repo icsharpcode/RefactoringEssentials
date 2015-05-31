@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertStringFormatToInterpolatedStringTests : ContextActionTestBase
+    public class ConvertStringFormatToInterpolatedStringTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestSimpleStringFormat()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ComputeConstantValueTests : ContextActionTestBase
+    public class ComputeConstantValueTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void Rational1()

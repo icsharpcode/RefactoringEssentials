@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class CS0618UsageOfObsoleteMemberTests : InspectionActionTestBase
+    public class CS0618UsageOfObsoleteMemberTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestObsoleteMethodUsage()

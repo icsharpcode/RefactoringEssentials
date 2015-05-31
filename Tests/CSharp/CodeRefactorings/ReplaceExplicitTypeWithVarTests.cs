@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ReplaceExplicitTypeWithVarTests : ContextActionTestBase
+    public class ReplaceExplicitTypeWithVarTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void SimpleVarDeclaration()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class EnumUnderlyingTypeIsIntTests : InspectionActionTestBase
+    public class EnumUnderlyingTypeIsIntTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestCase()

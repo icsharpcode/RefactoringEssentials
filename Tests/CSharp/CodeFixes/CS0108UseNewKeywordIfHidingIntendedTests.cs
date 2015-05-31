@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class CS0108UseNewKeywordIfHidingIntendedTests : CodeFixTestBase
+    public class CS0108UseNewKeywordIfHidingIntendedTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestMethod()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertIfStatementToReturnStatementActionTests : ContextActionTestBase
+    public class ConvertIfStatementToReturnStatementActionTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestReturn()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertMethodGroupToAnonymousMethodTests : ContextActionTestBase
+    public class ConvertMethodGroupToAnonymousMethodTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestVoidMethod()

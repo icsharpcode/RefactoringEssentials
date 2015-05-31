@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class CanBeReplacedWithTryCastAndCheckForNullTests : InspectionActionTestBase
+    public class CanBeReplacedWithTryCastAndCheckForNullTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void SimpleCase()

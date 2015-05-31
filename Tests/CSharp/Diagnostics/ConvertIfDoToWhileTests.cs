@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConvertIfDoToWhileTests : InspectionActionTestBase
+    public class ConvertIfDoToWhileTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBasicCase()

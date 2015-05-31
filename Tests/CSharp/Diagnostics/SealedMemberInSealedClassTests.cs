@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class SealedMemberInSealedClassTests : InspectionActionTestBase
+    public class SealedMemberInSealedClassTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBasicCase()

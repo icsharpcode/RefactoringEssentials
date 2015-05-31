@@ -5,7 +5,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class SplitStringTests : ContextActionTestBase
+    public class SplitStringTests : CSharpCodeRefactoringTestBase
     {
         [Test()]
         public void TestSimpleString()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertIfStatementToConditionalTernaryExpressionTests : ContextActionTestBase
+    public class ConvertIfStatementToConditionalTernaryExpressionTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestAssignment()

@@ -5,7 +5,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertForeachToForTests : ContextActionTestBase
+    public class ConvertForeachToForTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestArray()

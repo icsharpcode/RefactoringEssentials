@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class CS1520MethodMustHaveAReturnTypeTests : CodeFixTestBase
+    public class CS1520MethodMustHaveAReturnTypeTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestMethod()

@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class ConvertToLambdaExpressionTests : InspectionActionTestBase
+    public class ConvertToLambdaExpressionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestReturn()

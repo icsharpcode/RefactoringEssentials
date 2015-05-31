@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ReplaceSafeCastWithDirectCastTests : ContextActionTestBase
+    public class ReplaceSafeCastWithDirectCastTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void Test()

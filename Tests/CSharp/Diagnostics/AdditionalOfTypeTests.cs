@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [Ignore("TODO - AST pattern machting!")]
     [TestFixture]
-    public class AdditionalOfTypeTests : InspectionActionTestBase
+    public class AdditionalOfTypeTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestAdditionalCase()

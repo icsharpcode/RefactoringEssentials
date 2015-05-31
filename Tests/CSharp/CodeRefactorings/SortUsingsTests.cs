@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class SortUsingsTests : ContextActionTestBase
+    public class SortUsingsTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestActiveWhenCursorAtUsing()

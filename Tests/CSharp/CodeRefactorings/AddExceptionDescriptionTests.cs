@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class AddExceptionDescriptionTests : ContextActionTestBase
+    public class AddExceptionDescriptionTests : CSharpCodeRefactoringTestBase
     {
 
         [Test]

@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [Ignore("Needs insertion cursor mode.")]
     [TestFixture]
-    public class CreateDelegateTests : ContextActionTestBase
+    public class CreateDelegateTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestCreateDelegate()

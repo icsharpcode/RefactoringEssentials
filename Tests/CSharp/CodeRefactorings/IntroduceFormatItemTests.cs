@@ -5,7 +5,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class IntroduceFormatItemTests : ContextActionTestBase
+    public class IntroduceFormatItemTests : CSharpCodeRefactoringTestBase
     {
         [Test()]
         public void TestFirst()

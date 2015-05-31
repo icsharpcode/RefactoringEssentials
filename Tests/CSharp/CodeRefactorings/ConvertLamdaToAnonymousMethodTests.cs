@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertLamdaToAnonymousMethodTests : ContextActionTestBase
+    public class ConvertLamdaToAnonymousMethodTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void LambdaBlock()

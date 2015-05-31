@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class CS0164LabelHasNotBeenReferencedTests : CodeFixTestBase
+    public class CS0164LabelHasNotBeenReferencedTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestUnusedLabelInMethod()

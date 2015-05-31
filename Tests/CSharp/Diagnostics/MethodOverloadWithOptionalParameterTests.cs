@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class MethodOverloadWithOptionalParameterTests : InspectionActionTestBase
+    public class MethodOverloadWithOptionalParameterTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSingleMethod()

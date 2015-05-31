@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConvertClosureToMethodGroupTests : InspectionActionTestBase
+    public class ConvertClosureToMethodGroupTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSimpleVoidLambda()

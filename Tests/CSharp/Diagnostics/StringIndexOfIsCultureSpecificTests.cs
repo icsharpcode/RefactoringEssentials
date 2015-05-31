@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class StringIndexOfIsCultureSpecificTests : InspectionActionTestBase
+    public class StringIndexOfIsCultureSpecificTests : CSharpDiagnosticTestBase
     {
         const string stringIndexOfStringCalls = @"
 using System.Collections.Generic;

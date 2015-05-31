@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class MissingInterfaceMemberImplementationTests : InspectionActionTestBase
+    public class MissingInterfaceMemberImplementationTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestUnimplementedInterface()

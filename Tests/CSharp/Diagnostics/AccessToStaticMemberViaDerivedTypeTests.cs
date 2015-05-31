@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class AccessToStaticMemberViaDerivedTypeTests : InspectionActionTestBase
+    public class AccessToStaticMemberViaDerivedTypeTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void MemberInvocation()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests : CodeFixTestBase
+    public class ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestSimpleCase()

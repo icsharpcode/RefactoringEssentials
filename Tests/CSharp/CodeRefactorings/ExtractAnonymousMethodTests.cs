@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [Ignore("Needs insertion cursor mode.")]
     [TestFixture]
-    public class ExtractAnonymousMethodTests : ContextActionTestBase
+    public class ExtractAnonymousMethodTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestLambdaWithBodyStatement()

@@ -3,7 +3,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    public class EmptyDestructorTests : InspectionActionTestBase
+    public class EmptyDestructorTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBasicCase()

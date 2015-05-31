@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class UnusedParameterTests : InspectionActionTestBase
+    public class UnusedParameterTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestUnusedParameter()

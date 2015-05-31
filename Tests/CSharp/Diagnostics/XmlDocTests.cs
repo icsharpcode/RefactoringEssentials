@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class XmlDocTests : InspectionActionTestBase
+    public class XmlDocTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBeforeNamespace()

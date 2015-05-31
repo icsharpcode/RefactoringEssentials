@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class UseSystemEnvironmentNewLineTests : ContextActionTestBase
+    public class UseSystemEnvironmentNewLineTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestLFString()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture, Ignore("Not implemented!")]
-    public class MergeNestedIfTests : ContextActionTestBase
+    public class MergeNestedIfTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestOuterIf()

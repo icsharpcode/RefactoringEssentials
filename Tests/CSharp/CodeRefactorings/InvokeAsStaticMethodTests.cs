@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class InvokeAsStaticMethodTests : ContextActionTestBase
+    public class InvokeAsStaticMethodTests : CSharpCodeRefactoringTestBase
     {
 
         [Test]

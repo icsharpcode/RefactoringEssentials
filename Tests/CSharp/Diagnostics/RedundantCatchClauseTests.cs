@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class RedundantCatchClauseTests : InspectionActionTestBase
+    public class RedundantCatchClauseTests : CSharpDiagnosticTestBase
     {
         const string BaseInput = @"
 using System;

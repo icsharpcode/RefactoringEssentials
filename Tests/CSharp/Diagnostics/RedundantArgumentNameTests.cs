@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class RedundantArgumentNameTests : InspectionActionTestBase
+    public class RedundantArgumentNameTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void MethodInvocation1()

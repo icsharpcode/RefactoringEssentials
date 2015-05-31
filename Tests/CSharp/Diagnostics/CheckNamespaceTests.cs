@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [Ignore("TODO")]
     [TestFixture]
-    public class CheckNamespaceTests : InspectionActionTestBase
+    public class CheckNamespaceTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestWrongNamespace()

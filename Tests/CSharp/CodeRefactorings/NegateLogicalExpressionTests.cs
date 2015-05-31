@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class NegateLogicalExpressionTests : ContextActionTestBase
+    public class NegateLogicalExpressionTests : CSharpCodeRefactoringTestBase
     {
         public void Test(string op, string negatedOp)
         {

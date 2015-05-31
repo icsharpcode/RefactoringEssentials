@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class AutoLinqSumActionTests : ContextActionTestBase
+    public class AutoLinqSumActionTests : CSharpCodeRefactoringTestBase
     {
         [Test, Ignore("Not implemented!")]
         public void TestSimpleIntegerLoop()

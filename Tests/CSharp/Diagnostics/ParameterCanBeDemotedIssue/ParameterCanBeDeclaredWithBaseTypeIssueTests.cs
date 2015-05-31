@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class ParameterCanBeDeclaredWithBaseTypeTests : InspectionActionTestBase
+    public class ParameterCanBeDeclaredWithBaseTypeTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void BasicTest()

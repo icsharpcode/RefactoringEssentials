@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class CopyCommentsFromBaseTest : ContextActionTestBase
+    public class CopyCommentsFromBaseTest : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestCopyMethodMultiString()

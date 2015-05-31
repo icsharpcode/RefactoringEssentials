@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertLambdaBodyExpressionToStatementTests : ContextActionTestBase
+    public class ConvertLambdaBodyExpressionToStatementTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestReturn()

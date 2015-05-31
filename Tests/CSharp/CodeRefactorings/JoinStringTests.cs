@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class JoinStringTests : ContextActionTestBase
+    public class JoinStringTests : CSharpCodeRefactoringTestBase
     {
         public void Test(string input, string output)
         {

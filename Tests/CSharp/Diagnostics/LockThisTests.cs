@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class LockThisTests : InspectionActionTestBase
+    public class LockThisTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestLockThisInMethod()

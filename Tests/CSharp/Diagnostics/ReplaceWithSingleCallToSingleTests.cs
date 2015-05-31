@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ReplaceWithSingleCallToSingleTests : InspectionActionTestBase
+    public class ReplaceWithSingleCallToSingleTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSimpleCase()

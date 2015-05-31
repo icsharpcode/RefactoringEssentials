@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConstantConditionTests : InspectionActionTestBase
+    public class ConstantConditionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestConditionalExpression()

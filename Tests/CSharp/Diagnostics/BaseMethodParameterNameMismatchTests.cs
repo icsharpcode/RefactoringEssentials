@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class BaseMethodParameterNameMismatchTests : InspectionActionTestBase
+    public class BaseMethodParameterNameMismatchTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestMethod()

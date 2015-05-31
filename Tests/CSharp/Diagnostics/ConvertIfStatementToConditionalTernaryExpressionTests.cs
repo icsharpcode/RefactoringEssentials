@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConvertIfStatementToConditionalTernaryExpressionTests : InspectionActionTestBase
+    public class ConvertIfStatementToConditionalTernaryExpressionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestIfElse()

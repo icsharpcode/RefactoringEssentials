@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class GenerateSwitchLabelsTests : ContextActionTestBase
+    public class GenerateSwitchLabelsTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void Test()

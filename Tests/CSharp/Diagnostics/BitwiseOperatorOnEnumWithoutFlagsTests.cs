@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class BitwiseOperatorOnEnumWithoutFlagsTests : InspectionActionTestBase
+    public class BitwiseOperatorOnEnumWithoutFlagsTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestUnary()

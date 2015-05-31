@@ -8,7 +8,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class CheckIfParameterIsNullTests : ContextActionTestBase
+    public class CheckIfParameterIsNullTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void Test()

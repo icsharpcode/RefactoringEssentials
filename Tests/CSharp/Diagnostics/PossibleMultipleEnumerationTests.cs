@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class PossibleMultipleEnumerationTests : InspectionActionTestBase
+    public class PossibleMultipleEnumerationTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestVariableInvocation()

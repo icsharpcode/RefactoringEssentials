@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [Ignore("TODO roslyn port.")]
     [TestFixture]
-    public class ConstantNullCoalescingConditionTests : InspectionActionTestBase
+    public class ConstantNullCoalescingConditionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestNullRightSide()

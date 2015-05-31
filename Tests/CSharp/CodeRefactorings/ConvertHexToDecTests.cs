@@ -5,7 +5,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertHexToDecTests : ContextActionTestBase
+    public class ConvertHexToDecTests : CSharpCodeRefactoringTestBase
     {
         [Test()]
         public void Test()

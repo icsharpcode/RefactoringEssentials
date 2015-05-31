@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ThreadStaticAtInstanceFieldTests : InspectionActionTestBase
+    public class ThreadStaticAtInstanceFieldTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestInspectorCase1()

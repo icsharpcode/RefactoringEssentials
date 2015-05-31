@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ReplacePostfixExpressionWithAssignmentTests : ContextActionTestBase
+    public class ReplacePostfixExpressionWithAssignmentTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestAdd()

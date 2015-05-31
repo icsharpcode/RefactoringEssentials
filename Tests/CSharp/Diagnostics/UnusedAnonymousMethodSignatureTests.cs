@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class UnusedAnonymousMethodSignatureTests : InspectionActionTestBase
+    public class UnusedAnonymousMethodSignatureTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSimpleUsage()

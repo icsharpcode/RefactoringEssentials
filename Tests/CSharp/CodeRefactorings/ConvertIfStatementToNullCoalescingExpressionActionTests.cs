@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertIfStatementToNullCoalescingExpressionActionTests : ContextActionTestBase
+    public class ConvertIfStatementToNullCoalescingExpressionActionTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestDeclaration()

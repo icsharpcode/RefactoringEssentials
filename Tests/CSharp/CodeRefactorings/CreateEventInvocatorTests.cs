@@ -7,7 +7,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class CreateEventInvocatorTests : ContextActionTestBase
+    public class CreateEventInvocatorTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestSimpleCase()

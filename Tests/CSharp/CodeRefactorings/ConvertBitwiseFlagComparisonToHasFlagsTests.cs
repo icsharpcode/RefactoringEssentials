@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertBitwiseFlagComparisonToHasFlagsTests : ContextActionTestBase
+    public class ConvertBitwiseFlagComparisonToHasFlagsTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestComparisonWithNullInEqual()

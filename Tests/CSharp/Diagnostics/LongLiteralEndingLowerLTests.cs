@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class LongLiteralEndingLowerLTests : InspectionActionTestBase
+    public class LongLiteralEndingLowerLTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestNormal()

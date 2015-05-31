@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertImplicitToExplicittImplementationTests : ContextActionTestBase
+    public class ConvertImplicitToExplicittImplementationTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void Test()

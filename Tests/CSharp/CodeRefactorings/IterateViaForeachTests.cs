@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture, Ignore("Not implemented!")]
-    public class IterateViaForeachTests : ContextActionTestBase
+    public class IterateViaForeachTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void HandlesNonGenericCase()

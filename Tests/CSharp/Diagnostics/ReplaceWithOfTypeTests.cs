@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ReplaceWithOfTypeTests : InspectionActionTestBase
+    public class ReplaceWithOfTypeTests : CSharpDiagnosticTestBase
     {
         [Test]
         [Ignore("Does this even make sense? There's no SelectNotNull method!")]

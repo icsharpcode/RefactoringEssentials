@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class CS0759RedundantPartialMethodTests : CodeFixTestBase
+    public class CS0759RedundantPartialMethodTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestRedundantModifier()

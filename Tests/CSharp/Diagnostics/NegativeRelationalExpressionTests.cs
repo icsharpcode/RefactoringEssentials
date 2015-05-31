@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class NegativeRelationalExpressionTests : InspectionActionTestBase
+    public class NegativeRelationalExpressionTests : CSharpDiagnosticTestBase
     {
 
         public void Test(string op, string negatedOp)

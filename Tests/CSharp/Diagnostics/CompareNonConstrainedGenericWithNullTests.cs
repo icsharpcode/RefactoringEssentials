@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class CompareNonConstrainedGenericWithNullTests : InspectionActionTestBase
+    public class CompareNonConstrainedGenericWithNullTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestLocal()

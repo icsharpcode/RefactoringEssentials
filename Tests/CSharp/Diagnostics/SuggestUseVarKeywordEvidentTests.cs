@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class SuggestUseVarKeywordEvidentTests : InspectionActionTestBase
+    public class SuggestUseVarKeywordEvidentTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestInspectorCase1()

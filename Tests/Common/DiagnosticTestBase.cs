@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using Microsoft.CodeAnalysis.Diagnostics;
-using Microsoft.CodeAnalysis.CSharp;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using System.Threading;
@@ -13,9 +12,9 @@ using System.Text;
 using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.CodeActions;
 
-namespace RefactoringEssentials.Tests.CSharp.Diagnostics
+namespace RefactoringEssentials.Tests
 {
-    public class InspectionActionTestBase
+    public abstract class DiagnosticTestBase
     {
         static MetadataReference mscorlib;
         static MetadataReference systemAssembly;
@@ -26,7 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         static Dictionary<string, CodeFixProvider> providers = new Dictionary<string, CodeFixProvider>();
 
-        static InspectionActionTestBase()
+        static DiagnosticTestBase()
         {
             try
             {
@@ -65,42 +64,6 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         public static string GetUniqueName()
         {
             return Guid.NewGuid().ToString("D");
-        }
-
-        public static CSharpCompilation CreateCompilation(
-            IEnumerable<SyntaxTree> trees,
-            IEnumerable<MetadataReference> references = null,
-            CSharpCompilationOptions compOptions = null,
-            string assemblyName = "")
-        {
-            if (compOptions == null)
-            {
-                compOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, "a.dll");
-            }
-
-            return CSharpCompilation.Create(
-                string.IsNullOrEmpty(assemblyName) ? GetUniqueName() : assemblyName,
-                trees,
-                references,
-                compOptions);
-        }
-
-
-        public static CSharpCompilation CreateCompilationWithMscorlib(
-            IEnumerable<SyntaxTree> source,
-            IEnumerable<MetadataReference> references = null,
-            CSharpCompilationOptions compOptions = null,
-            string assemblyName = "")
-        {
-            var refs = new List<MetadataReference>();
-            if (references != null)
-            {
-                refs.AddRange(references);
-            }
-
-            refs.AddRange(DefaultMetadataReferences);
-
-            return CreateCompilation(source, refs, compOptions, assemblyName);
         }
 
         internal class TestWorkspace : Workspace
@@ -150,7 +113,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             }
         }
 
-        static void RunFix(Workspace workspace, ProjectId projectId, DocumentId documentId, Diagnostic diagnostic, int index = 0)
+        protected static void RunFix(Workspace workspace, ProjectId projectId, DocumentId documentId, Diagnostic diagnostic, int index = 0)
         {
             CodeFixProvider provider;
             if (providers.TryGetValue(diagnostic.Id, out provider))
@@ -228,7 +191,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             #endregion
         }
 
-        static TextSpan GetWholeSpan(Diagnostic d)
+        protected static TextSpan GetWholeSpan(Diagnostic d)
         {
             int start = d.Location.SourceSpan.Start;
             int end = d.Location.SourceSpan.End;
@@ -240,7 +203,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             return TextSpan.FromBounds(start, end);
         }
 
-        protected static void Analyze<T>(string input, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
+        protected static void Analyze<T>(Func<string, SyntaxTree> parseTextFunc, Func<SyntaxTree[], Compilation> createCompilationFunc, string input, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
         {
             var text = new StringBuilder();
 
@@ -265,9 +228,9 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
                 }
             }
 
-            var syntaxTree = CSharpSyntaxTree.ParseText(text.ToString());
+            var syntaxTree = parseTextFunc(text.ToString());
 
-            Compilation compilation = CreateCompilationWithMscorlib(new[] { syntaxTree });
+            Compilation compilation = createCompilationFunc(new[] { syntaxTree });
 
             var diagnostics = new List<Diagnostic>();
 
@@ -354,7 +317,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             }
         }
 
-        protected static void AnalyzeWithRule<T>(string input, string ruleId, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
+        protected static void AnalyzeWithRule<T>(Func<string, SyntaxTree> parseTextFunc, Func<SyntaxTree[], Compilation> createCompilationFunc, string input, string ruleId, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
         {
             var text = new StringBuilder();
 
@@ -379,9 +342,9 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
                 }
             }
 
-            var syntaxTree = CSharpSyntaxTree.ParseText(text.ToString());
+            var syntaxTree = parseTextFunc(text.ToString());
 
-            Compilation compilation = CreateCompilationWithMscorlib(new[] { syntaxTree });
+            Compilation compilation = createCompilationFunc(new[] { syntaxTree });
 
             var diagnostics = new List<Diagnostic>();
             var compilationWithAnalyzers = compilation.WithAnalyzers(System.Collections.Immutable.ImmutableArray<DiagnosticAnalyzer>.Empty.Add(new T()));

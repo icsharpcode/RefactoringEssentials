@@ -4,7 +4,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [Ignore("Should be a code fix")]
     [TestFixture]
-    public class StaticConstructorParameterTests : InspectionActionTestBase
+    public class StaticConstructorParameterTests : CSharpDiagnosticTestBase
     {
         //		[Test]
         //		public void TestSimpleCase()

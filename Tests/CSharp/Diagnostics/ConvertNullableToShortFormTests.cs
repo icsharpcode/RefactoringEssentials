@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConvertNullableToShortFormTests : InspectionActionTestBase
+    public class ConvertNullableToShortFormTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSimpleCase()

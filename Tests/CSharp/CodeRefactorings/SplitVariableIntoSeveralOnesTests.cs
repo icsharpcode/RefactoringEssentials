@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class SplitDeclarationListTests : ContextActionTestBase
+    public class SplitDeclarationListTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestLocalVariable()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertMethodGroupToLambdaTests : ContextActionTestBase
+    public class ConvertMethodGroupToLambdaTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestVoidMethod()

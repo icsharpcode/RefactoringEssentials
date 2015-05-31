@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ExtractWhileConditionToInternalIfStatementTests : ContextActionTestBase
+    public class ExtractWhileConditionToInternalIfStatementTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestBasicCase()

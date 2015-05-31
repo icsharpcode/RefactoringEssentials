@@ -5,7 +5,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ReplacePropertyWithBackingFieldWithAutoPropertyTests : ContextActionTestBase
+    public class ReplacePropertyWithBackingFieldWithAutoPropertyTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestSimpleStore()

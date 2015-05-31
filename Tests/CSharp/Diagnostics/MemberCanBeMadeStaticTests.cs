@@ -4,7 +4,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class MemberCanBeMadeStaticTests : InspectionActionTestBase
+    public class MemberCanBeMadeStaticTests : CSharpDiagnosticTestBase
     {
         //		[Test]
         //		public void TestPrivateMethod()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class OptionalParameterRefOutTests : InspectionActionTestBase
+    public class OptionalParameterRefOutTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestRef()

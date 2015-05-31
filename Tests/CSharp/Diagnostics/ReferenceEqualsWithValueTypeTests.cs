@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class ReferenceEqualsWithValueTypeTests : InspectionActionTestBase
+    public class ReferenceEqualsWithValueTypeTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestValueTypeCase1()

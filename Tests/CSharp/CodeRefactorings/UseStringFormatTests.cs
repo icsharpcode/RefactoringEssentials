@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture, Ignore("Not implemented!")]
-    public class UseStringFormatTests : ContextActionTestBase
+    public class UseStringFormatTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void Test()

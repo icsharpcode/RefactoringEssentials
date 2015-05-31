@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class StaticMethodInvocationToExtensionMethodInvocationTests : InspectionActionTestBase
+    public class StaticMethodInvocationToExtensionMethodInvocationTests : CSharpDiagnosticTestBase
     {
 
         [Test]

@@ -5,7 +5,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class InsertAnonymousMethodSignatureTests : ContextActionTestBase
+    public class InsertAnonymousMethodSignatureTests : CSharpCodeRefactoringTestBase
     {
         [Test()]
         public void Test()

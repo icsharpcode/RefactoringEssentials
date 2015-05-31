@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class CS0162UnreachableCodeDetectedTests : CodeFixTestBase
+    public class CS0162UnreachableCodeDetectedTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestReturn()

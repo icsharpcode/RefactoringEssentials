@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class CheckStringIndexValueTests : ContextActionTestBase
+    public class CheckStringIndexValueTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestSimpleCase()

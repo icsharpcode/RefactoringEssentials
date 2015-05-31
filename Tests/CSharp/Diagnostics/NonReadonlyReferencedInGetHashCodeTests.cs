@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class NonReadonlyReferencedInGetHashCodeTests : InspectionActionTestBase
+    public class NonReadonlyReferencedInGetHashCodeTests : CSharpDiagnosticTestBase
     {
 
         [Test]

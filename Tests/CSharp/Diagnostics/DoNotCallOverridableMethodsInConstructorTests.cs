@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class DoNotCallOverridableMethodsInConstructorTests : InspectionActionTestBase
+    public class DoNotCallOverridableMethodsInConstructorTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void CatchesBadCase()

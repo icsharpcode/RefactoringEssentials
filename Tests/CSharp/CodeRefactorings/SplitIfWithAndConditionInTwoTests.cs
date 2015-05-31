@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class SplitIfWithAndConditionInTwoTests : ContextActionTestBase
+    public class SplitIfWithAndConditionInTwoTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestAndSimple()

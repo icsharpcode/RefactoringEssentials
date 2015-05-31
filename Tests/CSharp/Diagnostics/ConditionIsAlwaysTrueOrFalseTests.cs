@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConditionIsAlwaysTrueOrFalseTests : InspectionActionTestBase
+    public class ConditionIsAlwaysTrueOrFalseTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestComparsionWithNull()

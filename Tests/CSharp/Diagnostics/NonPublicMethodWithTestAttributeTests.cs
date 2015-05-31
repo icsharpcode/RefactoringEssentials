@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class NonPublicMethodWithTestAttributeTests : InspectionActionTestBase
+    public class NonPublicMethodWithTestAttributeTests : CSharpDiagnosticTestBase
     {
         const string NUnitClasses = @"using System;
 using NUnit.Framework;

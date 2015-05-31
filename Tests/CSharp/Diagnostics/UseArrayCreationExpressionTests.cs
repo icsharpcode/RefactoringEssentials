@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class UseArrayCreationExpressionTests : InspectionActionTestBase
+    public class UseArrayCreationExpressionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestTypeOfIsAssignableFrom()

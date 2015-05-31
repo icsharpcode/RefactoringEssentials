@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class RedundantEmptyDefaultSwitchBranchTests : InspectionActionTestBase
+    public class RedundantEmptyDefaultSwitchBranchTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestDefaultRedundantCase()

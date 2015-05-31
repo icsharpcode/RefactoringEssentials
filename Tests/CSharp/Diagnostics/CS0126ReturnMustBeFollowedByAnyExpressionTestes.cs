@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class CS0126ReturnMustBeFollowedByAnyExpressionTests : InspectionActionTestBase
+    public class CS0126ReturnMustBeFollowedByAnyExpressionTests : CSharpDiagnosticTestBase
     {
         static void Test(string type, string defaultValue)
         {

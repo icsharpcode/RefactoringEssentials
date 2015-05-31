@@ -52,6 +52,7 @@
 * MethodOverloadWithOptionalParameterAnalyzer
 * MissingInterfaceMemberImplementationAnalyzer
 * NegativeRelationalExpressionAnalyzer
+* NonPublicMethodWithTestAttributeAnalyzer
 * NonReadonlyReferencedInGetHashCodeAnalyzer
 * OptionalParameterHierarchyMismatchAnalyzer
 * ParameterCanBeDeclaredWithBaseTypeAnalyzer

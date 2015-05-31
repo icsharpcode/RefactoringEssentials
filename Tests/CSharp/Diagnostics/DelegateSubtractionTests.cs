@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class DelegateSubtractionTests : InspectionActionTestBase
+    public class DelegateSubtractionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSubtraction()

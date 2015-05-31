@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class InvalidConversionTests : CodeFixTestBase
+    public class InvalidConversionTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestConversion()

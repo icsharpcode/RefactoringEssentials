@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture, Ignore("Not implemented!")]
-    public class LinqFluentToQueryTests : ContextActionTestBase
+    public class LinqFluentToQueryTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestBasicCase()

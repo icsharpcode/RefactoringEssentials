@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConvertIfStatementToSwitchStatementTests : InspectionActionTestBase
+    public class ConvertIfStatementToSwitchStatementTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBreak()

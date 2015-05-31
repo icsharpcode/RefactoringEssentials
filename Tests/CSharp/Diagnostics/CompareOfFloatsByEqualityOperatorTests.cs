@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class CompareOfFloatsByEqualityOperatorTests : InspectionActionTestBase
+    public class CompareOfFloatsByEqualityOperatorTests : CSharpDiagnosticTestBase
     {
         static void TestOperator(string inputOp, string outputOp)
         {

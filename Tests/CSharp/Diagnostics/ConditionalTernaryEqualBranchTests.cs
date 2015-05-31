@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ConditionalTernaryEqualBranchTests : InspectionActionTestBase
+    public class ConditionalTernaryEqualBranchTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestInspectorCase1()

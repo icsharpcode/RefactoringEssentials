@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class FlipRelationalOperatorArgumentsTests : ContextActionTestBase
+    public class FlipRelationalOperatorArgumentsTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestLessThan()

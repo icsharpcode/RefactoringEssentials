@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ChangeAccessModifierTests : ContextActionTestBase
+    public class ChangeAccessModifierTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestNoEnumMember()

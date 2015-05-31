@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class PartialTypeWithSinglePartTests : InspectionActionTestBase
+    public class PartialTypeWithSinglePartTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestRedundantModifier()

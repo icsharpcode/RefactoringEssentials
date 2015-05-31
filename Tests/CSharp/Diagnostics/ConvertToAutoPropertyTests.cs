@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class ConvertToAutoPropertyTests : InspectionActionTestBase
+    public class ConvertToAutoPropertyTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBasicCase()

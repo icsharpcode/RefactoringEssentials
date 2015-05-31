@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class FlipOperatorArguments : ContextActionTestBase
+    public class FlipOperatorArguments : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestEquals()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertDoWhileToWhileLoopTests : ContextActionTestBase
+    public class ConvertDoWhileToWhileLoopTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestSimple()

@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class StaticFieldInGenericTypeTests : InspectionActionTestBase
+    public class StaticFieldInGenericTypeTests : CSharpDiagnosticTestBase
     {
 
         [Test]

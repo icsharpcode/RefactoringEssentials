@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class EventUnsubscriptionViaAnonymousDelegateTests : InspectionActionTestBase
+    public class EventUnsubscriptionViaAnonymousDelegateTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestDelegateCase()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class RedundantTernaryExpressionTests : InspectionActionTestBase
+    public class RedundantTernaryExpressionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestTrueFalseCase()

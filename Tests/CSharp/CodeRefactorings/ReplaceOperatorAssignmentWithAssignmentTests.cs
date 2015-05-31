@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ReplaceOperatorAssignmentWithAssignmentTests : ContextActionTestBase
+    public class ReplaceOperatorAssignmentWithAssignmentTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestAdd()

@@ -5,7 +5,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class RemoveBracesTests : ContextActionTestBase
+    public class RemoveBracesTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestSimpleBraces()

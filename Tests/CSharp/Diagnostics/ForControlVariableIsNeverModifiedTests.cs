@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class ForControlVariableIsNeverModifiedTests : InspectionActionTestBase
+    public class ForControlVariableIsNeverModifiedTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBinaryOpConditionNotModified()

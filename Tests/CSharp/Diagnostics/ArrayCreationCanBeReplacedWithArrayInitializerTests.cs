@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class ArrayCreationCanBeReplacedWithArrayInitializerTests : InspectionActionTestBase
+    public class ArrayCreationCanBeReplacedWithArrayInitializerTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestVariableDeclarationCase1()

@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class PossibleMistakenCallToGetTypeTests : InspectionActionTestBase
+    public class PossibleMistakenCallToGetTypeTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestGetTypeCase()

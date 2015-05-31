@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class InitializeAutoPropertyFromConstructorParameterTests : ContextActionTestBase
+    public class InitializeAutoPropertyFromConstructorParameterTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestSimple()

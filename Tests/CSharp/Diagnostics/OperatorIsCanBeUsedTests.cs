@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class OperatorIsCanBeUsedTests : InspectionActionTestBase
+    public class OperatorIsCanBeUsedTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestInspectorCase1()

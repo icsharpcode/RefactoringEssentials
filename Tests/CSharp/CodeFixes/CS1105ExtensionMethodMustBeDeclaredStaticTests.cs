@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class CS1105ExtensionMethodMustBeDeclaredStaticTests : CodeFixTestBase
+    public class CS1105ExtensionMethodMustBeDeclaredStaticTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestMethod()

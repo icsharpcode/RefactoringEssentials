@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [Ignore("Needs insertion cursor mode.")]
     [TestFixture]
-    public class CreateOverloadWithoutParameterTests : ContextActionTestBase
+    public class CreateOverloadWithoutParameterTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void Test()

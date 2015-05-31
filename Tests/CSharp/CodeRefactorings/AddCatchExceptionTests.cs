@@ -3,7 +3,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    public class AddCatchExceptionTests : ContextActionTestBase
+    public class AddCatchExceptionTests : CSharpCodeRefactoringTestBase
     {
 
         [Test]

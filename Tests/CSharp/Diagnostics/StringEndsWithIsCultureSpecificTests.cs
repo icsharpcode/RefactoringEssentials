@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class StringEndsWithIsCultureSpecificTests : InspectionActionTestBase
+    public class StringEndsWithIsCultureSpecificTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestEndsWith()

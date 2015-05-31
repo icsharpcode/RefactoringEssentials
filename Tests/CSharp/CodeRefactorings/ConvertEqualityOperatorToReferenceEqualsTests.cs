@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertEqualityOperatorToReferenceEqualsTests : ContextActionTestBase
+    public class ConvertEqualityOperatorToReferenceEqualsTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestEquality()

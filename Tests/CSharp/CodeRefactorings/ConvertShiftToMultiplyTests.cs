@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertShiftToMultiplyTests : ContextActionTestBase
+    public class ConvertShiftToMultiplyTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestShiftLeft()

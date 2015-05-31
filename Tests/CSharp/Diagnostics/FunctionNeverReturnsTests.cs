@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet.")]
-    public class FunctionNeverReturnsTests : InspectionActionTestBase
+    public class FunctionNeverReturnsTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestEnd()

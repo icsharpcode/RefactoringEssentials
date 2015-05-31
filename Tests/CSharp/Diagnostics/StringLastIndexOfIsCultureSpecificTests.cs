@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class StringLastIndexOfIsCultureSpecificTests : InspectionActionTestBase
+    public class StringLastIndexOfIsCultureSpecificTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestLastIndexOf()

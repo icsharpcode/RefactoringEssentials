@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ConvertForToWhileTests : ContextActionTestBase
+    public class ConvertForToWhileTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void TestSimpleFor()

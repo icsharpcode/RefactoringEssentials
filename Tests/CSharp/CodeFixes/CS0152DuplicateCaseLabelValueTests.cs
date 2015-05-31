@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeFixes;
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
     [TestFixture]
-    public class CS0152DuplicateCaseLabelValueTests : CodeFixTestBase
+    public class CS0152DuplicateCaseLabelValueTests : CSharpCodeFixTestBase
     {
         [Test]
         public void TestDuplicateSections()

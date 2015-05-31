@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     [TestFixture]
-    public class ToAbstractVirtualNonVirtualConversionTests : ContextActionTestBase
+    public class ToAbstractVirtualNonVirtualConversionTests : CSharpCodeRefactoringTestBase
     {
         [Test]
         public void VirtualToNonVirtualTest()

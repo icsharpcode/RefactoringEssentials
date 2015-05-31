@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
     [Ignore("TODO: Issue not ported yet")]
-    public class RedundantEmptyFinallyBlockTests : InspectionActionTestBase
+    public class RedundantEmptyFinallyBlockTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestRedundantTry()
