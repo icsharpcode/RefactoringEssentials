@@ -52,6 +52,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\refactoringessentials-logo90.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Images\refactoringessentials-preview.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="license.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -64,6 +72,7 @@
     <ProjectReference Include="..\RefactoringEssentials\RefactoringEssentials.csproj">
       <Project>{c465a5dc-ad28-49a2-89c0-f81838814a7e}</Project>
       <Name>RefactoringEssentials</Name>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
