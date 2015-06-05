@@ -37,7 +37,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (node == null)
                 return;
             var newRoot = root.ReplaceNode((SyntaxNode)node, node.WithOperatorToken(SyntaxFactory.Token(SyntaxKind.EqualsToken)).WithAdditionalAnnotations(Formatter.Annotation));
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Replace with '{0}'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Replace with '='", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }
