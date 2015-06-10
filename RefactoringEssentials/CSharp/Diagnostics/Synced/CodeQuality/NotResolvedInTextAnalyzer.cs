@@ -121,7 +121,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     if (objectCreateExpression.ArgumentList.Arguments.Count == 2)
                     {
                         altParam = objectCreateExpression.ArgumentList.Arguments[1].Expression;
-                        if (model.GetTypeInfo(altParam).Type.SpecialType != SpecialType.System_String)
+                        if (model.GetTypeInfo(altParam).Type?.SpecialType != SpecialType.System_String)
                             paramNode = null;
                     }
                     if (objectCreateExpression.ArgumentList.Arguments.Count == 3)
