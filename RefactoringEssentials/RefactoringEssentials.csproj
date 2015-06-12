@@ -649,6 +649,13 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
+  <Target Name="RestorePackages" AfterTargets="EnsureNuGetPackageBuildImports">
+    <PropertyGroup>
+      <NuGet>$(SolutionDir)\.nuget\NuGet.exe</NuGet>
+      <NuGet Condition="$(OS)=='Unix'">mono $(NuGet)</NuGet>
+    </PropertyGroup>
+    <Exec Condition="$(SolutionDir) != $([System.IO.Path]::GetFullPath('..'))" Command="$(NuGet) restore -SolutionDirectory .." />
+  </Target>
   <PropertyGroup>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

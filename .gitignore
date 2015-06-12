@@ -5,7 +5,6 @@ obj
 /lib/*.dll
 _ReSharper*/*
 /Vsix/source.extension.vsixmanifest
-RefactoringEssentials.nuspec
 .vs
 
 # User-specific folders
