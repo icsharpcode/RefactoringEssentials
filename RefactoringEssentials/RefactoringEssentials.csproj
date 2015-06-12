@@ -650,8 +650,6 @@
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
   </Target>
   <PropertyGroup>
-    <PreBuildEvent>RefactoringEssentials.BuildTools.exe -version "-settings:$(SolutionDir)RefactoringEssentials.Versioning.config" "-template:$(SolutionDir)GlobalAssemblyInfo.template.cs" "-target:$(SolutionDir)GlobalAssemblyInfo.cs"
-RefactoringEssentials.BuildTools.exe -version "-settings:$(SolutionDir)RefactoringEssentials.Versioning.config" "-template:$(ProjectDir)RefactoringEssentials.template.nuspec" "-target:$(ProjectDir)RefactoringEssentials.nuspec"</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -5,7 +5,6 @@ obj
 /lib/*.dll
 _ReSharper*/*
 /Vsix/source.extension.vsixmanifest
-GlobalAssemblyInfo.cs
 RefactoringEssentials.nuspec
 .vs
 
