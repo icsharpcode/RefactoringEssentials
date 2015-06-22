@@ -398,6 +398,8 @@
     <Compile Include="CSharp\CodeRefactorings\ConvertInterpolatedStringToStringFormatTests.cs" />
     <Compile Include="Common\DiagnosticTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileTests.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopTests.cs" />
     <Compile Include="VB\CodeRefactorings\VBCodeRefactoringTestBase.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />
     <Compile Include="VB\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />
