@@ -8,10 +8,10 @@ namespace RefactoringEssentials
 {
     class ReflectionNamespaces
     {
-        public const string WorkspacesAsmName = ", Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CSWorkspacesAsmName = ", Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CAAsmName = ", Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CACSharpAsmName = ", Microsoft.CodeAnalysis.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+        public const string WorkspacesAsmName = ", Microsoft.CodeAnalysis.Workspaces";
+        public const string CSWorkspacesAsmName = ", Microsoft.CodeAnalysis.CSharp.Workspaces";
+        public const string CAAsmName = ", Microsoft.CodeAnalysis";
+        public const string CACSharpAsmName = ", Microsoft.CodeAnalysis.CSharp";
     }
 
     static class CSharpUtil
