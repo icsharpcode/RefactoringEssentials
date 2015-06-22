@@ -4,7 +4,6 @@ obj
 *.csproj.user
 /lib/*.dll
 _ReSharper*/*
-/Vsix/source.extension.vsixmanifest
 .vs
 
 # User-specific folders

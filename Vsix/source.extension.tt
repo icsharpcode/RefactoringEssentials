@@ -1,7 +1,11 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".vsixmanifest" #>
+<?xml version="1.0" encoding="utf-8"?>
+<#@ include file="../RefactoringEssentials/Versioning.t4.template" once="true" #>
+<# ReadVersions(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), "../RefactoringEssentials/RefactoringEssentials.version")); #>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="NR6Pack.Refactorings.Vsix..cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="%%shorter_version%%.%%debug_version%%" Language="en-US" Publisher="IC#Code"/>
+    <Identity Id="NR6Pack.Refactorings.Vsix..cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="<#= generatedFullVersion #>" Language="en-US" Publisher="IC#Code"/>
     <DisplayName>Refactoring Essentials for Visual Studio</DisplayName>
     <Description xml:space="preserve">Roslyn-based refactorings and diagnostics.</Description>
     <License>license.txt</License>
