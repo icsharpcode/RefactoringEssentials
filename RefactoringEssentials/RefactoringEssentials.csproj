@@ -615,9 +615,6 @@
     <None Include="buildpackage.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="RefactoringEssentials.template.nuspec">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
     <None Include="RefactoringEssentials.version" />
     <None Include="tools\install.ps1">

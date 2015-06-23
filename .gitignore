@@ -2,6 +2,7 @@ bin
 obj
 *.suo
 *.csproj.user
+*.userprefs
 /lib/*.dll
 _ReSharper*/*
 .vs
