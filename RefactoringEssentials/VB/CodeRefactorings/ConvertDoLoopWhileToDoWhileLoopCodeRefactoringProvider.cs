@@ -74,7 +74,7 @@ namespace RefactoringEssentials.VB.CodeRefactorings
                             (SyntaxNode)parentBlockNode,
                             SyntaxFactory.DoLoopBlock(blockKindAfterConversion,
                                 SyntaxFactory.DoStatement(doKindAfterConversion, parentBlockNode.LoopStatement.WhileOrUntilClause),
-                                parentBlockNode.Statements, SyntaxFactory.SimpleLoopStatement())
+                                parentBlockNode.Statements, SyntaxFactory.SimpleLoopStatement().WithTrailingTrivia(parentBlockNode.LoopStatement.GetTrailingTrivia()))
                             .WithLeadingTrivia(parentBlockNode.GetLeadingTrivia())
                             .WithAdditionalAnnotations(Formatter.Annotation));
                         return Task.FromResult(document.WithSyntaxRoot(newRoot));
