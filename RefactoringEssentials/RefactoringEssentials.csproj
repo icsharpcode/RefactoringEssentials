@@ -608,6 +608,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RefactoringEssentials.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Versioning.t4.template">
       <LastGenOutput>Versioning.cs.cs</LastGenOutput>
