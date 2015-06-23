@@ -4,7 +4,7 @@
   <Metadata>
     <Identity Id="NR6Pack.Refactorings.Vsix..cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="1.0.0.0" Language="en-US" Publisher="IC#Code"/>
     <DisplayName>Refactoring Essentials for Visual Studio</DisplayName>
-    <Description xml:space="preserve">Roslyn-based refactorings and diagnostics.</Description>
+    <Description xml:space="preserve">Free refactorings for C# and Visual Basic (VB) - plus more!</Description>
     <License>license.txt</License>
     <Icon>Images\refactoringessentials-logo90.png</Icon>
     <PreviewImage>Images\refactoringessentials-preview.png</PreviewImage>

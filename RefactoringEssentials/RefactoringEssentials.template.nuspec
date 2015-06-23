@@ -7,13 +7,13 @@
 		<authors>IC#Code</authors>
 		<owners>IC#Code</owners>
 		<licenseUrl>https://visualstudiogallery.msdn.microsoft.com/site/68c1575b-e0bf-420d-a94b-1b0f4bcdcbcc/eula?licenseType=None</licenseUrl>
-		<projectUrl>https://visualstudiogallery.msdn.microsoft.com/68c1575b-e0bf-420d-a94b-1b0f4bcdcbcc</projectUrl>
+		<projectUrl>http://vsrefactoringessentials.com/</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/icsharpcode/RefactoringEssentials/master/RefactoringEssentials/Images/refactoringessentials-logo32.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>Roslyn-based analyzers from the NRefactory OSS library for Visual Studio 2015.</description>
+		<description>Analyzers and Code Fixes for Visual Studio 2015 (Roslyn-based). Intended for build integration. If you need Visual Studio integration only, please check out the VSIX (Visual Studio extension) from our Web site.</description>
 		<releaseNotes>New diagnostic analyzers and refactorings, some bug fixes.</releaseNotes>
 		<copyright>Copyright (c) 2014-2015 AlphaSierraPapa</copyright>
-		<tags>VS 2015 Roslyn Analyzer Refactoring</tags>
+		<tags>VS 2015 Roslyn Analyzer Refactoring Fix</tags>
 		<frameworkAssemblies>
 			<frameworkAssembly assemblyName="System" targetFramework="" />
 		</frameworkAssemblies>

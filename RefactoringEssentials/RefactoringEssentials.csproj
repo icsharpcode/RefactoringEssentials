@@ -604,17 +604,15 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
     </Content>
-    <None Include="Versioning.t4.template">
-      <LastGenOutput>Versioning.cs.cs</LastGenOutput>
-    </None>
-    <None Include="buildpackage.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="RefactoringEssentials.nuspec">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>RefactoringEssentials.tt</DependentUpon>
-      <SubType>Designer</SubType>
+    </None>
+    <None Include="Versioning.t4.template">
+      <LastGenOutput>Versioning.cs.cs</LastGenOutput>
+    </None>
+    <None Include="buildpackage.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="RefactoringEssentials.template.nuspec">
