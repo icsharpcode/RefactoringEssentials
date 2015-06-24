@@ -15,7 +15,7 @@
 		<iconUrl>https://raw.githubusercontent.com/icsharpcode/RefactoringEssentials/master/RefactoringEssentials/Images/refactoringessentials-logo32.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Analyzers and Code Fixes for Visual Studio 2015 (Roslyn-based). Intended for build integration. If you need Visual Studio integration only, please check out the VSIX (Visual Studio extension) from our Web site.</description>
-		<releaseNotes>First release as 'RefactoringEssentials', new VB refactorings.</releaseNotes>
+		<releaseNotes>Small fixes and new VB analyzer.</releaseNotes>
 		<copyright>Copyright (c) 2014-2015 AlphaSierraPapa</copyright>
 		<tags>VS 2015 Roslyn Analyzer Refactoring</tags>
 		<frameworkAssemblies>
