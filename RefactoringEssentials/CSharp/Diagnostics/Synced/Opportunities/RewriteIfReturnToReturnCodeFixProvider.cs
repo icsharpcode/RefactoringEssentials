@@ -3,6 +3,9 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -32,10 +35,20 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Convert to 'return' statement", document.WithSyntaxRoot(newRoot)), diagnostic);
+            if (node == null)
+                return;
+
+            context.RegisterCodeFix(
+                CodeActionFactory.Create(node.Span, diagnostic.Severity, "Convert to 'return' statement", token =>
+                {
+                    var returnStatement = node.ChildNodes().OfType<ReturnStatementSyntax>().First();
+                    var newNode = SyntaxFactory.ReturnStatement(returnStatement.ReturnKeyword,
+                        (node as IfStatementSyntax).Condition, returnStatement.SemicolonToken);
+                    var newRoot = root.ReplaceNode((SyntaxNode)node,
+                        newNode.WithLeadingTrivia(node.GetLeadingTrivia())
+                            .WithAdditionalAnnotations(Formatter.Annotation));
+                    return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                }), diagnostic);
         }
     }
 }
