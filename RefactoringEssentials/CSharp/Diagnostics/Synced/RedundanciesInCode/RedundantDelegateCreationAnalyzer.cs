@@ -1,14 +1,15 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantDelegateCreationAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantDelegateCreationAnalyzerID,
             GettextCatalog.GetString("Explicit delegate creation expression is redundant"),
             GettextCatalog.GetString("Redundant explicit delegate declaration"),
@@ -23,55 +24,42 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                 SyntaxKind.SimpleAssignmentExpression
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+
+            var semanticModel = nodeContext.SemanticModel;
+            var assignmentExpression = nodeContext.Node as AssignmentExpressionSyntax;
+
+            var oces = assignmentExpression?.Left as ObjectCreationExpressionSyntax;
+            if (oces == null || oces.ArgumentList.Arguments.Count != 1)
+                return false;
+
+            var leftTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, assignmentExpression.Left).ConvertedType;
+            if (leftTypeInfo == null || leftTypeInfo.Kind.Equals(SyntaxKind.EventDeclaration))
+                return false;
+
+            var rightTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, assignmentExpression.Right).ConvertedType;
+            if (rightTypeInfo == null || rightTypeInfo.IsErrorType() || leftTypeInfo.Equals(rightTypeInfo))
+                return false;
+
+            diagnostic = Diagnostic.Create(descriptor, assignmentExpression.GetLocation());
+            return true;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantDelegateCreationAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitAssignmentExpression(AssignmentExpression assignmentExpression)
-        ////			{
-        ////				base.VisitAssignmentExpression(assignmentExpression);
-        ////				if (assignmentExpression.Operator != AssignmentOperatorType.Add && assignmentExpression.Operator != AssignmentOperatorType.Subtract)
-        ////					return;
-        ////				var oce = assignmentExpression.Right as ObjectCreateExpression;
-        ////				if (oce == null || oce.Arguments.Count != 1)
-        ////					return;
-        ////				var left = ctx.Resolve(assignmentExpression.Left) as MemberResolveResult;
-        ////				if (left == null || left.Member.SymbolKind != SymbolKind.Event)
-        ////					return;
-        ////				var right = ctx.Resolve(assignmentExpression.Right);
-        ////				if (right.IsError || !Equals(left.Type, right.Type))
-        ////					return;
-        ////				AddDiagnosticAnalyzer(new CodeIssue(oce.StartLocation, oce.Type.EndLocation,
-        ////					ctx.TranslateString(""),
-        ////					ctx.TranslateString(""),
-        ////					s => s.Replace(assignmentExpression.Right, oce.Arguments.First())
-        ////				) { IssueMarker = IssueMarker.GrayOut });
-        ////			}
-        //		}
     }
 }
