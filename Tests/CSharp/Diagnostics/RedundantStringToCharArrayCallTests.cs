@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantStringToCharArrayCallTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -38,7 +37,7 @@ class FooBar
         [Test]
         public void TestVarForeachCase()
         {
-            Test<RedundantStringToCharArrayCallAnalyzer>(@"
+            Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
 using System;
 class FooBar
 {
@@ -66,7 +65,7 @@ class FooBar
         [Test]
         public void TestIndexerCase()
         {
-            Test<RedundantStringToCharArrayCallAnalyzer>(@"
+            Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
 using System;
 class FooBar
 {
