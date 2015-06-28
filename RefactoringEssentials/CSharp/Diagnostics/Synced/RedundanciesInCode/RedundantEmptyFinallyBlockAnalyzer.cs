@@ -1,11 +1,13 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantEmptyFinallyBlockAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -23,15 +25,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.FinallyClause
+            );
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -39,10 +43,20 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            var node = nodeContext.Node as FinallyClauseSyntax;
+            if (node == null)
+                return false;
+
+            if (IsFinallyBlockEmpty(node))
+                return false;
+
+            diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
+            return true;
+        }
+
+        static bool IsFinallyBlockEmpty(FinallyClauseSyntax finallyClause)
+        {
+            return finallyClause.ChildNodes().OfType<BlockSyntax>().First().DescendantNodes().Any();
         }
 
         //		class GatherVisitor : GatherVisitorBase<RedundantEmptyFinallyBlockAnalyzer>

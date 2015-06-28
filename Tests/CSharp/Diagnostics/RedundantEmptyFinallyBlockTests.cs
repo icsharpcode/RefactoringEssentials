@@ -4,13 +4,12 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantEmptyFinallyBlockTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestRedundantTry()
         {
-            Test<RedundantEmptyFinallyBlockAnalyzer>(@"
+            Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
 using System;
 class Test
 {
@@ -39,7 +38,7 @@ class Test
         [Test]
         public void TestSimpleCase()
         {
-            Test<RedundantEmptyFinallyBlockAnalyzer>(@"
+            Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
 using System;
 class Test
 {
