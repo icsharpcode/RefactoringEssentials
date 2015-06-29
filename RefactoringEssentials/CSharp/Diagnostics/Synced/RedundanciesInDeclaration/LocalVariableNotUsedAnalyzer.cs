@@ -1,11 +1,13 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class LocalVariableNotUsedAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -22,15 +24,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                new SyntaxKind[] { SyntaxKind.LocalDeclarationStatement }
+            );
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -38,10 +42,51 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+
+            var localDeclaration = nodeContext.Node as LocalDeclarationStatementSyntax;
+            var variableInitializer = localDeclaration?.DescendantNodes().OfType<VariableDeclaratorSyntax>().First(); ;
+
+            if (variableInitializer == null)
+                return false;
+            //// check if variable is assigned
+            //if (!variableInitializer.ChildNodes().OfType<EqualsValueClauseSyntax>().Any()) //I thought that we should only look for var... If looking for any variables, this check from the ancient visitor should not be here.
+            //    return false;
+            var decl = variableInitializer.Parent as VariableDeclarationSyntax;
+            if (decl == null)
+                return false;
+
+            if (IsLocalVariableBeingUsed(variableInitializer, nodeContext))
+            {
+                diagnostic = Diagnostic.Create(descriptor, localDeclaration.GetLocation());
+                return true;
+            }
+
             return false;
+        }
+
+        static bool IsLocalVariableBeingUsed(VariableDeclaratorSyntax variableDeclarator, SyntaxNodeAnalysisContext syntaxNode)
+        {
+            var methodBody = variableDeclarator.AncestorsAndSelf(false).OfType<MethodDeclarationSyntax>().First();
+            if (methodBody == null)
+                return false;
+
+            var model = syntaxNode.SemanticModel;
+            var result = model.AnalyzeDataFlow(methodBody);
+            var variablesDeclared = result.VariablesDeclared;
+            var variablesRead = result.ReadInside.Union(result.ReadOutside);
+            var unused = variablesDeclared.Except(variablesRead);
+            var localVariableSymbol = model.GetDeclaredSymbol(variableDeclarator);
+            var isLocalVariableNotBeingUsed = false;
+            if (localVariableSymbol == null)
+                return false;
+
+            foreach (var varNotUsed in unused)
+            {
+                if (varNotUsed.Name == localVariableSymbol.Name)
+                    isLocalVariableNotBeingUsed = true;
+            }
+
+            return isLocalVariableNotBeingUsed;
         }
 
         //		class GatherVisitor : GatherVisitorBase<LocalVariableNotUsedAnalyzer>
