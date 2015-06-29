@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantIfElseBlockTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -31,7 +30,7 @@ class TestClass
 		return 0;
 	}
 }";
-            Test<RedundantIfElseBlockAnalyzer>(input, 1, output);
+            Analyze<RedundantIfElseBlockAnalyzer>(input, output, 1,1);
         }
 
         [Test]
