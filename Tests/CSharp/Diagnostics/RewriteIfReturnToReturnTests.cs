@@ -20,7 +20,7 @@ class TestClass
 	}
 }";
 
-            Analyze<RewriteIfReturnToReturnAnalyzer>(input, null, 1);
+            Analyze<RewriteIfReturnToReturnAnalyzer>(input, null, 0);
         }
 
         [Test]
@@ -31,7 +31,7 @@ class TestClass
 {
 	bool TestMethod (object obj)
 	{
-        return obj!= null
+        return obj!= null;
 	}
 }";
 
@@ -57,7 +57,7 @@ class TestClass
 {
 	bool TestMethod (object obj)
 	{
-        return obj!= null
+        return obj!= null;
 	}
 }";
 
