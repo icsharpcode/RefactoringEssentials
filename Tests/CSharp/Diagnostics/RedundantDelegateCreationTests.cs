@@ -48,7 +48,7 @@ public class FooBase
         [Test]
         public void TestRemove()
         {
-            Test<RedundantDelegateCreationAnalyzer>(@"
+            Analyze<RedundantDelegateCreationAnalyzer>(@"
 using System;
 
 public class FooBase
