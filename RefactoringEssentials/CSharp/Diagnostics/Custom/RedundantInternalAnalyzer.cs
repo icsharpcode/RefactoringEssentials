@@ -48,6 +48,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (nodeContext.IsFromGeneratedCode())
                 return false;
             var node = nodeContext.Node as BaseTypeDeclarationSyntax;
+            if (node == null)
+                return false;
             if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.InternalKeyword)))
                 return false;
             if (node.Parent is BaseTypeDeclarationSyntax)

@@ -47,7 +47,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             {
                 LiteralExpressionSyntax right = node.Right as LiteralExpressionSyntax;
                 //if right is true
-                if (right != null && (bool)right.Token.Value)
+                if ((right != null) && right.IsKind(SyntaxKind.TrueLiteralExpression))
                 {
                     diagnostic = Diagnostic.Create(
                         descriptor,
@@ -61,7 +61,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             {
                 LiteralExpressionSyntax right = node.Right as LiteralExpressionSyntax;
                 //if right is false
-                if (right != null && !(bool)right.Token.Value)
+                if ((right != null) && right.IsKind(SyntaxKind.FalseLiteralExpression))
                 {
                     diagnostic = Diagnostic.Create(
                         descriptor,
