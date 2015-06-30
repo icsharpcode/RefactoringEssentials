@@ -401,6 +401,7 @@
     <Compile Include="VB\CodeRefactorings\CheckDictionaryKeyValueTests.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileTests.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopTests.cs" />
+    <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseTests.cs" />
     <Compile Include="VB\CodeRefactorings\VBCodeRefactoringTestBase.cs" />
     <Compile Include="VB\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />
