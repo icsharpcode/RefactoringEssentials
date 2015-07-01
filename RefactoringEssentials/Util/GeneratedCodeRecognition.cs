@@ -9,7 +9,7 @@ using System.Collections.Immutable;
 
 namespace RefactoringEssentials
 {
-    static class GeneratedCodeRecognition
+    public static class GeneratedCodeRecognition
     {
         public static bool IsFromGeneratedCode(this SemanticModel semanticModel, CancellationToken cancellationToken)
         {
