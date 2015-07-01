@@ -4,13 +4,12 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantExplicitArraySizeTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSimpleCase()
         {
-            Test<RedundantExplicitArraySizeAnalyzer>(@"
+            Analyze<RedundantExplicitArraySizeAnalyzer>(@"
 class Test
 {
 	void Foo ()

@@ -1,14 +1,16 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantExplicitArraySizeAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantExplicitArraySizeAnalyzerID,
             GettextCatalog.GetString("Redundant explicit size in array creation"),
             GettextCatalog.GetString("Redundant explicit size in array creation"),
@@ -23,26 +25,39 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                 SyntaxKind.ArrayCreationExpression 
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+            var node = nodeContext.Node as ArrayCreationExpressionSyntax;
+            var arrayType = node?.ChildNodes().OfType<ArrayTypeSyntax>().FirstOrDefault();
+            if (arrayType == null || !arrayType.RankSpecifiers.Any())
+                return false;
+
+            ////				var value = (int)arg.Value;
+            //Looking for how to get int value inside the brackets.
+            if (node.Initializer.Expressions.Count == arrayType.RankSpecifiers.FirstOrDefault().Sizes.Count)
+            {
+                diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
+                return true;
+            }
+
             return false;
+
         }
 
         //		class GatherVisitor : GatherVisitorBase<RedundantExplicitArraySizeAnalyzer>
