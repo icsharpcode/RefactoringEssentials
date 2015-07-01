@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantExplicitArraySizeAnalyzerID,
             GettextCatalog.GetString("Redundant explicit size in array creation"),
-            GettextCatalog.GetString("Redundant explicit size in array creation"),
+            GettextCatalog.GetString("Remove the redundant size indicator"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
@@ -44,20 +44,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (nodeContext.IsFromGeneratedCode())
                 return false;
             var node = nodeContext.Node as ArrayCreationExpressionSyntax;
-            var arrayType = node?.ChildNodes().OfType<ArrayTypeSyntax>().FirstOrDefault();
+            var arrayType = node?.Type;
+
             if (arrayType == null || !arrayType.RankSpecifiers.Any())
                 return false;
 
-            ////				var value = (int)arg.Value;
-            //Looking for how to get int value inside the brackets.
-            if (node.Initializer.Expressions.Count == arrayType.RankSpecifiers.FirstOrDefault().Sizes.Count)
+            var intSizeValue = nodeContext.SemanticModel.GetConstantValue(arrayType.RankSpecifiers[0].Sizes[0]);
+            if (!intSizeValue.HasValue || (int)intSizeValue.Value <= -1)
+                return false;
+
+            if (node.Initializer.Expressions.Count == (int)intSizeValue.Value)
             {
-                diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
+                diagnostic = Diagnostic.Create(descriptor, arrayType.RankSpecifiers[0].Sizes[0].GetLocation());
                 return true;
             }
 
             return false;
-
         }
 
         //		class GatherVisitor : GatherVisitorBase<RedundantExplicitArraySizeAnalyzer>

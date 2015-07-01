@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -32,10 +33,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove '{0}'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var arrayType = ((ArrayCreationExpressionSyntax) node).Type;
+            //a RemoveNode of arrayType.RankSpecifiers[0] should do it.
+            var newRoot = root.RemoveNode(arrayType.RankSpecifiers[0], SyntaxRemoveOptions.KeepNoTrivia);
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove the redundant size indicator", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }
