@@ -1,16 +1,16 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using System.Linq;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class LocalVariableNotUsedAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.LocalVariableNotUsedAnalyzerID,
             GettextCatalog.GetString("Local variable is never used"),
             GettextCatalog.GetString("Local variable is never used"),
@@ -37,7 +37,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
@@ -64,14 +64,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             return false;
         }
 
-        static bool IsLocalVariableBeingUsed(VariableDeclaratorSyntax variableDeclarator, SyntaxNodeAnalysisContext syntaxNode)
+        private static bool IsLocalVariableBeingUsed(VariableDeclaratorSyntax variableDeclarator, SyntaxNodeAnalysisContext syntaxNode)
         {
+            var model = syntaxNode.SemanticModel.Compilation.GetSemanticModel(variableDeclarator.SyntaxTree);
             var methodBody = variableDeclarator.AncestorsAndSelf(false).OfType<MethodDeclarationSyntax>().First();
-            if (methodBody == null)
+            var lastMethodNode = methodBody?.ChildNodes().LastOrDefault();
+            if (lastMethodNode == null)
                 return false;
 
-            var model = syntaxNode.SemanticModel;
-            var result = model.AnalyzeDataFlow(methodBody);
+            var readWrite = syntaxNode.SemanticModel.AnalyzeDataFlow(variableDeclarator, lastMethodNode);
+            DataFlowAnalysis result = model.AnalyzeDataFlow(variableDeclarator);
             var variablesDeclared = result.VariablesDeclared;
             var variablesRead = result.ReadInside.Union(result.ReadOutside);
             var unused = variablesDeclared.Except(variablesRead);
@@ -114,7 +116,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////				if (IsUsed(decl.Parent, resolveResult.Variable, variableInitializer))
         ////					return;
         ////
-        ////				AddDiagnosticAnalyzer(new CodeIssue(variableInitializer.NameToken, 
+        ////				AddDiagnosticAnalyzer(new CodeIssue(variableInitializer.NameToken,
         ////					string.Format(ctx.TranslateString(""), resolveResult.Variable.Name), ctx.TranslateString(""),
         ////					script => {
         ////						if (decl.Variables.Count == 1) {
@@ -127,7 +129,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////						}
         ////					}) { IssueMarker = IssueMarker.GrayOut });
         //			}
-
 
         //			public override void VisitForEachStatement(ForEachStatementSyntax node)
         //			{
@@ -149,6 +150,4 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////			}
         //		}
     }
-
-
 }
