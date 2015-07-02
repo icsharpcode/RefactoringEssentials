@@ -46,7 +46,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = nodeContext.Node as ArrayCreationExpressionSyntax;
             var arrayType = node?.Type;
 
-            if (arrayType == null || !arrayType.RankSpecifiers.Any())
+            if (arrayType == null)
+                return false;
+
+
+            var rs = arrayType.RankSpecifiers;
+            if (rs.Count != 1 || rs[0].Sizes.Count != 1)
                 return false;
 
             var intSizeValue = nodeContext.SemanticModel.GetConstantValue(arrayType.RankSpecifiers[0].Sizes[0]);
