@@ -1,6 +1,9 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -23,15 +26,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.MethodDeclaration 
+            );
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -39,10 +44,34 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            var methodDeclaration = nodeContext.Node as MethodDeclarationSyntax;
+            if (methodDeclaration == null)
+                return false;
+
+            if (!methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
+            {
+                return false;
+            }
+
+            var lastParam = methodDeclaration.ParameterList.Parameters.LastOrDefault();
+            if (lastParam == null || !lastParam.Modifiers.ElementAt(0).IsKind(SyntaxKind.ParamsKeyword))
+                return false;
+
+            var type = lastParam.Type; //What is a ComposedType?
+            if (type == null)
+                return false;
+            ////				var type = lastParam.Type as ComposedType;
+            ////				if (type == null || !type.ArraySpecifiers.Any())
+            ////					return;
+
+            var methodSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(methodDeclaration);
+            if (methodSymbol == null || methodSymbol.Parameters.Length == 0 || methodSymbol.Parameters.LastOrDefault().IsParams)
+                return false;
+
+            // Do I need to look for BlockSyntax ? If yes, What ? 
+
+            diagnostic = Diagnostic.Create(descriptor, methodDeclaration.GetLocation());
+            return true;
         }
 
         //		class GatherVisitor : GatherVisitorBase<RedundantParamsAnalyzer>
