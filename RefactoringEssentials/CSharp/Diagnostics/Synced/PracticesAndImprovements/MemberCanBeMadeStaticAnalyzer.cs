@@ -11,27 +11,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MemberCanBeMadeStaticAnalyzer : DiagnosticAnalyzer
     {
-        private EventHandler _myEvent;
-
-        public event EventHandler MyEvent
-        {
-            add
-            {
-                lock (this)
-                {
-                    _myEvent += value;
-                }
-            }
-            remove
-            {
-                lock (this)
-                {
-                    _myEvent -= value;
-                }
-            }
-        }
-
-
         private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.MemberCanBeMadeStaticAnalyzerID,
             GettextCatalog.GetString("A member doesn't use 'this' object neither explicit nor implicit. It can be made static"),
@@ -96,7 +75,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             var body = methodDeclaration.Body;
             // skip empty methods
-            if (!body.Statements.Any())
+            if (body.Statements.Count==0)
                 return false;
 
             if (body.Statements.Count == 1)
@@ -147,11 +126,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             if (IsEmpty(getterAccessor) && IsEmpty(setterAccessor))
                 return false;
-
-
-            //if (!propertyDeclaration.Getter.IsNull && StaticVisitor.UsesNotStaticMember(ctx, propertyDeclaration.Getter.Body) ||
-            //    !propertyDeclaration.Setter.IsNull && StaticVisitor.UsesNotStaticMember(ctx, propertyDeclaration.Setter.Body))
-            //    return;
 
             diagnostic = Diagnostic.Create(descriptor, propertyDeclaration.GetLocation());
             return true;
