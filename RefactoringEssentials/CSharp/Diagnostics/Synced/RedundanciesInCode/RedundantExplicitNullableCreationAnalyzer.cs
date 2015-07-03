@@ -53,8 +53,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             int? i = new int?(5);
-            int? a = new System.Nullable<int>(5);
-
 
             //Not so sure about this check but was there before
             var parentVarDeclaration = objectCreation.Parent.Parent as VariableDeclarationSyntax;
@@ -63,20 +61,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             if (objectCreationSymbol.OriginalDefinition.ToString().Equals("System.Nullable<T>.Nullable(T)"))
             {
-                var qualifiedName = objectCreation.ChildNodes().OfType<QualifiedNameSyntax>().FirstOrDefault();
-                if (qualifiedName != null)
-                {
-                    diagnostic = Diagnostic.Create(descriptor, qualifiedName.GetLocation());
-                    return true;
-                }
-
-                var nullableType = objectCreation.Type as NullableTypeSyntax;
-                if (nullableType != null)
-                {
-                    diagnostic = Diagnostic.Create(descriptor, nullableType.GetLocation());
-                    return true;
-                }
-                return false;
+                diagnostic = Diagnostic.Create(descriptor, objectCreation.GetLocation());
+                return true;
             }
             return false;
         }

@@ -34,8 +34,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var objectCreation = root.FindNode(context.Span) as ObjectCreationExpressionSyntax;
-            var argumentList = objectCreation.ChildNodes().OfType<ArgumentListSyntax>().FirstOrDefault();
-
+            var argumentList = objectCreation.ArgumentList;
             if (argumentList == null)
                 return;
 
