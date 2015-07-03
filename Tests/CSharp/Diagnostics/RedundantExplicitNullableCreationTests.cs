@@ -4,13 +4,12 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantExplicitNullableCreationTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestVariableCreation()
         {
-            Test<RedundantExplicitNullableCreationAnalyzer>(@"
+            Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
 class FooBar
 {
 	void Test()
@@ -32,7 +31,7 @@ class FooBar
         [Test]
         public void TestLongForm()
         {
-            Test<RedundantExplicitNullableCreationAnalyzer>(@"
+            Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
 class FooBar
 {
 	void Test()

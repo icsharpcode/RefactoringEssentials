@@ -1,11 +1,13 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantExplicitNullableCreationAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -23,15 +25,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.ObjectCreationExpression
+            );
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -39,9 +43,41 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+
+            var objectCreation = nodeContext.Node as ObjectCreationExpressionSyntax;
+            if (objectCreation == null)
+                return false;
+
+            var objectCreationSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(objectCreation);
+            if (objectCreationSymbol == null)
+                return false;
+
+            int? i = new int?(5);
+            int? a = new System.Nullable<int>(5);
+
+
+            //Not so sure about this check but was there before
+            var parentVarDeclaration = objectCreation.Parent.Parent as VariableDeclarationSyntax;
+            if (parentVarDeclaration != null && parentVarDeclaration.Type.IsVar)
+                return false;
+
+            if (objectCreationSymbol.OriginalDefinition.ToString().Equals("System.Nullable<T>.Nullable(T)"))
+            {
+                var qualifiedName = objectCreation.ChildNodes().OfType<QualifiedNameSyntax>().FirstOrDefault();
+                if (qualifiedName != null)
+                {
+                    diagnostic = Diagnostic.Create(descriptor, qualifiedName.GetLocation());
+                    return true;
+                }
+
+                var nullableType = objectCreation.Type as NullableTypeSyntax;
+                if (nullableType != null)
+                {
+                    diagnostic = Diagnostic.Create(descriptor, nullableType.GetLocation());
+                    return true;
+                }
+                return false;
+            }
             return false;
         }
 

@@ -1,12 +1,14 @@
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantExplicitNullableCreationCodeFixProvider : CodeFixProvider
     {
@@ -31,11 +33,23 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant 'new'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var objectCreation = root.FindNode(context.Span) as ObjectCreationExpressionSyntax;
+            var argumentList = objectCreation.ChildNodes().OfType<ArgumentListSyntax>().FirstOrDefault();
+
+            if (argumentList == null)
+                return;
+
+            context.RegisterCodeFix(CodeActionFactory.Create(objectCreation.Span, diagnostic.Severity, "Redundant explicit nullable type creation", token =>
+            {
+                var newNode = SyntaxFactory.ObjectCreationExpression(objectCreation.NewKeyword, objectCreation.Type,
+                    argumentList, objectCreation.Initializer);
+
+                var newRoot = root.ReplaceNode(objectCreation,
+                    newNode.WithLeadingTrivia(objectCreation.GetLeadingTrivia())
+                        .WithAdditionalAnnotations(Formatter.Annotation));
+
+                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+            }), diagnostic);
         }
     }
 }
