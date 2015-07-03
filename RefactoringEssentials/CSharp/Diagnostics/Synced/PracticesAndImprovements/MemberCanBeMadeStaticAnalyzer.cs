@@ -1,14 +1,38 @@
+using System;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class MemberCanBeMadeStaticAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private EventHandler _myEvent;
+
+        public event EventHandler MyEvent
+        {
+            add
+            {
+                lock (this)
+                {
+                    _myEvent += value;
+                }
+            }
+            remove
+            {
+                lock (this)
+                {
+                    _myEvent -= value;
+                }
+            }
+        }
+
+
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.MemberCanBeMadeStaticAnalyzerID,
             GettextCatalog.GetString("A member doesn't use 'this' object neither explicit nor implicit. It can be made static"),
             GettextCatalog.GetString("Member can be made static"),
@@ -22,26 +46,189 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnosticMethodDeclaration(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                 SyntaxKind.MethodDeclaration
+            );
+
+            context.RegisterSyntaxNodeAction(
+    (nodeContext) =>
+    {
+        Diagnostic diagnostic;
+        if (TryGetDiagnosticPropertyDeclaration(nodeContext, out diagnostic))
+        {
+            nodeContext.ReportDiagnostic(diagnostic);
+        }
+    },
+     SyntaxKind.PropertyDeclaration
+);
+            context.RegisterSyntaxNodeAction(
+    (nodeContext) =>
+    {
+        Diagnostic diagnostic;
+        if (TryGetDiagnosticEventFieldDeclaration(nodeContext, out diagnostic))
+        {
+            nodeContext.ReportDiagnostic(diagnostic);
+        }
+    },
+     SyntaxKind.EventDeclaration
+);
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetDiagnosticMethodDeclaration(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            var methodDeclaration = nodeContext.Node as MethodDeclarationSyntax;
+            if (methodDeclaration == null)
+                return false;
+
+            if (DoesMethodContainModifier(methodDeclaration))
+                return false;
+
+            var body = methodDeclaration.Body;
+            // skip empty methods
+            if (!body.Statements.Any())
+                return false;
+
+            if (body.Statements.Count == 1)
+            {
+                if (body.Statements.First() is ThrowStatementSyntax)
+                    return false;
+            }
+
+            var methodSymbolInfo = nodeContext.SemanticModel.GetDeclaredSymbol(methodDeclaration);
+            if (methodSymbolInfo == null)
+                return false;
+
+            var isMethodImplementingInterface = methodSymbolInfo.ExplicitInterfaceImplementations();
+            if (!isMethodImplementingInterface.IsEmpty)
+                return false;
+
+            diagnostic = Diagnostic.Create(descriptor, methodDeclaration.GetLocation());
+            return true;
+        }
+
+        private static bool TryGetDiagnosticPropertyDeclaration(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        {
+            diagnostic = default(Diagnostic);
+            if (nodeContext.IsFromGeneratedCode())
+                return false;
+            var propertyDeclaration = nodeContext.Node as PropertyDeclarationSyntax;
+            if (propertyDeclaration == null)
+                return false;
+
+            if (DoesPropertyContainModifier(propertyDeclaration))
+                return false;
+
+            var propSymbolInfo = nodeContext.SemanticModel.GetDeclaredSymbol(propertyDeclaration);
+            if (propSymbolInfo == null)
+                return false;
+
+            var isPropertyImplementingInterface = propSymbolInfo.ExplicitInterfaceImplementations();
+            if (!isPropertyImplementingInterface.IsEmpty)
+                return false;
+
+            var getterAccessor = propertyDeclaration.AccessorList.Accessors.FirstOrDefault();
+            if (getterAccessor == null)
+                return false;
+
+            var setterAccessor = propertyDeclaration.AccessorList.Accessors.ElementAt(1);
+            if (setterAccessor == null)
+                return false;
+
+            if (IsEmpty(getterAccessor) && IsEmpty(setterAccessor))
+                return false;
+
+
+            //if (!propertyDeclaration.Getter.IsNull && StaticVisitor.UsesNotStaticMember(ctx, propertyDeclaration.Getter.Body) ||
+            //    !propertyDeclaration.Setter.IsNull && StaticVisitor.UsesNotStaticMember(ctx, propertyDeclaration.Setter.Body))
+            //    return;
+
+            diagnostic = Diagnostic.Create(descriptor, propertyDeclaration.GetLocation());
+            return true;
+        }
+
+        private static bool TryGetDiagnosticEventFieldDeclaration(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        {
+            diagnostic = default(Diagnostic);
+            if (nodeContext.IsFromGeneratedCode())
+                return false;
+
+            var eventField = nodeContext.Node as EventDeclarationSyntax;
+            if (eventField == null)
+                return false;
+
+            if (DoesEventFieldContainModifier(eventField))
+                return false;
+
+            var addAccessor = eventField.AccessorList.Accessors.FirstOrDefault();
+            if (addAccessor == null)
+                return false;
+
+            var removeAccessor = eventField.AccessorList.Accessors.ElementAt(1);
+            if (removeAccessor == null)
+                return false;
+
+            if (IsEmpty(addAccessor) && IsEmpty(removeAccessor))
+                return false;
+
+
+            var eventSymbolInfo = nodeContext.SemanticModel.GetDeclaredSymbol(eventField);
+            if (eventSymbolInfo == null)
+                return false;
+
+            var isPropertyImplementingInterface = eventSymbolInfo.ExplicitInterfaceImplementations();
+            if (!isPropertyImplementingInterface.IsEmpty)
+                return false;
+
+            diagnostic = Diagnostic.Create(descriptor, eventField.GetLocation());
+            return true;
+        }
+
+         static bool DoesMethodContainModifier(MethodDeclarationSyntax methodDeclaration)
+        {
+            return 
+                methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
+                methodDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
+                methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
+                methodDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) ||
+                methodDeclaration.AttributeLists.FirstOrDefault().Attributes.Any();
+        }
+
+        static bool DoesPropertyContainModifier(PropertyDeclarationSyntax propertyDeclaration)
+        {
+            return 
+                propertyDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
+                propertyDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
+                propertyDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
+                propertyDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) ||
+                propertyDeclaration.AttributeLists.FirstOrDefault().Attributes.Any();
+        }
+
+         static bool DoesEventFieldContainModifier(EventDeclarationSyntax eventFieldDeclaration)
+        {
+            return
+                eventFieldDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
+                eventFieldDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
+                eventFieldDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
+                eventFieldDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) ||
+                eventFieldDeclaration.AttributeLists.FirstOrDefault().Attributes.Any();
+        }
+
+        static bool IsEmpty(AccessorDeclarationSyntax accessor)
+        {
+            return accessor == null ||
+                !accessor.Body.Statements.Any() ||
+                accessor.Body.Statements.Count == 1 && accessor.Body.Statements.First() is ThrowStatementSyntax;
         }
 
         //		private class GatherVisitor : GatherVisitorBase<MemberCanBeMadeStaticAnalyzer>
@@ -62,7 +249,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////				var rr = ctx.Resolve(typeDeclaration);
         ////				if (rr.Type.GetNonInterfaceBaseTypes().Any(t => t.Name == "MarshalByRefObject" && t.Namespace == "System"))
         ////					return; // ignore MarshalByRefObject, as only instance method calls get marshaled
-        ////				
+        ////
         ////				base.VisitTypeDeclaration(typeDeclaration);
         ////			}
         ////
@@ -71,7 +258,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////				return resolved.Accessibility == Accessibility.Private && !CheckPrivateMember ||
         ////					resolved.Accessibility != Accessibility.Private && CheckPrivateMember;
         ////			}
-        ////			
+        ////
         ////			public override void VisitMethodDeclaration(MethodDeclaration methodDeclaration)
         ////			{
         ////				var context = ctx;
@@ -91,7 +278,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////					if (body.Statements.First () is ThrowStatement)
         ////						return;
         ////				}
-        ////					
+        ////
         ////				var resolved = context.Resolve(methodDeclaration) as MemberResolveResult;
         ////				if (resolved == null || SkipMember(resolved.Member))
         ////					return;
@@ -101,7 +288,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////
         ////				if (StaticVisitor.UsesNotStaticMember(context, body))
         ////					return;
-        ////				
+        ////
         ////				AddDiagnosticAnalyzer(new CodeIssue(
         ////					methodDeclaration.NameToken.StartLocation, methodDeclaration.NameToken.EndLocation,
         ////					string.Format(context.TranslateString("Method '{0}' can be made static."), methodDeclaration.Name),
@@ -111,7 +298,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////
         ////			static bool IsEmpty(Accessor setter)
         ////			{
-        ////				return setter.IsNull || 
+        ////				return setter.IsNull ||
         ////					!setter.Body.Statements.Any() ||
         ////					setter.Body.Statements.Count == 1 && setter.Body.Statements.First () is ThrowStatement;
         ////			}
