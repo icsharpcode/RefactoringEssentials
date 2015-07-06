@@ -52,6 +52,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
             //ignore implicitly declared (e.g. default ctor)
             IEnumerable<ISymbol> enumerable = classType.GetMembers().Where(m => !(m is ITypeSymbol));
+            if (!enumerable.Any(m => !m.IsImplicitlyDeclared))
+                return false;
             if (Enumerable.Any(enumerable, f => (!f.IsStatic && !f.IsImplicitlyDeclared) || (f is IMethodSymbol && IsMainMethod((IMethodSymbol)f))))
                 return false;
 

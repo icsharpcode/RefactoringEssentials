@@ -83,7 +83,6 @@
 * RedundantExplicitNullableCreationAnalyzer
 * RedundantExtendsListEntryAnalyzer
 * RedundantIfElseBlockAnalyzer
-* RedundantInternalAnalyzer
 * RedundantLambdaParameterTypeAnalyzer
 * RedundantLambdaSignatureParenthesesAnalyzer
 * RedundantLogicalConditionalExpressionOperandAnalyzer

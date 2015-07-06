@@ -220,5 +220,18 @@ class ShouldBeStatic
 ");
         }
 
+        [Test]
+        public void TestEmptyPublicClassWithInterfaceImplementation()
+        {
+            Analyze<ConvertToStaticTypeAnalyzer>(@"
+interface SomeInterface
+{
+}
+
+public class ShouldNotBeStatic : SomeInterface
+{
+}
+");
+        }
     }
 }

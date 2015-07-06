@@ -15,7 +15,7 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>89 code analyzers for C#</p>
+    <p>90 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
@@ -70,6 +70,7 @@
       <li>'base.' is redundant and can safely be removed (RedundantBaseQualifierAnalyzer)</li>
       <li>Redundant case label (RedundantCaseLabelAnalyzer)</li>
       <li>Redundant empty 'default' switch branch (RedundantEmptyDefaultSwitchBranchAnalyzer)</li>
+      <li>Removes 'internal' modifiers that are not required (RedundantInternalAnalyzer)</li>
       <li>Removes 'private' modifiers that are not required (RedundantPrivateAnalyzer)</li>
       <li>Redundant conditional expression (RedundantTernaryExpressionAnalyzer)</li>
       <li>Remove redundant statement (RemoveRedundantOrStatementAnalyzer)</li>
