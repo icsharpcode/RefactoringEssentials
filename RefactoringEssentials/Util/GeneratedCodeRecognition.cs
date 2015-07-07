@@ -34,28 +34,60 @@ namespace RefactoringEssentials
             ".g.i",
             ".AssemblyAttributes"
         };
+        const int generatedCodeSuffixesLength = 6;
+
+        static readonly string generatedCodePrefix = "TemporaryGeneratedFile_";
+        const int generatedCodePrefixLength = 23;
 
         public unsafe static bool IsFileNameForGeneratedCode(string fileName)
         {
-            if (fileName.StartsWith("TemporaryGeneratedFile_", StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            int idx = fileName.LastIndexOf ('.');
-            if (idx < 0)
-                return false;
+            char* curPtr, endPtr;
             fixed (char* beginPtr = fileName)
             {
-                char *endPtr = beginPtr + idx;
+                // Check prefix
+                if (generatedCodePrefixLength < fileName.Length)
+                {
+                    curPtr = beginPtr;
+                    endPtr = beginPtr + generatedCodePrefixLength;
 
-                for (int i = 0; i < generatedCodeSuffixes.Length; i++)
+                    fixed (char* patternPtr = generatedCodePrefix)
+                    {
+                        char* curPatternPtr = patternPtr;
+                        while (curPtr != endPtr)
+                        {
+                            if (char.ToUpperInvariant (*curPtr) != char.ToUpperInvariant (*curPatternPtr))
+                            {
+                                break;
+                            }
+                            curPtr++;
+                            curPatternPtr++;
+                        }
+                        if (curPtr == endPtr)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                // Search last index of '.'
+                curPtr = beginPtr + fileName.Length - 1;
+                while (curPtr >= beginPtr && *curPtr != '.')
+                {
+                    curPtr--;
+                }
+                if (curPtr < beginPtr)
+                {
+                    return false;
+                }
+                endPtr = curPtr;
+
+                // Check suffix
+                for (int i = 0; i < generatedCodeSuffixesLength; i++)
                 {
                     string str = generatedCodeSuffixes[i];
-                    int p = idx - str.Length;
-                    if (p < 0)
+                    curPtr = endPtr - str.Length;
+                    if (curPtr < beginPtr)
                         continue;
-                    char* curPtr = beginPtr + p;
                     fixed (char* patternPtr = str)
                     {
                         char* curPatternPtr = patternPtr;
