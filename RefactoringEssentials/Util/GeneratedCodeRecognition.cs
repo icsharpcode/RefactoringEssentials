@@ -26,29 +26,55 @@ namespace RefactoringEssentials
             return IsFromGeneratedCode(context.SemanticModel, context.CancellationToken);
         }
 
-        public static bool IsFileNameForGeneratedCode(string fileName)
+        static readonly string[] generatedCodeSuffixes = {
+            "AssemblyInfo",
+            ".designer",
+            ".generated",
+            ".g",
+            ".g.i",
+            ".AssemblyAttributes"
+        };
+
+        public unsafe static bool IsFileNameForGeneratedCode(string fileName)
         {
             if (fileName.StartsWith("TemporaryGeneratedFile_", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
 
-            string extension = Path.GetExtension(fileName);
-            if (extension != string.Empty)
+            int idx = fileName.LastIndexOf ('.');
+            if (idx < 0)
+                return false;
+            fixed (char* beginPtr = fileName)
             {
-                fileName = Path.GetFileNameWithoutExtension(fileName);
+                char *endPtr = beginPtr + idx;
 
-                if (fileName.EndsWith("AssemblyInfo", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".designer", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".generated", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".g", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".g.i", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".AssemblyAttributes", StringComparison.OrdinalIgnoreCase))
+                for (int i = 0; i < generatedCodeSuffixes.Length; i++)
                 {
-                    return true;
+                    string str = generatedCodeSuffixes[i];
+                    int p = idx - str.Length;
+                    if (p < 0)
+                        continue;
+                    char* curPtr = beginPtr + p;
+                    fixed (char* patternPtr = str)
+                    {
+                        char* curPatternPtr = patternPtr;
+                        while (curPtr != endPtr)
+                        {
+                            if (char.ToUpperInvariant (*curPtr) != char.ToUpperInvariant (*curPatternPtr))
+                            {
+                                break;
+                            }
+                            curPtr++;
+                            curPatternPtr++;
+                        }
+                        if (curPtr == endPtr)
+                        {
+                            return true;
+                        }
+                    }
                 }
             }
-
             return false;
         }
 
