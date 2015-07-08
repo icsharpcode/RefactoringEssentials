@@ -85,6 +85,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var variableTypeName = localVariable.Declaration.Type;
             var semanticModel = nodeContext.SemanticModel;
             var variableType = semanticModel.GetSymbolInfo(variableTypeName, nodeContext.CancellationToken).Symbol as ITypeSymbol;
+            if (variableType == null)
+                return false;
             return IsArrayTypeSomeObviousTypeCase(nodeContext, initializerExpression, variableType, localVariable) ||
                 IsObjectCreationSomeObviousTypeCase(nodeContext, initializerExpression, variableType) ||
                 IsCastingSomeObviousTypeCase(nodeContext, initializerExpression, variableType) /*||
