@@ -18,3 +18,6 @@ _ReSharper*/*
 !**/packages/build/
 # If using the old MSBuild-Integrated Package Restore, uncomment this:
 !**/packages/repositories.config
+
+# Switch file for debug versioning of VSIX
+__debug.versioning
