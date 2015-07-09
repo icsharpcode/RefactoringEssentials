@@ -71,6 +71,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             IReadOnlyList<ParameterSyntax> lambdaParameters = parenLambda?.ParameterList?.Parameters ?? anoMethod?.ParameterList?.Parameters;
             if (simpleLambda != null)
                 lambdaParameters = new[] { simpleLambda.Parameter };
+            if (lambdaParameters == null)
+                lambdaParameters = new ParameterSyntax[] { };
 
             var arguments = invocation.ArgumentList.Arguments;
             if (method.Parameters.Length != arguments.Count || lambdaParameters.Count != arguments.Count)
