@@ -3,6 +3,9 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -34,8 +37,21 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = root.FindNode(context.Span);
             //if (!node.IsKind(SyntaxKind.BaseList))
             //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove 'params' modifier", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var redundantParameterWithModifier = FindParameterWithParamsModifier(((MethodDeclarationSyntax)node).ParameterList);
+            if (redundantParameterWithModifier == null)
+                return;
+
+            var paramsKeyword = (redundantParameterWithModifier.Modifiers.FirstOrDefault(x => x.IsKind(SyntaxKind.ParamsKeyword)));
+            redundantParameterWithModifier.Modifiers.Remove(paramsKeyword);
+
+            //var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+            //context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove 'params' modifier", document.WithSyntaxRoot(newRoot)), diagnostic);
+        }
+
+
+        public ParameterSyntax FindParameterWithParamsModifier( ParameterListSyntax parameterList)
+        {
+            return parameterList.Parameters.FirstOrDefault(p => p.Modifiers.Any(x => x.IsKind(SyntaxKind.ParamsKeyword)));
         }
     }
 }

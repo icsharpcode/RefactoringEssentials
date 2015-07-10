@@ -30,13 +30,41 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 (nodeContext) =>
                 {
                     Diagnostic diagnostic;
-                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    if (TryGetParamsDiagnostic(nodeContext, out diagnostic))
                     {
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                SyntaxKind.MethodDeclaration 
+                SyntaxKind.ParameterList 
             );
+        }
+        //I think it's a better decision to head in this direction instead of MethodDeclaration.
+        static bool TryGetParamsDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        {
+            diagnostic = default(Diagnostic);
+            if (nodeContext.IsFromGeneratedCode())
+                return false;
+
+            var paramList = nodeContext.Node as ParameterListSyntax;
+            var declaration = paramList?.Parent as MethodDeclarationSyntax;
+
+            if (declaration == null)
+                return false;
+
+            if (declaration.Modifiers.Count == 0 ||!declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
+                return false;
+
+            var lastParam = declaration.ParameterList.Parameters.LastOrDefault();
+            if (lastParam == null || !lastParam.Modifiers.ElementAt(0).IsKind(SyntaxKind.ParamsKeyword))
+                return false;
+
+            var methodSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(declaration);
+            if (methodSymbol == null || methodSymbol.Parameters.Length == 0 || methodSymbol.Parameters.LastOrDefault().IsParams)
+                return false;
+
+
+            diagnostic = Diagnostic.Create(descriptor, lastParam.GetLocation());
+            return true;
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -48,7 +76,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (methodDeclaration == null)
                 return false;
 
-            if (!methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
+            if (  methodDeclaration.Modifiers.Count==0|| !methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
             {
                 return false;
             }
