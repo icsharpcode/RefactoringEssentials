@@ -179,6 +179,65 @@ class C
 }");
         }
 
+        [Test]
+        public void HandlesDelegateExtensionMethodOnVariable()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"
+using System;
+static class B
+{
+    public static void CallPrintIntHandler(this Action<int> a, int i) { }
+}
+
+class C
+{
+    void F()
+    {
+        int a = 4;
+        Action<int> printIntHandler = i => Console.WriteLine(i);
+        B.$CallPrintIntHandler$(printIntHandler, a);
+    }
+}", @"
+using System;
+static class B
+{
+    public static void CallPrintIntHandler(this Action<int> a, int i) { }
+}
+
+class C
+{
+    void F()
+    {
+        int a = 4;
+        Action<int> printIntHandler = i => Console.WriteLine(i);
+        printIntHandler.CallPrintIntHandler(a);
+    }
+}");
+        }
+
+        [Test]
+        public void IgnoresDelegateExtensionMethodOnMethod()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
+static class B
+{
+    public static void CallPrintIntHandler(this Action<int> a, int i) { }
+}
+
+class C
+{
+    void F()
+    {
+        int a = 4;
+        B.CallPrintIntHandler(PrintIntHandler, a);
+    }
+
+    void PrintIntHandler(int i)
+    {
+        Console.WriteLine(i);
+    }
+}");
+        }
 
         [Test]
         public void TestDisable()
