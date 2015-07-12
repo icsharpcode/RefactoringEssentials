@@ -40,7 +40,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
 
             var method = invocationRR.Symbol as IMethodSymbol;
-            if (method == null || !method.IsExtensionMethod)
+            if (method == null || !method.IsExtensionMethod || method.MethodKind == MethodKind.Ordinary)
                 return;
 
             context.RegisterRefactoring(
