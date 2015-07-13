@@ -157,6 +157,95 @@ class Foo
 }");
         }
 
+        [Test]
+        public void CallAsUnambiguousMethodParameter1()
+        {
+            Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
+static class FooStringExtensions
+{
+    public static int MyMethod(this String str) { return 0; }
+}
+
+class Foo
+{
+    void Bar (string str)
+    {
+        SomeMethod($() => str.MyMethod()$);
+    }
+
+    void SomeMethod(Func<int> action) { }
+}", @"using System;
+static class FooStringExtensions
+{
+    public static int MyMethod(this String str) { return 0; }
+}
+
+class Foo
+{
+    void Bar (string str)
+    {
+        SomeMethod(str.MyMethod);
+    }
+
+    void SomeMethod(Func<int> action) { }
+}");
+        }
+
+        [Test]
+        public void CallAsAmbiguousMethodParameter()
+        {
+            Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
+static class FooStringExtensions
+{
+    public static void MyMethod(this String str) { return; }
+}
+
+class Foo
+{
+    void Bar (string str)
+    {
+        SomeMethod(() => str.MyMethod());
+    }
+
+    void SomeMethod(Action action) { }
+    void SomeMethod(Func<object> action) { }
+}");
+        }
+
+        [Test]
+        public void CallAsUnambiguousMethodParameter2()
+        {
+            Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
+static class FooStringExtensions
+{
+    public static void MyMethod(this String str) { return; }
+}
+
+class Foo
+{
+    void Bar (string str)
+    {
+        SomeMethod($() => str.MyMethod()$);
+    }
+
+    void SomeMethod(Action action) { }
+}", @"using System;
+static class FooStringExtensions
+{
+    public static void MyMethod(this String str) { return; }
+}
+
+class Foo
+{
+    void Bar (string str)
+    {
+        SomeMethod(str.MyMethod);
+    }
+
+    void SomeMethod(Action action) { }
+}");
+        }
+
         /// <summary>
         /// Bug 12184 - Expression can be reduced to delegate fix can create ambiguity
         /// </summary>

@@ -33,6 +33,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
+            if (node is ArgumentSyntax)
+                node = ((ArgumentSyntax)node).Expression;
             var c1 = node as AnonymousMethodExpressionSyntax;
             var c2 = node as ParenthesizedLambdaExpressionSyntax;
             var c3 = node as SimpleLambdaExpressionSyntax;
