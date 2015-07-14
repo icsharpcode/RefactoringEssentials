@@ -768,22 +768,40 @@ namespace RefactoringEssentials
             return token.ToString() == SyntaxFacts.GetText(kind);
         }
 
-        public static bool IsKind(this SyntaxToken token, SyntaxKind kind1, SyntaxKind kind2)
+        public static bool IsKind(this SyntaxToken token, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind1, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind2)
         {
-            return token.Kind() == kind1
-                || token.Kind() == kind2;
+            return Microsoft.CodeAnalysis.CSharp.CSharpExtensions.Kind(token) == kind1
+                || Microsoft.CodeAnalysis.CSharp.CSharpExtensions.Kind(token) == kind2;
         }
 
-        public static bool IsKind(this SyntaxToken token, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3)
+        public static bool IsKind(this SyntaxToken token, Microsoft.CodeAnalysis.VisualBasic.SyntaxKind kind1, Microsoft.CodeAnalysis.VisualBasic.SyntaxKind kind2)
         {
-            return token.Kind() == kind1
-                || token.Kind() == kind2
-                || token.Kind() == kind3;
+            return Microsoft.CodeAnalysis.VisualBasic.VisualBasicExtensions.Kind(token) == kind1
+                || Microsoft.CodeAnalysis.VisualBasic.VisualBasicExtensions.Kind(token) == kind2;
         }
 
-        public static bool IsKind(this SyntaxToken token, params SyntaxKind[] kinds)
+        public static bool IsKind(this SyntaxToken token, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind1, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind2, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind3)
         {
-            return kinds.Contains(token.Kind());
+            return Microsoft.CodeAnalysis.CSharp.CSharpExtensions.Kind(token) == kind1
+                || Microsoft.CodeAnalysis.CSharp.CSharpExtensions.Kind(token) == kind2
+                || Microsoft.CodeAnalysis.CSharp.CSharpExtensions.Kind(token) == kind3;
+        }
+
+        public static bool IsKind(this SyntaxToken token, Microsoft.CodeAnalysis.VisualBasic.SyntaxKind kind1, Microsoft.CodeAnalysis.VisualBasic.SyntaxKind kind2, Microsoft.CodeAnalysis.VisualBasic.SyntaxKind kind3)
+        {
+            return Microsoft.CodeAnalysis.VisualBasic.VisualBasicExtensions.Kind(token) == kind1
+                || Microsoft.CodeAnalysis.VisualBasic.VisualBasicExtensions.Kind(token) == kind2
+                || Microsoft.CodeAnalysis.VisualBasic.VisualBasicExtensions.Kind(token) == kind3;
+        }
+
+        public static bool IsKind(this SyntaxToken token, params Microsoft.CodeAnalysis.CSharp.SyntaxKind[] kinds)
+        {
+            return kinds.Contains(Microsoft.CodeAnalysis.CSharp.CSharpExtensions.Kind(token));
+        }
+
+        public static bool IsKind(this SyntaxToken token, params Microsoft.CodeAnalysis.VisualBasic.SyntaxKind[] kinds)
+        {
+            return kinds.Contains(Microsoft.CodeAnalysis.VisualBasic.VisualBasicExtensions.Kind(token));
         }
 
         public static bool IsLiteral(this SyntaxToken token)
