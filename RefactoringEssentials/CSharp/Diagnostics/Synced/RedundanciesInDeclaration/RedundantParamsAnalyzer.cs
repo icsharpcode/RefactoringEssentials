@@ -51,21 +51,33 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (declaration == null)
                 return false;
 
-            if (declaration.Modifiers.Count == 0 ||!declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
+            if (declaration.Modifiers.Count == 0 || !declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
                 return false;
 
             var lastParam = declaration.ParameterList.Parameters.LastOrDefault();
-            if (lastParam == null || !lastParam.Modifiers.ElementAt(0).IsKind(SyntaxKind.ParamsKeyword))
+            SyntaxToken? paramsModifierToken = null;
+            if (lastParam == null)
                 return false;
 
-            var methodSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(declaration);
-            if (methodSymbol == null || methodSymbol.Parameters.Length == 0 || methodSymbol.Parameters.LastOrDefault().IsParams)
+            foreach (var x in lastParam.Modifiers)
+            {
+                if (x.IsKind(SyntaxKind.ParamsKeyword))
+                {
+                    paramsModifierToken = x;
+                    break;
+                }
+            }
+
+            if (!paramsModifierToken.HasValue ||
+                !paramsModifierToken.Value.IsKind(SyntaxKind.ParamsKeyword))
                 return false;
+
 
 
             diagnostic = Diagnostic.Create(descriptor, lastParam.GetLocation());
             return true;
         }
+
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {

@@ -1,3 +1,4 @@
+using System;
 using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
 
@@ -51,6 +52,25 @@ class FooBar2 : FooBar
 class FooBar2 : FooBar
 {
 	public override void Foo(string fmt, object[] args)
+	{
+		System.Console.WriteLine(fmt, args);
+	}
+}");
+        }
+
+        [Test]
+        public void ValideParamsUsageTests()
+        {
+            Analyze<RedundantParamsAnalyzer>(@"class FooBar
+{
+	public virtual void Foo(string fmt, params object[] args)
+	{
+	}
+}
+
+class FooBar2 : FooBar
+{
+	public override void Foo(string fmt, params object[] args)
 	{
 		System.Console.WriteLine(fmt, args);
 	}
