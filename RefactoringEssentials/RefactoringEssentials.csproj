@@ -495,6 +495,7 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\ImportStaticClassWithUsingCodeRefactoringProvider.cs" />
     <Compile Include="Util\GeneratedCodeRecognition.cs" />
     <Compile Include="Util\HelpLink.cs" />
+    <Compile Include="Util\ITypeSymbolExtensionsVB.cs" />
     <Compile Include="Util\NRefactory6Host.cs" />
     <Compile Include="Util\SyntaxExtensions.cs" />
     <Compile Include="Util\TypeExtensions.cs" />
@@ -509,6 +510,7 @@
     <Compile Include="Util\SpeculationAnalyzer.cs" />
     <Compile Include="Util\CodeFixContextExtensions.cs" />
     <Compile Include="Util\SyntaxTokenExtensions.cs" />
+    <Compile Include="Util\VBSyntaxExtensions.cs" />
     <Compile Include="Util\WordParser.cs" />
     <Compile Include="Util\SyntaxNodeExtensions.cs" />
     <Compile Include="Util\Matcher.cs" />
@@ -544,6 +546,7 @@
     <Compile Include="VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticIDs.cs" />
