@@ -495,7 +495,6 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\ImportStaticClassWithUsingCodeRefactoringProvider.cs" />
     <Compile Include="Util\GeneratedCodeRecognition.cs" />
     <Compile Include="Util\HelpLink.cs" />
-    <Compile Include="Util\ITypeSymbolExtensionsVB.cs" />
     <Compile Include="Util\NRefactory6Host.cs" />
     <Compile Include="Util\SyntaxExtensions.cs" />
     <Compile Include="Util\TypeExtensions.cs" />
