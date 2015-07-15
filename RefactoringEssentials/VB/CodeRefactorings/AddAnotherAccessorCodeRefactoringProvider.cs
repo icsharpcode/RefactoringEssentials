@@ -119,12 +119,6 @@ namespace RefactoringEssentials.VB.CodeRefactorings
                 if (getter != null)
                 {
                     var getField = ScanGetter(model, getter);
-                    /*if (getField == null)
-                    {
-                        // Get ... End Get
-                        accessor = accessor.WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)).WithTrailingTrivia(getter.GetTrailingTrivia());
-                    }
-                    else*/
                     if (getField == null || getField.IsReadOnly)
                     {
                         // Readonly or no field can be found
@@ -132,7 +126,7 @@ namespace RefactoringEssentials.VB.CodeRefactorings
                     }
                     else
                     {
-                        //now we add a 'field = value'.
+                        // Now we add a 'field = value'.
                         accessor = accessor.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] {
                                 SyntaxFactory.AssignmentStatement(SyntaxKind.SimpleAssignmentStatement, SyntaxFactory.IdentifierName(getField.Name), SyntaxFactory.Token(SyntaxKind.EqualsToken), SyntaxFactory.IdentifierName("value")) }));
                     }
@@ -150,21 +144,11 @@ namespace RefactoringEssentials.VB.CodeRefactorings
 
                 var setter = propertyDeclaration.Accessors.FirstOrDefault(m => m.IsKind(SyntaxKind.SetAccessorBlock));
                 var accessorDeclList = new SyntaxList<AccessorBlockSyntax>();
-                if (setter == null)
-                {
-                    //set;
-                    //accessor = accessor.WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
-                }
-                else
+                if (setter != null)
                 {
                     var setField = ScanSetter(model, setter);
                     if (setField == null)
                     {
-                        //    //set;
-                        //    //accessor = accessor.WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)).WithTrailingTrivia(setter.GetTrailingTrivia());
-                        //}
-                        //else if (setField == null)
-                        //{
                         // No field can be found
                         accessor = accessor.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] { GetNotImplementedThrowStatement() }));
                     }
