@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.Formatting;
+using RefactoringEssentials.Util;
 
 namespace RefactoringEssentials.VB.CodeRefactorings
 {
@@ -60,47 +61,6 @@ namespace RefactoringEssentials.VB.CodeRefactorings
             );
         }
 
-        static IFieldSymbol ScanGetter(SemanticModel model, AccessorBlockSyntax getter)
-        {
-            if (getter == null || getter.Statements.Count != 1)
-                return null;
-            var retStatement = getter.Statements.First() as ReturnStatementSyntax;
-            if (retStatement == null)
-                return null;
-            if (!IsPossibleExpression(retStatement.Expression))
-                return null;
-            var retSymbol = model.GetSymbolInfo(retStatement.Expression).Symbol;
-            return ((IFieldSymbol)retSymbol);
-        }
-
-        static IFieldSymbol ScanSetter(SemanticModel model, AccessorBlockSyntax setter)
-        {
-            if (setter == null || setter.Statements.Count != 1) //no getter/get;/get we can't easily work out
-                return null;
-            var setAssignment = setter.Statements.OfType<StatementSyntax>().FirstOrDefault();
-            var assignment = setAssignment != null ? setAssignment as AssignmentStatementSyntax : null;
-            if (assignment == null || !assignment.OperatorToken.IsKind(SyntaxKind.EqualsToken))
-                return null;
-            var id = assignment.Right as IdentifierNameSyntax;
-            if (id == null || id.Identifier.ValueText != "value")
-                return null;
-            if (!IsPossibleExpression(assignment.Left))
-                return null;
-            var retSymbol = model.GetSymbolInfo(assignment.Left).Symbol;
-            return ((IFieldSymbol)retSymbol);
-
-        }
-
-        static bool IsPossibleExpression(ExpressionSyntax left)
-        {
-            if (left.IsKind(SyntaxKind.IdentifierName))
-                return true;
-            var mr = left as MemberAccessExpressionSyntax;
-            if (mr == null)
-                return false;
-            return mr.Expression is MyClassExpressionSyntax;
-        }
-
         Document PerformAction(Document document, SemanticModel model, SyntaxNode root, PropertyBlockSyntax propertyDeclaration, bool needsSetter)
         {
             AccessorBlockSyntax accessor = null;
@@ -118,7 +78,7 @@ namespace RefactoringEssentials.VB.CodeRefactorings
                 var getter = propertyDeclaration.Accessors.FirstOrDefault(m => m.IsKind(SyntaxKind.GetAccessorBlock));
                 if (getter != null)
                 {
-                    var getField = ScanGetter(model, getter);
+                    var getField = getter.ScanGetter(model);
                     if (getField == null || getField.IsReadOnly)
                     {
                         // Readonly or no field can be found
@@ -146,7 +106,7 @@ namespace RefactoringEssentials.VB.CodeRefactorings
                 var accessorDeclList = new SyntaxList<AccessorBlockSyntax>();
                 if (setter != null)
                 {
-                    var setField = ScanSetter(model, setter);
+                    var setField = setter.ScanSetter(model);
                     if (setField == null)
                     {
                         // No field can be found
