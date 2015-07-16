@@ -155,6 +155,36 @@ End Class");
         }
 
         [Test]
+        public void TestReadOnlyProperty()
+        {
+            TestWrongContext<CreateChangedEventCodeRefactoringProvider>(@"
+Class TestClass
+    Dim _test As String
+
+    Public ReadOnly Property Test As $String
+        Get
+            Return _test
+        End Get
+    End Property
+End Class");
+        }
+
+        [Test]
+        public void TestWriteOnlyProperty()
+        {
+            TestWrongContext<CreateChangedEventCodeRefactoringProvider>(@"
+Class TestClass
+    Dim _test As String
+
+    Public WriteOnly Property $Test As String
+        Set(ByVal value As String)
+            _test = value
+        End Set
+    End Property
+End Class");
+        }
+
+        [Test]
         public void TestWrongLocation()
         {
             TestWrongContext<CreateChangedEventCodeRefactoringProvider>(@"

@@ -117,31 +117,31 @@ namespace RefactoringEssentials.VB.CodeRefactorings
 
         static EventStatementSyntax CreateChangedEventDeclaration(PropertyBlockSyntax propertyDeclaration)
         {
-            bool isInheritable = !propertyDeclaration.PropertyStatement.Modifiers.Any(m => m.IsKind(SyntaxKind.SharedKeyword));
+            bool isNonInheritable = !propertyDeclaration.PropertyStatement.Modifiers.Any(m => m.IsKind(SyntaxKind.SharedKeyword));
 
             return SyntaxFactory.EventStatement(
                     SyntaxFactory.List<AttributeListSyntax>(),
-                    isInheritable ? SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)) :
-                        SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.SharedKeyword)), SyntaxFactory.Identifier(propertyDeclaration.PropertyStatement.Identifier + "Changed"),
+                    isNonInheritable ? SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.SharedKeyword)) :
+                        SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)), SyntaxFactory.Identifier(propertyDeclaration.PropertyStatement.Identifier + "Changed"),
                     null,
                     SyntaxFactory.SimpleAsClause(SyntaxFactory.ParseTypeName("System.EventHandler").WithAdditionalAnnotations(Simplifier.Annotation)), null);
         }
 
-        static ArgumentSyntax GetInvokeArgument(bool isStatic)
+        static ArgumentSyntax GetInvokeArgument(bool isShared)
         {
             return SyntaxFactory.SimpleArgument(
-                isStatic ? (ExpressionSyntax)SyntaxFactory.NothingLiteralExpression(SyntaxFactory.Token(SyntaxKind.NothingKeyword)) : SyntaxFactory.MeExpression());
+                isShared ? (ExpressionSyntax)SyntaxFactory.NothingLiteralExpression(SyntaxFactory.Token(SyntaxKind.NothingKeyword)) : SyntaxFactory.MeExpression());
         }
 
-        static MethodBlockSyntax CreateEventInvocator(string declaringTypeName, bool isSealed, bool isStatic, string eventName, IMethodSymbol invokeMethod, bool useExplictType)
+        static MethodBlockSyntax CreateEventInvocator(string declaringTypeName, bool isNonInheritable, bool isShared, string eventName, IMethodSymbol invokeMethod, bool useExplictType)
         {
-            var result = CreateMethodStub(isSealed, isStatic, eventName, invokeMethod);
+            var result = CreateMethodStub(isNonInheritable, isShared, eventName, invokeMethod);
             result = result.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] {
                 SyntaxFactory.RaiseEventStatement(
                     SyntaxFactory.IdentifierName(eventName),
                     SyntaxFactory.ArgumentList(
                             SyntaxFactory.SeparatedList<ArgumentSyntax>(new[] {
-                                GetInvokeArgument(isStatic),
+                                GetInvokeArgument(isShared),
                                 SyntaxFactory.SimpleArgument(SyntaxFactory.IdentifierName(invokeMethod.Parameters[1].Name))
                             })
                         )
@@ -155,16 +155,16 @@ namespace RefactoringEssentials.VB.CodeRefactorings
             return "On" + char.ToUpper(eventName[0]) + eventName.Substring(1);
         }
 
-        static MethodBlockSyntax CreateMethodStub(bool isSealed, bool isStatic, string eventName, IMethodSymbol invokeMethod)
+        static MethodBlockSyntax CreateMethodStub(bool isNonInheritable, bool isShared, string eventName, IMethodSymbol invokeMethod)
         {
             var methodStatement = SyntaxFactory.MethodStatement(SyntaxKind.SubStatement, SyntaxFactory.Token(SyntaxKind.SubKeyword), GetEventMethodName(eventName));
 
-            if (isStatic)
+            if (isShared)
             {
                 // Shared properties: Make the method Shared, too
                 methodStatement = methodStatement.WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword), SyntaxFactory.Token(SyntaxKind.SharedKeyword)));
             }
-            else if (isSealed)
+            else if (isNonInheritable)
             {
                 // No additional modifiers for non-inheritable properties
             }
