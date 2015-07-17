@@ -3,6 +3,10 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -36,6 +40,25 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             //	continue;
             var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Make '{0}' static", document.WithSyntaxRoot(newRoot)), diagnostic);
+        }
+
+        public void MakeMethodStaticFix(MethodDeclarationSyntax methodDeclaration, Diagnostic diagnostic, CodeFixContext context)
+        {
+//            context.RegisterCodeFix(CodeActionFactory.Create(methodDeclaration.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
+//                token =>
+//                {
+////                methodDeclaration.Modifiers.Add(new SyntaxToken().)
+////                //var newNode = SyntaxFactory.MethodDeclaration(methodDeclaration.AttributeLists,)
+////                ObjectCreationExpression(objectCreation.NewKeyword, objectCreation.Type,
+////argumentList, objectCreation.Initializer);
+
+////              var newRoot = root.ReplaceNode(objectCreation,
+////newNode.WithLeadingTrivia(objectCreation.GetLeadingTrivia())
+////      .WithAdditionalAnnotations(Formatter.Annotation));
+
+////              return Task.FromResult(document.WithSyntaxRoot(newRoot));
+////          }), diagnostic);
+//                }
         }
     }
 }
