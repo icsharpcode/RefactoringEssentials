@@ -551,6 +551,7 @@
     <Compile Include="VB\Diagnostics\VBDiagnosticIDs.cs" />
     <Compile Include="VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs" />
     <Compile Include="VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />
+    <Compile Include="Util\NameGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Collections.Immutable">
@@ -655,8 +656,8 @@
     <MonoDevelop>
       <Properties>
         <Policies>
-          <TextStylePolicy FileWidth="120" TabsToSpaces="False" EolMarker="Unix" inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
-          <CSharpFormattingPolicy inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+          <CSharpFormattingPolicy IndentSwitchSection="True" NewLinesForBracesInProperties="True" NewLinesForBracesInAnonymousMethods="True" NewLinesForBracesInControlBlocks="True" NewLinesForBracesInAnonymousTypes="True" NewLinesForBracesInObjectCollectionArrayInitializers="True" NewLinesForBracesInLambdaExpressionBody="True" NewLineForElse="True" NewLineForCatch="True" NewLineForFinally="True" NewLineForMembersInObjectInit="True" NewLineForMembersInAnonymousTypes="True" NewLineForClausesInQuery="True" SpacingAfterMethodDeclarationName="False" SpaceAfterMethodCallName="False" SpaceBeforeOpenSquareBracket="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
         </Policies>
       </Properties>
     </MonoDevelop>
@@ -694,10 +695,12 @@
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug_Mono</OutputPath>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Release|AnyCPU' ">
     <Optimize>false</Optimize>
     <OutputPath>bin\Mono_Release</OutputPath>
     <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
   </PropertyGroup>
 </Project>
