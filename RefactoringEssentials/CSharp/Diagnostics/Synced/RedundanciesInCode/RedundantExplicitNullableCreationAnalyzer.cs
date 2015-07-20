@@ -1,16 +1,15 @@
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantExplicitNullableCreationAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantExplicitNullableCreationAnalyzerID,
             GettextCatalog.GetString("Value types are implicitly convertible to nullables"),
             GettextCatalog.GetString("Redundant explicit nullable type creation"),
@@ -29,7 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 (nodeContext) =>
                 {
                     Diagnostic diagnostic;
-                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    if (TryGetRedundantNullableDiagnostic(nodeContext, out diagnostic))
                     {
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
@@ -38,7 +37,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetRedundantNullableDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
@@ -48,18 +47,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (objectCreation == null)
                 return false;
 
-            var objectCreationSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(objectCreation);
-            if (objectCreationSymbol == null)
-                return false;
-
-            int? i = new int?(5);
-
             //Not so sure about this check but was there before
-            var parentVarDeclaration = objectCreation.Parent.Parent as VariableDeclarationSyntax;
+            var parentVarDeclaration = objectCreation?.Parent?.Parent?.Parent as VariableDeclarationSyntax;
             if (parentVarDeclaration != null && parentVarDeclaration.Type.IsVar)
                 return false;
 
-            if (objectCreationSymbol.OriginalDefinition.ToString().Equals("System.Nullable<T>.Nullable(T)"))
+            var objectCreationSymbol = nodeContext.SemanticModel.GetTypeInfo(objectCreation);
+            //IsNullable method fails the analysis
+            //Used string comparison for testing even though it's bad on performance.
+            if (objectCreationSymbol.Type != null && objectCreationSymbol.Type.OriginalDefinition.ToString().Equals("System.Nullable<T>"))
             {
                 diagnostic = Diagnostic.Create(descriptor, objectCreation.GetLocation());
                 return true;
@@ -78,7 +74,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////			{
         ////				base.VisitObjectCreateExpression(objectCreateExpression);
         ////
-        ////				// test for var foo = new ... 
+        ////				// test for var foo = new ...
         ////				var parentVarDecl = objectCreateExpression.Parent.Parent as VariableDeclarationStatement;
         ////				if (parentVarDecl != null && parentVarDecl.Type.IsVar())
         ////					return;

@@ -34,18 +34,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var objectCreation = root.FindNode(context.Span) as ObjectCreationExpressionSyntax;
-            var argumentList = objectCreation.ArgumentList;
-            if (argumentList == null)
+            var argumentListArgument = objectCreation.ArgumentList.Arguments.FirstOrDefault();
+            if (argumentListArgument == null)
                 return;
 
             context.RegisterCodeFix(CodeActionFactory.Create(objectCreation.Span, diagnostic.Severity, "Redundant explicit nullable type creation", token =>
             {
-                var newNode = SyntaxFactory.ObjectCreationExpression(objectCreation.NewKeyword, objectCreation.Type,
-                    argumentList, objectCreation.Initializer);
-
-                var newRoot = root.ReplaceNode(objectCreation,
-                    newNode.WithLeadingTrivia(objectCreation.GetLeadingTrivia())
-                        .WithAdditionalAnnotations(Formatter.Annotation));
+                var newRoot = root.ReplaceNode(objectCreation, argumentListArgument.Expression.WithAdditionalAnnotations(Formatter.Annotation));
 
                 return Task.FromResult(document.WithSyntaxRoot(newRoot));
             }), diagnostic);
