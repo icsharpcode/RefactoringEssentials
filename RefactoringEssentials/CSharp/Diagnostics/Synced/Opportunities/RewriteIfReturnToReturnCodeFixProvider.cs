@@ -41,11 +41,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             context.RegisterCodeFix(
                 CodeActionFactory.Create(node.Span, diagnostic.Severity, "Convert to 'return' statement", token =>
                 {
-                    var returnStatement = node.ChildNodes().OfType<ReturnStatementSyntax>().First();
-                    var newNode = SyntaxFactory.ReturnStatement(returnStatement.ReturnKeyword,
-                        (node as IfStatementSyntax).Condition, returnStatement.SemicolonToken);
-                    var newRoot = root.ReplaceNode((SyntaxNode)node,
-                        newNode.WithLeadingTrivia(node.GetLeadingTrivia())
+                    var statementCondition = (node as IfStatementSyntax).Condition;
+                    var newReturn = SyntaxFactory.ReturnStatement(SyntaxFactory.Token(SyntaxKind.ReturnKeyword),
+                        statementCondition, SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+                    var newRoot = root.ReplaceNode(node,
+                        newReturn.WithLeadingTrivia(node.GetLeadingTrivia())
                             .WithAdditionalAnnotations(Formatter.Annotation));
                     return Task.FromResult(document.WithSyntaxRoot(newRoot));
                 }), diagnostic);
