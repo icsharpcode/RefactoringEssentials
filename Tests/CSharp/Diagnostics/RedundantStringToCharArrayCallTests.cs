@@ -9,13 +9,13 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         [Test]
         public void TestSimpleForeachCase()
         {
-            Test<RedundantStringToCharArrayCallAnalyzer>(@"
+            Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
 using System;
 class FooBar
 {
 	public void Test (string str)
 	{
-		foreach (char c in str.ToCharArray ()) {
+		foreach (char c in str.$ToCharArray ()$) {
 			Console.WriteLine (c);
 		}
 	}
@@ -43,7 +43,7 @@ class FooBar
 {
 	public void Test (string str)
 	{
-		foreach (var c in str.ToCharArray ()) {
+		foreach (var c in str.$ToCharArray ()$) {
 			Console.WriteLine (c);
 		}
 	}
@@ -71,7 +71,7 @@ class FooBar
 {
 	public void Test (string str)
 	{
-		Console.WriteLine ((str.ToCharArray ())[5]);
+		Console.WriteLine ((str.$ToCharArray ()$)[5]);
 	}
 }
 ", @"
@@ -97,7 +97,8 @@ class FooBar
 	public void Test (string str)
 	{
 		// ReSharper disable once RedundantStringToCharArrayCall
-		foreach (char c in str.ToCharArray ()) {
++#pragma warning disable " + CSharpDiagnosticIDs.RedundantStringToCharArrayCallAnalyzerID + @"
+		foreach (char c in str.$ToCharArray ()$) {
 			Console.WriteLine (c);
 		}
 	}
