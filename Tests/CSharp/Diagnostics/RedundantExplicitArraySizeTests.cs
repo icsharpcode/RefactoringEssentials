@@ -14,7 +14,7 @@ class Test
 {
 	void Foo ()
 	{
-		var foo = new int[3] { 1, 2, 3 };
+		var foo = new int[$3$] { 1, 2, 3 };
 	}
 }
 ", @"
