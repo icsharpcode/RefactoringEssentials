@@ -23,7 +23,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         	{
         		int a = 2;
         	}
-        }"
+        }",1
             );
         }
 

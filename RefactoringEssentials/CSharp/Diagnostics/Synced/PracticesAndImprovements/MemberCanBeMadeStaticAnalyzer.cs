@@ -171,31 +171,34 @@ namespace RefactoringEssentials.CSharp.Diagnostics
          static bool DoesMethodContainModifier(MethodDeclarationSyntax methodDeclaration)
         {
             return 
+                methodDeclaration.Modifiers.Count != 0 && (
                 methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
                 methodDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
                 methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
                 methodDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) ||
-                methodDeclaration.AttributeLists.FirstOrDefault().Attributes.Any();
+                methodDeclaration.AttributeLists.FirstOrDefault().Attributes.Any());
         }
 
         static bool DoesPropertyContainModifier(PropertyDeclarationSyntax propertyDeclaration)
         {
-            return 
+            return
+                propertyDeclaration.Modifiers.Count != 0 && (
                 propertyDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
                 propertyDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
                 propertyDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
                 propertyDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) ||
-                propertyDeclaration.AttributeLists.FirstOrDefault().Attributes.Any();
+                propertyDeclaration.AttributeLists.FirstOrDefault().Attributes.Any());
         }
 
          static bool DoesEventFieldContainModifier(EventDeclarationSyntax eventFieldDeclaration)
         {
             return
+                eventFieldDeclaration.Modifiers.Count != 0 && (
                 eventFieldDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
                 eventFieldDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
                 eventFieldDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
                 eventFieldDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) ||
-                eventFieldDeclaration.AttributeLists.FirstOrDefault().Attributes.Any();
+                eventFieldDeclaration.AttributeLists.FirstOrDefault().Attributes.Any());
         }
 
         static bool IsEmpty(AccessorDeclarationSyntax accessor)
