@@ -1,16 +1,13 @@
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
-using System.Linq;
-using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Formatting;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class MemberCanBeMadeStaticCodeFixProvider : CodeFixProvider
     {
@@ -36,29 +33,45 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Make '{0}' static", document.WithSyntaxRoot(newRoot)), diagnostic);
+
+            if(node is MethodDeclarationSyntax)
+                MakeMethodStaticFix(node as MethodDeclarationSyntax, diagnostic,context,root);
+            else if(node is PropertyDeclarationSyntax)
+                MakePropertyStaticFix(node as PropertyDeclarationSyntax, diagnostic,context,root);
+            else if(node is EventDeclarationSyntax)
+                MakeEventStaticFix(node as EventDeclarationSyntax,diagnostic, context,root);
+
         }
 
-        public void MakeMethodStaticFix(MethodDeclarationSyntax methodDeclaration, Diagnostic diagnostic, CodeFixContext context)
+        public void MakeMethodStaticFix(MethodDeclarationSyntax methodDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
         {
-//            context.RegisterCodeFix(CodeActionFactory.Create(methodDeclaration.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
-//                token =>
-//                {
-////                methodDeclaration.Modifiers.Add(new SyntaxToken().)
-////                //var newNode = SyntaxFactory.MethodDeclaration(methodDeclaration.AttributeLists,)
-////                ObjectCreationExpression(objectCreation.NewKeyword, objectCreation.Type,
-////argumentList, objectCreation.Initializer);
-
-////              var newRoot = root.ReplaceNode(objectCreation,
-////newNode.WithLeadingTrivia(objectCreation.GetLeadingTrivia())
-////      .WithAdditionalAnnotations(Formatter.Annotation));
-
-////              return Task.FromResult(document.WithSyntaxRoot(newRoot));
-////          }), diagnostic);
-//                }
+            context.RegisterCodeFix(CodeActionFactory.Create(methodDeclaration.Span, diagnostic.Severity, "Method can be made static",
+                token =>
+                {
+                    methodDeclaration.WithModifiers(methodDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
+                    return Task.FromResult(context.Document.WithSyntaxRoot(null)); // I don't know what to put there... 
+                }), diagnostic);
         }
+
+        public void MakePropertyStaticFix(PropertyDeclarationSyntax propertyDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
+        {
+            context.RegisterCodeFix(CodeActionFactory.Create(propertyDeclaration.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
+                token =>
+                {
+                    propertyDeclaration.WithModifiers(propertyDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
+                    return Task.FromResult(context.Document.WithSyntaxRoot(null)); // I don't know what to put there... 
+                }), diagnostic);
+        }
+
+        public void MakeEventStaticFix(EventDeclarationSyntax eventDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
+        {
+            context.RegisterCodeFix(CodeActionFactory.Create(eventDeclaration.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
+                token =>
+                {
+                    eventDeclaration.WithModifiers(eventDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
+                    return Task.FromResult(context.Document.WithSyntaxRoot(null)); // I don't know what to put there... 
+                }), diagnostic);
+        }
+
     }
 }
