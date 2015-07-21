@@ -47,7 +47,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (node == null)
                 return false;
 
-            if (IsFinallyBlockEmpty(node))
+            if (!IsFinallyBlockEmpty(node))
                 return false;
 
             diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
@@ -56,7 +56,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         static bool IsFinallyBlockEmpty(FinallyClauseSyntax finallyClause)
         {
-            return finallyClause.ChildNodes().OfType<BlockSyntax>().First().DescendantNodes().Any();
+            return finallyClause.Block.Statements.Count == 0;
         }
 
         //		class GatherVisitor : GatherVisitorBase<RedundantEmptyFinallyBlockAnalyzer>

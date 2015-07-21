@@ -18,8 +18,8 @@ class Test
 		try {
 			Console.WriteLine (""1"");
 			Console.WriteLine (""2"");
-		} finally {
-		}
+		} $finally {
+		}$
 	}
 }
 ", @"
@@ -48,8 +48,8 @@ class Test
 			Console.WriteLine (""1"");
 			Console.WriteLine (""2"");
 		} catch (Exception) {
-		} finally {
-		}
+		} $finally {
+		}$
 	}
 }
 ", @"
@@ -101,6 +101,8 @@ class Test
 			Console.WriteLine(""2"");
 		}
 		// ReSharper disable once RedundantEmptyFinallyBlock
++#pragma warning disable " + CSharpDiagnosticIDs.RedundantEmptyFinallyBlockAnalyzerID + @"
+
  		finally {
 		}
 	}
