@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -34,8 +35,19 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = root.FindNode(context.Span);
             //if (!node.IsKind(SyntaxKind.BaseList))
             //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+            var assignmentExpression = (node as ExpressionStatementSyntax)?.Expression as AssignmentExpressionSyntax;
+            var objectCreation = assignmentExpression?.Right as ObjectCreationExpressionSyntax;
+
+            if (objectCreation == null)
+                return;
+
+            var argument = objectCreation.ArgumentList.Arguments[0];
+            if (argument == null)
+                return;
+
+            var newRoot = root.ReplaceNode(objectCreation, argument.WithoutLeadingTrivia());
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant 'new'", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
+
     }
 }

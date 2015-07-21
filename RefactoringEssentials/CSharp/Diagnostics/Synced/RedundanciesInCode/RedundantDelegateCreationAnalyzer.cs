@@ -1,8 +1,10 @@
+using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -33,8 +35,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                 SyntaxKind.SimpleAssignmentExpression
+                 SyntaxKind.ExpressionStatement
             );
+        }
+        public event EventHandler<EventArgs> Changed;
+
+        void HandleChanged(object sender, EventArgs e)
+        {
+        }
+
+        void someMethod()
+        {
+            Changed += new EventHandler<EventArgs>(HandleChanged);
+            Changed += HandleChanged;
+            Changed -= HandleChanged;
+
+
         }
 
         private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -43,22 +59,25 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (nodeContext.IsFromGeneratedCode())
                 return false;
 
+
             var semanticModel = nodeContext.SemanticModel;
-            var assignmentExpression = nodeContext.Node as AssignmentExpressionSyntax;
+            var expressionStatement = nodeContext.Node as ExpressionStatementSyntax;
+            var addOrSubstractExpression = expressionStatement?.Expression as AssignmentExpressionSyntax;
+            var rightMember = addOrSubstractExpression?.Right as ObjectCreationExpressionSyntax;
 
-            var oces = assignmentExpression?.Left as ObjectCreationExpressionSyntax;
-            if (oces == null || oces.ArgumentList.Arguments.Count != 1)
-                return false;
+            if (rightMember == null || rightMember.ArgumentList.Arguments.Count != 1)
+                return false; 
 
-            var leftTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, assignmentExpression.Left).ConvertedType;
+            var leftTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, addOrSubstractExpression.Left).ConvertedType;
             if (leftTypeInfo == null || leftTypeInfo.Kind.Equals(SyntaxKind.EventDeclaration))
                 return false;
 
-            var rightTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, assignmentExpression.Right).ConvertedType;
-            if (rightTypeInfo == null || rightTypeInfo.IsErrorType() || leftTypeInfo.Equals(rightTypeInfo))
-                return false;
+            //Why do I need to make that check ? 
+            //var rightTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, addOrSubstractExpression.Right).ConvertedType;
+            //if (rightTypeInfo == null || rightTypeInfo.IsErrorType() || leftTypeInfo.Equals(rightTypeInfo))
+            //    return false;
 
-            diagnostic = Diagnostic.Create(descriptor, assignmentExpression.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, addOrSubstractExpression.GetLocation());
             return true;
         }
     }
