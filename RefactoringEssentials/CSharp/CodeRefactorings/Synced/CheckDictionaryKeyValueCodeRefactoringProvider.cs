@@ -38,7 +38,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (elementAccess == null)
                 return;
             var elementType = model.GetTypeInfo(elementAccess.Expression);
-            if (!IsDictionary(elementType.Type as INamedTypeSymbol) && !elementType.Type.AllInterfaces.Any(IsDictionary))
+            var type = elementType.Type;
+            if (type == null)
+                return;
+            if (!IsDictionary(type as INamedTypeSymbol) && !type.AllInterfaces.Any(IsDictionary))
                 return;
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
