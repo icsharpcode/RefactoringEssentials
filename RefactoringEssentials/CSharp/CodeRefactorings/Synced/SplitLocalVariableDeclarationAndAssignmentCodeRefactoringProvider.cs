@@ -20,13 +20,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var declaration = node.Parent as VariableDeclarationSyntax;
             if (declaration == null || node.Initializer == null || (!node.Identifier.Span.Contains(span) && !node.Initializer.EqualsToken.Span.Contains(span) && node.Initializer.Value.SpanStart != span.Start))
                 yield break;
+            var variableDecl = declaration.Parent as LocalDeclarationStatementSyntax;
             var forStmt = declaration.Parent as ForStatementSyntax;
             if (forStmt != null)
             {
             }
             else
             {
-                var variableDecl = declaration.Parent as LocalDeclarationStatementSyntax;
                 if (variableDecl == null || variableDecl.Modifiers.Any(m => m.IsKind(SyntaxKind.ConstKeyword)))
                     yield break;
                 var block = variableDecl.Parent as BlockSyntax;
@@ -44,59 +44,48 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         SyntaxNode newRoot;
                         if (forStmt != null)
                         {
-                            root = root.TrackNodes(new SyntaxNode[] { forStmt, declaration });
-                            newRoot = root.InsertNodesBefore(
-                                root.GetCurrentNode(forStmt),
-                                new[] {
-                                    SyntaxFactory.LocalDeclarationStatement(
+                            var newDeclaration = SyntaxFactory.VariableDeclaration(
+                                SyntaxFactory.ParseTypeName(""),
+                                SyntaxFactory.SeparatedList(new[] { node }))
+                                .WithAdditionalAnnotations(Formatter.Annotation);
+                            newRoot = root.ReplaceNode(forStmt, new SyntaxNode[] {
+                                SyntaxFactory.LocalDeclarationStatement(
                                         SyntaxFactory.VariableDeclaration(
                                             declaration.Type,
                                             SyntaxFactory.SeparatedList(new [] {
                                                 SyntaxFactory.VariableDeclarator(node.Identifier)
                                             })
-                                        ).WithAdditionalAnnotations(Formatter.Annotation)
-                                    ).WithAdditionalAnnotations(Formatter.Annotation)
-                                }
-                            );
-                            newRoot = newRoot.ReplaceNode((SyntaxNode)
-                                newRoot.GetCurrentNode(declaration),
-                                SyntaxFactory.VariableDeclaration(
-                                        SyntaxFactory.ParseTypeName(""),
-                                    SyntaxFactory.SeparatedList(new[] {
-                                            node
-                                    })
-                                ).WithAdditionalAnnotations(Formatter.Annotation)
-                            );
+                                        ).WithLeadingTrivia(forStmt.GetLeadingTrivia().Where(t => !t.IsKind(SyntaxKind.WhitespaceTrivia)))
+                                        .WithAdditionalAnnotations(Formatter.Annotation)
+                                    ).WithAdditionalAnnotations(Formatter.Annotation),
+                                forStmt.WithDeclaration(newDeclaration)
+                                    .WithLeadingTrivia(forStmt.GetLeadingTrivia().Where(t => t.IsKind(SyntaxKind.WhitespaceTrivia)))
+                            });
                         }
                         else
                         {
-                            root = root.TrackNodes(new SyntaxNode[] { declaration.Parent, declaration.Type, node });
-                            newRoot = root.InsertNodesAfter(
-                                root.GetCurrentNode(declaration.Parent),
-                                new[] {
-                                    SyntaxFactory.ExpressionStatement(
+                            TypeSyntax newDeclarationType = declaration.Type;
+                            if (declaration.Type.ToString() == "var")
+                            {
+                                var type = semanticModel.GetTypeInfo(declaration.Type).Type;
+
+                                newDeclarationType = SyntaxFactory.ParseTypeName(type.ToMinimalDisplayString(semanticModel, declaration.SpanStart))
+                                    .WithLeadingTrivia(declaration.Type.GetLeadingTrivia())
+                                    .WithTrailingTrivia(declaration.Type.GetTrailingTrivia())
+                                    .WithAdditionalAnnotations(Formatter.Annotation);
+                            }
+
+                            var newDeclaration = declaration.WithType(newDeclarationType).WithVariables(SyntaxFactory.SeparatedList(declaration.Variables.Select(v => SyntaxFactory.VariableDeclarator(v.Identifier).WithAdditionalAnnotations(Formatter.Annotation))));
+                            newRoot = root.ReplaceNode(variableDecl, new SyntaxNode[] {
+                                variableDecl.WithDeclaration(newDeclaration),
+                                SyntaxFactory.ExpressionStatement(
                                         SyntaxFactory.AssignmentExpression(
                                             SyntaxKind.SimpleAssignmentExpression,
                                             SyntaxFactory.IdentifierName(node.Identifier),
                                             node.Initializer.Value
                                         )
                                     ).WithAdditionalAnnotations(Formatter.Annotation)
-                                }
-                            );
-                            newRoot = newRoot.ReplaceNode((SyntaxNode)newRoot.GetCurrentNode(node), SyntaxFactory.VariableDeclarator(node.Identifier).WithAdditionalAnnotations(Formatter.Annotation));
-
-                            if (declaration.Type.ToString() == "var")
-                            {
-                                var type = semanticModel.GetTypeInfo(declaration.Type).Type;
-
-                                newRoot = newRoot.ReplaceNode((SyntaxNode)
-                                    newRoot.GetCurrentNode(declaration.Type),
-                                    SyntaxFactory.ParseTypeName(type.ToMinimalDisplayString(semanticModel, declaration.SpanStart))
-                                    .WithLeadingTrivia(declaration.Type.GetLeadingTrivia())
-                                    .WithTrailingTrivia(declaration.Type.GetTrailingTrivia())
-                                    .WithAdditionalAnnotations(Formatter.Annotation)
-                                );
-                            }
+                            });
                         }
                         //Console.WriteLine (newRoot);
                         return Task.FromResult(document.WithSyntaxRoot(newRoot));

@@ -167,6 +167,48 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
         [Test]
+        public void TestVarDeclarationWithComment()
+        {
+            Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
+{
+    public void T()
+    {
+        // Some comment
+        int $i = 5;
+    }
+}", @"class Test
+{
+    public void T()
+    {
+        // Some comment
+        int i;
+        i = 5;
+    }
+}");
+        }
+
+        [Test]
+        public void TestForStatementWithComment()
+        {
+            Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
+{
+    public void T()
+    {
+        // Some comment
+        for (int $i = 1; i < 10; i++) {}
+    }
+}", @"class Test
+{
+    public void T()
+    {
+        // Some comment
+        int i;
+        for (i = 1; i < 10; i++) {}
+    }
+}");
+        }
+
+        [Test]
         public void TestHideInExpression()
         {
             TestWrongContext<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
