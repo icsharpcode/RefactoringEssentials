@@ -29,7 +29,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Ignore("TODO")]
+        [Ignore()]
         [Test]
         public void TestSimplify()
         {

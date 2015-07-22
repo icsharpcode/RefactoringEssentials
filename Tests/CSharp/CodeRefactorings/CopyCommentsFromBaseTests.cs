@@ -307,7 +307,7 @@ class TestClass : ITest
 }");
         }
 
-        [Ignore("TODO")]
+        [Ignore]
         public void TestInterfaceNoProblem()
         {
             Test<CopyCommentsFromBaseCodeRefactoringProvider>(@"
