@@ -96,15 +96,15 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "    }" + Environment.NewLine +
                                          "}"
                                      );
-            Assert.AreEqual(
-                @"class TestClass
+            string expected = @"class TestClass
 {
     void Test ()
     {
         int i;
         for (i = 1; i < 10; i++) {}
     }
-}", result);
+}";
+            Assert.AreEqual(HomogenizeEol(expected), HomogenizeEol(result));
         }
 
         [Test]
