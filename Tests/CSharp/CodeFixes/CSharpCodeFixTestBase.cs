@@ -25,6 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
         public void Test(CodeFixProvider provider, string input, string output, int action = 0, bool expectErrors = false, CSharpParseOptions parseOptions = null)
         {
             string result = HomogenizeEol(RunContextAction(provider, HomogenizeEol(input), action, expectErrors, parseOptions));
+            output = HomogenizeEol(output);
             bool passed = result == output;
             if (!passed)
             {
@@ -33,7 +34,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
                 Console.WriteLine("-----------Got:");
                 Console.WriteLine(result);
             }
-            Assert.AreEqual(HomogenizeEol(output), result);
+            Assert.AreEqual(output, result);
         }
 
         internal static List<Microsoft.CodeAnalysis.CodeActions.CodeAction> GetActions<T>(string input) where T : CodeFixProvider, new()

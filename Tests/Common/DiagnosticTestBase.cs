@@ -292,6 +292,8 @@ namespace RefactoringEssentials.Tests
             }
 
             var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
+            output = CodeFixTestBase.HomogenizeEol(output);
+            txt = CodeFixTestBase.HomogenizeEol(txt);
             if (output != txt)
             {
                 Console.WriteLine("expected:");
