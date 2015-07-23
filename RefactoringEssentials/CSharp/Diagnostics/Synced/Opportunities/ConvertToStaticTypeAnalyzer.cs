@@ -50,11 +50,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             ITypeSymbol classType = semanticModel.GetDeclaredSymbol(node);
             if (!node.Modifiers.Any() || node.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword)) || classType.IsAbstract || classType.IsStatic)
                 return false;
-            //ignore implicitly declared (e.g. default ctor)
-            IEnumerable<ISymbol> enumerable = classType.GetMembers().Where(m => !(m is ITypeSymbol));
-            if (!enumerable.Any(m => !m.IsImplicitlyDeclared))
+            if ((node.BaseList != null) && node.BaseList.Types.Any())
                 return false;
-            if (Enumerable.Any(enumerable, f => (!f.IsStatic && !f.IsImplicitlyDeclared) || (f is IMethodSymbol && IsMainMethod((IMethodSymbol)f))))
+            IEnumerable<ISymbol> members = classType.GetMembers().Where(m => !(m is ITypeSymbol));
+            if (!members.Any(m => !m.IsImplicitlyDeclared)) // Ignore implicitly declared (e.g. default ctor)
+                return false;
+            if (Enumerable.Any(members, f => (!f.IsStatic && !f.IsImplicitlyDeclared) || (f is IMethodSymbol && IsMainMethod((IMethodSymbol)f))))
                 return false;
 
             diagnostic = Diagnostic.Create(

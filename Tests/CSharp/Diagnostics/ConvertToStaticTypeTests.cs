@@ -221,7 +221,17 @@ class ShouldBeStatic
         }
 
         [Test]
-        public void TestEmptyPublicClassWithInterfaceImplementation()
+        public void TestEmptyPublicClass()
+        {
+            Analyze<ConvertToStaticTypeAnalyzer>(@"
+public class ShouldNotBeStatic
+{
+}
+");
+        }
+
+        [Test]
+        public void TestClassImplementingAnotherType()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
 interface SomeInterface
@@ -230,6 +240,7 @@ interface SomeInterface
 
 public class ShouldNotBeStatic : SomeInterface
 {
+    private static string test;
 }
 ");
         }
