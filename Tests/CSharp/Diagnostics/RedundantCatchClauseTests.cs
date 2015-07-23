@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantCatchClauseTests : CSharpDiagnosticTestBase
     {
         const string BaseInput = @"
@@ -35,7 +34,7 @@ class A
         [Test]
         public void TestEmptyCatch()
         {
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		try {
 			F ();
 		} catch (ArgumentOutOfRangeException aoore) {
@@ -46,20 +45,20 @@ class A
 			throw;
 		}
 	}
-}", 2, BaseInput + @"
+}", BaseInput + @"
 		try {
 			F ();
 		} catch (ArgumentOutOfRangeException aoore) {
 			Console.WriteLine (aoore);
 		}  
-	}
-}");
+	},
+}",2);
         }
 
         [Test]
         public void TestOnlyRedundantCatches()
         {
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		try {
 			F ();
 			Console.WriteLine (""Inside try"");
@@ -77,7 +76,7 @@ class A
         [Test]
         public void AddsBlockIfNeccessary()
         {
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		if (true)
 			try {
 				F ();
@@ -99,7 +98,7 @@ class A
         [Test]
         public void AddsBlockIfNeccessaryOnEmptyTryBlock()
         {
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		if (true)
 			try {
 			} catch {
@@ -116,18 +115,18 @@ class A
         [Test]
         public void EmptyTryCatchSkeleton()
         {
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		try {
 		} catch {
 		}
 	}
-}", 0);
+}");
         }
 
         [Test]
         public void DoesNotAddBlockIfUnneccessary()
         {
-            Test<RedundantCatchClauseAnalyzer>(@"
+            Analyze<RedundantCatchClauseAnalyzer>(@"
 		if (true)
 			try {
 				F ();
@@ -145,18 +144,18 @@ class A
         [Test]
         public void NoIssuesWhenMissingCatch()
         {
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		try {
 			F ();
 		}
 	}
-}", 0);
+}");
         }
 
         [Test]
         public void TestEmptyCatchWithFinally()
         {
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		try {
 			F ();
 		} catch {
@@ -181,7 +180,7 @@ class A
         [Test]
         public void TestBug12273()
         {
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		try {
 			F ();
 		} catch (ArgumentOutOfRangeException) {
@@ -190,9 +189,9 @@ class A
 			Console.WriteLine (e);
 		}
 	}
-}", 0);
+}");
 
-            Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
+            Analyze<RedundantCatchClauseAnalyzer>(BaseInput + @"
 		try {
 			F ();
 		} catch (ArgumentOutOfRangeException) {
