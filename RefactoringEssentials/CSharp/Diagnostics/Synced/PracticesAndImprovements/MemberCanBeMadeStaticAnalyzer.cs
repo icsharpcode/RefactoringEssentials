@@ -175,14 +175,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
                 methodDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
                 methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
-                methodDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) ||
+                methodDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) || methodDeclaration.AttributeLists.Count>0 &&
                 methodDeclaration.AttributeLists.FirstOrDefault().Attributes.Any());
         }
 
         static bool DoesPropertyContainModifier(PropertyDeclarationSyntax propertyDeclaration)
         {
             return
-                propertyDeclaration.Modifiers.Count != 0 && (
+                propertyDeclaration.Modifiers.Count != 0 && !(
                 propertyDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
                 propertyDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
                 propertyDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
@@ -193,7 +193,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
          static bool DoesEventFieldContainModifier(EventDeclarationSyntax eventFieldDeclaration)
         {
             return
-                eventFieldDeclaration.Modifiers.Count != 0 && (
+                eventFieldDeclaration.Modifiers.Count != 0 && !(
                 eventFieldDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
                 eventFieldDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
                 eventFieldDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
