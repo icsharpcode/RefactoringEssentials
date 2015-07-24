@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -43,14 +44,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         }
 
+
+
         public void MakeMethodStaticFix(MethodDeclarationSyntax methodDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
         {
             context.RegisterCodeFix(CodeActionFactory.Create(methodDeclaration.Span, diagnostic.Severity, "Method can be made static",
                 token =>
                 {
+                    Debug.WriteLine("1");
+                    var oldNode = methodDeclaration;
                     methodDeclaration.WithModifiers(methodDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
-                    return Task.FromResult(context.Document.WithSyntaxRoot(null)); // I don't know what to put there... 
+                    Debug.WriteLine("2");
+                    var newRoot = root.ReplaceNode(oldNode, methodDeclaration.WithLeadingTrivia());
+                    Debug.WriteLine("3");
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); // I don't know what to put there... 
                 }), diagnostic);
+
         }
 
         public void MakePropertyStaticFix(PropertyDeclarationSyntax propertyDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
@@ -58,8 +67,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             context.RegisterCodeFix(CodeActionFactory.Create(propertyDeclaration.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
                 token =>
                 {
+                    var oldNode = propertyDeclaration;
                     propertyDeclaration.WithModifiers(propertyDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
-                    return Task.FromResult(context.Document.WithSyntaxRoot(null)); // I don't know what to put there... 
+                    var newRoot = root.ReplaceNode(oldNode, propertyDeclaration.WithLeadingTrivia());
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); // I don't know what to put there... 
                 }), diagnostic);
         }
 
@@ -68,8 +79,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             context.RegisterCodeFix(CodeActionFactory.Create(eventDeclaration.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
                 token =>
                 {
+                    var oldNode = eventDeclaration;
                     eventDeclaration.WithModifiers(eventDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
-                    return Task.FromResult(context.Document.WithSyntaxRoot(null)); // I don't know what to put there... 
+                    var newRoot = root.ReplaceNode(oldNode, eventDeclaration.WithLeadingTrivia());
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); // I don't know what to put there... 
                 }), diagnostic);
         }
 
