@@ -1,15 +1,14 @@
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RewriteIfReturnToReturnCodeFixProvider : CodeFixProvider
     {
@@ -44,9 +43,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     var statementCondition = (node as IfStatementSyntax).Condition;
                     var newReturn = SyntaxFactory.ReturnStatement(SyntaxFactory.Token(SyntaxKind.ReturnKeyword),
                         statementCondition, SyntaxFactory.Token(SyntaxKind.SemicolonToken));
-                    var newRoot = root.ReplaceNode(node,
-                        newReturn.WithLeadingTrivia(node.GetLeadingTrivia())
-                            .WithAdditionalAnnotations(Formatter.Annotation));
+                    var block = node.Parent as BlockSyntax;
+                    var returnStatementAfterIfStatementIndex = block.Statements.IndexOf(node as IfStatementSyntax) + 1;
+                    ReturnStatementSyntax returnStatementAfterIfStatement = (ReturnStatementSyntax)
+                    ((block.Statements.Count > returnStatementAfterIfStatementIndex)
+                        ? block.Statements.ElementAt(returnStatementAfterIfStatementIndex)
+                        : null);
+                    root.RemoveNode(returnStatementAfterIfStatement, SyntaxRemoveOptions.KeepNoTrivia);
+                     var newRoot = root.ReplaceNode(node as IfStatementSyntax,
+    newReturn.WithLeadingTrivia(node.GetLeadingTrivia())
+        .WithAdditionalAnnotations(Formatter.Annotation));
+                   newRoot =  root.RemoveNode(returnStatementAfterIfStatement, SyntaxRemoveOptions.KeepNoTrivia);
                     return Task.FromResult(document.WithSyntaxRoot(newRoot));
                 }), diagnostic);
         }
