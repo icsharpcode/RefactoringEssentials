@@ -1,14 +1,15 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantExplicitNullableCreationAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantExplicitNullableCreationAnalyzerID,
             GettextCatalog.GetString("Value types are implicitly convertible to nullables"),
             GettextCatalog.GetString("Redundant explicit nullable type creation"),
@@ -23,25 +24,42 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetRedundantNullableDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.ObjectCreationExpression
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetRedundantNullableDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+
+            var objectCreation = nodeContext.Node as ObjectCreationExpressionSyntax;
+            if (objectCreation == null)
+                return false;
+
+            //Not so sure about this check but was there before
+            var parentVarDeclaration = objectCreation?.Parent?.Parent?.Parent as VariableDeclarationSyntax;
+            if (parentVarDeclaration != null && parentVarDeclaration.Type.IsVar)
+                return false;
+
+            var objectCreationSymbol = nodeContext.SemanticModel.GetTypeInfo(objectCreation);
+            //IsNullable method fails the analysis
+            //Used string comparison for testing even though it's bad on performance.
+            if (objectCreationSymbol.Type != null && objectCreationSymbol.Type.OriginalDefinition.ToString().Equals("System.Nullable<T>"))
+            {
+                diagnostic = Diagnostic.Create(descriptor, objectCreation.GetLocation());
+                return true;
+            }
             return false;
         }
 
@@ -56,7 +74,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////			{
         ////				base.VisitObjectCreateExpression(objectCreateExpression);
         ////
-        ////				// test for var foo = new ... 
+        ////				// test for var foo = new ...
         ////				var parentVarDecl = objectCreateExpression.Parent.Parent as VariableDeclarationStatement;
         ////				if (parentVarDecl != null && parentVarDecl.Type.IsVar())
         ////					return;
