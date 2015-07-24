@@ -1,13 +1,13 @@
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantExplicitArraySizeCodeFixProvider : CodeFixProvider
     {
@@ -33,15 +33,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            var arrayType = ((ArrayCreationExpressionSyntax) node)?.Type;
-            if (arrayType != null)
-            {
-                var rs = arrayType.RankSpecifiers;
-                var newRoot = root.RemoveNode(rs[0], SyntaxRemoveOptions.KeepNoTrivia);
-                context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove the redundant size indicator", document.WithSyntaxRoot(newRoot)), diagnostic);
-            }
-            //var arrayType = ((ArrayCreationExpressionSyntax) node).Type;
-            //a RemoveNode of arrayType.RankSpecifiers[0] should do it.
+            var array = node as ArrayCreationExpressionSyntax;
+            if (array == null)
+                return;
+
+            var rs = array.Type.RankSpecifiers;
+            Debug.WriteLine(rs[0]);
+            var newRoot = root.RemoveNode(rs[0], SyntaxRemoveOptions.KeepNoTrivia);
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove the redundant size indicator", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }
