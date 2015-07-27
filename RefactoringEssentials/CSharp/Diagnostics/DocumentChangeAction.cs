@@ -40,11 +40,14 @@ namespace RefactoringEssentials
 
             var options = document.Project.Solution.Workspace.Options;
 
-            options = options.WithChangedOption(CSharpFormattingOptions.SpaceWithinSquareBrackets, false);
-            options = options.WithChangedOption(CSharpFormattingOptions.SpaceBetweenEmptySquareBrackets, false);
-            options = options.WithChangedOption(CSharpFormattingOptions.SpaceBetweenEmptyMethodCallParentheses, false);
-            options = options.WithChangedOption(CSharpFormattingOptions.SpaceBetweenEmptyMethodDeclarationParentheses, false);
-            options = options.WithChangedOption(CSharpFormattingOptions.SpaceWithinOtherParentheses, false);
+            if (document.Project.Language == LanguageNames.CSharp)
+            {
+                options = options.WithChangedOption(CSharpFormattingOptions.SpaceWithinSquareBrackets, false);
+                options = options.WithChangedOption(CSharpFormattingOptions.SpaceBetweenEmptySquareBrackets, false);
+                options = options.WithChangedOption(CSharpFormattingOptions.SpaceBetweenEmptyMethodCallParentheses, false);
+                options = options.WithChangedOption(CSharpFormattingOptions.SpaceBetweenEmptyMethodDeclarationParentheses, false);
+                options = options.WithChangedOption(CSharpFormattingOptions.SpaceWithinOtherParentheses, false);
+            }
 
             document = await Formatter.FormatAsync(document, Formatter.Annotation, options: options, cancellationToken: cancellationToken).ConfigureAwait(false);
 
