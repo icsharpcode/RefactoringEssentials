@@ -80,7 +80,6 @@
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer
 * RedundantExplicitArraySizeAnalyzer
-* RedundantExplicitNullableCreationAnalyzer
 * RedundantExtendsListEntryAnalyzer
 * RedundantIfElseBlockAnalyzer
 * RedundantLambdaParameterTypeAnalyzer
