@@ -617,6 +617,20 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
     </Content>
+    <None Include="buildlibrarypackage.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="RefactoringEssentials.Library.tt">
+      <SubType>Designer</SubType>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RefactoringEssentials.Library.nuspec</LastGenOutput>
+    </Content>
+    <None Include="RefactoringEssentials.Library.nuspec">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>RefactoringEssentials.Library.tt</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="RefactoringEssentials.nuspec">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
