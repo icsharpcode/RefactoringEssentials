@@ -149,7 +149,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var anonymousMethod = node as AnonymousMethodExpressionSyntax;
                 if (anonymousMethod != null)
                     names.AddRange(anonymousMethod.ParameterList.Parameters.Select(p => p.Identifier.ToString()));
-
+                
                 var indexer = node as IndexerDeclarationSyntax;
                 if (indexer != null)
                 {
@@ -173,13 +173,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var accessor = node as AccessorDeclarationSyntax;
                 if (accessor != null)
                 {
-                    if (accessor.IsKind(SyntaxKind.SetAccessorDeclaration) ||
-                        accessor.IsKind(SyntaxKind.AddAccessorDeclaration) ||
-                        accessor.IsKind(SyntaxKind.RemoveAccessorDeclaration))
+                    if (!accessor.Parent.Parent.IsKind(SyntaxKind.IndexerDeclaration))
                     {
-                        names.Add("value");
+                        if (accessor.IsKind(SyntaxKind.SetAccessorDeclaration) ||
+                            accessor.IsKind(SyntaxKind.AddAccessorDeclaration) ||
+                            accessor.IsKind(SyntaxKind.RemoveAccessorDeclaration))
+                        {
+                            names.Add("value");
+                        }
+                        break;
                     }
-                    break;
                 }
                 node = node.Parent;
             }

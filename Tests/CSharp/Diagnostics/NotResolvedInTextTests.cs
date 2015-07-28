@@ -379,5 +379,22 @@ class A
 	}
 }", 0, 1);
         }
+
+        [Test]
+        public void TestIssue45()
+        {
+            Analyze<NotResolvedInTextAnalyzer>(@"
+using System;
+class A
+{
+    public string this[string key]
+    {
+       set
+       {
+           if (key == null) throw new ArgumentNullException(""key"");
+       }
+    }
+}");
+        }
     }
 }
