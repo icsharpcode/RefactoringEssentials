@@ -43,15 +43,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (nodeContext.IsFromGeneratedCode())
                 return false;
             var node = nodeContext.Node as CatchClauseSyntax;
-            if (node.Declaration == null)
-            {
-                diagnostic = Diagnostic.Create(
-                    descriptor,
-                    node.CatchKeyword.GetLocation()
-                );
-                return true;
-            }
-            else
+            if (node.Declaration != null)
             {
                 var type = node.Declaration.Type;
                 if (type != null)
@@ -59,23 +51,23 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     var typeSymbol = nodeContext.SemanticModel.GetTypeInfo(type).Type;
                     if (typeSymbol == null || typeSymbol.TypeKind == TypeKind.Error || !typeSymbol.GetFullName().Equals("System.Exception"))
                         return false;
-
-                    // Don't consider a catch clause with "when (...)" as general
-                    if (node.Filter != null)
-                        return false;
-
-                    BlockSyntax body = node.Block;
-                    if (body.Statements.Any())
-                        return false;
-
-                    diagnostic = Diagnostic.Create(
-                        descriptor,
-                        node.CatchKeyword.GetLocation()
-                    );
-                    return true;
                 }
             }
-            return false;
+
+            // Don't consider a catch clause with "when (...)" as general
+            if (node.Filter != null)
+                return false;
+
+            BlockSyntax body = node.Block;
+            if (body.Statements.Any())
+                return false;
+
+            diagnostic = Diagnostic.Create(
+                descriptor,
+                node.CatchKeyword.GetLocation()
+            );
+
+            return true;
         }
     }
 }
