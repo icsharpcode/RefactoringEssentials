@@ -173,16 +173,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var accessor = node as AccessorDeclarationSyntax;
                 if (accessor != null)
                 {
-                    if (!accessor.Parent.Parent.IsKind(SyntaxKind.IndexerDeclaration))
+                    if (accessor.IsKind(SyntaxKind.SetAccessorDeclaration) ||
+                        accessor.IsKind(SyntaxKind.AddAccessorDeclaration) ||
+                        accessor.IsKind(SyntaxKind.RemoveAccessorDeclaration))
                     {
-                        if (accessor.IsKind(SyntaxKind.SetAccessorDeclaration) ||
-                            accessor.IsKind(SyntaxKind.AddAccessorDeclaration) ||
-                            accessor.IsKind(SyntaxKind.RemoveAccessorDeclaration))
-                        {
-                            names.Add("value");
-                        }
-                        break;
+                        names.Add("value");
                     }
+
+                    if (!accessor.Parent.Parent.IsKind(SyntaxKind.IndexerDeclaration))
+                        break;
                 }
                 node = node.Parent;
             }
