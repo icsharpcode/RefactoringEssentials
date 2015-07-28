@@ -120,7 +120,10 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             {
                 op.Apply(workspace, default(CancellationToken));
             }
-            return workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            var result = workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            if (Environment.NewLine != "\r\n")
+                result = result.Replace("\r\n", Environment.NewLine);
+            return result;
         }
 
 

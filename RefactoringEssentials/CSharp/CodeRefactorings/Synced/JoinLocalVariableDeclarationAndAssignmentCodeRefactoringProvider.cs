@@ -43,9 +43,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     GettextCatalog.GetString("Join declaration and assignment"),
                     t2 =>
                     {
-                        root = root.TrackNodes(new SyntaxNode[] { node, nextStatement });
-                        var newRoot = root.ReplaceNode((SyntaxNode)
-                            root.GetCurrentNode(node),
+                        var trackedRoot = root.TrackNodes(new SyntaxNode[] { node, nextStatement });
+                        var newRoot = trackedRoot.ReplaceNode((SyntaxNode)
+                            trackedRoot.GetCurrentNode(node),
                             node.WithInitializer(SyntaxFactory.EqualsValueClause(assignment.Right)).WithAdditionalAnnotations(Formatter.Annotation)
                         );
                         newRoot = newRoot.RemoveNode(newRoot.GetCurrentNode(nextStatement), SyntaxRemoveOptions.KeepNoTrivia);
