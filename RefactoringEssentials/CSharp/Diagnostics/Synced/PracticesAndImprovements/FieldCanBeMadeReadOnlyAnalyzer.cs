@@ -100,8 +100,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     wasUsed = true;
                 if (!usage.IsWrittenTo())
                     continue;
-                if (member.IsKind(SyntaxKind.ConstructorDeclaration) && !symbol.IsStatic && !usage.Ancestors().Any(a => a.IsKind(SyntaxKind.AnonymousMethodExpression) || a.IsKind(SyntaxKind.SimpleLambdaExpression) || a.IsKind(SyntaxKind.ParenthesizedLambdaExpression)))
-                    continue;
+                if (member.IsKind(SyntaxKind.ConstructorDeclaration) && !usage.Ancestors().Any(a => a.IsKind(SyntaxKind.AnonymousMethodExpression) || a.IsKind(SyntaxKind.SimpleLambdaExpression) || a.IsKind(SyntaxKind.ParenthesizedLambdaExpression)))
+                {
+                    if (member.GetModifiers().Any(m => m.IsKind(SyntaxKind.StaticKeyword)) == info.IsStatic)
+                        continue;
+                }
                 if (info == symbol)
                     return true;
             }
