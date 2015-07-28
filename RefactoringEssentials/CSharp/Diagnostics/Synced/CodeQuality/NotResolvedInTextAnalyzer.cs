@@ -179,9 +179,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     {
                         names.Add("value");
                     }
-
                     if (!accessor.Parent.Parent.IsKind(SyntaxKind.IndexerDeclaration))
+                    {
                         break;
+                    }
                 }
                 node = node.Parent;
             }

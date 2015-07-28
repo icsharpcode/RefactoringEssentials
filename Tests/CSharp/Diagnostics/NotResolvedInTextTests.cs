@@ -243,6 +243,26 @@ class A
 }", 0, 0);
         }
 
+        /// <summary>
+        /// Source analysis can't resolve 'key' in indexer property setter 
+        /// </summary>
+        [Test]
+        public void TestArgumentNullOnIndexerKey()
+        {
+            Analyze<NotResolvedInTextAnalyzer>(@"
+using System;
+class A
+{
+	public string this[string key] {
+		get {}
+		set {
+			if(key == null) throw new ArgumentNullException(""key"");
+            if(value == null) throw new ArgumentNullException(""value"");
+		}
+	}
+}");
+        }
+
         [Test]
         public void TestArgumentNullGuessingCase2()
         {
