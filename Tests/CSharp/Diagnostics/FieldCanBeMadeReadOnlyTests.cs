@@ -219,6 +219,19 @@ struct MutableStruct {
 }");
         }
 
+
+        [Test]
+        public void TestIssue37()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class SomeClass
+{
+    static int StaticField;
+    public SomeClass()
+    {
+        StaticField = 1;
+    }
+}");
+        }
     }
 }
 
