@@ -6,6 +6,8 @@
     <DisplayName>Refactoring Essentials for Visual Studio</DisplayName>
     <Description xml:space="preserve">Free refactorings for C# and Visual Basic (VB) - plus more!</Description>
     <License>license.txt</License>
+    <GettingStartedGuide>https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-1.2</GettingStartedGuide>
+    <ReleaseNotes>https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-1.2</ReleaseNotes>
     <Icon>Images\refactoringessentials-logo90.png</Icon>
     <PreviewImage>Images\refactoringessentials-preview.png</PreviewImage>
   </Metadata>

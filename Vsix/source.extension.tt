@@ -9,6 +9,8 @@
     <DisplayName>Refactoring Essentials for Visual Studio</DisplayName>
     <Description xml:space="preserve">Free refactorings for C# and Visual Basic (VB) - plus more!</Description>
     <License>license.txt</License>
+    <GettingStartedGuide><#= releaseNotesLink #></GettingStartedGuide>
+    <ReleaseNotes><#= releaseNotesLink #></ReleaseNotes>
     <Icon>Images\refactoringessentials-logo90.png</Icon>
     <PreviewImage>Images\refactoringessentials-preview.png</PreviewImage>
   </Metadata>
