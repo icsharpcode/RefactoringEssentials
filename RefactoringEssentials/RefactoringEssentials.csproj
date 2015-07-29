@@ -510,6 +510,7 @@
     <Compile Include="Util\CodeFixContextExtensions.cs" />
     <Compile Include="Util\SyntaxTokenExtensions.cs" />
     <Compile Include="Util\VBSyntaxExtensions.cs" />
+    <Compile Include="Util\VBUtil.cs" />
     <Compile Include="Util\WordParser.cs" />
     <Compile Include="Util\SyntaxNodeExtensions.cs" />
     <Compile Include="Util\Matcher.cs" />
@@ -546,6 +547,7 @@
     <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\InvertIfCodeRefactoringProvider.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticIDs.cs" />
