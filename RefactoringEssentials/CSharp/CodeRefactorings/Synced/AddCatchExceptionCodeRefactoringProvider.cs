@@ -40,8 +40,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     GettextCatalog.GetString("To 'catch (Exception)'"),
                     t2 =>
                     {
-                        var newRoot = root.ReplaceNode((SyntaxNode)catchClause, catchClause.WithDeclaration(SyntaxFactory.CatchDeclaration(newIdent, SyntaxFactory.Identifier("e"))
-                            .WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation)));
+                        var newRoot = root.ReplaceNode((SyntaxNode)catchClause, catchClause
+                            .WithCatchKeyword(catchClause.CatchKeyword.WithTrailingTrivia(SyntaxFactory.Whitespace(" ")))
+                            .WithDeclaration(SyntaxFactory.CatchDeclaration(newIdent, SyntaxFactory.Identifier("e")).WithTrailingTrivia(catchClause.CatchKeyword.TrailingTrivia))
+                            .WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation));
                         return Task.FromResult(document.WithSyntaxRoot(newRoot));
                     }
                 )
