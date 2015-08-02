@@ -132,7 +132,6 @@
     <Compile Include="CSharp\CodeFixes\InvalidConversionTests.cs" />
     <Compile Include="CSharp\CodeFixes\ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests.cs" />
     <Compile Include="CSharp\CodeFixes\UnreachableCodeTests.cs" />
-    <Compile Include="CSharp\CodeRefactorings\GeneratePropertyTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\GenerateSwitchLabelsTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ImportStaticClassWithUsingTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InitializeAutoPropertyFromConstructorParameterTests.cs" />

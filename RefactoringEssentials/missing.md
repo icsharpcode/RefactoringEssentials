@@ -13,7 +13,6 @@
 * CreateOverloadWithoutParameterAction
 * ExtractAnonymousMethodAction
 * GenerateGetterAction
-* GeneratePropertyAction
 * IntroduceConstantAction
 * IterateViaForeachAction
 * LinqFluentToQueryAction
