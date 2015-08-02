@@ -20,7 +20,7 @@
 		</frameworkAssemblies>
 	</metadata>
 	<files>
-		<file src="RefactoringEssentials.dll" target="tools\analyzers\" />
+		<file src="RefactoringEssentials.dll" target="analyzers\dotnet\" />
 		<file src="tools\install.ps1" target="tools\" />
 		<file src="tools\uninstall.ps1" target="tools\" />
 	</files>
