@@ -3,7 +3,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture, Ignore("Not implemented!")]
+    [TestFixture]
     public class MergeNestedIfTests : CSharpCodeRefactoringTestBase
     {
         [Test]
@@ -12,20 +12,20 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             Test<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		$if (a > 0)
-			if (a < 5) 
-				return 1;
-	}
+    int TestMethod (int a)
+    {
+        $if (a > 0)
+            if (a < 5) 
+                return 1;
+    }
 }", @"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		if (a > 0 && a < 5)
-			return 1;
-	}
+    int TestMethod (int a)
+    {
+        if (a > 0 && a < 5)
+            return 1;
+    }
 }");
         }
 
@@ -35,25 +35,25 @@ class TestClass
             Test<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		$if (a > 0) {
+    int TestMethod (int a)
+    {
+        $if (a > 0) {
 
-		{
-			if (a < 5) 
-				return 1;
-		}
+        {
+            if (a < 5) 
+                return 1;
+        }
 
-		}
-	}
+        }
+    }
 }", @"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		if (a > 0 && a < 5)
-			return 1;
-	}
+    int TestMethod (int a)
+    {
+        if (a > 0 && a < 5)
+            return 1;
+    }
 }");
         }
 
@@ -63,20 +63,20 @@ class TestClass
             Test<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		if (a > 0)
-			$if (a < 5) 
-				return 1;
-	}
+    int TestMethod (int a)
+    {
+        if (a > 0)
+            $if (a < 5) 
+                return 1;
+    }
 }", @"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		if (a > 0 && a < 5)
-			return 1;
-	}
+    int TestMethod (int a)
+    {
+        if (a > 0 && a < 5)
+            return 1;
+    }
 }");
         }
 
@@ -86,25 +86,25 @@ class TestClass
             Test<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		if (a > 0) {
+    int TestMethod (int a)
+    {
+        if (a > 0) {
 
-		{
-			$if (a < 5) 
-				return 1;
-		}
+        {
+            $if (a < 5) 
+                return 1;
+        }
 
-		}
-	}
+        }
+    }
 }", @"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		if (a > 0 && a < 5)
-			return 1;
-	}
+    int TestMethod (int a)
+    {
+        if (a > 0 && a < 5)
+            return 1;
+    }
 }");
         }
 
@@ -114,26 +114,26 @@ class TestClass
             TestWrongContext<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		$if (a > 0)
-			if (a < 5) 
-				return 1;
-		else
-			return 0;
-	}
+    int TestMethod (int a)
+    {
+        $if (a > 0)
+            if (a < 5) 
+                return 1;
+        else
+            return 0;
+    }
 }");
             TestWrongContext<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		$if (a > 0) {
-			if (a < 5) 
-				return 1;
-		} else
-			return 0;
-	}
+    int TestMethod (int a)
+    {
+        $if (a > 0) {
+            if (a < 5) 
+                return 1;
+        } else
+            return 0;
+    }
 }");
         }
 
@@ -143,27 +143,27 @@ class TestClass
             TestWrongContext<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		$if (a > 0)
-			if (a < 5) 
-				return 1;
-			else
-				return 0;
-	}
+    int TestMethod (int a)
+    {
+        $if (a > 0)
+            if (a < 5) 
+                return 1;
+            else
+                return 0;
+    }
 }");
             TestWrongContext<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		$if (a > 0) {
-			if (a < 5) 
-				return 1;
-			else
-				return 0;
-		}
-	}
+    int TestMethod (int a)
+    {
+        $if (a > 0) {
+            if (a < 5) 
+                return 1;
+            else
+                return 0;
+        }
+    }
 }");
         }
 
@@ -173,26 +173,26 @@ class TestClass
             TestWrongContext<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		$if (a > 0) {
-			if (a < 5) 
-				return 1;
-			return 0;
-		}
-	}
+    int TestMethod (int a)
+    {
+        $if (a > 0) {
+            if (a < 5) 
+                return 1;
+            return 0;
+        }
+    }
 }");
             TestWrongContext<MergeNestedIfAction>(@"
 class TestClass
 {
-	int TestMethod (int a)
-	{
-		if (a > 0) {
-			$if (a < 5) 
-				return 1;
-			return 0;
-		}
-	}
+    int TestMethod (int a)
+    {
+        if (a > 0) {
+            $if (a < 5) 
+                return 1;
+            return 0;
+        }
+    }
 }");
         }
     }

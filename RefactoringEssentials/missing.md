@@ -17,7 +17,6 @@
 * IterateViaForeachAction
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
-* MergeNestedIfAction
 * MoveToOuterScopeAction
 * PutInsideUsingAction
 * UseStringFormatAction
