@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("'params' is ignored on overrides"),
             GettextCatalog.GetString("'params' is always ignored in overrides"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantParamsAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

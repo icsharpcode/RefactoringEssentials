@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant operand in logical conditional expression"),
             GettextCatalog.GetString("Redundant operand in logical conditional expression"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantLogicalConditionalExpressionOperandAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

@@ -14,7 +14,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant explicit property name"),
             GettextCatalog.GetString("The name can be inferred from the initializer expression"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantAnonymousTypePropertyNameAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
