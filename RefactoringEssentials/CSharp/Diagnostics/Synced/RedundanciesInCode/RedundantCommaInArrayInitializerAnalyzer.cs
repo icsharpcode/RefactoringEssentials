@@ -54,7 +54,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             var commaCount = node.Expressions.Count;
             var commaToken = node.ChildTokens().ElementAt(commaCount-1);
-            if (commaToken.ToString() != ",")
+            if (!commaToken.IsKind(SyntaxKind.CommaToken))
                 return false;
 
 

@@ -4,7 +4,9 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -33,23 +35,26 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
+            var node = root.FindNode(context.Span) as InitializerExpressionSyntax;
             //if (!node.IsKind(SyntaxKind.BaseList))
             //	continue;
-            var commaCount = (node as InitializerExpressionSyntax)?.Expressions.Count;
-            if (!commaCount.HasValue)
+            if (node == null)
                 return;
 
-            var tokenList = (node as InitializerExpressionSyntax)?.ChildTokens();
-            if (tokenList == null)
+            var commaCount = node.Expressions.Count;
+            if (commaCount<=1)
                 return;
 
-            var syntaxTokens = tokenList.ToList();
-            var redundantCommaToken = syntaxTokens.ElementAt(commaCount.Value - 1);
-            //syntaxTokens.RemoveAt(commaCount.Value-1);
-            //var newTokenList = (IEnumerable<SyntaxToken>) syntaxTokens;
-            var newlyRoot = root.ReplaceToken(redundantCommaToken, null);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove ','", document.WithSyntaxRoot(newlyRoot)), diagnostic);
+            var redundantComma = node.Expressions.GetSeparator(commaCount - 1);
+            var newRoot = root.ReplaceNode(
+                node,
+                node
+                .WithExpressions(SyntaxFactory.SeparatedList(node.Expressions.ToArray()))
+                .WithLeadingTrivia(node.GetLeadingTrivia())
+                .WithTrailingTrivia(node.GetTrailingTrivia()))
+                .WithAdditionalAnnotations(Formatter.Annotation);
+
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove ','", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }
