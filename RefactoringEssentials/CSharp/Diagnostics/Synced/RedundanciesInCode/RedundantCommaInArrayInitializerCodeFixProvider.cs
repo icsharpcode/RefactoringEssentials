@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -34,8 +36,20 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = root.FindNode(context.Span);
             //if (!node.IsKind(SyntaxKind.BaseList))
             //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove ','", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var commaCount = (node as InitializerExpressionSyntax)?.Expressions.Count;
+            if (!commaCount.HasValue)
+                return;
+
+            var tokenList = (node as InitializerExpressionSyntax)?.ChildTokens();
+            if (tokenList == null)
+                return;
+
+            var syntaxTokens = tokenList.ToList();
+            var redundantCommaToken = syntaxTokens.ElementAt(commaCount.Value - 1);
+            //syntaxTokens.RemoveAt(commaCount.Value-1);
+            //var newTokenList = (IEnumerable<SyntaxToken>) syntaxTokens;
+            var newlyRoot = root.ReplaceToken(redundantCommaToken, null);
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove ','", document.WithSyntaxRoot(newlyRoot)), diagnostic);
         }
     }
 }

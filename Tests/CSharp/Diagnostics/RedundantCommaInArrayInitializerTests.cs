@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantCommaInArrayInitializerTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -15,7 +14,7 @@ class TestClass
 {
 	void TestMethod ()
 	{
-		var a = new int[] { 1, 2, };
+		var a = new int[] ${ 1, 2, }$;
 	}
 }";
             var output = @"
@@ -26,7 +25,7 @@ class TestClass
 		var a = new int[] { 1, 2 };
 	}
 }";
-            Test<RedundantCommaInArrayInitializerAnalyzer>(input, 1, output);
+            Analyze<RedundantCommaInArrayInitializerAnalyzer>(input, output);
         }
 
         [Test]
