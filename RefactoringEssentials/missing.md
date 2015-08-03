@@ -7,6 +7,7 @@
 
 * AutoLinqSumAction
 * ChangeAccessModifierAction
+* ConvertStatementBodyToExpressionBodyCodeRefactoringProvider
 * CreateDelegateAction
 * CreateIndexerAction
 * CreateOverloadWithoutParameterAction
@@ -16,7 +17,6 @@
 * IterateViaForeachAction
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
-* MergeNestedIfAction
 * MoveToOuterScopeAction
 * PutInsideUsingAction
 * UseStringFormatAction
@@ -106,4 +106,3 @@
 * UseMethodAnyAnalyzer
 * UseMethodIsInstanceOfTypeAnalyzer
 * XmlDocAnalyzer
-

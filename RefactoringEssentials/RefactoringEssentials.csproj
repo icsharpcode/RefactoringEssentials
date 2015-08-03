@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\NotPortedYetAttribute.cs" />
+    <Compile Include="CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\AddAnotherAccessorCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\AddCatchExceptionCodeRefactoringProvider.cs" />
@@ -129,7 +130,6 @@
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\IterateViaForeachAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\LinqFluentToQueryAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\LinqQueryToFluentAction.cs" />
-    <Compile Include="CSharp\CodeRefactorings\Uncategorized\MergeNestedIfAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\MoveToOuterScopeAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\PutInsideUsingAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\SortUsingsAction.cs" />
