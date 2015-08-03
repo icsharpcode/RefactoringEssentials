@@ -49,8 +49,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var invocationSymbol = nodeContext.SemanticModel.GetSymbolInfo(node).Symbol;
             if (invocationSymbol == null)
                 return false;
-            //System.Array.CreateInstance(typeof (int), 10);
-            //new int[10, 20, i];
+            System.Array.CreateInstance(typeof(int), 10);
+            new int[10, 20, i];
 
             if (invocationSymbol.Name != "CreateInstance" || invocationSymbol.IsArrayType())
                 // IsArrayType not working -> using it wrong.. 
@@ -64,20 +64,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 node.ArgumentList.Arguments[1].ChildNodes().FirstOrDefault() as LiteralExpressionSyntax;
             if (argumentChildLiteralExpression == null)
                 return false;
-            var literalExpressionSymbol = nodeContext.SemanticModel.GetSymbolInfo(argumentChildLiteralExpression).Symbol as ITypeSymbol; //breaks here....
-            if (literalExpressionSymbol == null)
+
+           
+            if (!argumentChildLiteralExpression.IsKind(SyntaxKind.NumericLiteralExpression))
                 return false;
 
-            if (!argumentChildLiteralExpression.IsKind(SyntaxKind.NumericLiteralExpression) && literalExpressionSymbol.MetadataName != "int32")
-                return false;
-
-
-            ////				if (rr.Member.Name != "CreateInstance" ||
-            ////				    !rr.Member.DeclaringType.IsKnownType(KnownTypeCode.Array))
-            ////					return;
-            ////				var firstArg = invocationExpression.Arguments.FirstOrDefault() as TypeOfExpression;
-            ////				if (firstArg == null)
-            ////					return;
             ////				var argRR = ctx.Resolve(invocationExpression.Arguments.ElementAt(1));
             ////				if (!argRR.Type.IsKnownType(KnownTypeCode.Int32))
             ////					return;
