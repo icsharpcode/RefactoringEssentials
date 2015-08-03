@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis.Formatting;
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert statement body member to expression body")]
-    [NotPortedYet]
     public class ConvertStatementBodyToExpressionBodyCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

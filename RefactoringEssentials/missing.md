@@ -7,7 +7,6 @@
 
 * AutoLinqSumAction
 * ChangeAccessModifierAction
-* ConvertStatementBodyToExpressionBodyCodeRefactoringProvider
 * CreateDelegateAction
 * CreateIndexerAction
 * CreateOverloadWithoutParameterAction
