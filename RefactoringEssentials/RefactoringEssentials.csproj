@@ -547,6 +547,7 @@
     <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\InvertIfCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\MoveClassToNewFileCodeRefactoringProvider.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticIDs.cs" />

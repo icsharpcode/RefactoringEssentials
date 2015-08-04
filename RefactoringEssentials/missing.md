@@ -7,7 +7,6 @@
 
 * AutoLinqSumAction
 * ChangeAccessModifierAction
-* ConvertStatementBodyToExpressionBodyCodeRefactoringProvider
 * CreateDelegateAction
 * CreateIndexerAction
 * CreateOverloadWithoutParameterAction
@@ -106,3 +105,4 @@
 * UseMethodAnyAnalyzer
 * UseMethodIsInstanceOfTypeAnalyzer
 * XmlDocAnalyzer
+

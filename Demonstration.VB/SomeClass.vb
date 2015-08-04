@@ -26,4 +26,10 @@
         End Set
     End Property
 
+
+
+End Class
+
+Public Class SomeOtherClass
+
 End Class
