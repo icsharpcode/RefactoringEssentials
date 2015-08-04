@@ -1,140 +1,173 @@
 using System.Threading;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.FindSymbols;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "put inside 'using'")]
-    [NotPortedYet]
     public class PutInsideUsingAction : SpecializedCodeRefactoringProvider<VariableDeclaratorSyntax>
-    {
+    {        
         protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, VariableDeclaratorSyntax node, CancellationToken cancellationToken)
         {
-            yield break;
+            var variableDeclaration = node.GetAncestor<VariableDeclarationSyntax>();
+            var localDeclaration = node.GetAncestor<LocalDeclarationStatementSyntax>();
+
+            if (node.Initializer == null)
+                yield break;
+
+            var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(node);
+
+            if (!IsDisposable(semanticModel, symbol.Type))
+                yield break;
+
+            var containingBlock = node.GetAncestor<BlockSyntax>();
+
+            yield return CodeActionFactory.Create(span, DiagnosticSeverity.Info, "Put inside 'using'", ct =>
+            {                
+                var insideUsing = containingBlock.Statements.SkipWhile(x => x != localDeclaration).Skip(1).ToList();
+
+                for (int i = insideUsing.Count - 1; i >= 0; i--)
+                {
+                    var flow = semanticModel.AnalyzeDataFlow(insideUsing[i]);
+
+                    if (flow.ReadInside.Contains(symbol) || flow.WrittenInside.Contains(symbol))
+                    {
+                        break;
+                    }
+
+                    insideUsing.RemoveAt(i);
+                }
+
+                var nodesToRemove = new List<SyntaxNode>(insideUsing);
+
+                var inUsingDataFlow = semanticModel.AnalyzeDataFlow(insideUsing.First(), insideUsing.Last());
+
+                var declaredVariablesUsedOutside = inUsingDataFlow.ReadOutside.Union(inUsingDataFlow.WrittenOutside)
+                    .Distinct()
+                    .Intersect(inUsingDataFlow.VariablesDeclared)
+                    .Select(x => new { Symbol = x, Declarator = (VariableDeclaratorSyntax)x.DeclaringSyntaxReferences[0].GetSyntax(ct) })
+                    .ToArray();
+
+                var beforeUsing = new List<StatementSyntax>();
+
+                for (var i = 0; i < insideUsing.Count; i++)
+                {
+                    var stmt = insideUsing[i];
+
+                    var localDeclarationStmt = stmt as LocalDeclarationStatementSyntax;
+
+                    if (localDeclarationStmt == null)
+                    {
+                        continue;
+                    }
+
+                    nodesToRemove.Add(localDeclarationStmt);
+
+                    var declaredVariables = localDeclarationStmt.Declaration
+                        .Variables.Select(x => new { Symbol = semanticModel.GetDeclaredSymbol(x), Declarator = x })
+                        .ToArray();
+
+                    var variablesToMove = declaredVariables
+                    .Intersect(declaredVariablesUsedOutside)
+                    .ToArray();
+
+                    var reducedLocalDeclaration = localDeclarationStmt.RemoveNodes(variablesToMove.Select(x => x.Declarator), SyntaxRemoveOptions.AddElasticMarker);
+
+                    if (reducedLocalDeclaration.Declaration.Variables.Any())
+                    {
+                        insideUsing[i] = reducedLocalDeclaration;
+                    }
+                    else
+                    {
+                        insideUsing.RemoveAt(i);
+                        i--;
+                    }
+
+                    foreach (var needAssignment in variablesToMove.Where(x => x.Declarator.Initializer != null))
+                    {
+                        insideUsing.Insert(i + 1, SyntaxFactory.ExpressionStatement(
+                            SyntaxFactory.AssignmentExpression(
+                                SyntaxKind.SimpleAssignmentExpression, 
+                                SyntaxFactory.IdentifierName(needAssignment.Declarator.Identifier),
+                                needAssignment.Declarator.Initializer.Value
+                                )
+                            )
+                        );
+                    }                    
+
+                    beforeUsing.Add(SyntaxFactory
+                        .LocalDeclarationStatement(
+                            SyntaxFactory.VariableDeclaration(
+                                               localDeclarationStmt.Declaration.Type,
+                                              SyntaxFactory.SeparatedList(variablesToMove.Select(x => x.Declarator.WithInitializer(null)))
+                                          )
+
+                        )
+                        .WithAdditionalAnnotations(Formatter.Annotation)
+                    );
+                }
+
+                var lastInUsingAsCall = (((insideUsing.LastOrDefault() as ExpressionStatementSyntax)?.Expression as InvocationExpressionSyntax)?.Expression as MemberAccessExpressionSyntax);
+
+                if (lastInUsingAsCall != null && symbol.Equals(semanticModel.GetSymbolInfo(lastInUsingAsCall.Expression).Symbol))
+                {
+                    var dispose = semanticModel.Compilation.GetSpecialType(SpecialType.System_IDisposable).GetMembers("Dispose").Single();
+
+                    if (dispose.Equals(semanticModel.GetSymbolInfo(lastInUsingAsCall).Symbol))
+                    {
+                        nodesToRemove.Add(insideUsing.Last());
+                        insideUsing.RemoveAt(insideUsing.Count - 1);                                                
+                    }
+                }
+
+                var usingVariableDeclaration = variableDeclaration.WithVariables(SyntaxFactory.SingletonSeparatedList(node));
+
+                var usingNode = SyntaxFactory.UsingStatement(usingVariableDeclaration, null, SyntaxFactory.Block(insideUsing)).WithAdditionalAnnotations(Formatter.Annotation);
+
+                var newRoot = root.TrackNodes(nodesToRemove.Concat(localDeclaration));
+
+                newRoot = newRoot.RemoveNodes(newRoot.GetCurrentNodes<SyntaxNode>(nodesToRemove), SyntaxRemoveOptions.AddElasticMarker);
+
+                newRoot = newRoot.InsertNodesAfter(newRoot.GetCurrentNode(localDeclaration), beforeUsing.Concat(usingNode));
+
+                if (localDeclaration.Declaration.Variables.Count > 1)
+                {
+                    var remainingVariables = localDeclaration.Declaration.Variables.Except(new[] {node});
+                    newRoot = newRoot.ReplaceNode(newRoot.GetCurrentNode(localDeclaration), 
+                        localDeclaration.WithDeclaration(localDeclaration.Declaration.WithVariables(SyntaxFactory.SeparatedList(remainingVariables)))
+                        .WithAdditionalAnnotations(Formatter.Annotation));
+                }
+                else
+                {
+                    newRoot = newRoot.RemoveNode(newRoot.GetCurrentNode(localDeclaration), SyntaxRemoveOptions.AddElasticMarker);
+                }
+
+                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+            });
         }
-        //		static readonly FindReferences refFinder = new FindReferences ();
-        //		protected override CodeAction GetAction (SemanticModel context, VariableInitializer node)
-        //		{
-        //			if (node.Initializer.IsNull)
-        //				return null;
-        //
-        //			var variableDecl = node.Parent as VariableDeclarationStatement;
-        //			if (variableDecl == null || !(variableDecl.Parent is BlockStatement))
-        //				return null;
-        //
-        //			var type = context.ResolveType (variableDecl.Type);
-        //			if (!IsIDisposable (type))
-        //				return null;
-        //
-        //			var unit = context.RootNode as SyntaxTree;
-        //			if (unit == null)
-        //				return null;
-        //
-        //			var resolveResult = (LocalResolveResult)context.Resolve (node);
-        //
-        //			return new CodeAction (context.TranslateString ("put inside 'using'"),
-        //				script =>
-        //				{
-        //					var lastReference = GetLastReference (resolveResult.Variable, context, unit);
-        //
-        //					var body = new BlockStatement ();
-        //					var variableToMoveOutside = new List<VariableDeclarationStatement> ();
-        //
-        //					if (lastReference != node) {
-        //						var statements = CollectStatements (variableDecl.GetNextSibling (n => n is Statement) as Statement, 
-        //															lastReference.EndLocation).ToArray();
-        //
-        //						// collect statements to put inside 'using' and variable declaration to move outside 'using'
-        //						foreach (var statement in statements) {
-        //							script.Remove (statement);
-        //
-        //							var decl = statement as VariableDeclarationStatement;
-        //							if (decl == null) {
-        //								body.Statements.Add (statement.Clone ());
-        //								continue;
-        //							}
-        //
-        //							var outsideDecl = (VariableDeclarationStatement)decl.Clone ();
-        //							outsideDecl.Variables.Clear ();
-        //							var insideDecl = (VariableDeclarationStatement)outsideDecl.Clone ();
-        //
-        //							foreach (var variable in decl.Variables) {
-        //								var reference = GetLastReference (
-        //									((LocalResolveResult)context.Resolve (variable)).Variable, context, unit);
-        //								if (reference.StartLocation > lastReference.EndLocation)
-        //									outsideDecl.Variables.Add ((VariableInitializer)variable.Clone ());
-        //								else
-        //									insideDecl.Variables.Add ((VariableInitializer)variable.Clone ());
-        //							}
-        //							if (outsideDecl.Variables.Count > 0)
-        //								variableToMoveOutside.Add (outsideDecl);
-        //							if (insideDecl.Variables.Count > 0)
-        //								body.Statements.Add (insideDecl);
-        //						}
-        //					}
-        //
-        //					foreach (var decl in variableToMoveOutside)
-        //						script.InsertBefore (variableDecl, decl);
-        //
-        //					if (body.Statements.Count > 0) {
-        //						var lastStatement = body.Statements.Last ();
-        //						if (IsDisposeInvocation (resolveResult.Variable.Name, lastStatement))
-        //							lastStatement.Remove ();
-        //					}
-        //					var usingStatement = new UsingStatement
-        //					{
-        //						ResourceAcquisition = new VariableDeclarationStatement (variableDecl.Type.Clone (), node.Name,
-        //																				node.Initializer.Clone ()),
-        //						EmbeddedStatement = body
-        //					};
-        //					script.Replace (variableDecl, usingStatement);
-        //
-        //					if (variableDecl.Variables.Count == 1)
-        //						return;
-        //					// other variables in the same declaration statement
-        //					var remainingVariables = (VariableDeclarationStatement)variableDecl.Clone ();
-        //					remainingVariables.Variables.Remove (
-        //						remainingVariables.Variables.FirstOrDefault (v => v.Name == node.Name));
-        //					script.InsertBefore (usingStatement, remainingVariables);
-        //				}, node.NameToken);
-        //		}
-        //
-        //		static bool IsIDisposable (IType type)
-        //		{
-        //			return type.GetAllBaseTypeDefinitions ().Any (t => t.KnownTypeCode == KnownTypeCode.IDisposable);
-        //		}
-        //	
-        //		static IEnumerable<Statement> CollectStatements (Statement statement, TextLocation end)
-        //		{
-        //			while (statement != null) {
-        //				yield return statement;
-        //				if (statement.Contains (end))
-        //					break;
-        //				statement = statement.GetNextSibling (n => n is Statement) as Statement;
-        //			}
-        //		}
-        //
-        //		static AstNode GetLastReference (IVariable variable, SemanticModel context, SyntaxTree unit)
-        //		{
-        //			AstNode lastReference = null;
-        //			refFinder.FindLocalReferences (variable, context.UnresolvedFile, unit, context.Compilation,
-        //				(v, r) =>
-        //				{
-        //					if (lastReference == null || v.EndLocation > lastReference.EndLocation)
-        //						lastReference = v;
-        //				}, context.CancellationToken);
-        //			return lastReference;
-        //		}
-        //
-        //		static bool IsDisposeInvocation (string variableName, Statement statement)
-        //		{
-        //			var memberReferenceExpr = new MemberReferenceExpression (new IdentifierExpression (variableName), "Dispose");
-        //			var pattern = new ExpressionStatement (new InvocationExpression (memberReferenceExpr));
-        //			return pattern.Match (statement).Success;
-        //		}
+
+        private static bool IsDisposable(SemanticModel semanticModel, ITypeSymbol type)
+        {
+            var disposable = semanticModel.Compilation.GetSpecialType(SpecialType.System_IDisposable);
+
+            if (type.GetAllInterfacesIncludingThis().Contains(disposable))
+                return true;
+
+            var parameterType = type as ITypeParameterSymbol;
+
+            if (parameterType != null && parameterType.ConstraintTypes.Any(x => IsDisposable(semanticModel, x)))
+                return true;
+
+            return false;
+        }
     }
 }
