@@ -148,5 +148,28 @@ class TestClass
     }
 }");
         }
+
+        /// <summary>
+        /// Bug 'ConvertIfStatementToReturnStatementAction crashes on "if" without "else" #63'
+        /// </summary>
+        [Test]
+        public void TestIssue63()
+        {
+            var actions = GetActions<ConvertIfStatementToReturnStatementAction>(@"
+class TestClass
+{
+    int TestMethod(int a)
+    {
+        if (a > 0)
+            $if (a < 5)
+            {
+                return 1;
+            }
+
+        return 0;
+    }
+}");
+            Assert.AreEqual(0, actions.Count);
+        }
     }
 }
