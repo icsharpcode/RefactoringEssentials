@@ -80,7 +80,7 @@ namespace RefactoringEssentials.VB.CodeRefactorings
                                             )))),
                                     SyntaxFactory.List<StatementSyntax>(new[] { GetNotImplementedThrowStatement() }))
                             })
-                        );
+                        ).WithTrailingTrivia(eventStatement.GetTrailingTrivia());
                         
                         return Task.FromResult(document.WithSyntaxRoot(root.ReplaceNode(eventStatement, customEventStatement.WithAdditionalAnnotations(Formatter.Annotation))));
                     }
