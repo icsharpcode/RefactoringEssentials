@@ -17,8 +17,9 @@ Class Test
 End Class", @"
 Class Test
     Public Shared Sub Main(args As System.Collections.Generic.IDictionary(Of Integer, Integer))
-        If args.ContainsKey(5) Then
-            Console.WriteLine(args(5))
+        Dim val As Integer
+        If args.TryGetValue(5, val) Then
+            Console.WriteLine(val)
         End If
     End Sub
 End Class");
@@ -41,8 +42,9 @@ Class Test
     Public Shared Sub Main(args As System.Collections.Generic.IDictionary(Of Integer, Integer))
         If True Then
             If True Then
-                If args.ContainsKey(5 + 234 - 234) Then
-                    Console.WriteLine(args(5 + 234 - 234))
+                Dim val As Integer
+                If args.TryGetValue(5 + 234 - 234, val) Then
+                    Console.WriteLine(val)
                 End If
             End If
         End If
@@ -53,20 +55,35 @@ End Class");
         [Test]
         public void TestNestedCase2()
         {
-            Test<CheckDictionaryKeyValueCodeRefactoringProvider>(@"
+            TestWrongContext<CheckDictionaryKeyValueCodeRefactoringProvider>(@"
 Class Test
     Public Shared Sub Main(args As System.Collections.Generic.IDictionary(Of Integer, Integer))
-        If args.ContainsKey(5) Then
-            Console.WriteLine(args($5))
+        Dim val As Integer
+        If args.TryGetValue($5, val) Then
+            Console.WriteLine(val)
         End If
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void TestNameClash()
+        {
+            Test<CheckDictionaryKeyValueCodeRefactoringProvider>(@"
+Class Test
+    Private Shared val As Integer
+
+    Public Shared Sub Main(args As System.Collections.Generic.IDictionary(Of Integer, Integer))
+        Console.WriteLine(args($5))
     End Sub
 End Class", @"
 Class Test
+    Private Shared val As Integer
+
     Public Shared Sub Main(args As System.Collections.Generic.IDictionary(Of Integer, Integer))
-        If args.ContainsKey(5) Then
-            If args.ContainsKey(5) Then
-                Console.WriteLine(args(5))
-            End If
+        Dim val1 As Integer
+        If args.TryGetValue(5, val1) Then
+            Console.WriteLine(val1)
         End If
     End Sub
 End Class");

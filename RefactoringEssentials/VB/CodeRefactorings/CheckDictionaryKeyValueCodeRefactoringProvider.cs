@@ -40,38 +40,56 @@ namespace RefactoringEssentials.VB.CodeRefactorings
             var elementType = model.GetTypeInfo(elementAccess.Expression);
             if (elementType.Type == null)
                 return;
+
             if (!IsDictionary(elementType.Type as INamedTypeSymbol) && !elementType.Type.AllInterfaces.Any(IsDictionary))
                 return;
 
             context.RegisterRefactoring(
-                CodeActionFactory.Create(
-                    span,
-                    DiagnosticSeverity.Info,
-                    string.Format(GettextCatalog.GetString("Check 'If {0}.ContainsKey({1})'"), elementAccess.Expression, elementAccess.ArgumentList.Arguments.First()),
-                    t2 =>
-                    {
-                        var parentStatement = elementAccess.Parent.AncestorsAndSelf().OfType<StatementSyntax>().FirstOrDefault();
+            CodeActionFactory.Create(
+                span,
+                DiagnosticSeverity.Info,
+                string.Format(GettextCatalog.GetString("Check 'If {0}.TryGetValue({1}, val)'"), elementAccess.Expression, elementAccess.ArgumentList.Arguments.First()),
+                t2 =>
+                {
+                    var reservedNames = model.LookupSymbols(elementAccess.SpanStart).Select(s => s.Name);
+                    string localVariableName = NameGenerator.EnsureUniqueness("val", reservedNames, true);
 
-                        var newParent = SyntaxFactory.MultiLineIfBlock(
-                            SyntaxFactory.IfStatement(
-                                SyntaxFactory.Token(SyntaxKind.IfKeyword),
-                                SyntaxFactory.InvocationExpression(
-                                    SyntaxFactory.MemberAccessExpression(
-                                        SyntaxKind.SimpleMemberAccessExpression,
-                                        elementAccess.Expression,
-                                        SyntaxFactory.Token(SyntaxKind.DotToken),
-                                        SyntaxFactory.IdentifierName("ContainsKey")),
-                                    SyntaxFactory.ArgumentList(elementAccess.ArgumentList.Arguments)
-                                ),
-                                SyntaxFactory.Token(SyntaxKind.ThenKeyword)),
-                            SyntaxFactory.List(new[] { parentStatement }),
-                            SyntaxFactory.List<ElseIfBlockSyntax>(), null
-                        ).WithLeadingTrivia(parentStatement.GetLeadingTrivia());
-                        
-                        return Task.FromResult(document.WithSyntaxRoot(root.ReplaceNode(parentStatement, newParent.WithAdditionalAnnotations(Formatter.Annotation))));
-                    }
-                )
-            );
+                    var parentStatement = elementAccess.Parent.AncestorsAndSelf().OfType<StatementSyntax>().FirstOrDefault();
+                    var dict = IsDictionary(elementType.Type as INamedTypeSymbol) ? elementType.Type : elementType.Type.AllInterfaces.First(IsDictionary);
+
+                    var tempVariableDeclaration = SyntaxFactory.LocalDeclarationStatement(
+                        SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.DimKeyword)),
+                        SyntaxFactory.SeparatedList(new[] {
+                                SyntaxFactory.VariableDeclarator(SyntaxFactory.SeparatedList(new[]
+                                {
+                                    SyntaxFactory.ModifiedIdentifier(localVariableName)
+                                }),
+                                SyntaxFactory.SimpleAsClause(SyntaxFactory.ParseTypeName(dict.GetTypeArguments()[1].GetFullName())),
+                                null)
+                        })).WithTrailingTrivia(parentStatement.GetTrailingTrivia());
+
+                    var newParent = SyntaxFactory.MultiLineIfBlock(
+                        SyntaxFactory.IfStatement(
+                            SyntaxFactory.Token(SyntaxKind.IfKeyword),
+                            SyntaxFactory.InvocationExpression(
+                                SyntaxFactory.MemberAccessExpression(
+                                    SyntaxKind.SimpleMemberAccessExpression,
+                                    elementAccess.Expression,
+                                    SyntaxFactory.Token(SyntaxKind.DotToken),
+                                    SyntaxFactory.IdentifierName("TryGetValue")),
+                                SyntaxFactory.ArgumentList(elementAccess.ArgumentList.Arguments)
+                                    .AddArguments(SyntaxFactory.SimpleArgument(SyntaxFactory.IdentifierName(localVariableName)))
+                            ),
+                            SyntaxFactory.Token(SyntaxKind.ThenKeyword)),
+                        SyntaxFactory.List(new[] { parentStatement.ReplaceNode(elementAccess, SyntaxFactory.IdentifierName(localVariableName)) }),
+                        SyntaxFactory.List<ElseIfBlockSyntax>(), null
+                    ).WithLeadingTrivia(parentStatement.GetLeadingTrivia());
+
+                    return Task.FromResult(document.WithSyntaxRoot(root.ReplaceNode(parentStatement,
+                        new SyntaxNode[] { tempVariableDeclaration.WithAdditionalAnnotations(Formatter.Annotation), newParent.WithAdditionalAnnotations(Formatter.Annotation) })));
+                }
+            )
+        );
         }
 
         static bool IsDictionary(INamedTypeSymbol type)
