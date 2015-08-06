@@ -3,6 +3,9 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -31,10 +34,25 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
+            var node = root.FindNode(context.Span) as InvocationExpressionSyntax;
+            if (node == null)
+                return;
+            
+            var newArgumentList = node.ArgumentList.Arguments.RemoveAt(0);
+
+            context.RegisterCodeFix(
+    CodeActionFactory.Create(node.Span, diagnostic.Severity, "Convert to 'return' statement", token =>
+    {
+        var newArrayInstantiation = SyntaxFactory.ArrayCreationExpression(SyntaxFactory.Token(SyntaxKind.NewKeyword),
+            null, null, null);
+        var newRoot = root.ReplaceNode(node,
+newArrayInstantiation.WithLeadingTrivia(node.GetLeadingTrivia())
+         .WithAdditionalAnnotations(Formatter.Annotation));
+        return Task.FromResult(document.WithSyntaxRoot(newRoot));
+    }), diagnostic);
+
             //if (!node.IsKind(SyntaxKind.BaseList))
             //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Replace with 'new'", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
