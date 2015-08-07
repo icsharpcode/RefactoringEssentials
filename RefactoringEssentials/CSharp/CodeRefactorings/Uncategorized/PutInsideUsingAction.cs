@@ -35,17 +35,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             {                
                 var insideUsing = containingBlock.Statements.SkipWhile(x => x != localDeclaration).Skip(1).ToList();
 
-                for (int i = insideUsing.Count - 1; i >= 0; i--)
-                {
-                    var flow = semanticModel.AnalyzeDataFlow(insideUsing[i]);
-
-                    if (flow.ReadInside.Contains(symbol) || flow.WrittenInside.Contains(symbol))
-                    {
-                        break;
-                    }
-
-                    insideUsing.RemoveAt(i);
-                }
+                ReduceUsingBlock(semanticModel, insideUsing, symbol);
 
                 var nodesToRemove = new List<SyntaxNode>(insideUsing);
 
@@ -53,89 +43,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                 if (insideUsing.Any())
                 {
-                    var inUsingDataFlow = semanticModel.AnalyzeDataFlow(insideUsing.First(), insideUsing.Last());
-
-                    var declaredVariablesUsedOutside = inUsingDataFlow.ReadOutside.Union(inUsingDataFlow.WrittenOutside)
-                        .Distinct()
-                        .Intersect(inUsingDataFlow.VariablesDeclared)
-                        .Select(x => new {Symbol = x, Declarator = (VariableDeclaratorSyntax) x.DeclaringSyntaxReferences[0].GetSyntax(ct)})
-                        .ToArray();
-                   
-
-                    for (var i = 0; i < insideUsing.Count; i++)
-                    {
-                        var stmt = insideUsing[i];
-
-                        var localDeclarationStmt = stmt as LocalDeclarationStatementSyntax;
-
-                        if (localDeclarationStmt == null)
-                        {
-                            continue;
-                        }
-
-                        nodesToRemove.Add(localDeclarationStmt);
-
-                        var declaredVariables = localDeclarationStmt.Declaration
-                            .Variables.Select(x => new {Symbol = semanticModel.GetDeclaredSymbol(x), Declarator = x})
-                            .ToArray();
-
-                        var variablesToMove = declaredVariables
-                            .Intersect(declaredVariablesUsedOutside)
-                            .ToArray();
-
-                        if (!variablesToMove.Any())
-                        {
-                            continue;
-                        }
-
-                        var reducedLocalDeclaration = localDeclarationStmt.RemoveNodes(variablesToMove.Select(x => x.Declarator), SyntaxRemoveOptions.AddElasticMarker);
-
-                        if (reducedLocalDeclaration.Declaration.Variables.Any())
-                        {
-                            insideUsing[i] = reducedLocalDeclaration;
-                        }
-                        else
-                        {
-                            insideUsing.RemoveAt(i);
-                            i--;
-                        }
-
-                        foreach (var needAssignment in variablesToMove.Where(x => x.Declarator.Initializer != null))
-                        {
-                            insideUsing.Insert(i + 1, SyntaxFactory.ExpressionStatement(
-                                SyntaxFactory.AssignmentExpression(
-                                    SyntaxKind.SimpleAssignmentExpression,
-                                    SyntaxFactory.IdentifierName(needAssignment.Declarator.Identifier),
-                                    needAssignment.Declarator.Initializer.Value
-                                    )
-                                )
-                                );
-                        }
-
-                        beforeUsing.Add(SyntaxFactory
-                            .LocalDeclarationStatement(
-                                SyntaxFactory.VariableDeclaration(
-                                    localDeclarationStmt.Declaration.Type,
-                                    SyntaxFactory.SeparatedList(variablesToMove.Select(x => x.Declarator.WithInitializer(null)))
-                                    )
-
-                            )
-                            .WithAdditionalAnnotations(Formatter.Annotation)
-                            );
-                    }
+                    ExtractVariableDeclarationsBeforeUsing(semanticModel, beforeUsing, insideUsing, nodesToRemove, ct);
                 }
 
-                var lastInUsingAsCall = (((insideUsing.LastOrDefault() as ExpressionStatementSyntax)?.Expression as InvocationExpressionSyntax)?.Expression as MemberAccessExpressionSyntax);
-
-                if (lastInUsingAsCall != null && symbol.Equals(semanticModel.GetSymbolInfo(lastInUsingAsCall.Expression).Symbol))
+                if (IsEndingWithDispose(semanticModel, insideUsing, symbol))
                 {
-                    var dispose = semanticModel.Compilation.GetSpecialType(SpecialType.System_IDisposable).GetMembers("Dispose").Single();
-
-                    if (dispose.Equals(semanticModel.GetSymbolInfo(lastInUsingAsCall).Symbol))
-                    {
-                        nodesToRemove.Add(insideUsing.Last());
-                        insideUsing.RemoveAt(insideUsing.Count - 1);                                                
-                    }
+                    nodesToRemove.Add(insideUsing.Last());
+                    insideUsing.RemoveAt(insideUsing.Count - 1);
                 }
 
                 var usingVariableDeclaration = SyntaxFactory.VariableDeclaration(variableDeclaration.Type.WithoutTrivia(), SyntaxFactory.SingletonSeparatedList(node));
@@ -164,6 +78,110 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                 return Task.FromResult(document.WithSyntaxRoot(newRoot));
             });
+        }
+
+        private static void ReduceUsingBlock(SemanticModel semanticModel, List<StatementSyntax> insideUsing, ILocalSymbol symbol)
+        {
+            for (int i = insideUsing.Count - 1; i >= 0; i--)
+            {
+                var flow = semanticModel.AnalyzeDataFlow(insideUsing[i]);
+
+                if (flow.ReadInside.Contains(symbol) || flow.WrittenInside.Contains(symbol))
+                {
+                    break;
+                }
+
+                insideUsing.RemoveAt(i);
+            }
+        }
+
+        private static void ExtractVariableDeclarationsBeforeUsing(SemanticModel semanticModel, List<StatementSyntax> beforeUsing, List<StatementSyntax> insideUsing, List<SyntaxNode> nodesToRemove, CancellationToken ct)
+        {
+            var inUsingDataFlow = semanticModel.AnalyzeDataFlow(insideUsing.First(), insideUsing.Last());
+
+            var declaredVariablesUsedOutside = inUsingDataFlow.ReadOutside.Union(inUsingDataFlow.WrittenOutside)
+                .Distinct()
+                .Intersect(inUsingDataFlow.VariablesDeclared)
+                .Select(x => new {Symbol = x, Declarator = (VariableDeclaratorSyntax) x.DeclaringSyntaxReferences[0].GetSyntax(ct)})
+                .ToArray();
+
+
+            for (var i = 0; i < insideUsing.Count; i++)
+            {
+                var stmt = insideUsing[i];
+
+                var localDeclarationStmt = stmt as LocalDeclarationStatementSyntax;
+
+                if (localDeclarationStmt == null)
+                {
+                    continue;
+                }
+
+                nodesToRemove.Add(localDeclarationStmt);
+
+                var declaredVariables = localDeclarationStmt.Declaration
+                    .Variables.Select(x => new {Symbol = semanticModel.GetDeclaredSymbol(x), Declarator = x})
+                    .ToArray();
+
+                var variablesToMove = declaredVariables
+                    .Intersect(declaredVariablesUsedOutside)
+                    .ToArray();
+
+                if (!variablesToMove.Any())
+                {
+                    continue;
+                }
+
+                var reducedLocalDeclaration = localDeclarationStmt.RemoveNodes(variablesToMove.Select(x => x.Declarator), SyntaxRemoveOptions.AddElasticMarker);
+
+                if (reducedLocalDeclaration.Declaration.Variables.Any())
+                {
+                    insideUsing[i] = reducedLocalDeclaration;
+                }
+                else
+                {
+                    insideUsing.RemoveAt(i);
+                    i--;
+                }
+
+                foreach (var needAssignment in variablesToMove.Where(x => x.Declarator.Initializer != null))
+                {
+                    insideUsing.Insert(i + 1, needAssignment.Declarator.InitializerAsAssignment());
+                }
+
+                beforeUsing.Add(SyntaxFactory.LocalDeclarationStatement(
+                        SyntaxFactory.VariableDeclaration(
+                            localDeclarationStmt.Declaration.Type,
+                            SyntaxFactory.SeparatedList(variablesToMove.Select(x => x.Declarator.WithInitializer(null)))
+                            )
+                    )
+                    .WithAdditionalAnnotations(Formatter.Annotation)
+                    );
+            }
+        }
+
+        private static bool IsEndingWithDispose(SemanticModel semanticModel, List<StatementSyntax> insideUsing, ILocalSymbol disposableLocal)
+        {
+            var lastInUsingAsCall = (((insideUsing.LastOrDefault() as ExpressionStatementSyntax)?.Expression as InvocationExpressionSyntax)?.Expression as MemberAccessExpressionSyntax);
+
+            if (lastInUsingAsCall == null)
+                return false;
+
+            var targetSymbol = semanticModel.GetSymbolInfo(lastInUsingAsCall.Expression);
+
+            if (!disposableLocal.Equals(targetSymbol.Symbol))
+                return false;
+
+
+            var dispose = semanticModel.Compilation.GetSpecialType(SpecialType.System_IDisposable).GetMembers("Dispose").Single();
+
+            var calledMethod = semanticModel.GetSymbolInfo(lastInUsingAsCall).Symbol;
+
+            if (!dispose.Equals(calledMethod))
+                return false;
+
+
+            return true;
         }
 
         private static bool IsDisposable(SemanticModel semanticModel, ITypeSymbol type)

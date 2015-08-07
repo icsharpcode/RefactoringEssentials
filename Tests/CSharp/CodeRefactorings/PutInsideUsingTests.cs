@@ -335,6 +335,36 @@ class TestClass
     }
 }");
         }
+
+        [Test]
+        public void TestLastCallInBlockIsStatic()
+        {
+            Test<PutInsideUsingAction>(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        System.IDisposable obj $= null;
+        int a, b;
+        a = b = 0;
+        a++;
+        System.String.Split('.', obj.Method());
+    }
+}", @"
+class TestClass
+{
+    void TestMethod()
+    {
+        using (System.IDisposable obj = null)
+        {
+            int a, b;
+            a = b = 0;
+            a++;
+            System.String.Split('.', obj.Method());
+        }
+    }
+}");
+        }
     }
 
    
