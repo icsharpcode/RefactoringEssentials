@@ -239,6 +239,104 @@ class TestClass
     }
 }");
         }
+
+        [Test]
+        public void TestAllDeclaredVariablesAreUsedInsideUsingBlock()
+        {
+            Test<PutInsideUsingAction>(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        System.IDisposable obj $= null;
+        int a, b;
+        a = b = 0;
+        a++;
+        obj.Method();
     }
+}", @"
+class TestClass
+{
+    void TestMethod()
+    {
+        using (System.IDisposable obj = null)
+        {
+            int a, b;
+            a = b = 0;
+            a++;
+            obj.Method();
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void TestEmptyUsingBlock()
+        {
+            Test<PutInsideUsingAction>(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        System.IDisposable obj = null, $obj2 = null;
+        int a, b;
+        a = b = 0;
+        obj.Method();
+        a++;
+    }
+}", @"
+class TestClass
+{
+    void TestMethod()
+    {
+        System.IDisposable obj = null;
+        using (System.IDisposable obj2 = null)
+        {
+        }
+
+        int a, b;
+        a = b = 0;
+        obj.Method();
+        a++;
+    }
+}");
+        }
+
+        [Test]
+        public void TestVariableWithComment()
+        {
+            Test<PutInsideUsingAction>(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        // This is a comment
+        System.IDisposable obj $= null;
+        int a, b;
+        a = b = 0;
+        obj.Method();
+        a++;
+    }
+}", @"
+class TestClass
+{
+    void TestMethod()
+    {
+        int a;
+        // This is a comment
+        using (System.IDisposable obj = null)
+        {
+            int b;
+            a = b = 0;
+            obj.Method();
+        }
+
+        a++;
+    }
+}");
+        }
+    }
+
+   
 
 }

@@ -49,71 +49,80 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                 var nodesToRemove = new List<SyntaxNode>(insideUsing);
 
-                var inUsingDataFlow = semanticModel.AnalyzeDataFlow(insideUsing.First(), insideUsing.Last());
-
-                var declaredVariablesUsedOutside = inUsingDataFlow.ReadOutside.Union(inUsingDataFlow.WrittenOutside)
-                    .Distinct()
-                    .Intersect(inUsingDataFlow.VariablesDeclared)
-                    .Select(x => new { Symbol = x, Declarator = (VariableDeclaratorSyntax)x.DeclaringSyntaxReferences[0].GetSyntax(ct) })
-                    .ToArray();
-
                 var beforeUsing = new List<StatementSyntax>();
 
-                for (var i = 0; i < insideUsing.Count; i++)
+                if (insideUsing.Any())
                 {
-                    var stmt = insideUsing[i];
+                    var inUsingDataFlow = semanticModel.AnalyzeDataFlow(insideUsing.First(), insideUsing.Last());
 
-                    var localDeclarationStmt = stmt as LocalDeclarationStatementSyntax;
-
-                    if (localDeclarationStmt == null)
-                    {
-                        continue;
-                    }
-
-                    nodesToRemove.Add(localDeclarationStmt);
-
-                    var declaredVariables = localDeclarationStmt.Declaration
-                        .Variables.Select(x => new { Symbol = semanticModel.GetDeclaredSymbol(x), Declarator = x })
+                    var declaredVariablesUsedOutside = inUsingDataFlow.ReadOutside.Union(inUsingDataFlow.WrittenOutside)
+                        .Distinct()
+                        .Intersect(inUsingDataFlow.VariablesDeclared)
+                        .Select(x => new {Symbol = x, Declarator = (VariableDeclaratorSyntax) x.DeclaringSyntaxReferences[0].GetSyntax(ct)})
                         .ToArray();
+                   
 
-                    var variablesToMove = declaredVariables
-                    .Intersect(declaredVariablesUsedOutside)
-                    .ToArray();
-
-                    var reducedLocalDeclaration = localDeclarationStmt.RemoveNodes(variablesToMove.Select(x => x.Declarator), SyntaxRemoveOptions.AddElasticMarker);
-
-                    if (reducedLocalDeclaration.Declaration.Variables.Any())
+                    for (var i = 0; i < insideUsing.Count; i++)
                     {
-                        insideUsing[i] = reducedLocalDeclaration;
-                    }
-                    else
-                    {
-                        insideUsing.RemoveAt(i);
-                        i--;
-                    }
+                        var stmt = insideUsing[i];
 
-                    foreach (var needAssignment in variablesToMove.Where(x => x.Declarator.Initializer != null))
-                    {
-                        insideUsing.Insert(i + 1, SyntaxFactory.ExpressionStatement(
-                            SyntaxFactory.AssignmentExpression(
-                                SyntaxKind.SimpleAssignmentExpression, 
-                                SyntaxFactory.IdentifierName(needAssignment.Declarator.Identifier),
-                                needAssignment.Declarator.Initializer.Value
+                        var localDeclarationStmt = stmt as LocalDeclarationStatementSyntax;
+
+                        if (localDeclarationStmt == null)
+                        {
+                            continue;
+                        }
+
+                        nodesToRemove.Add(localDeclarationStmt);
+
+                        var declaredVariables = localDeclarationStmt.Declaration
+                            .Variables.Select(x => new {Symbol = semanticModel.GetDeclaredSymbol(x), Declarator = x})
+                            .ToArray();
+
+                        var variablesToMove = declaredVariables
+                            .Intersect(declaredVariablesUsedOutside)
+                            .ToArray();
+
+                        if (!variablesToMove.Any())
+                        {
+                            continue;
+                        }
+
+                        var reducedLocalDeclaration = localDeclarationStmt.RemoveNodes(variablesToMove.Select(x => x.Declarator), SyntaxRemoveOptions.AddElasticMarker);
+
+                        if (reducedLocalDeclaration.Declaration.Variables.Any())
+                        {
+                            insideUsing[i] = reducedLocalDeclaration;
+                        }
+                        else
+                        {
+                            insideUsing.RemoveAt(i);
+                            i--;
+                        }
+
+                        foreach (var needAssignment in variablesToMove.Where(x => x.Declarator.Initializer != null))
+                        {
+                            insideUsing.Insert(i + 1, SyntaxFactory.ExpressionStatement(
+                                SyntaxFactory.AssignmentExpression(
+                                    SyntaxKind.SimpleAssignmentExpression,
+                                    SyntaxFactory.IdentifierName(needAssignment.Declarator.Identifier),
+                                    needAssignment.Declarator.Initializer.Value
+                                    )
                                 )
+                                );
+                        }
+
+                        beforeUsing.Add(SyntaxFactory
+                            .LocalDeclarationStatement(
+                                SyntaxFactory.VariableDeclaration(
+                                    localDeclarationStmt.Declaration.Type,
+                                    SyntaxFactory.SeparatedList(variablesToMove.Select(x => x.Declarator.WithInitializer(null)))
+                                    )
+
                             )
-                        );
-                    }                    
-
-                    beforeUsing.Add(SyntaxFactory
-                        .LocalDeclarationStatement(
-                            SyntaxFactory.VariableDeclaration(
-                                               localDeclarationStmt.Declaration.Type,
-                                              SyntaxFactory.SeparatedList(variablesToMove.Select(x => x.Declarator.WithInitializer(null)))
-                                          )
-
-                        )
-                        .WithAdditionalAnnotations(Formatter.Annotation)
-                    );
+                            .WithAdditionalAnnotations(Formatter.Annotation)
+                            );
+                    }
                 }
 
                 var lastInUsingAsCall = (((insideUsing.LastOrDefault() as ExpressionStatementSyntax)?.Expression as InvocationExpressionSyntax)?.Expression as MemberAccessExpressionSyntax);
@@ -129,9 +138,11 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     }
                 }
 
-                var usingVariableDeclaration = variableDeclaration.WithVariables(SyntaxFactory.SingletonSeparatedList(node));
+                var usingVariableDeclaration = SyntaxFactory.VariableDeclaration(variableDeclaration.Type.WithoutTrivia(), SyntaxFactory.SingletonSeparatedList(node));
 
-                var usingNode = SyntaxFactory.UsingStatement(usingVariableDeclaration, null, SyntaxFactory.Block(insideUsing)).WithAdditionalAnnotations(Formatter.Annotation);
+                var usingNode = SyntaxFactory.UsingStatement(usingVariableDeclaration, null, SyntaxFactory.Block(insideUsing))
+                    .WithAdditionalAnnotations(Formatter.Annotation)
+                    .WithPrependedLeadingTrivia(variableDeclaration.GetLeadingTrivia());
 
                 var newRoot = root.TrackNodes(nodesToRemove.Concat(localDeclaration));
 
