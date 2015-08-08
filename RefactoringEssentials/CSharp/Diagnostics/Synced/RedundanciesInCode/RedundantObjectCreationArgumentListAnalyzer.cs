@@ -1,14 +1,15 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantObjectCreationArgumentListAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantObjectCreationArgumentListAnalyzerID,
             GettextCatalog.GetString("When object creation uses object or collection initializer, empty argument list is redundant"),
             GettextCatalog.GetString("Empty argument list is redundant"),
@@ -23,26 +24,32 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                 SyntaxKind.ObjectCreationExpression
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+
+            var objectCreation = nodeContext.Node as ObjectCreationExpressionSyntax;
+            if (objectCreation?.Initializer == null ||
+                objectCreation.ArgumentList.Arguments.Count == 0)
+                return false;
+
+            diagnostic = Diagnostic.Create(descriptor, objectCreation.GetLocation());
+            return true;
         }
 
         //		class GatherVisitor : GatherVisitorBase<RedundantObjectCreationArgumentListAnalyzer>
