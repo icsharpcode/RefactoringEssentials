@@ -31,7 +31,7 @@ class TestClass
 		};
 	}
 }";
-            Test<RedundantObjectCreationArgumentListAnalyzer>(input, 1, output);
+            Analyze<RedundantObjectCreationArgumentListAnalyzer>(input, output);
         }
 
         [Test]

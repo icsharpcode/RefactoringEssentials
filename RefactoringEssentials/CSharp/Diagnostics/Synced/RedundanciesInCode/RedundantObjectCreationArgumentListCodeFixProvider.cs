@@ -34,16 +34,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span) ;
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
+            var node = root.FindNode(context.Span) as ObjectCreationExpressionSyntax ;
+
             if (node == null)
                 return;
-            
+
+
             var newRoot = root.ReplaceNode(
                 node,
                 node
-                .WithExpressions(SyntaxFactory.SeparatedList(node..ToArray()))
                 .WithLeadingTrivia(node.GetLeadingTrivia())
                 .WithTrailingTrivia(node.GetTrailingTrivia()))
                 .WithAdditionalAnnotations(Formatter.Annotation);
