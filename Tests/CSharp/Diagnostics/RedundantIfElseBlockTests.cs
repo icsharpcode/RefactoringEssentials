@@ -30,7 +30,7 @@ class TestClass
 		return 0;
 	}
 }";
-            Analyze<RedundantIfElseBlockAnalyzer>(input, output, 1,1);
+            Analyze<RedundantIfElseBlockAnalyzer>(input, output);
         }
 
         [Test]

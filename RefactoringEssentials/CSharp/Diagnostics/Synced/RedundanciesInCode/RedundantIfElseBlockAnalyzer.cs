@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantIfElseBlockAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -36,7 +35,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                new SyntaxKind[] { SyntaxKind.ElseClause }
+             SyntaxKind.ElseClause
             );
         }
 
@@ -49,7 +48,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (node == null)
                 return false;
 
-            if (ElseIsRedundantControlFlow(node, nodeContext))
+            if (!ElseIsRedundantControlFlow(node, nodeContext))
                 return false;
 
             diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
@@ -58,8 +57,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
        static bool ElseIsRedundantControlFlow(ElseClauseSyntax ifElseStatement, SyntaxNodeAnalysisContext syntaxNode)
         {
-            if (ifElseStatement.Statement == null || ifElseStatement.Parent is ElseBlockSyntax)
+            if (ifElseStatement.Statement == null)
                 return false;
+
             var blockStatement = ifElseStatement.ChildNodes().OfType<BlockSyntax>().FirstOrDefault();
             if (blockStatement != null && blockStatement.Statements.Any())
                 return true;
