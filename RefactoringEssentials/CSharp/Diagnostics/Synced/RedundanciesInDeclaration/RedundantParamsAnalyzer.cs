@@ -1,9 +1,9 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using System.Linq;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -11,7 +11,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     [NotPortedYet]
     public class RedundantParamsAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantParamsAnalyzerID,
             GettextCatalog.GetString("'params' is ignored on overrides"),
             GettextCatalog.GetString("'params' is always ignored in overrides"),
@@ -35,11 +35,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                SyntaxKind.ParameterList 
+                SyntaxKind.ParameterList
             );
         }
+
         //I think it's a better decision to head in this direction instead of MethodDeclaration.
-        static bool TryGetParamsDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetParamsDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
@@ -72,45 +73,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 !paramsModifierToken.Value.IsKind(SyntaxKind.ParamsKeyword))
                 return false;
 
-
-
             diagnostic = Diagnostic.Create(descriptor, lastParam.GetLocation());
-            return true;
-        }
-
-
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
-        {
-            diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
-            var methodDeclaration = nodeContext.Node as MethodDeclarationSyntax;
-            if (methodDeclaration == null)
-                return false;
-
-            if (  methodDeclaration.Modifiers.Count==0|| !methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
-            {
-                return false;
-            }
-
-            var lastParam = methodDeclaration.ParameterList.Parameters.LastOrDefault();
-            if (lastParam == null || !lastParam.Modifiers.ElementAt(0).IsKind(SyntaxKind.ParamsKeyword))
-                return false;
-
-            var type = lastParam.Type; //What is a ComposedType?
-            if (type == null)
-                return false;
-            ////				var type = lastParam.Type as ComposedType;
-            ////				if (type == null || !type.ArraySpecifiers.Any())
-            ////					return;
-
-            var methodSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(methodDeclaration);
-            if (methodSymbol == null || methodSymbol.Parameters.Length == 0 || methodSymbol.Parameters.LastOrDefault().IsParams)
-                return false;
-
-            // Do I need to look for BlockSyntax ? If yes, What ? 
-
-            diagnostic = Diagnostic.Create(descriptor, methodDeclaration.GetLocation());
             return true;
         }
 
@@ -155,7 +118,4 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////			}
         //		}
     }
-
-
 }
-
