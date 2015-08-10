@@ -72,11 +72,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (leftTypeInfo == null || leftTypeInfo.Kind.Equals(SyntaxKind.EventDeclaration))
                 return false;
 
-            //Why do I need to make that check ? 
-            //var rightTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, addOrSubstractExpression.Right).ConvertedType;
-            //if (rightTypeInfo == null || rightTypeInfo.IsErrorType() || leftTypeInfo.Equals(rightTypeInfo))
-            //    return false;
-
             diagnostic = Diagnostic.Create(descriptor, addOrSubstractExpression.GetLocation());
             return true;
         }

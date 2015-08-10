@@ -18,7 +18,7 @@ public class FooBase
 
 	FooBase()
 	{
-		Changed += new EventHandler$<EventArgs>(HandleChanged)$;
+		$Changed += new EventHandler<EventArgs>(HandleChanged)$;
 	}
 
 	void HandleChanged(object sender, EventArgs e)
@@ -42,7 +42,7 @@ public class FooBase
 	}
 }";
 
-            Analyze<RedundantDelegateCreationAnalyzer>(input, output, 0);
+            Analyze<RedundantDelegateCreationAnalyzer>(input, output);
         }
 
         [Test]
@@ -57,7 +57,7 @@ public class FooBase
 
 	FooBase()
 	{
-		Changed -= new EventHandler<EventArgs>(HandleChanged);
+		$Changed -= new EventHandler<EventArgs>(HandleChanged)$;
 	}
 
 	void HandleChanged(object sender, EventArgs e)
@@ -94,6 +94,7 @@ public class FooBase
 	FooBase()
 	{
 		// ReSharper disable once RedundantDelegateCreation
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantDelegateCreationAnalyzerID + @"
 		Changed += new EventHandler<EventArgs>(HandleChanged);
 	}
 
