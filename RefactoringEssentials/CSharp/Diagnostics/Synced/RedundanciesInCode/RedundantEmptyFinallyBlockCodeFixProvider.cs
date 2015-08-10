@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -37,14 +38,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var tryStatement = (node as FinallyClauseSyntax).Parent as TryStatementSyntax;
             if (tryStatement != null && !tryStatement.Catches.Any())
             {
-                FixEmptyFinallyWithoutCatchClause(node as FinallyClauseSyntax, tryStatement, diagnostic, context, root);
+                FixEmptyFinallyWithCatchClause(node as FinallyClauseSyntax, diagnostic, context, root);
             }
             else if (tryStatement != null && tryStatement.Catches.Any())
             {
                 FixEmptyFinallyWithCatchClause(node as FinallyClauseSyntax, diagnostic, context, root);
             }
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove 'finally'", document.WithSyntaxRoot(newRoot)), diagnostic);
+        //    var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+        //    context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove 'finally'", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
 
         public void FixEmptyFinallyWithoutCatchClause(FinallyClauseSyntax finallyClause, TryStatementSyntax tryStatement, Diagnostic diagnostic,
@@ -54,7 +55,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             "Remove redundant 'finally' ", token =>
             {
                 var blockSyntax = tryStatement.Block;
-                var newRoot = root.ReplaceNode(tryStatement, blockSyntax.WithoutLeadingTrivia());
+                
+                var newRoot = root.ReplaceNode(tryStatement, blockSyntax
+                    .WithLeadingTrivia(blockSyntax.GetLeadingTrivia())
+                    .WithTrailingTrivia(blockSyntax.GetTrailingTrivia()))
+                    .WithAdditionalAnnotations(Formatter.Annotation);
 
                 return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
             }), diagnostic);
