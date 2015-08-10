@@ -39,7 +39,7 @@ class TestClass
         }
 
         [Test]
-        public void When_Return_Statement_Corrected()
+        public void When_Retrurn_Statement_Corrected()
         {
             var input = @"
 class TestClass
