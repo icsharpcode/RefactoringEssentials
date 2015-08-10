@@ -79,6 +79,7 @@ class Test
 	void Foo ()
 	{
 		// ReSharper disable once RedundantExplicitArraySize
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantExplicitArraySizeAnalyzerID + @"
 		var foo = new int[3] { 1, 2, 3 };
 	}
 }

@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -34,7 +33,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                 SyntaxKind.ArrayCreationExpression 
+                 SyntaxKind.ArrayCreationExpression
             );
         }
 
@@ -48,7 +47,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             if (arrayType == null)
                 return false;
-
 
             var rs = arrayType.RankSpecifiers;
             if (rs.Count != 1 || rs[0].Sizes.Count != 1)
@@ -66,34 +64,5 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             return false;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantExplicitArraySizeAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitArrayCreateExpression(ArrayCreateExpression arrayCreateExpression)
-        ////			{
-        ////				base.VisitArrayCreateExpression(arrayCreateExpression);
-        ////				if (arrayCreateExpression.Arguments.Count != 1)
-        ////					return;
-        ////				var arg = arrayCreateExpression.Arguments.Single() as PrimitiveExpression;
-        ////				if (arg == null || !(arg.Value is int))
-        ////					return;
-        ////				var value = (int)arg.Value;
-        ////				if (value == 0)
-        ////					return;
-        ////				if (arrayCreateExpression.Initializer.Elements.Count() == value) {
-        ////					AddDiagnosticAnalyzer(new CodeIssue(
-        ////						arg,
-        ////						ctx.TranslateString(""),
-        ////						string.Format(ctx.TranslateString(""), arg),
-        ////						s => { s.Remove(arg); }
-        ////					) { IssueMarker = IssueMarker.GrayOut });
-        ////				}
-        ////			}
-        //		}
     }
 }

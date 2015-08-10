@@ -33,13 +33,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            var array = node as ArrayCreationExpressionSyntax;
-            if (array == null)
+            if (node == null)
                 return;
-
-            var rs = array.Type.RankSpecifiers;
-            Debug.WriteLine(rs[0]);
-            var newRoot = root.RemoveNode(rs[0], SyntaxRemoveOptions.KeepNoTrivia);
+            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove the redundant size indicator", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
