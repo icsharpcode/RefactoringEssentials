@@ -17,7 +17,6 @@
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
 * MoveToOuterScopeAction
-* PutInsideUsingAction
 * UseStringFormatAction
 
 *Analyzers*
