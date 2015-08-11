@@ -33,37 +33,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span) as ParameterSyntax;
-            if (node == null)
+            var fullParameterNode = root.FindNode(diagnostic.Location.SourceSpan) as ParameterSyntax;
+            if (fullParameterNode == null)
                 return;
 
-            if (!node.Modifiers.Any(x => x.IsKind(SyntaxKind.ParamsKeyword)))
-                return;
+            // Keep all modifiers except the params
+            var newModifiers = fullParameterNode.Modifiers.Where(m => !m.IsKind(SyntaxKind.ParamsKeyword));
+            var syntaxModifiers = SyntaxTokenList.Create(new SyntaxToken());
+            syntaxModifiers.AddRange(newModifiers);
 
-            var oldParameterNode = node;
-            var paramList = node.Parent as ParameterListSyntax;
-            if (paramList == null)
-                return;
 
-            //var newRoot = root.ReplaceNode(
-            //                            oldParameterNode.Parent as ParameterListSyntax,
-            //                            paramList.WithParameters
-            //                            (SyntaxFactory.SeparatedList(paramList.Parameters.ToArray()))
-            //                            .WithLeadingTrivia(node.GetLeadingTrivia())
-            //                            .WithTrailingTrivia(node.GetTrailingTrivia()))
-            //                            .WithAdditionalAnnotations(Formatter.Annotation);
-
-            //var paramsKeyword = (node.Modifiers.FirstOrDefault(x => x.IsKind(SyntaxKind.ParamsKeyword)));
-            //var indexParams = node.Modifiers.IndexOf(paramsKeyword);
-            //var syntaxListWithoutParams = node.Modifiers.RemoveAt(indexParams);
-            //node.ReplaceToken(paramsKeyword, syntaxListWithoutParams.AsEnumerable());
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove 'params' modifier", token =>
+            context.RegisterCodeFix(CodeActionFactory.Create(fullParameterNode.Span, diagnostic.Severity, "Remove 'params' modifier", token =>
             {
-              var newNode = SyntaxFactory.Parameter(node.AttributeLists,node.Modifiers.Remove(SyntaxFactory.Token(SyntaxKind.ParamsKeyword)),node.Type,node.Identifier,node.Default);
-             var newRoot = root.ReplaceNode(node, newNode);
+             var updatedParameterNode = fullParameterNode.WithModifiers(syntaxModifiers);
+             var newRoot = root.ReplaceNode(fullParameterNode, updatedParameterNode);
              return Task.FromResult(document.WithSyntaxRoot(newRoot));
             }), diagnostic);
-            //context.RegisterCodeFix(CodeActionFactory.Create(node.SKCpan, diagnostic.Severity, , document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }

@@ -69,11 +69,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 }
             }
 
-            if (!paramsModifierToken.HasValue ||
-                !paramsModifierToken.Value.IsKind(SyntaxKind.ParamsKeyword))
+            if (!paramsModifierToken.HasValue)
                 return false;
 
-            diagnostic = Diagnostic.Create(descriptor, lastParam.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, paramsModifierToken.Value.GetLocation());
             return true;
         }
 
