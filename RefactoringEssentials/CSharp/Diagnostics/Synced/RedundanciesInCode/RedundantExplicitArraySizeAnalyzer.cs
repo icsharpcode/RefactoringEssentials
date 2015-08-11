@@ -9,7 +9,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantExplicitArraySizeAnalyzer : DiagnosticAnalyzer
     {
-        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantExplicitArraySizeAnalyzerID,
             GettextCatalog.GetString("Redundant explicit size in array creation"),
             GettextCatalog.GetString("Remove the redundant size indicator"),
@@ -37,7 +37,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             );
         }
 
-        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
@@ -53,10 +53,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var intSizeValue = nodeContext.SemanticModel.GetConstantValue(arrayType.RankSpecifiers[0].Sizes[0]);
-            if (!intSizeValue.HasValue || (int)intSizeValue.Value <= -1)
+            if (!intSizeValue.HasValue || !(intSizeValue.Value is int))
                 return false;
 
-            if (node.Initializer.Expressions.Count == (int)intSizeValue.Value)
+            var size = (int)intSizeValue.Value;
+            if (size <= -1)
+                return false;
+            
+            if (node.Initializer.Expressions.Count == size)
             {
                 diagnostic = Diagnostic.Create(descriptor, arrayType.RankSpecifiers[0].Sizes[0].GetLocation());
                 return true;
