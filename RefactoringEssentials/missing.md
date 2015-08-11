@@ -75,7 +75,6 @@
 * RedundantEmptyFinallyBlockAnalyzer
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer
-* RedundantExplicitArraySizeAnalyzer
 * RedundantExtendsListEntryAnalyzer
 * RedundantIfElseBlockAnalyzer
 * RedundantLambdaParameterTypeAnalyzer
