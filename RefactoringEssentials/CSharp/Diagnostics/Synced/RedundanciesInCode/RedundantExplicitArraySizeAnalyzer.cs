@@ -48,6 +48,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (arrayType == null)
                 return false;
 
+            if (node.Initializer == null)
+                return false;
+
             var rs = arrayType.RankSpecifiers;
             if (rs.Count != 1 || rs[0].Sizes.Count != 1)
                 return false;
