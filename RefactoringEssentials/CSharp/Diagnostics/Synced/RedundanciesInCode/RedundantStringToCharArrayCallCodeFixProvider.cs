@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -42,10 +43,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public void FixStringToCharInvocation(MemberAccessExpressionSyntax toCharArrayInvocation, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
         {
-            context.RegisterCodeFix(CodeActionFactory.Create(toCharArrayInvocation.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
+            context.RegisterCodeFix(CodeActionFactory.Create(toCharArrayInvocation.Span, diagnostic.Severity, "Remove redundant 'string.ToCharArray()' call",
             token =>
             {
-                var newRoot = root.ReplaceNode(toCharArrayInvocation, toCharArrayInvocation.Expression);
+                var newRoot = root.ReplaceNode(toCharArrayInvocation, toCharArrayInvocation.Expression
+                    .WithLeadingTrivia(toCharArrayInvocation.GetLeadingTrivia())
+                    .WithTrailingTrivia(toCharArrayInvocation.GetTrailingTrivia()))
+                    .WithAdditionalAnnotations(Formatter.Annotation);
                 return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
             }), diagnostic);
         }
