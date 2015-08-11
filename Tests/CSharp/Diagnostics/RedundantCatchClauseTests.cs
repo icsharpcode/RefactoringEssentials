@@ -39,7 +39,7 @@ class A
 			F ();
 		} catch (ArgumentOutOfRangeException aoore) {
 			Console.WriteLine (aoore);
-		} catch (ArgumentException) {
+		} catch (ArgumentException ae) {
 			throw;
 		} catch {
 			throw;

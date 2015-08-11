@@ -1,19 +1,16 @@
-using System;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Immutable;
-using System.Diagnostics;
-using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using RefactoringEssentials.CSharp.CodeRefactorings;
+using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantCatchClauseAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantCatchClauseAnalyzerID,
             GettextCatalog.GetString("Catch clause with a single 'throw' statement is redundant"),
             "{0}",
@@ -39,17 +36,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                  SyntaxKind.CatchClause 
+                  SyntaxKind.CatchClause
             );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
 
-            var catchClause = nodeContext.Node as CatchClauseSyntax ;
+            var catchClause = nodeContext.Node as CatchClauseSyntax;
             var tryStatement = catchClause?.Parent as TryStatementSyntax;
             if (tryStatement == null || tryStatement.Finally != null)
                 return false;
@@ -57,9 +54,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var catchBlock = catchClause.Block;
 
             if (catchBlock == null || !catchBlock.Statements.Any())
-            {
                 return false;
-            }
 
             if (IsRedundant(catchClause, nodeContext))
             {
@@ -69,33 +64,59 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             return false;
         }
 
-        static bool IsThrowsClause(CatchClauseSyntax catchClause)
+        private static bool IsThrowsClause(CatchClauseSyntax catchClause)
         {
             var firstStatement = catchClause.Block.Statements.FirstOrDefault();
             var throwStatement = firstStatement as ThrowStatementSyntax;
-            return throwStatement != null || throwStatement.Expression is ObjectCreationExpressionSyntax ;
+            return (throwStatement != null);
         }
 
-        static bool IsRedundant(CatchClauseSyntax catchClause, SyntaxNodeAnalysisContext nodeContext)
+        private static bool IsRedundant(CatchClauseSyntax catchClause, SyntaxNodeAnalysisContext nodeContext)
         {
             if (!IsThrowsClause(catchClause))
                 return false;
 
             var type = nodeContext.SemanticModel.GetTypeInfo(catchClause).ConvertedType;
-            var catches = (catchClause.Parent as TryStatementSyntax).Catches;
+            var tryStatement = catchClause.Parent as TryStatementSyntax;
+            if (tryStatement == null)
+                return false;
+
+            var catches = tryStatement.Catches;
             var index = catches.IndexOf(catchClause);
             var nextSibling = catches.ElementAtOrDefault(index + 1);
             var typeInfo = nodeContext.SemanticModel.GetTypeInfo(catchClause).Type;
+
             while (nextSibling != null)
             {
                 var nextClause = nextSibling;
-                if (nextClause.Declaration.Type == null || !IsThrowsClause(nextClause)) //code breaks here ! Need help
+                if (!IsThrowsClause(nextClause)  || nextClause.Declaration?.Type == null ) 
                     return false;
-                if (!IsThrowsClause(nextClause))// how can verify if deriving from definition
+                var nextTypeInfo = nodeContext.SemanticModel.GetTypeInfo(nextClause).Type;
+                if (!IsThrowsClause(nextClause) && typeInfo.InheritsFromOrEqualsIgnoringConstruction(nextTypeInfo))
                     return false;
+                //type.GetDefinition ().IsDerivedFrom (ctx.Resolve (nextClause.Type).Type.GetDefinition ()))
                 nextSibling = catches.ElementAtOrDefault(catches.IndexOf(nextSibling) + 1);
             }
             return true;
+        }
+
+
+        private bool InheritsFrom<T>(INamedTypeSymbol symbol)
+        {
+            while (true)
+            {
+                if (symbol.ToString() == typeof(T).FullName)
+                {
+                    return true;
+                }
+                if (symbol.BaseType != null)
+                {
+                    symbol = symbol.BaseType;
+                    continue;
+                }
+                break;
+            }
+            return false;
         }
     }
 
