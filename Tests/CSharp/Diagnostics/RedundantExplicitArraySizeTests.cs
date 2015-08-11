@@ -4,18 +4,17 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantExplicitArraySizeTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSimpleCase()
         {
-            Test<RedundantExplicitArraySizeAnalyzer>(@"
+            Analyze<RedundantExplicitArraySizeAnalyzer>(@"
 class Test
 {
 	void Foo ()
 	{
-		var foo = new int[3] { 1, 2, 3 };
+		var foo = new int[$3$] { 1, 2, 3 };
 	}
 }
 ", @"
@@ -80,6 +79,7 @@ class Test
 	void Foo ()
 	{
 		// ReSharper disable once RedundantExplicitArraySize
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantExplicitArraySizeAnalyzerID + @"
 		var foo = new int[3] { 1, 2, 3 };
 	}
 }
