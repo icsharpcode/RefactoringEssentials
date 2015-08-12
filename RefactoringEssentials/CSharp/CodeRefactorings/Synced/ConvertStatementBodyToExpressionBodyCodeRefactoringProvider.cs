@@ -131,6 +131,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                             .WithAccessorList(null)
                             .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(expr))
                             .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
+                            .WithTrailingTrivia(expr.Parent.GetTrailingTrivia())
                             .WithAdditionalAnnotations(Formatter.Annotation)
                         );
                         return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
@@ -158,6 +159,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                             .WithAccessorList(null)
                             .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(expr))
                             .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
+                            .WithTrailingTrivia(expr.Parent.GetTrailingTrivia())
                             .WithAdditionalAnnotations(Formatter.Annotation)
                         );
                         return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
