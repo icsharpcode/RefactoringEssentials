@@ -44,15 +44,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     var statementCondition = (node as IfStatementSyntax)?.Condition;
                     var newReturn = SyntaxFactory.ReturnStatement(SyntaxFactory.Token(SyntaxKind.ReturnKeyword),
                         statementCondition, SyntaxFactory.Token(SyntaxKind.SemicolonToken));
-                    var newRoot = root.ReplaceNode(node as IfStatementSyntax, newReturn.WithLeadingTrivia(node.GetLeadingTrivia()).WithAdditionalAnnotations(Formatter.Annotation));
+                    var newRoot = root.ReplaceNode(node as IfStatementSyntax, newReturn
+                        .WithLeadingTrivia(node.GetLeadingTrivia())
+                        .WithAdditionalAnnotations(Formatter.Annotation));
                     var block = node.Parent as BlockSyntax;
                     if (block == null)
                         return null;
 
                     var returnStatementAfterIfStatementIndex = block.Statements.IndexOf(node as IfStatementSyntax) + 1;
+                    Debug.WriteLine(returnStatementAfterIfStatementIndex);
                     var returnStatementToBeEliminated = block.Statements.ElementAt(returnStatementAfterIfStatementIndex) as ReturnStatementSyntax;
-                    Debug.WriteLine(returnStatementToBeEliminated != null);//Results shows that return statement found
-                    //var afterRemoveRoot= root.RemoveNode(returnStatementToBeEliminated, SyntaxRemoveOptions.KeepNoTrivia); //
+                    Debug.WriteLine(returnStatementToBeEliminated.Kind());//ReturnStatementSyntax...
                     newRoot.RemoveNode(returnStatementToBeEliminated, SyntaxRemoveOptions.KeepNoTrivia);
                     return Task.FromResult(document.WithSyntaxRoot(newRoot));
                 }), diagnostic);

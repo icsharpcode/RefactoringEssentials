@@ -42,10 +42,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var node = nodeContext.Node as IfStatementSyntax;
-            if (node == null)
-                return false;
-
-            if (node.ChildNodes().OfType<ReturnStatementSyntax>().Any())
+            if (node?.Statement is ReturnStatementSyntax)
             {
                 diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
                 return true;

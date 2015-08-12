@@ -35,7 +35,7 @@ class TestClass
 	}
 }";
 
-            Analyze<RewriteIfReturnToReturnAnalyzer>(input, null, 0);
+            Analyze<RewriteIfReturnToReturnAnalyzer>(input);
         }
 
         [Test]
