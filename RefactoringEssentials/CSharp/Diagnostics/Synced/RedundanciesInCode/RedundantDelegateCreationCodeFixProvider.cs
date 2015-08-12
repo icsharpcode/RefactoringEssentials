@@ -1,9 +1,12 @@
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -32,21 +35,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var assignmentExpression = (node as ExpressionStatementSyntax)?.Expression as AssignmentExpressionSyntax;
+            var assignmentExpression = root.FindNode(context.Span) as AssignmentExpressionSyntax;
             var objectCreation = assignmentExpression?.Right as ObjectCreationExpressionSyntax;
+            var argument = objectCreation?.ArgumentList.Arguments[0];
 
-            if (objectCreation == null)
-                return;
-
-            var argument = objectCreation.ArgumentList.Arguments[0];
             if (argument == null)
                 return;
 
-            var newRoot = root.ReplaceNode(objectCreation, argument.WithoutLeadingTrivia());
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant 'new'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var newRoot = root.ReplaceNode(objectCreation, 
+                argument
+                .WithoutLeadingTrivia()
+                .WithAdditionalAnnotations(Formatter.Annotation));
+            context.RegisterCodeFix(CodeActionFactory.Create(assignmentExpression.Span, diagnostic.Severity, "Remove redundant 'new'", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
 
     }

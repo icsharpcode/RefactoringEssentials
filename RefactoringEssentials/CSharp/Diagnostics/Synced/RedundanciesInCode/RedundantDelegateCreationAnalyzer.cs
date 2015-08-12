@@ -72,7 +72,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (leftTypeInfo == null || leftTypeInfo.Kind.Equals(SyntaxKind.EventDeclaration))
                 return false;
 
-            diagnostic = Diagnostic.Create(descriptor, addOrSubstractExpression.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, addOrSubstractExpression.Right.GetLocation());
             return true;
         }
     }
