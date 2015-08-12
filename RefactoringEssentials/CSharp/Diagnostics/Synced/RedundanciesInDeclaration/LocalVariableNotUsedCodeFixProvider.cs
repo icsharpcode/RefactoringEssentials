@@ -1,8 +1,11 @@
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -32,10 +35,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
+            if (node == null)
+                return;
             var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove unused local variable '{0}'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove unused local variable", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }

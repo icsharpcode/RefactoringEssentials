@@ -6,7 +6,6 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     [TestFixture]
     public class LocalVariableNotUsedTests : CSharpDiagnosticTestBase
     {
-
         [Test]
         public void TestUnusedVariable()
         {
@@ -14,7 +13,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 class TestClass {
 	void TestMethod ()
 	{
-		int i;
+		$int i$;
 	}
 }";
             var output = @"
@@ -23,12 +22,17 @@ class TestClass {
 	{
 	}
 }";
-            Analyze<LocalVariableNotUsedAnalyzer>(input, output, 1);
+            Analyze<LocalVariableNotUsedAnalyzer>(input, output);
+        }
+
+        [Test]
+        public void TestUnusedVariable2()
+        {
             var input2 = @"
 class TestClass {
 	void TestMethod ()
 	{
-		int i, j;
+		$int i, j$;
 		j = 1;
 	}
 }";
@@ -40,7 +44,7 @@ class TestClass {
 		j = 1;
 	}
 }";
-            Analyze<LocalVariableNotUsedAnalyzer>(input2, output2,2);
+            Analyze<LocalVariableNotUsedAnalyzer>(input2, output2);
         }
 
         [Test]
@@ -50,7 +54,7 @@ class TestClass {
 class TestClass {
 	void TestMethod ()
 	{
-		int i = 0;
+		$int i = 0$;
 	}
 }";
             var input2 = @"
@@ -61,8 +65,8 @@ class TestClass {
 		i = 0;
 	}
 }";
-            Analyze<LocalVariableNotUsedAnalyzer>(input1, null,0);
-            Analyze<LocalVariableNotUsedAnalyzer>(input2, null,0);
+            Analyze<LocalVariableNotUsedAnalyzer>(input1);
+            Analyze<LocalVariableNotUsedAnalyzer>(input2);
         }
 
         [Test]
@@ -77,8 +81,7 @@ class TestClass {
 		}
 	}
 }";
-            Analyze<LocalVariableNotUsedAnalyzer>(input, null,1);
-
+            Analyze<LocalVariableNotUsedAnalyzer>(input);
         }
 
         [Test]
@@ -95,8 +98,7 @@ class TestClass {
 		}
 	}
 }";
-            Analyze<LocalVariableNotUsedAnalyzer>(input, null,0);
+            Analyze<LocalVariableNotUsedAnalyzer>(input);
         }
-
     }
 }
