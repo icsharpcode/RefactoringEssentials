@@ -12,18 +12,18 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
         {
-        	$void Test ()
-        	{
-        		int a = 2;
-        	}$
-        }",
-                @"class TestClass
-        {
-        	static void Test ()
+        	void $Test$ ()
         	{
         		int a = 2;
         	}
-        }",1,1
+        }",
+                @"class TestClass
+{
+    static void Test()
+    {
+        int a = 2;
+    }
+}"
             );
         }
 
@@ -33,7 +33,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
         {
-        	void Test ()
+        	void $Test$ ()
         	{
         		int a = 2;
         	}
@@ -47,18 +47,18 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
         {
-        	$public void Test ()
-        	{
-        		int a = 2;
-        	}$
-        }",
-                @"class TestClass
-        {
-        	public static void Test ()
+        	public void $Test$ ()
         	{
         		int a = 2;
         	}
-        }"
+        }",
+                @"class TestClass
+{
+    public static void Test()
+    {
+        int a = 2;
+    }
+}"
             );
         }
 
@@ -68,7 +68,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
         {
-        	public void Test ()
+        	public void $Test$ ()
         	{
         		int a = 2;
         	}
@@ -82,18 +82,18 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
         {
-        	$string Test (string txt)
-        	{
-        		return txt.Trim ();
-        	}$
-        }",
-                @"class TestClass
-        {
-        	static string Test (string txt)
+        	string $Test$ (string txt)
         	{
         		return txt.Trim ();
         	}
-        }"
+        }",
+                @"class TestClass
+{
+    static string Test(string txt)
+    {
+        return txt.Trim();
+    }
+}"
             );
         }
 
@@ -103,7 +103,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
             var input = @"class TestClass
         {
-        	public virtual void $Test ()
+        	public virtual void Test()
         	{
         		int a = 2;
         	}
@@ -119,10 +119,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
         class TestClass : IBase
         {
-        	$public void $Test ()
+        	public void $Test$ ()
         	{
         		int a = 2;
-        	}$
+        	}
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -133,7 +133,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
             var input = @"class TestClass
         {
-        	static void $Test ()
+        	static void Test()
         	{
         		int a = 2;
         	}
@@ -149,7 +149,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         class TestClass
         {
         	[Obsolete]
-        	public void $Test ()
+        	public void Test()
         	{
         		int a = 2;
         	}
@@ -164,7 +164,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"using System;
         class TestClass
         {
-        	public void $Test ()
+        	public void Test()
         	{
         	}
         }";
@@ -178,7 +178,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"using System;
         interface ITestInterface
         {
-        	void $Test ();
+        	void Test();
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -189,7 +189,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"using System;
         class TestClass
         {
-        	public void $Test ()
+        	public void Test ()
         	{
         		throw new NotImplementedExceptionIssue();
         	}
@@ -204,7 +204,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         class TestClass
         {
         	public int Foo { get; set; }
-        	public void $Test ()
+        	public void Test ()
         	{
         		System.Console.WriteLine (Foo);
         	}
@@ -218,7 +218,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
             var input = @"class TestClass : System.MarshalByRefObject
         {
-        	public void $Test ()
+        	public void Test ()
         	{
         		int a = 2;
         	}
@@ -231,21 +231,20 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
-        {
-        	$int Test {
-        		get {
-        			return 2;
-        		}
-        	}$
-        }",
-                @"class TestClass
-        {
-        	static int Test {
+            {
+        	int Test {
         		get {
         			return 2;
         		}
         	}
-        "
+        }",
+                @"class TestClass
+        {
+        	static int Test{
+        		get{
+        			return 2;
+        		}
+        	}"
             );
         }
 
@@ -260,22 +259,22 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
         	static event EventHandler Foo;
 
-        	$event EventHandler Bar {
-        		add { Foo += value; }
-        		remove { Foo -= value; }
-        	}$
-        }",
-                @"using System;
-
-        class TestClass
-        {
-        	static event EventHandler Foo;
-
-        	static event EventHandler Bar {
+        	event EventHandler $Bar$ {
         		add { Foo += value; }
         		remove { Foo -= value; }
         	}
-        }"
+        }",
+                @"using System;
+
+class TestClass
+{
+    static event EventHandler Foo;
+    event EventHandler Bar
+    {
+        add { Foo += value; }
+        remove { Foo -= value; }
+    }
+}"
                 );
         }
 
@@ -305,6 +304,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
                 @"class TestClass
         {
         // ReSharper disable once MemberCanBeMadeStatic.Local
+#pragma warning disable " + CSharpDiagnosticIDs.MemberCanBeMadeStaticAnalyzerID + @"
         	void Test ()
         	{
         		int a = 2;

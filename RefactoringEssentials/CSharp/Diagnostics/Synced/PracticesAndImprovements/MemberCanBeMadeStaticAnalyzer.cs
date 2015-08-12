@@ -26,39 +26,39 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public override void Initialize(AnalysisContext context)
         {
             context.RegisterSyntaxNodeAction(
+                  (nodeContext) =>
+                    {
+                        Diagnostic diagnostic;
+                        if (TryGetDiagnosticMethodDeclaration(nodeContext, out diagnostic))
+                        {
+                            nodeContext.ReportDiagnostic(diagnostic);
+                        }
+                    },
+                     SyntaxKind.MethodDeclaration
+                );
+
+                context.RegisterSyntaxNodeAction(
+                    (nodeContext) =>
+                    {
+                        Diagnostic diagnostic;
+                        if (TryGetDiagnosticPropertyDeclaration(nodeContext, out diagnostic))
+                        {
+                            nodeContext.ReportDiagnostic(diagnostic);
+                        }
+                    },
+                        SyntaxKind.PropertyDeclaration
+                );
+                        context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
                     Diagnostic diagnostic;
-                    if (TryGetDiagnosticMethodDeclaration(nodeContext, out diagnostic))
+                    if (TryGetDiagnosticEventFieldDeclaration(nodeContext, out diagnostic))
                     {
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                 SyntaxKind.MethodDeclaration
+                    SyntaxKind.EventDeclaration
             );
-
-            context.RegisterSyntaxNodeAction(
-    (nodeContext) =>
-    {
-        Diagnostic diagnostic;
-        if (TryGetDiagnosticPropertyDeclaration(nodeContext, out diagnostic))
-        {
-            nodeContext.ReportDiagnostic(diagnostic);
-        }
-    },
-     SyntaxKind.PropertyDeclaration
-);
-            context.RegisterSyntaxNodeAction(
-    (nodeContext) =>
-    {
-        Diagnostic diagnostic;
-        if (TryGetDiagnosticEventFieldDeclaration(nodeContext, out diagnostic))
-        {
-            nodeContext.ReportDiagnostic(diagnostic);
-        }
-    },
-     SyntaxKind.EventDeclaration
-);
         }
 
         private static bool TryGetDiagnosticMethodDeclaration(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -70,12 +70,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (methodDeclaration == null)
                 return false;
 
+            if (methodDeclaration.AttributeLists.Any() &&
+                DoesAttributeListContainObsoleteAttribute(methodDeclaration.AttributeLists.FirstOrDefault()))
+                return false;
+
             if (DoesMethodContainModifier(methodDeclaration))
                 return false;
 
             var body = methodDeclaration.Body;
             // skip empty methods
-            if (body.Statements.Count==0)
+            if (body != null && body.Statements.Count == 0)
                 return false;
 
             if (body.Statements.Count == 1)
@@ -92,7 +96,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (!isMethodImplementingInterface.IsEmpty)
                 return false;
 
-            diagnostic = Diagnostic.Create(descriptor, methodDeclaration.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, methodDeclaration.Identifier.GetLocation());
             return true;
         }
 
@@ -127,7 +131,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (IsEmpty(getterAccessor) && IsEmpty(setterAccessor))
                 return false;
 
-            diagnostic = Diagnostic.Create(descriptor, propertyDeclaration.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, propertyDeclaration.Identifier.GetLocation());
             return true;
         }
 
@@ -155,7 +159,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (IsEmpty(addAccessor) && IsEmpty(removeAccessor))
                 return false;
 
-
             var eventSymbolInfo = nodeContext.SemanticModel.GetDeclaredSymbol(eventField);
             if (eventSymbolInfo == null)
                 return false;
@@ -164,22 +167,27 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (!isPropertyImplementingInterface.IsEmpty)
                 return false;
 
-            diagnostic = Diagnostic.Create(descriptor, eventField.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, eventField.Identifier.GetLocation());
             return true;
         }
 
-         static bool DoesMethodContainModifier(MethodDeclarationSyntax methodDeclaration)
+        private static bool DoesAttributeListContainObsoleteAttribute(AttributeListSyntax als)
         {
-            return 
+           return als != null && als.Attributes.Any(x => x.Name.ToString() == "Obsolete");
+        }
+
+        private static bool DoesMethodContainModifier(MethodDeclarationSyntax methodDeclaration)
+        {
+            return
                 methodDeclaration.Modifiers.Count != 0 && (
                 methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) ||
                 methodDeclaration.Modifiers.Any(SyntaxKind.VirtualKeyword) ||
                 methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword) ||
-                methodDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) || methodDeclaration.AttributeLists.Count>0 &&
+                methodDeclaration.Modifiers.Any(SyntaxKind.NewKeyword) || methodDeclaration.AttributeLists.Count > 0 &&
                 methodDeclaration.AttributeLists.FirstOrDefault().Attributes.Any());
         }
 
-        static bool DoesPropertyContainModifier(PropertyDeclarationSyntax propertyDeclaration)
+        private static bool DoesPropertyContainModifier(PropertyDeclarationSyntax propertyDeclaration)
         {
             return
                 propertyDeclaration.Modifiers.Count != 0 && !(
@@ -190,7 +198,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 propertyDeclaration.AttributeLists.FirstOrDefault().Attributes.Any());
         }
 
-         static bool DoesEventFieldContainModifier(EventDeclarationSyntax eventFieldDeclaration)
+        private static bool DoesEventFieldContainModifier(EventDeclarationSyntax eventFieldDeclaration)
         {
             return
                 eventFieldDeclaration.Modifiers.Count != 0 && !(
@@ -201,11 +209,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 eventFieldDeclaration.AttributeLists.FirstOrDefault().Attributes.Any());
         }
 
-        static bool IsEmpty(AccessorDeclarationSyntax accessor)
+        private static bool IsEmpty(AccessorDeclarationSyntax accessor)
         {
             return accessor == null ||
-                !accessor.Body.Statements.Any() ||
-                accessor.Body.Statements.Count == 1 && accessor.Body.Statements.First() is ThrowStatementSyntax;
+                   !accessor.Body.Statements.Any() ||
+                   accessor.Body.Statements.Count == 1 && accessor.Body.Statements.First() is ThrowStatementSyntax;
         }
 
         //		private class GatherVisitor : GatherVisitorBase<MemberCanBeMadeStaticAnalyzer>

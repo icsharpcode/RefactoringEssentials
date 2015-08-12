@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -52,33 +53,40 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 token =>
                 {
                     var oldNode = methodDeclaration;
-                    var newRoot = root.ReplaceNode(oldNode, methodDeclaration.WithModifiers(methodDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword))).WithLeadingTrivia());
-                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); // I don't know what to put there... 
+                    var newRoot = root.ReplaceNode(oldNode, methodDeclaration
+                        .WithModifiers(methodDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)))
+                        .WithLeadingTrivia())
+                        .WithAdditionalAnnotations(Formatter.Annotation);
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); 
                 }), diagnostic);
 
         }
 
         public void MakePropertyStaticFix(PropertyDeclarationSyntax propertyDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
         {
-            context.RegisterCodeFix(CodeActionFactory.Create(propertyDeclaration.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
+            context.RegisterCodeFix(CodeActionFactory.Create(propertyDeclaration.Span, diagnostic.Severity, "Property can be made static",
                 token =>
                 {
                     var oldNode = propertyDeclaration;
                     propertyDeclaration.WithModifiers(propertyDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
-                    var newRoot = root.ReplaceNode(oldNode, propertyDeclaration.WithLeadingTrivia());
-                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); // I don't know what to put there... 
+                    var newRoot = root.ReplaceNode(oldNode, propertyDeclaration
+                        .WithLeadingTrivia())
+                        .WithAdditionalAnnotations(Formatter.Annotation);
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); 
                 }), diagnostic);
         }
 
         public void MakeEventStaticFix(EventDeclarationSyntax eventDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
         {
-            context.RegisterCodeFix(CodeActionFactory.Create(eventDeclaration.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
+            context.RegisterCodeFix(CodeActionFactory.Create(eventDeclaration.Span, diagnostic.Severity, "Event can be made static",
                 token =>
                 {
                     var oldNode = eventDeclaration;
                     eventDeclaration.WithModifiers(eventDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
-                    var newRoot = root.ReplaceNode(oldNode, eventDeclaration.WithLeadingTrivia());
-                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); // I don't know what to put there... 
+                    var newRoot = root.ReplaceNode(oldNode, eventDeclaration
+                        .WithLeadingTrivia())
+                        .WithAdditionalAnnotations(Formatter.Annotation);
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
                 }), diagnostic);
         }
 
