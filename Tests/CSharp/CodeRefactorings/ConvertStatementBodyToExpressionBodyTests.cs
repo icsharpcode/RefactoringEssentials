@@ -41,6 +41,27 @@ class TestClass
         }
 
         [Test]
+        public void TestVoidMethodNameWithExpression()
+        {
+            Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    void DoSomething() { }
+
+    void $TestMethod(int i)
+    {
+        DoSomething();
+    }
+}", @"
+class TestClass
+{
+    void DoSomething() { }
+
+    void TestMethod(int i) => DoSomething();
+}");
+        }
+
+        [Test]
         public void TestMethodNameWithCommentInBody()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -117,6 +138,57 @@ class TestClass
     int $TestProperty  {
         get {
             return 321;
+        }
+		set {} 
+    }
+}");
+        }
+
+        [Test]
+        public void TestIndexerName()
+        {
+            Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int $this[int index]  {
+        get {
+            return list[index];
+        }
+    }
+}", @"
+class TestClass
+{
+    int this[int index] => list[index];
+}");
+        }
+
+        [Test]
+        public void TestIndexerReturn()
+        {
+            Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int $this[int index]  {
+        get {
+            return list[index];
+        }
+    }
+}", @"
+class TestClass
+{
+    int this[int index] => list[index];
+}");
+        }
+
+        [Test]
+        public void TestInvalidIndexer()
+        {
+            TestWrongContext<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int $this[int index]  {
+        get {
+            return list[index];
         }
 		set {} 
     }

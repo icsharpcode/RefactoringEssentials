@@ -38,6 +38,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var property = GetDeclaration<PropertyDeclarationSyntax>(token);
             if (property != null)
                 HandlePropertyCase(context, root, token, property);
+
+            var indexer = GetDeclaration<IndexerDeclarationSyntax>(token);
+            if (indexer != null)
+                HandleIndexerCase(context, root, token, indexer);
         }
 
         static bool IsSimpleReturn(BlockSyntax body, out ExpressionSyntax returnedExpression)
@@ -53,9 +57,27 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             return true;
         }
 
+        static bool IsSimpleExpressionInVoidMethod(MethodDeclarationSyntax method, out ExpressionSyntax returnedExpression)
+        {
+            var voidReturnType = method.ReturnType as PredefinedTypeSyntax;
+            if (method.Body == null ||
+                method.Body.Statements.Count != 1 ||
+                !(method.Body.Statements[0] is ExpressionStatementSyntax) ||
+                voidReturnType == null ||
+                !voidReturnType.Keyword.IsKind(SyntaxKind.VoidKeyword))
+            {
+                returnedExpression = null;
+                return false;
+            }
+            returnedExpression = ((ExpressionStatementSyntax)method.Body.Statements[0]).Expression;
+            return (returnedExpression != null);
+        }
+
         static T GetDeclaration<T>(SyntaxToken token) where T : MemberDeclarationSyntax
         {
             if (token.IsKind(SyntaxKind.IdentifierToken))
+                return token.Parent as T;
+            if (token.IsKind(SyntaxKind.ThisKeyword))
                 return token.Parent as T;
             if (token.IsKind(SyntaxKind.ReturnKeyword))
                 return token.Parent.GetAncestors().OfType<T>().FirstOrDefault();
@@ -66,7 +88,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         {
             ExpressionSyntax expr;
             if (!IsSimpleReturn(method.Body, out expr))
-                return;
+                if (!IsSimpleExpressionInVoidMethod(method, out expr))
+                    return;
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
                     token.Span,
@@ -87,7 +110,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     }
                 )
             );
-
         }
 
         static void HandlePropertyCase(CodeRefactoringContext context, SyntaxNode root, SyntaxToken token, PropertyDeclarationSyntax property)
@@ -106,6 +128,33 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         var newRoot = root.ReplaceNode((SyntaxNode)
                             property,
                             property
+                            .WithAccessorList(null)
+                            .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(expr))
+                            .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
+                            .WithAdditionalAnnotations(Formatter.Annotation)
+                        );
+                        return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
+                    }
+                )
+            );
+        }
+
+        static void HandleIndexerCase(CodeRefactoringContext context, SyntaxNode root, SyntaxToken token, IndexerDeclarationSyntax indexer)
+        {
+            var getter = indexer.AccessorList.Accessors.FirstOrDefault(acc => acc.IsKind(SyntaxKind.GetAccessorDeclaration));
+            ExpressionSyntax expr;
+            if (getter == null || indexer.AccessorList.Accessors.Count != 1 || !IsSimpleReturn(getter.Body, out expr))
+                return;
+            context.RegisterRefactoring(
+                CodeActionFactory.Create(
+                    token.Span,
+                    DiagnosticSeverity.Info,
+                    GettextCatalog.GetString("To expression body"),
+                    t2 =>
+                    {
+                        var newRoot = root.ReplaceNode((SyntaxNode)
+                            indexer,
+                            indexer
                             .WithAccessorList(null)
                             .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(expr))
                             .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
