@@ -40,6 +40,22 @@ class TestClass
 }");
         }
 
+        [Test]
+        public void TestMethodNameWithCommentInBody()
+        {
+            Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int $TestMethod(int i)
+    {
+        return i << 8; // Some comment
+    }
+}", @"
+class TestClass
+{
+    int TestMethod(int i) => i << 8; // Some comment
+}");
+        }
 
         [Test]
         public void TestInvalidMethod()

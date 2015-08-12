@@ -80,6 +80,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                             .WithBody(null)
                             .WithExpressionBody(SyntaxFactory.ArrowExpressionClause(expr))
                             .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
+                            .WithTrailingTrivia(expr.Parent.GetTrailingTrivia())
                             .WithAdditionalAnnotations(Formatter.Annotation)
                         );
                         return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
