@@ -1,14 +1,16 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class ParameterOnlyAssignedAnalyzer : VariableOnlyAssignedAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.ParameterOnlyAssignedAnalyzerID,
             GettextCatalog.GetString("Parameter is assigned but its value is never used"),
             GettextCatalog.GetString("Parameter is assigned but its value is never used"),
@@ -16,57 +18,73 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.ParameterOnlyAssignedAnalyzerID)
-        );
+            );
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.Parameter
+                );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        void TestMethod(int i)
+        {
+            i = 1;
+        }
+
+        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+
+            var parameter = nodeContext.Node as ParameterSyntax;
+            if (parameter == null)
+                return false;
+
+            if (parameter.Modifiers.Any(SyntaxKind.OutKeyword) || parameter.Modifiers.Any(SyntaxKind.RefKeyword))
+                return false;
+
+            var localParamSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(parameter);
+            if (localParamSymbol == null)
+                return false;
+
+            var method = parameter.Parent.Parent as MethodDeclarationSyntax;
+            if (method == null)
+                return false;
+
+            var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(method.Body);
+            var alwaysAssignedWithoutBeingUsed = dataFlow.AlwaysAssigned.Except(dataFlow.ReadInside).ToArray();
+
+            if (alwaysAssignedWithoutBeingUsed.Any())
+            {
+                if (alwaysAssignedWithoutBeingUsed.Contains(localParamSymbol))
+                {
+                    var statements = method.Body.Statements;
+                    foreach (var statement in statements)
+                    {
+                        var expression = statement as ExpressionStatementSyntax;
+                        var assignment = expression?.Expression as AssignmentExpressionSyntax;
+                        if (assignment != null && 
+                            (nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol)!= null)
+                        {
+                            diagnostic = Diagnostic.Create(descriptor, assignment.GetLocation());
+                            return true;
+                        }
+                    }
+                }
+            }
             return false;
         }
-
-        //		private class GatherVisitor : GatherVisitorBase<ParameterOnlyAssignedAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base(semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitParameterDeclaration(ParameterDeclaration parameterDeclaration)
-        ////			{
-        ////				base.VisitParameterDeclaration(parameterDeclaration);
-        ////
-        ////				var resolveResult = ctx.Resolve(parameterDeclaration) as LocalResolveResult;
-        ////				if (resolveResult == null)
-        ////					return;
-        ////
-        ////				var parameterModifier = parameterDeclaration.ParameterModifier;
-        ////				if (parameterModifier == ParameterModifier.Out || parameterModifier == ParameterModifier.Ref ||
-        ////					!TestOnlyAssigned(ctx, parameterDeclaration.Parent, resolveResult.Variable)) {
-        ////					return;
-        ////				}
-        ////				AddDiagnosticAnalyzer(new CodeIssue(parameterDeclaration.NameToken, 
-        //			//					ctx.TranslateString("Parameter is assigned but its value is never used")));
-        ////			}
-        //		}
     }
 }

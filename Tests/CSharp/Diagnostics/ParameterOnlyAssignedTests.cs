@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class ParameterOnlyAssignedTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -15,10 +14,18 @@ class TestClass
 {
 	void TestMethod(int i)
 	{
-		i = 1;
+		$i = 1$;
 	}
 }";
-            Test<ParameterOnlyAssignedAnalyzer>(input, 1);
+
+            var output = @"
+class TestClass
+{
+	void TestMethod()
+	{
+	}
+}";
+            Analyze<ParameterOnlyAssignedAnalyzer>(input,output);
         }
 
         [Test]
@@ -33,7 +40,7 @@ class TestClass
 		return i;
 	}
 }";
-            Test<ParameterOnlyAssignedAnalyzer>(input, 0);
+            Analyze<ParameterOnlyAssignedAnalyzer>(input);
         }
 
         [Test]
@@ -47,7 +54,7 @@ class TestClass
 		i = 1;
 	}
 }";
-            Test<ParameterOnlyAssignedAnalyzer>(input, 0);
+            Analyze<ParameterOnlyAssignedAnalyzer>(input);
         }
 
         [Test]
@@ -61,7 +68,7 @@ class TestClass
 		i = 1;
 	}
 }";
-            Test<ParameterOnlyAssignedAnalyzer>(input, 0);
+            Analyze<ParameterOnlyAssignedAnalyzer>(input);
         }
     }
 }
