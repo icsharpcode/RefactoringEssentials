@@ -17,7 +17,6 @@
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
 * MoveToOuterScopeAction
-* PutInsideUsingAction
 * UseStringFormatAction
 
 *Analyzers*
@@ -76,7 +75,6 @@
 * RedundantEmptyFinallyBlockAnalyzer
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer
-* RedundantExplicitArraySizeAnalyzer
 * RedundantExtendsListEntryAnalyzer
 * RedundantIfElseBlockAnalyzer
 * RedundantLambdaParameterTypeAnalyzer

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Formatting;
+using System;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
@@ -64,10 +65,18 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return true;
             }
 
-            //attempt to match if(condition) return
+            //attempt to match if(condition) return; return
             if (e1 != null)
             {
-                rs = node.Parent.ChildThatContainsPosition(node.GetTrailingTrivia().Max(t => t.FullSpan.End) + 1).AsNode() as ReturnStatementSyntax;
+                var parentBlock = node.Parent as BlockSyntax;
+                if (parentBlock == null)
+                    return false;
+                var index = parentBlock.Statements.IndexOf(node);
+                if (index + 1 < parentBlock.Statements.Count)
+                {
+                    rs = parentBlock.Statements[index + 1] as ReturnStatementSyntax;
+                }
+
                 if (rs != null)
                 {
                     e2 = rs;

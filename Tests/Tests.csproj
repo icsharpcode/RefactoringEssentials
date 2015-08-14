@@ -414,6 +414,7 @@
     <Compile Include="Common\DiagnosticTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorTests.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertToCustomEventTests.cs" />
     <Compile Include="VB\CodeRefactorings\CheckDictionaryKeyValueTests.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileTests.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopTests.cs" />
