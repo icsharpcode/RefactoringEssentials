@@ -13,6 +13,7 @@ using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
+'Comment'
 namespace MoveClassToFile
 {
 
