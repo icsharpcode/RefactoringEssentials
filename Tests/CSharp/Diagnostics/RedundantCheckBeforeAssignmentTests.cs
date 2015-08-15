@@ -4,14 +4,13 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantCheckBeforeAssignmentTests : CSharpDiagnosticTestBase
     {
 
         [Test]
         public void TestInspectorCase1()
         {
-            Test<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
+            Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
 class baseClass
 {
 	public void method()
