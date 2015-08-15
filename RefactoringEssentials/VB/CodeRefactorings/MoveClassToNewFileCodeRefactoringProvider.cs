@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-'Comment'
+
 namespace MoveClassToFile
 {
 
@@ -28,22 +28,40 @@ namespace MoveClassToFile
             var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
             var node = root.FindNode(context.Span);
 
+            var currentRoot = await context.Document.GetSyntaxTreeAsync().Result.GetRootAsync();
+            var classCount = currentRoot.DescendantNodesAndSelf().Where(n => n is ClassStatementSyntax).Count();
+            
             // only for a type declaration node that doesn't match the current file name
             // also omit all private classes
             var typeDecl = node as ClassStatementSyntax;
             var className = typeDecl.Identifier.GetIdentifierText() + ".vb";
 
+            //Is the name of the file the same as the name of the class then do nothing. 
             if(typeDecl == null || context.Document.Name.ToLowerInvariant() == className.ToLowerInvariant() || typeDecl.Modifiers.Any(SyntaxKind.PrivateKeyword))
             { return; }
 
-            var action = CodeAction.Create("Move class to file \"" + className + "\" ", c => MoveClassIntoNewFileAsync(context.Document, typeDecl, className, c));
-            context.RegisterRefactoring(action);
+            //We know the name of the class is not the same as the file. If this is the only class in the file we will offer a rename file refactoring.
+            if(classCount == 1)
+            {
+                var renameFileActino = CodeAction.Create("Rename file to \"" + className + "\" ", c => RenameDocumentAsync(context.Document, className,c));
+            }else
+            {
+                var action = CodeAction.Create("Move class to file \"" + className + "\" ", c => MoveClassIntoNewFileAsync(context.Document, typeDecl, className, c));
+                context.RegisterRefactoring(action);
+            }
+                            
+        }
+
+
+        async Task<Solution> RenameDocumentAsync(Document document, string NewName,CancellationToken cancellationToken)
+        {
+            //To be implementet
+            //Maybe create a new document with the same content as this and delete this one. Does not seem to be an easy way to rename files. 
+
         }
 
         async Task<Solution> MoveClassIntoNewFileAsync(Document document, ClassStatementSyntax typeDecl, string className, CancellationToken cancellationToken)
         {
-            var identifierToken = typeDecl.Identifier;
-
             // symbol representing the type
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
             var typeSymbol = semanticModel.GetDeclaredSymbol(typeDecl, cancellationToken);
@@ -67,8 +85,10 @@ namespace MoveClassToFile
 
             SyntaxList<StatementSyntax> c;
 
+
             if(currentNs != null)
             {
+                //We have to wrap the content of the class in the namespace. 
                 var temp = SyntaxFactory.SingletonList(
                 SyntaxFactory.NamespaceBlock(
                      SyntaxFactory.NamespaceStatement(SyntaxFactory.ParseName(currentNs.Name.ToString())),
@@ -81,6 +101,7 @@ namespace MoveClassToFile
             {
                 c = SyntaxFactory.SingletonList(typeDecl.Parent);
             }
+                
 
             var newFileTree = SyntaxFactory.CompilationUnit()
                 .WithImports(SyntaxFactory.List(currentUsings.Select(i => ((ImportsStatementSyntax)i))))
@@ -92,7 +113,7 @@ namespace MoveClassToFile
 
             //TODO: handle name conflicts
             var newDocument = document.Project.AddDocument(className, SourceText.From(codeText), document.Folders);
-
+            
             newDocument = await RemoveUnusedImportDirectivesAsync(newDocument, cancellationToken);
 
             return newDocument.Project.Solution;
