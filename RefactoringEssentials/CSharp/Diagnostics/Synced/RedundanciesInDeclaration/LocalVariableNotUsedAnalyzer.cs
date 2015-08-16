@@ -28,12 +28,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 (nodeContext) =>
                 {
                     Diagnostic diagnostic;
-                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    if (TryGetUnusedLocalVariableDiagnostic(nodeContext, out diagnostic))
                     {
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                SyntaxKind.LocalDeclarationStatement
+                SyntaxKind.MethodDeclaration
             );
         }
 
@@ -48,14 +48,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(method.Body);
+            
             var variablesDeclared = dataFlow.VariablesDeclared;
             var variablesRead = dataFlow.ReadInside.Union(dataFlow.ReadOutside);
-            var unused = variablesDeclared.Except(variablesRead).ToArray();
+            var unused = variablesDeclared.Except(variablesRead).Except(dataFlow.WrittenInside).ToArray();
 
             if (unused.Any())
             {
                 foreach (var unusedVar in unused)
                 {
+                   
                     diagnostic = Diagnostic.Create(descriptor, unusedVar.Locations.First());
                     return true;
                 }

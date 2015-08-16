@@ -13,7 +13,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 class TestClass {
 	void TestMethod ()
 	{
-		$int i$;
+		int $i$;
 	}
 }";
             var output = @"
@@ -32,7 +32,7 @@ class TestClass {
 class TestClass {
 	void TestMethod ()
 	{
-		$int i, j$;
+		int i, j;
 		j = 1;
 	}
 }";
@@ -54,7 +54,7 @@ class TestClass {
 class TestClass {
 	void TestMethod ()
 	{
-		$int i = 0$;
+		int i = 0;
 	}
 }";
             var input2 = @"
