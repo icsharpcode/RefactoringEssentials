@@ -45,9 +45,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
             int q = 1;
             if (q != 1)
-            {
                 q = 1;
-            }
+            
             var node = nodeContext.Node as IfStatementSyntax;
             var check = node?.Condition as BinaryExpressionSyntax;
             if (check == null)
@@ -65,7 +64,21 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     return true;
                 }
             }
-
+            else
+            {
+                var statement = node.Statement as ExpressionStatementSyntax;
+                if (statement != null)
+                {
+                    var expression = statement;
+                    var syntax = expression.Expression as AssignmentExpressionSyntax;
+                    if(syntax != null &&
+                       check.Left.Equals(syntax.Left))
+                    {
+                        diagnostic = Diagnostic.Create(descriptor, check.GetLocation());
+                        return true;
+                    }
+                }
+            }
             return false;
         }
 

@@ -16,7 +16,7 @@ class baseClass
 	public void method()
 	{
 		int q = 1;
-		if (q != 1) {
+		if ($q != 1$) {
 			q = 1;
 		}
 	}
@@ -36,7 +36,7 @@ class baseClass
         [Test]
         public void TestInspectorCase2()
         {
-            TestIssue<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
+            Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
 namespace resharper_test
 {
 	public class baseClass
@@ -44,7 +44,7 @@ namespace resharper_test
 		public void method()
 		{
 			int q = 1;
-			if (q != 1)
+			if ($q != 1$)
 				q = 1;
 		}
 	}
@@ -63,7 +63,7 @@ namespace resharper_test
 		public void method()
 		{
 			int q = 1;
-			if (1+0 != q)
+			if ($1+0 != q$)
 			{
 				q = 1 + 0;
 			}
@@ -86,7 +86,7 @@ namespace resharper_test
 		public void method()
 		{
 			int q = 1;
-			if (1+0 != q)
+			if ($1+0 != q$)
 			{
 				q = 1 + 0;
 			}
@@ -110,11 +110,14 @@ namespace resharper_test
 		{
 			int q = 1;
 //Resharper disable RedundantCheckBeforeAssignment
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID + @"
 			if (q != 1)
 			{
 				q = 1;
 			}
 //Resharper restore RedundantCheckBeforeAssignment
+#pragma warning restore " + CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID + @"
+
 		}
 	}
 }
