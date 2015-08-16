@@ -37,11 +37,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 );
         }
 
-        void TestMethod(int i)
-        {
-            i = 1;
-        }
-
         private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);

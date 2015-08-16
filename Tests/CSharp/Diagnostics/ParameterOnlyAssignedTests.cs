@@ -21,7 +21,7 @@ class TestClass
             var output = @"
 class TestClass
 {
-	void TestMethod()
+	void TestMethod(int i)
 	{
 	}
 }";
