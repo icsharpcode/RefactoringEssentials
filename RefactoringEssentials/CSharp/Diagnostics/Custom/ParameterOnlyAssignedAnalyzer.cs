@@ -59,23 +59,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(method.Body);
-            var alwaysAssignedWithoutBeingUsed = dataFlow.AlwaysAssigned.Except(dataFlow.ReadInside).ToArray();
-
-            if (alwaysAssignedWithoutBeingUsed.Any())
+            if (dataFlow.AlwaysAssigned.Except(dataFlow.ReadInside).Contains(localParamSymbol))
             {
-                if (alwaysAssignedWithoutBeingUsed.Contains(localParamSymbol))
+                var statements = method.Body.Statements;
+                foreach (var statement in statements)
                 {
-                    var statements = method.Body.Statements;
-                    foreach (var statement in statements)
+                    var expression = statement as ExpressionStatementSyntax;
+                    var assignment = expression?.Expression as AssignmentExpressionSyntax;
+                    if (assignment != null && 
+                        (nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol)!= null)
                     {
-                        var expression = statement as ExpressionStatementSyntax;
-                        var assignment = expression?.Expression as AssignmentExpressionSyntax;
-                        if (assignment != null && 
-                            (nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol)!= null)
-                        {
-                            diagnostic = Diagnostic.Create(descriptor, assignment.GetLocation());
-                            return true;
-                        }
+                        diagnostic = Diagnostic.Create(descriptor, assignment.GetLocation());
+                        return true;
                     }
                 }
             }
