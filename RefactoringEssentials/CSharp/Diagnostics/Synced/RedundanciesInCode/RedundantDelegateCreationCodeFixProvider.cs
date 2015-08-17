@@ -42,6 +42,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (argument == null)
                 return;
 
+            var newAssignementEpxresion = SyntaxFactory.AssignmentExpression(assignmentExpression.Kind(),
+                assignmentExpression.Left, argument);
             var newRoot = root.ReplaceNode(objectCreation, 
                 argument
                 .WithoutLeadingTrivia()

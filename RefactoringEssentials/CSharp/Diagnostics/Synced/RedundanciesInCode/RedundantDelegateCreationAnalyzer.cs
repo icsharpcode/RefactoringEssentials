@@ -38,20 +38,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                  SyntaxKind.ExpressionStatement
             );
         }
-        public event EventHandler<EventArgs> Changed;
-
-        void HandleChanged(object sender, EventArgs e)
-        {
-        }
-
-        void someMethod()
-        {
-            Changed += new EventHandler<EventArgs>(HandleChanged);
-            Changed += HandleChanged;
-            Changed -= HandleChanged;
-
-
-        }
 
         private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
