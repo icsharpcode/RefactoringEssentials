@@ -33,14 +33,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
+            var node = root.FindNode(context.Span) as CatchClauseSyntax;
             Debug.WriteLine(1);
-            var node = root.FindNode(context.Span) as TryStatementSyntax;
-            Debug.WriteLine(2);
             if (node == null)
                 return;
-            Debug.WriteLine(3);
+            Debug.WriteLine(node.Kind());
+            var tryStatement = (TryStatementSyntax)node.Parent;
+            tryStatement.Block.
             var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, diagnostic.GetMessage(), document.WithSyntaxRoot(newRoot)), diagnostic);
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Redundant catch clause to be remove.", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }

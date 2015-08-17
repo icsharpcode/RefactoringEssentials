@@ -39,11 +39,11 @@ class A
 			F ();
 		} catch (ArgumentOutOfRangeException aoore) {
 			Console.WriteLine (aoore);
-		} catch (ArgumentException ae) {
+		} $catch (ArgumentException ae) {
 			throw;
-		} catch {
+		}$ $catch {
 			throw;
-		}
+		}$
 	}
 }", BaseInput + @"
 		try {
@@ -62,9 +62,9 @@ class A
 		try {
 			F ();
 			Console.WriteLine (""Inside try"");
-		} catch {
+		} $catch {
 			throw;
-		}
+		}$
 	}
 }", BaseInput + @"
 		F ();
