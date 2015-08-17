@@ -46,16 +46,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             var objectCreation = nodeContext.Node as ObjectCreationExpressionSyntax;
             if (objectCreation?.Initializer == null ||
-                objectCreation.ArgumentList != null ||
-                objectCreation.ArgumentList?.Arguments.Count == 0)
+                objectCreation.ArgumentList == null ||
+                objectCreation.ArgumentList.Arguments.Any()||
+                objectCreation.Initializer.IsMissing)
                 return false;
 
-            var argumentList = objectCreation.ArgumentList;
-            //Means that a maximum of open and close braces
-            if (argumentList != null && argumentList.ChildTokens().Count() <= 2)
-                return false;
-
-            diagnostic = Diagnostic.Create(descriptor, objectCreation.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, objectCreation.ArgumentList.GetLocation());
             return true;
         }
     }
