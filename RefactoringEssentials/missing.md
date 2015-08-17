@@ -56,7 +56,6 @@
 * OptionalParameterHierarchyMismatchAnalyzer
 * ParameterCanBeDeclaredWithBaseTypeAnalyzer
 * ParameterHidesMemberAnalyzer
-* ParameterOnlyAssignedAnalyzer
 * PartialMethodParameterNameMismatchAnalyzer
 * PolymorphicFieldLikeEventInvocationAnalyzer
 * PossibleAssignmentToReadonlyFieldAnalyzer
