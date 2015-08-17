@@ -9,7 +9,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         [Test]
         public void TestTypeOfIsAssignableFrom()
         {
-            Test<UseArrayCreationExpressionAnalyzer>(@"
+            Analyze<UseArrayCreationExpressionAnalyzer>(@"
 class Test
 {
 	void Foo()
@@ -31,7 +31,7 @@ class Test
         [Test]
         public void MultiDim()
         {
-            Test<UseArrayCreationExpressionAnalyzer>(@"
+            Analyze<UseArrayCreationExpressionAnalyzer>(@"
 class Test
 {
 	void Foo(int i)

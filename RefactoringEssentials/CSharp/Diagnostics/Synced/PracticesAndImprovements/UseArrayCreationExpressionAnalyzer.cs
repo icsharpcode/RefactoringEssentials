@@ -50,9 +50,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (invocationSymbol == null)
                 return false;
             System.Array.CreateInstance(typeof(int), 10);
-            new int[10, 20, i];
+            //new int[10, 20, i];
 
-            if (invocationSymbol.Name != "CreateInstance" || !invocationSymbol.ContainingType.IsArrayType())
+            if (invocationSymbol.Name != "CreateInstance") // || !invocationSymbol.ContainingType)
                 return false;
 
             if (node.ArgumentList == null ||
@@ -74,6 +74,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (!argumentChildLiteralExpression.IsKind(SyntaxKind.NumericLiteralExpression))
                 return false;
 
+            var typeOfFirstArgument = nodeContext.SemanticModel.GetTypeInfo(node.ArgumentList.Arguments[1]).ConvertedType;
+            if (typeOfFirstArgument != null && !typeOfFirstArgument.IsValueType)
+            {
+                return false;
+            }
             ////				var argRR = ctx.Resolve(invocationExpression.Arguments.ElementAt(1));
             ////				if (!argRR.Type.IsKnownType(KnownTypeCode.Int32))
             ////					return;
