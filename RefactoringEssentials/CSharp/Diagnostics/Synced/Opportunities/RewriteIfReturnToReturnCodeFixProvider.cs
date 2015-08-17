@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -51,12 +50,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     if (block == null)
                         return null;
 
+                    //This code (starting from here) does not do what I'd like to do ...
                     var returnStatementAfterIfStatementIndex = block.Statements.IndexOf(node as IfStatementSyntax) + 1;
-                    Debug.WriteLine(returnStatementAfterIfStatementIndex);
                     var returnStatementToBeEliminated = block.Statements.ElementAt(returnStatementAfterIfStatementIndex) as ReturnStatementSyntax;
-                    Debug.WriteLine(returnStatementToBeEliminated.Kind());//ReturnStatementSyntax...
-                    newRoot.RemoveNode(returnStatementToBeEliminated, SyntaxRemoveOptions.KeepNoTrivia);
-                    return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                    var secondNewRoot = newRoot.RemoveNode(returnStatementToBeEliminated, SyntaxRemoveOptions.KeepNoTrivia);
+                    return Task.FromResult(document.WithSyntaxRoot(secondNewRoot));
                 }), diagnostic);
         }
     }
