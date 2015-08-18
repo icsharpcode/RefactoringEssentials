@@ -33,19 +33,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var tryStatement = (node as FinallyClauseSyntax).Parent as TryStatementSyntax;
+
+            var finallyClauseSyntax = node as FinallyClauseSyntax;
+            var tryStatement = finallyClauseSyntax?.Parent as TryStatementSyntax;
+
             if (tryStatement != null && !tryStatement.Catches.Any())
             {
-                FixEmptyFinallyWithCatchClause(node as FinallyClauseSyntax, diagnostic, context, root);
+                FixEmptyFinallyWithoutCatchClause(finallyClauseSyntax,tryStatement, diagnostic, context, root);
             }
-            else if (tryStatement != null && tryStatement.Catches.Any())
-            {
-                FixEmptyFinallyWithCatchClause(node as FinallyClauseSyntax, diagnostic, context, root);
-            }
-        //    var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-        //    context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove 'finally'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            FixEmptyFinallyWithCatchClause(finallyClauseSyntax, diagnostic, context, root);
         }
 
         public void FixEmptyFinallyWithoutCatchClause(FinallyClauseSyntax finallyClause, TryStatementSyntax tryStatement, Diagnostic diagnostic,
@@ -55,11 +51,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             "Remove redundant 'finally' ", token =>
             {
                 var blockSyntax = tryStatement.Block;
-                
+
                 var newRoot = root.ReplaceNode(tryStatement, blockSyntax
-                    .WithLeadingTrivia(blockSyntax.GetLeadingTrivia())
-                    .WithTrailingTrivia(blockSyntax.GetTrailingTrivia()))
-                    .WithAdditionalAnnotations(Formatter.Annotation);
+                    .WithoutLeadingTrivia()
+                    .WithoutTrailingTrivia()
+                    .WithoutAnnotations());
 
                 return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
             }), diagnostic);

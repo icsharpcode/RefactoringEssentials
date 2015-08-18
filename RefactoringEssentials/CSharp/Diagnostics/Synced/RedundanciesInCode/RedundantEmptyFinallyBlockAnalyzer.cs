@@ -47,59 +47,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (node == null)
                 return false;
 
-            if (!IsFinallyBlockEmpty(node))
+            if (IsFinallyBlockNotEmpty(node))
                 return false;
 
             diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
             return true;
         }
 
-        static bool IsFinallyBlockEmpty(FinallyClauseSyntax finallyClause)
+        static bool IsFinallyBlockNotEmpty(FinallyClauseSyntax finallyClause)
         {
-            return finallyClause.Block.Statements.Count == 0;
+            return finallyClause.Block.Statements.Any();
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantEmptyFinallyBlockAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			static bool IsEmpty (BlockStatement blockStatement)
-        ////			{
-        ////				return !blockStatement.Descendants.Any(s => s is Statement && !(s is EmptyStatement || s is BlockStatement));
-        ////			}
-        ////
-        ////			public override void VisitBlockStatement(BlockStatement blockStatement)
-        ////			{
-        ////				base.VisitBlockStatement(blockStatement);
-        ////				if (blockStatement.Role != TryCatchStatement.FinallyBlockRole || !IsEmpty (blockStatement))
-        ////					return;
-        ////				var tryCatch = blockStatement.Parent as TryCatchStatement;
-        ////				if (tryCatch == null)
-        ////					return;
-        ////				AddDiagnosticAnalyzer(new CodeIssue(
-        ////					tryCatch.FinallyToken.StartLocation,
-        ////					blockStatement.EndLocation,
-        ////					ctx.TranslateString(""),
-        ////					ctx.TranslateString(""),
-        ////					s => {
-        ////						if (tryCatch.CatchClauses.Any()) {
-        ////							s.Remove(tryCatch.FinallyToken);
-        ////							s.Remove(blockStatement); 
-        ////							s.FormatText(tryCatch);
-        ////							return;
-        ////						}
-        ////						s.Remove(tryCatch.TryToken);
-        ////						s.Remove(tryCatch.TryBlock.LBraceToken);
-        ////						s.Remove(tryCatch.TryBlock.RBraceToken);
-        ////						s.Remove(tryCatch.FinallyToken);
-        ////						s.Remove(tryCatch.FinallyBlock); 
-        ////						s.FormatText(tryCatch.Parent);
-        ////					}
-        ////				) { IssueMarker = IssueMarker.GrayOut });
-        ////			}
-        //		}
     }
 }
