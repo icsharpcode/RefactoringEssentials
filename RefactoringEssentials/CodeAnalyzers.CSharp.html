@@ -15,7 +15,7 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>92 code analyzers for C#</p>
+    <p>93 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
@@ -61,6 +61,7 @@
       <li>Possible unassigned object created by 'new' (ObjectCreationAsStatementAnalyzer)</li>
       <li>Operator Is can be used instead of comparing object GetType() and instances of System.Type object (OperatorIsCanBeUsedAnalyzer)</li>
       <li>C# doesn't support optional 'ref' or 'out' parameters (OptionalParameterRefOutAnalyzer)</li>
+      <li>Parameter is assigned but its value is never used (ParameterOnlyAssignedAnalyzer)</li>
       <li>Class is declared partial but has only one part (PartialTypeWithSinglePartAnalyzer)</li>
       <li>Possible mistaken call to 'object.GetType()' (PossibleMistakenCallToGetTypeAnalyzer)</li>
       <li>Constructor in abstract class should not be public (PublicConstructorInAbstractClassAnalyzer)</li>
