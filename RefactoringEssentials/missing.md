@@ -96,7 +96,6 @@
 * RedundantUnsafeContextAnalyzer
 * ReferenceEqualsWithValueTypeAnalyzer
 * ReplaceWithStringIsNullOrEmptyAnalyzer
-* RewriteIfReturnToReturnAnalyzer
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
 * StaticFieldInGenericTypeAnalyzer

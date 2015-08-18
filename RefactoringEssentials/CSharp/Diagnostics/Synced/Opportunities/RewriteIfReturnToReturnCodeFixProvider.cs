@@ -1,3 +1,4 @@
+using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
@@ -6,6 +7,8 @@ using Microsoft.CodeAnalysis.Formatting;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.Editing;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -25,6 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             return WellKnownFixAllProviders.BatchFixer;
         }
 
+
         public async override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var document = context.Document;
@@ -37,25 +41,28 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (node == null)
                 return;
 
-            context.RegisterCodeFix(
-                CodeActionFactory.Create(node.Span, diagnostic.Severity, "Convert to 'return' statement", token =>
-                {
-                    var statementCondition = (node as IfStatementSyntax)?.Condition;
-                    var newReturn = SyntaxFactory.ReturnStatement(SyntaxFactory.Token(SyntaxKind.ReturnKeyword),
-                        statementCondition, SyntaxFactory.Token(SyntaxKind.SemicolonToken));
-                    var newRoot = root.ReplaceNode(node as IfStatementSyntax, newReturn
-                        .WithLeadingTrivia(node.GetLeadingTrivia())
-                        .WithAdditionalAnnotations(Formatter.Annotation));
-                    var block = node.Parent as BlockSyntax;
-                    if (block == null)
-                        return null;
+            context.RegisterCodeFix(CodeAction.Create("Convert to 'return' statement", async token =>
+            {
+                var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
+                var statementCondition = (node as IfStatementSyntax)?.Condition;
+                var newReturn = SyntaxFactory.ReturnStatement(SyntaxFactory.Token(SyntaxKind.ReturnKeyword),
+                    statementCondition, SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+                editor.ReplaceNode(node as IfStatementSyntax, newReturn
+                    .WithLeadingTrivia(node.GetLeadingTrivia())
+                    .WithAdditionalAnnotations(Formatter.Annotation));
+                          
 
-                    //This code (starting from here) does not do what I'd like to do ...
-                    var returnStatementAfterIfStatementIndex = block.Statements.IndexOf(node as IfStatementSyntax) + 1;
-                    var returnStatementToBeEliminated = block.Statements.ElementAt(returnStatementAfterIfStatementIndex) as ReturnStatementSyntax;
-                    var secondNewRoot = newRoot.RemoveNode(returnStatementToBeEliminated, SyntaxRemoveOptions.KeepNoTrivia);
-                    return Task.FromResult(document.WithSyntaxRoot(secondNewRoot));
-                }), diagnostic);
+                var block = node.Parent as BlockSyntax;
+                if (block == null)
+                    return null;
+
+                var returnStatementAfterIfStatementIndex = block.Statements.IndexOf(node as IfStatementSyntax) + 1;
+                var returnStatementToBeEliminated = block.Statements.ElementAt(returnStatementAfterIfStatementIndex) as ReturnStatementSyntax;
+                editor.RemoveNode(returnStatementToBeEliminated);
+                var newDocument = editor.GetChangedDocument();
+
+                return newDocument;
+            }, string.Empty), diagnostic);
         }
     }
 }

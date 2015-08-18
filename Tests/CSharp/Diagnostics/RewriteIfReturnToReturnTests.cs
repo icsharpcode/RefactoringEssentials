@@ -6,23 +6,6 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     [TestFixture]
     public class RewriteIfReturnToReturnTests : CSharpDiagnosticTestBase
     {
-//        [Test]
-//        public void When_Return_In_IfStatement()
-//        {
-//            var input = @"
-//class TestClass
-//{
-//	object TestMethod (object obj)
-//	{
-//		if(obj != null)
-//            return obj;
-//        return new object();
-//	}
-//}";
-
-//            Analyze<RewriteIfReturnToReturnAnalyzer>(input, null, 0);
-//        }
-
         [Test]
         public void When_Return_Value_Correctly()
         {
@@ -34,12 +17,11 @@ class TestClass
         return obj!= null;
 	}
 }";
-
             Analyze<RewriteIfReturnToReturnAnalyzer>(input);
         }
 
         [Test]
-        public void When_Retrurn_Statement_Corrected()
+        public void When_Return_Statement_Corrected()
         {
             var input = @"
 class TestClass
@@ -57,10 +39,9 @@ class TestClass
 {
 	bool TestMethod (object obj)
 	{
-        return obj!= null;
-	}
+        return obj != null;
+    }
 }";
-
             Analyze<RewriteIfReturnToReturnAnalyzer>(input, output);
         }
     }
