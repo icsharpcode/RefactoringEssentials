@@ -481,6 +481,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Samples\CSharp\SampleAnalyzer.cs" />
+    <Compile Include="Samples\CSharp\SampleCodeFixProvider.cs" />
+    <Compile Include="Samples\CSharp\SampleCodeRefactoringProvider.cs" />
     <Compile Include="Util\ClassDeclarationSyntaxExtensions.cs" />
     <Compile Include="Util\GettextCatalog.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertInterpolatedStringToStringFormatCodeRefactoringProvider.cs" />
@@ -665,6 +668,7 @@
   <ItemGroup>
     <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
+    <Folder Include="Samples\VB\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />
