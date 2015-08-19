@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
@@ -34,8 +35,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
+
             if (node is MemberAccessExpressionSyntax)
             {
                 FixStringToCharInvocation(node as MemberAccessExpressionSyntax, diagnostic, context, root);
@@ -47,23 +47,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             context.RegisterCodeFix(CodeActionFactory.Create(toCharArrayInvocation.Span, diagnostic.Severity, "Remove redundant 'string.ToCharArray()' call",
             token =>
             {
-                var newRoot = root.ReplaceNode(toCharArrayInvocation, toCharArrayInvocation.Expression
+                var newRoot = root.ReplaceNode(toCharArrayInvocation.Parent, toCharArrayInvocation.Expression
                     .WithoutLeadingTrivia()
                     .WithoutTrailingTrivia()
                     .WithAdditionalAnnotations(Formatter.Annotation));
                 return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
             }), diagnostic);
         }
-
-        //public void FixStringToCharBracketArgument(ElementAccessExpressionSyntax elementAccessExpression, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
-        //{
-        //    context.RegisterCodeFix(CodeActionFactory.Create(elementAccessExpression.Span, diagnostic.Severity, "Redundant explicit nullable type creation",
-        //    token =>
-        //    {
-        //        //var newElementAccess = SyntaxFactory.ElementAccessExpression(null, elementAccessExpression.);
-        //        var newRoot = root.ReplaceNode(elementAccessExpression, toCharArrayInvocation.Expression);
-        //        return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
-        //    }), diagnostic);
-        //}
     }
 }

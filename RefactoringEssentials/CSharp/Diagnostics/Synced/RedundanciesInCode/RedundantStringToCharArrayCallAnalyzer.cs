@@ -35,8 +35,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                SyntaxKind.SimpleMemberAccessExpression
+                SyntaxKind.InvocationExpression
             );
+        }
+
+        public void Test(string str)
+        {
+            foreach (char c in str.ToCharArray()) {
+               // Console.WriteLine(c);
+            }
         }
 
         private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -44,23 +51,25 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            var node = nodeContext.Node as MemberAccessExpressionSyntax;
+            var node = nodeContext.Node as InvocationExpressionSyntax;
             if (node == null)
                 return false;
 
             if (!VerifyMethodCalled(node, nodeContext))
                 return false;
 
-            diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
+            var accessExpression = (MemberAccessExpressionSyntax)node.Expression;
+
+            diagnostic = Diagnostic.Create(descriptor, accessExpression.GetLocation());
             return true;
         }
 
-        static bool VerifyMethodCalled(MemberAccessExpressionSyntax methodCalled,SyntaxNodeAnalysisContext nodeContext)
+        static bool VerifyMethodCalled(InvocationExpressionSyntax methodCalled,SyntaxNodeAnalysisContext nodeContext)
         {
             if(methodCalled == null)
                 throw new ArgumentNullException();
-
-            var symbol = nodeContext.SemanticModel.GetSymbolInfo(methodCalled).Symbol;
+            var expression = methodCalled.Expression as MemberAccessExpressionSyntax;
+            var symbol = nodeContext.SemanticModel.GetSymbolInfo(expression).Symbol;
             return (symbol.Name == "ToCharArray");
         }
     }
