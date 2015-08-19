@@ -421,6 +421,7 @@
     <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseTests.cs" />
     <Compile Include="VB\CodeRefactorings\CreateChangedEventTests.cs" />
     <Compile Include="VB\CodeRefactorings\InvertIfTests.cs" />
+    <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\VBCodeRefactoringTestBase.cs" />
     <Compile Include="VB\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />
