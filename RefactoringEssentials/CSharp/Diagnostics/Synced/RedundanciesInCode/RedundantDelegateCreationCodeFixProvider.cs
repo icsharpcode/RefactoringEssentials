@@ -35,20 +35,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var assignmentExpression = root.FindNode(context.Span) as AssignmentExpressionSyntax;
-            var objectCreation = assignmentExpression?.Right as ObjectCreationExpressionSyntax;
+            var objectCreation = root.FindNode(context.Span) as ObjectCreationExpressionSyntax;
             var argument = objectCreation?.ArgumentList.Arguments[0];
 
             if (argument == null)
                 return;
 
-            var newAssignementEpxresion = SyntaxFactory.AssignmentExpression(assignmentExpression.Kind(),
-                assignmentExpression.Left, argument);
             var newRoot = root.ReplaceNode(objectCreation, 
-                argument
+                argument.Expression
                 .WithoutLeadingTrivia()
                 .WithAdditionalAnnotations(Formatter.Annotation));
-            context.RegisterCodeFix(CodeActionFactory.Create(assignmentExpression.Span, diagnostic.Severity, "Remove redundant 'new'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            context.RegisterCodeFix(CodeActionFactory.Create(objectCreation.Span, diagnostic.Severity, "Remove redundant 'new'", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
 
     }

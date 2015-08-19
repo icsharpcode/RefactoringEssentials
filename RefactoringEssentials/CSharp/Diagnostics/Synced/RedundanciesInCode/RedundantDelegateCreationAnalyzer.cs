@@ -62,4 +62,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             return true;
         }
     }
+
+    public class FooBase
+    {
+        public event EventHandler<EventArgs> Changed;
+
+        FooBase()
+        {
+            Changed += new EventHandler<EventArgs>(HandleChanged);
+        }
+
+        void HandleChanged(object sender, EventArgs e)
+        {
+        }
+    }
 }

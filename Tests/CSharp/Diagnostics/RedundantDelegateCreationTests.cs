@@ -18,7 +18,7 @@ public class FooBase
 
 	FooBase()
 	{
-		Changed += $new EventHandler<EventArgs>$(HandleChanged);
+		Changed += $new EventHandler<EventArgs>(HandleChanged)$;
 	}
 
 	void HandleChanged(object sender, EventArgs e)
@@ -57,7 +57,7 @@ public class FooBase
 
 	FooBase()
 	{
-		$Changed -= new EventHandler<EventArgs>(HandleChanged)$;
+		Changed -= $new EventHandler<EventArgs>(HandleChanged)$;
 	}
 
 	void HandleChanged(object sender, EventArgs e)
