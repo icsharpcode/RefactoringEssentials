@@ -1,12 +1,14 @@
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantParamsCodeFixProvider : CodeFixProvider
     {
@@ -31,11 +33,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove 'params' modifier", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var fullParameterNode = root.FindNode(diagnostic.Location.SourceSpan) as ParameterSyntax;
+            if (fullParameterNode == null)
+                return;
+
+            // Keep all modifiers except the params
+            var newModifiers = fullParameterNode.Modifiers.Where(m => !m.IsKind(SyntaxKind.ParamsKeyword));
+            var syntaxModifiers = SyntaxTokenList.Create(new SyntaxToken());
+            syntaxModifiers.AddRange(newModifiers);
+
+
+            context.RegisterCodeFix(CodeActionFactory.Create(fullParameterNode.Span, diagnostic.Severity, "Remove 'params' modifier", token =>
+            {
+             var updatedParameterNode = fullParameterNode.WithModifiers(syntaxModifiers);
+             var newRoot = root.ReplaceNode(fullParameterNode, updatedParameterNode);
+             return Task.FromResult(document.WithSyntaxRoot(newRoot));
+            }), diagnostic);
         }
     }
 }
