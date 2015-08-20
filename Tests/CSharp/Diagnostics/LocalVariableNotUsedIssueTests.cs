@@ -4,10 +4,8 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet.")]
     public class LocalVariableNotUsedTests : CSharpDiagnosticTestBase
     {
-
         [Test]
         public void TestUnusedVariable()
         {
@@ -15,7 +13,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 class TestClass {
 	void TestMethod ()
 	{
-		int i;
+		int $i$;
 	}
 }";
             var output = @"
@@ -24,7 +22,12 @@ class TestClass {
 	{
 	}
 }";
-            Test<LocalVariableNotUsedAnalyzer>(input, 1, output);
+            Analyze<LocalVariableNotUsedAnalyzer>(input, output);
+        }
+
+        [Test]
+        public void TestUnusedVariable2()
+        {
             var input2 = @"
 class TestClass {
 	void TestMethod ()
@@ -41,7 +44,7 @@ class TestClass {
 		j = 1;
 	}
 }";
-            Test<LocalVariableNotUsedAnalyzer>(input2, 1, output2);
+            Analyze<LocalVariableNotUsedAnalyzer>(input2, output2);
         }
 
         [Test]
@@ -62,8 +65,8 @@ class TestClass {
 		i = 0;
 	}
 }";
-            Test<LocalVariableNotUsedAnalyzer>(input1, 0);
-            Test<LocalVariableNotUsedAnalyzer>(input2, 0);
+            Analyze<LocalVariableNotUsedAnalyzer>(input1);
+            Analyze<LocalVariableNotUsedAnalyzer>(input2);
         }
 
         [Test]
@@ -78,8 +81,7 @@ class TestClass {
 		}
 	}
 }";
-            Test<LocalVariableNotUsedAnalyzer>(input, 1);
-
+            Analyze<LocalVariableNotUsedAnalyzer>(input);
         }
 
         [Test]
@@ -96,8 +98,7 @@ class TestClass {
 		}
 	}
 }";
-            Test<LocalVariableNotUsedAnalyzer>(input, 0);
+            Analyze<LocalVariableNotUsedAnalyzer>(input);
         }
-
     }
 }

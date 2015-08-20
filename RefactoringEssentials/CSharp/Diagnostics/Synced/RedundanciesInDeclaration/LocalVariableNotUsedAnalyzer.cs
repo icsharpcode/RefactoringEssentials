@@ -1,14 +1,16 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class LocalVariableNotUsedAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.LocalVariableNotUsedAnalyzerID,
             GettextCatalog.GetString("Local variable is never used"),
             GettextCatalog.GetString("Local variable is never used"),
@@ -22,88 +24,78 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetUnusedLocalVariableDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.MethodDeclaration
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetUnusedLocalVariableDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+
+            var method = nodeContext.Node as MethodDeclarationSyntax;
+            if (method == null)
+                return false;
+
+            var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(method.Body);
+            
+            var variablesDeclared = dataFlow.VariablesDeclared;
+            var variablesRead = dataFlow.ReadInside.Union(dataFlow.ReadOutside);
+            var unused = variablesDeclared.Except(variablesRead).Except(dataFlow.WrittenInside).ToArray();
+
+            if (unused.Any())
+            {
+                foreach (var unusedVar in unused)
+                {
+                   
+                    diagnostic = Diagnostic.Create(descriptor, unusedVar.Locations.First());
+                    return true;
+                }
+            }
             return false;
         }
 
-        //		class GatherVisitor : GatherVisitorBase<LocalVariableNotUsedAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
+        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        {
+            diagnostic = default(Diagnostic);
+            if (nodeContext.IsFromGeneratedCode())
+                return false;
 
-        //			public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
-        //			{
-        //				base.VisitVariableDeclarator(node);
+            var localDeclarationUnused = nodeContext.Node as LocalDeclarationStatementSyntax;
+            var body = localDeclarationUnused?.Parent as BlockSyntax;
+            if (body == null)
+                return false;
 
-        ////				// check if variable is assigned
-        ////				if (!variableInitializer.Initializer.IsNull)
-        ////					return;
-        ////				var decl = variableInitializer.Parent as VariableDeclarationStatement;
-        ////				if (decl == null)
-        ////					return;
-        ////
-        ////				var resolveResult = ctx.Resolve(variableInitializer) as LocalResolveResult;
-        ////				if (resolveResult == null)
-        ////					return;
-        ////
-        ////				if (IsUsed(decl.Parent, resolveResult.Variable, variableInitializer))
-        ////					return;
-        ////
-        ////				AddDiagnosticAnalyzer(new CodeIssue(variableInitializer.NameToken, 
-        ////					string.Format(ctx.TranslateString(""), resolveResult.Variable.Name), ctx.TranslateString(""),
-        ////					script => {
-        ////						if (decl.Variables.Count == 1) {
-        ////							script.Remove(decl);
-        ////						} else {
-        ////							var newDeclaration = (VariableDeclarationStatement)decl.Clone();
-        ////							newDeclaration.Variables.Remove(
-        ////								newDeclaration.Variables.FirstOrNullObject(v => v.Name == variableInitializer.Name));
-        ////							script.Replace(decl, newDeclaration);
-        ////						}
-        ////					}) { IssueMarker = IssueMarker.GrayOut });
-        //			}
+            var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(body);
+            var variablesDeclared = dataFlow.VariablesDeclared;
+            var variablesRead = dataFlow.ReadInside.Union(dataFlow.ReadOutside);
+            var unused = variablesDeclared.Except(variablesRead).ToArray();
+            if (unused == null)
+                return false;
 
+            if (localDeclarationUnused.Declaration == null || !localDeclarationUnused.Declaration.Variables.Any())
+                return false; 
 
-        //			public override void VisitForEachStatement(ForEachStatementSyntax node)
-        //			{
-        //				base.VisitForEachStatement(node);
-
-        ////				var resolveResult = ctx.Resolve(foreachStatement.VariableNameToken) as LocalResolveResult;
-        ////				if (resolveResult == null)
-        ////					return;
-        ////
-        ////				if (IsUsed(foreachStatement, resolveResult.Variable, foreachStatement.VariableNameToken))
-        ////					return;
-        ////
-        ////				AddDiagnosticAnalyzer(new CodeIssue(foreachStatement.VariableNameToken, ctx.TranslateString("Local variable is never used")));
-        //			}
-
-        ////			bool IsUsed(SyntaxNode rootNode, ILocalSymbol variable, SyntaxNode variableNode)
-        ////			{
-        ////				return ctx.FindReferences(rootNode, variable).Any(result => result.Node != variableNode);
-        ////			}
-        //		}
+            var localDeclarationSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(localDeclarationUnused.Declaration.Variables.FirstOrDefault());
+            if (unused.Any())
+            {
+                if (unused.Contains(localDeclarationSymbol))
+                {
+                    diagnostic = Diagnostic.Create(descriptor, localDeclarationUnused.Declaration.GetLocation());
+                    return true;
+                }
+            }
+            return false;
+        }
     }
-
-
 }
