@@ -1,3 +1,4 @@
+/*
 using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -120,16 +121,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (!isPropertyImplementingInterface.IsEmpty)
                 return false;
 
-            var getterAccessor = propertyDeclaration.AccessorList.Accessors.FirstOrDefault();
-            if (getterAccessor == null)
-                return false;
-
-            var setterAccessor = propertyDeclaration.AccessorList.Accessors.ElementAt(1);
-            if (setterAccessor == null)
-                return false;
-
-            if (IsEmpty(getterAccessor) && IsEmpty(setterAccessor))
-                return false;
+            foreach (var accessor in propertyDeclaration.AccessorList.Accessors) {
+                if (IsEmpty(accessor))
+                    return false;
+                
+            }
 
             diagnostic = Diagnostic.Create(descriptor, propertyDeclaration.Identifier.GetLocation());
             return true;
@@ -209,11 +205,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 eventFieldDeclaration.AttributeLists.FirstOrDefault().Attributes.Any());
         }
 
-        private static bool IsEmpty(AccessorDeclarationSyntax accessor)
+        static bool IsEmpty(AccessorDeclarationSyntax accessor)
         {
-            return accessor == null ||
-                   !accessor.Body.Statements.Any() ||
-                   accessor.Body.Statements.Count == 1 && accessor.Body.Statements.First() is ThrowStatementSyntax;
+            return
+                accessor == null ||
+                accessor.Body == null || 
+                !accessor.Body.Statements.Any() ||
+                accessor.Body.Statements.Count == 1 && accessor.Body.Statements.First() is ThrowStatementSyntax;
         }
 
         //		private class GatherVisitor : GatherVisitorBase<MemberCanBeMadeStaticAnalyzer>
@@ -232,8 +230,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////			public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
         ////			{
         ////				var rr = ctx.Resolve(typeDeclaration);
-        ////				if (rr.Type.GetNonInterfaceBaseTypes().Any(t => t.Name == "MarshalByRefObject" && t.Namespace == "System"))
-        ////					return; // ignore MarshalByRefObject, as only instance method calls get marshaled
+        ////                if (rr.Type.GetNonInterfaceBaseTypes().Any(t => t.Name == "MarshalByRefObject" && t.Namespace == "System"))
+        ////                    return; // ignore MarshalByRefObject, as only instance method calls get marshaled
         ////
         ////				base.VisitTypeDeclaration(typeDeclaration);
         ////			}
@@ -367,4 +365,4 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////			}
         //		}
     }
-}
+}*/

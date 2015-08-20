@@ -1,3 +1,4 @@
+/*
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
@@ -36,12 +37,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
 
-            if(node is MethodDeclarationSyntax)
-                MakeMethodStaticFix(node as MethodDeclarationSyntax, diagnostic,context,root);
-            else if(node is PropertyDeclarationSyntax)
-                MakePropertyStaticFix(node as PropertyDeclarationSyntax, diagnostic,context,root);
-            else if(node is EventDeclarationSyntax)
-                MakeEventStaticFix(node as EventDeclarationSyntax,diagnostic, context,root);
+            if (node is MethodDeclarationSyntax)
+                MakeMethodStaticFix(node as MethodDeclarationSyntax, diagnostic, context, root);
+            else if (node is PropertyDeclarationSyntax)
+                MakePropertyStaticFix(node as PropertyDeclarationSyntax, diagnostic, context, root);
+            else if (node is EventDeclarationSyntax)
+                MakeEventStaticFix(node as EventDeclarationSyntax, diagnostic, context, root);
 
         }
 
@@ -55,9 +56,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     var oldNode = methodDeclaration;
                     var newRoot = root.ReplaceNode(oldNode, methodDeclaration
                         .WithModifiers(methodDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)))
-                        .WithLeadingTrivia())
-                        .WithAdditionalAnnotations(Formatter.Annotation);
-                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); 
+                        .WithAdditionalAnnotations(Formatter.Annotation));
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
                 }), diagnostic);
 
         }
@@ -68,11 +68,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 token =>
                 {
                     var oldNode = propertyDeclaration;
-                    propertyDeclaration.WithModifiers(propertyDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
-                    var newRoot = root.ReplaceNode(oldNode, propertyDeclaration
-                        .WithLeadingTrivia())
-                        .WithAdditionalAnnotations(Formatter.Annotation);
-                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); 
+                    
+                var newRoot = root.ReplaceNode(oldNode, propertyDeclaration
+                                               .WithModifiers(propertyDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)))
+                                               .WithAdditionalAnnotations(Formatter.Annotation)
+                                              );
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
                 }), diagnostic);
         }
 
@@ -82,13 +83,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 token =>
                 {
                     var oldNode = eventDeclaration;
-                    eventDeclaration.WithModifiers(eventDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
-                    var newRoot = root.ReplaceNode(oldNode, eventDeclaration
-                        .WithLeadingTrivia())
-                        .WithAdditionalAnnotations(Formatter.Annotation);
+                var newRoot = root.ReplaceNode(oldNode, eventDeclaration.WithModifiers(eventDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword))).WithAdditionalAnnotations(Formatter.Annotation));
                     return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
                 }), diagnostic);
         }
 
     }
 }
+*/

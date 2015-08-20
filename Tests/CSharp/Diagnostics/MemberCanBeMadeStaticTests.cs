@@ -1,3 +1,4 @@
+/*
 using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
 
@@ -11,12 +12,12 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
-        {
-        	void $Test$ ()
-        	{
-        		int a = 2;
-        	}
-        }",
+{
+    void $Test$ ()
+    {
+        int a = 2;
+    }
+}",
                 @"class TestClass
 {
     static void Test()
@@ -33,10 +34,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
         {
-        	void $Test$ ()
-        	{
-        		int a = 2;
-        	}
+            void $Test$ ()
+            {
+                int a = 2;
+            }
         }"
             );
         }
@@ -46,12 +47,12 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
-        {
-        	public void $Test$ ()
-        	{
-        		int a = 2;
-        	}
-        }",
+{
+    public void $Test$ ()
+    {
+        int a = 2;
+    }
+}",
                 @"class TestClass
 {
     public static void Test()
@@ -68,10 +69,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
         {
-        	public void $Test$ ()
-        	{
-        		int a = 2;
-        	}
+            public void $Test$ ()
+            {
+                int a = 2;
+            }
         }"
             );
         }
@@ -81,12 +82,12 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"class TestClass
-        {
-        	string $Test$ (string txt)
-        	{
-        		return txt.Trim ();
-        	}
-        }",
+{
+    string $Test$ (string txt)
+    {
+        return txt.Trim ();
+    }
+}",
                 @"class TestClass
 {
     static string Test(string txt)
@@ -103,10 +104,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
             var input = @"class TestClass
         {
-        	public virtual void Test()
-        	{
-        		int a = 2;
-        	}
+            public virtual void Test()
+            {
+                int a = 2;
+            }
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -119,10 +120,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
         class TestClass : IBase
         {
-        	public void $Test$ ()
-        	{
-        		int a = 2;
-        	}
+            public void $Test$ ()
+            {
+                int a = 2;
+            }
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -133,10 +134,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
             var input = @"class TestClass
         {
-        	static void Test()
-        	{
-        		int a = 2;
-        	}
+            static void Test()
+            {
+                int a = 2;
+            }
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -148,11 +149,11 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"using System;
         class TestClass
         {
-        	[Obsolete]
-        	public void Test()
-        	{
-        		int a = 2;
-        	}
+            [Obsolete]
+            public void Test()
+            {
+                int a = 2;
+            }
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -164,9 +165,9 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"using System;
         class TestClass
         {
-        	public void Test()
-        	{
-        	}
+            public void Test()
+            {
+            }
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -178,7 +179,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"using System;
         interface ITestInterface
         {
-        	void Test();
+            void Test();
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -189,10 +190,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"using System;
         class TestClass
         {
-        	public void Test ()
-        	{
-        		throw new NotImplementedExceptionIssue();
-        	}
+            public void Test ()
+            {
+                throw new NotImplementedExceptionIssue();
+            }
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -203,11 +204,11 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"using System;
         class TestClass
         {
-        	public int Foo { get; set; }
-        	public void Test ()
-        	{
-        		System.Console.WriteLine (Foo);
-        	}
+            public int Foo { get; set; }
+            public void Test ()
+            {
+                System.Console.WriteLine (Foo);
+            }
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -218,10 +219,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
             var input = @"class TestClass : System.MarshalByRefObject
         {
-        	public void Test ()
-        	{
-        		int a = 2;
-        	}
+            public void Test ()
+            {
+                int a = 2;
+            }
         }";
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
@@ -230,21 +231,22 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         public void TestProperty()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
-                @"class TestClass
-            {
-        	int Test {
-        		get {
-        			return 2;
-        		}
-        	}
-        }",
-                @"class TestClass
-        {
-        	static int Test{
-        		get{
-        			return 2;
-        		}
-        	}"
+ @"class TestClass
+{
+    int $Test$ {
+        get {
+            return 2;
+        }
+    }
+}",
+@"class TestClass
+{
+    static int Test {
+        get {
+            return 2;
+        }
+    }
+}"
             );
         }
 
@@ -255,21 +257,22 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(
                 @"using System;
 
-        class TestClass
-        {
-        	static event EventHandler Foo;
+class TestClass
+{
+    static event EventHandler Foo;
 
-        	event EventHandler $Bar$ {
-        		add { Foo += value; }
-        		remove { Foo -= value; }
-        	}
-        }",
-                @"using System;
+    event EventHandler $Bar$ {
+        add { Foo += value; }
+        remove { Foo -= value; }
+    }
+}",
+            @"using System;
 
 class TestClass
 {
     static event EventHandler Foo;
-    event EventHandler Bar
+
+    static event EventHandler Bar
     {
         add { Foo += value; }
         remove { Foo -= value; }
@@ -287,12 +290,12 @@ class TestClass
 
         class TestClass
         {
-        	static event EventHandler Foo;
+            static event EventHandler Foo;
 
-        	event EventHandler Bar {
-        		add { throw new NotImplementedException (); }
-        		remove { throw new NotImplementedException (); }
-        	}
+            event EventHandler Bar {
+                add { throw new NotImplementedException (); }
+                remove { throw new NotImplementedException (); }
+            }
         }"
                 );
         }
@@ -305,11 +308,12 @@ class TestClass
         {
         // ReSharper disable once MemberCanBeMadeStatic.Local
 #pragma warning disable " + CSharpDiagnosticIDs.MemberCanBeMadeStaticAnalyzerID + @"
-        	void Test ()
-        	{
-        		int a = 2;
-        	}
+            void Test ()
+            {
+                int a = 2;
+            }
         }");
         }
     }
 }
+*/
