@@ -1,12 +1,15 @@
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class MemberCanBeMadeStaticCodeFixProvider : CodeFixProvider
     {
@@ -32,10 +35,60 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Make '{0}' static", document.WithSyntaxRoot(newRoot)), diagnostic);
+
+            if(node is MethodDeclarationSyntax)
+                MakeMethodStaticFix(node as MethodDeclarationSyntax, diagnostic,context,root);
+            else if(node is PropertyDeclarationSyntax)
+                MakePropertyStaticFix(node as PropertyDeclarationSyntax, diagnostic,context,root);
+            else if(node is EventDeclarationSyntax)
+                MakeEventStaticFix(node as EventDeclarationSyntax,diagnostic, context,root);
+
         }
+
+
+
+        public void MakeMethodStaticFix(MethodDeclarationSyntax methodDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
+        {
+            context.RegisterCodeFix(CodeActionFactory.Create(methodDeclaration.Span, diagnostic.Severity, "Method can be made static",
+                token =>
+                {
+                    var oldNode = methodDeclaration;
+                    var newRoot = root.ReplaceNode(oldNode, methodDeclaration
+                        .WithModifiers(methodDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)))
+                        .WithLeadingTrivia())
+                        .WithAdditionalAnnotations(Formatter.Annotation);
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); 
+                }), diagnostic);
+
+        }
+
+        public void MakePropertyStaticFix(PropertyDeclarationSyntax propertyDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
+        {
+            context.RegisterCodeFix(CodeActionFactory.Create(propertyDeclaration.Span, diagnostic.Severity, "Property can be made static",
+                token =>
+                {
+                    var oldNode = propertyDeclaration;
+                    propertyDeclaration.WithModifiers(propertyDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
+                    var newRoot = root.ReplaceNode(oldNode, propertyDeclaration
+                        .WithLeadingTrivia())
+                        .WithAdditionalAnnotations(Formatter.Annotation);
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot)); 
+                }), diagnostic);
+        }
+
+        public void MakeEventStaticFix(EventDeclarationSyntax eventDeclaration, Diagnostic diagnostic, CodeFixContext context, SyntaxNode root)
+        {
+            context.RegisterCodeFix(CodeActionFactory.Create(eventDeclaration.Span, diagnostic.Severity, "Event can be made static",
+                token =>
+                {
+                    var oldNode = eventDeclaration;
+                    eventDeclaration.WithModifiers(eventDeclaration.Modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
+                    var newRoot = root.ReplaceNode(oldNode, eventDeclaration
+                        .WithLeadingTrivia())
+                        .WithAdditionalAnnotations(Formatter.Annotation);
+                    return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
+                }), diagnostic);
+        }
+
     }
 }
