@@ -26,13 +26,14 @@ class TestClass {
         }
 
         [Test]
+        [Ignore("Support for multiple variables not implemented yet. Reactivate when finished.")]
         public void TestUnusedVariable2()
         {
             var input2 = @"
 class TestClass {
 	void TestMethod ()
 	{
-		int i, j;
+		int $i$, j;
 		j = 1;
 	}
 }";
