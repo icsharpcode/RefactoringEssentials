@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantCommaInArrayInitializerTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -13,26 +12,26 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"
 class TestClass
 {
-	void TestMethod ()
-	{
-		var a = new int[] { 1, 2, };
-	}
+    void TestMethod ()
+    {
+        var a = new int[] ${ 1, 2, }$;
+    }
 }";
             var output = @"
 class TestClass
 {
-	void TestMethod ()
-	{
-		var a = new int[] { 1, 2 };
-	}
+    void TestMethod ()
+    {
+        var a = new int[] { 1, 2 };
+    }
 }";
-            Test<RedundantCommaInArrayInitializerAnalyzer>(input, 1, output);
+            Analyze<RedundantCommaInArrayInitializerAnalyzer>(input, output);
         }
 
         [Test]
         public void TestArrayInitializerDescription()
         {
-            TestIssue<RedundantCommaInArrayInitializerAnalyzer>(@"
+            Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
 class TestClass
 {
 	void TestMethod ()
@@ -45,7 +44,7 @@ class TestClass
         [Test]
         public void TestObjectInitializerDescription()
         {
-            TestIssue<RedundantCommaInArrayInitializerAnalyzer>(@"
+            Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
 class TestClass
 {
 	int Prop { get; set; }
@@ -59,7 +58,7 @@ class TestClass
         [Test]
         public void TestCollectionInitializerDescrition()
         {
-            TestIssue<RedundantCommaInArrayInitializerAnalyzer>(@"
+            Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
 class TestClass
 {
 	void TestMethod ()
@@ -78,6 +77,7 @@ class TestClass
 	void TestMethod ()
 	{            
 // ReSharper disable once RedundantCommaInArrayInitializer
+++#pragma warning disable " + CSharpDiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID +@"
 		var a = new TestClass { 1, };
 	}
 }";
