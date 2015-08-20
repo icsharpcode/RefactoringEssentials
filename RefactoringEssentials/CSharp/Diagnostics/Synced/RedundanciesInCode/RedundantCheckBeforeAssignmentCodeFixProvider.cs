@@ -5,6 +5,8 @@ using Microsoft.CodeAnalysis.Formatting;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Editing;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
@@ -54,12 +56,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (expression == null)
                 return;
 
-            var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
+            context.RegisterCodeFix(CodeAction.Create("Remove redundant check", async token =>
+            {
+                var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
+                editor.InsertBefore(ifStatement,expression);
+                editor.RemoveNode(ifStatement);
 
-            var newRoot = root.ReplaceNode(node, expression.WithLeadingTrivia(node.GetLeadingTrivia())
-            .WithTrailingTrivia(node.GetTrailingTrivia()))
-            .WithAdditionalAnnotations(Formatter.Annotation);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant check", document.WithSyntaxRoot(newRoot)), diagnostic);
+                var newDocument = editor.GetChangedDocument();
+                return newDocument;
+            }, string.Empty), diagnostic);
         }
     }
 }

@@ -27,8 +27,8 @@ class baseClass
 	public void method()
 	{
 		int q = 1;
-		q = 1;
-	}
+			q = 1;
+    }
 }
 ");
         }
@@ -44,7 +44,7 @@ namespace resharper_test
 		public void method()
 		{
 			int q = 1;
-			if ($q != 1$)
+			if (q != 1)
 				q = 1;
 		}
 	}
@@ -63,7 +63,7 @@ namespace resharper_test
 		public void method()
 		{
 			int q = 1;
-			if ($1+0 != q$)
+			if (1+0 != q)
 			{
 				q = 1 + 0;
 			}
@@ -86,7 +86,7 @@ namespace resharper_test
 		public void method()
 		{
 			int q = 1;
-			if ($1+0 != q$)
+			if (1+0 != q)
 			{
 				q = 1 + 0;
 			}
