@@ -43,77 +43,47 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            int q = 1;
-            if (q != 1)
-                q = 1;
-            
+
             var node = nodeContext.Node as IfStatementSyntax;
             var check = node?.Condition as BinaryExpressionSyntax;
             if (check == null)
                 return false;
             var block = node.Statement as BlockSyntax;
-
             if (block?.Statements.Count > 0)
             {
                 var statement = block.Statements.ElementAt(0) as ExpressionStatementSyntax;
                 var assignmentExpression = statement?.Expression as AssignmentExpressionSyntax;
-                if (assignmentExpression != null &&
-                    check.Left.Equals(assignmentExpression.Left))
-                {
-                    diagnostic = Diagnostic.Create(descriptor, check.GetLocation());
-                    return true;
-                }
+                if (assignmentExpression == null ||
+                    !(check.Left is IdentifierNameSyntax ||
+                    !(assignmentExpression.Left is IdentifierNameSyntax)))
+                    return false;
+
+                var checkLeftSymbol = nodeContext.SemanticModel.GetSymbolInfo(check.Left).Symbol;
+                var assignmentLeftSymbol = nodeContext.SemanticModel.GetSymbolInfo(assignmentExpression.Left).Symbol;
+                
+                if (checkLeftSymbol == null||
+                    assignmentLeftSymbol == null||
+                    !checkLeftSymbol.Name.Equals(assignmentLeftSymbol.Name))
+                    return false;
+                diagnostic = Diagnostic.Create(descriptor, check.GetLocation());
+                return true;
             }
             else
             {
                 var statement = node.Statement as ExpressionStatementSyntax;
-                if (statement != null)
-                {
-                    var expression = statement;
-                    var syntax = expression.Expression as AssignmentExpressionSyntax;
-                    if(syntax != null &&
-                       check.Left.Equals(syntax.Left))
-                    {
-                        diagnostic = Diagnostic.Create(descriptor, check.GetLocation());
-                        return true;
-                    }
-                }
+                var expression = statement;
+                var assignment = expression?.Expression as AssignmentExpressionSyntax;
+                if (assignment == null)
+                    return false;
+
+                var checkLeftSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(check.Left);
+                var assignmentLeftSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(assignment.Left);
+                if (!checkLeftSymbol.Name.Equals(assignmentLeftSymbol.Name))
+                    return false;
+
+                diagnostic = Diagnostic.Create(descriptor, check.GetLocation());
+                return true;
             }
-            return false;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantCheckBeforeAssignmentAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			static readonly AstNode pattern =
-        ////				new IfElseStatement(
-        ////					PatternHelper.CommutativeOperatorWithOptionalParentheses(new AnyNode("a"), BinaryOperatorType.InEquality, new AnyNode("b")),
-        ////					PatternHelper.EmbeddedStatement(new AssignmentExpression(new Backreference("a"), PatternHelper.OptionalParentheses(new Backreference("b"))))
-        ////				);
-        ////
-        ////			public override void VisitIfElseStatement(IfElseStatement ifElseStatement)
-        ////			{
-        ////				base.VisitIfElseStatement(ifElseStatement);
-        ////				var m = pattern.Match(ifElseStatement);
-        ////				if (!m.Success)
-        ////					return;
-        ////				AddDiagnosticAnalyzer(new CodeIssue(
-        ////					ifElseStatement.Condition,
-        ////					ctx.TranslateString(""),
-        ////					ctx.TranslateString(""),
-        ////					script => {
-        ////						var stmt = ifElseStatement.TrueStatement;
-        ////						var block = stmt as BlockStatement;
-        ////						if (block != null)
-        ////							stmt = block.Statements.First();
-        ////						script.Replace(ifElseStatement, stmt.Clone());
-        ////					}
-        ////				));
-        ////			}
-        //		}
     }
 }

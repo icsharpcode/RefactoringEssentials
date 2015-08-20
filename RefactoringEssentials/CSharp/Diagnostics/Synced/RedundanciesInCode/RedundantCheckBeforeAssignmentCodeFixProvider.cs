@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Editing;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -52,6 +53,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             if (expression == null)
                 return;
+
+            var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
 
             var newRoot = root.ReplaceNode(node, expression.WithLeadingTrivia(node.GetLeadingTrivia())
             .WithTrailingTrivia(node.GetTrailingTrivia()))
