@@ -24,7 +24,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (node.Initializer == null)
                 yield break;
 
-            var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(node);
+            var symbol = semanticModel.GetDeclaredSymbol(node) as ILocalSymbol;
+            if (symbol == null)
+                yield break;
 
             if (!IsDisposable(semanticModel, symbol.Type))
                 yield break;
