@@ -50,9 +50,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 node,
                 node
                 .WithExpressions(SyntaxFactory.SeparatedList(node.Expressions.ToArray()))
-                .WithLeadingTrivia(node.GetLeadingTrivia())
-                .WithTrailingTrivia(node.GetTrailingTrivia()))
-                .WithAdditionalAnnotations(Formatter.Annotation);
+                .WithAdditionalAnnotations(Formatter.Annotation));
 
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove ','", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
