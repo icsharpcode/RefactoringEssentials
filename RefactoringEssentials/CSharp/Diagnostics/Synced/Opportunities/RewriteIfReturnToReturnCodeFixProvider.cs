@@ -57,7 +57,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     return null;
 
                 var returnStatementAfterIfStatementIndex = block.Statements.IndexOf(node as IfStatementSyntax) + 1;
-                var returnStatementToBeEliminated = block.Statements.ElementAt(returnStatementAfterIfStatementIndex) as ReturnStatementSyntax;
+                var returnStatementToBeEliminated = block.Statements[returnStatementAfterIfStatementIndex] as ReturnStatementSyntax;
                 editor.RemoveNode(returnStatementToBeEliminated);
                 var newDocument = editor.GetChangedDocument();
 

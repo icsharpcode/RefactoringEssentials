@@ -46,7 +46,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var ifStatementIndex = methodBody?.Statements.IndexOf(node);
 
             if (node?.Statement is ReturnStatementSyntax &&
-                methodBody?.Statements.ElementAt(ifStatementIndex.Value + 1) is ReturnStatementSyntax)
+                methodBody?.Statements[ifStatementIndex.Value + 1] is ReturnStatementSyntax)
             {
                 diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
                 return true;
