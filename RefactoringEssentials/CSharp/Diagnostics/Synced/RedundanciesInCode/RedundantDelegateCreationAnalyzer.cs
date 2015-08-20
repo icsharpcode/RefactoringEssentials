@@ -1,10 +1,8 @@
-using System;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -45,14 +43,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (nodeContext.IsFromGeneratedCode())
                 return false;
 
-
             var semanticModel = nodeContext.SemanticModel;
             var expressionStatement = nodeContext.Node as ExpressionStatementSyntax;
             var addOrSubstractExpression = expressionStatement?.Expression as AssignmentExpressionSyntax;
             var rightMember = addOrSubstractExpression?.Right as ObjectCreationExpressionSyntax;
 
             if (rightMember == null || rightMember.ArgumentList.Arguments.Count != 1)
-                return false; 
+                return false;
 
             var leftTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, addOrSubstractExpression.Left).ConvertedType;
             if (leftTypeInfo == null || leftTypeInfo.Kind.Equals(SyntaxKind.EventDeclaration))
@@ -60,20 +57,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             diagnostic = Diagnostic.Create(descriptor, addOrSubstractExpression.Right.GetLocation());
             return true;
-        }
-    }
-
-    public class FooBase
-    {
-        public event EventHandler<EventArgs> Changed;
-
-        FooBase()
-        {
-            Changed += new EventHandler<EventArgs>(HandleChanged);
-        }
-
-        void HandleChanged(object sender, EventArgs e)
-        {
         }
     }
 }
