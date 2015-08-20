@@ -11,7 +11,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantStringToCharArrayCallAnalyzer : DiagnosticAnalyzer
     {
-        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantStringToCharArrayCallAnalyzerID,
             GettextCatalog.GetString("Redundant 'string.ToCharArray()' call"),
             GettextCatalog.GetString("Redundant 'string.ToCharArray()' call"),
@@ -39,14 +39,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             );
         }
 
-        public void Test(string str)
-        {
-            foreach (char c in str.ToCharArray()) {
-               // Console.WriteLine(c);
-            }
-        }
-
-        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
@@ -54,7 +47,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = nodeContext.Node as InvocationExpressionSyntax;
             if (node == null)
                 return false;
-
+            if (!(node.Parent is ForEachStatementSyntax) && !(node.Parent is ElementAccessExpressionSyntax))
+                return false;
             if (!VerifyMethodCalled(node, nodeContext))
                 return false;
 
@@ -64,13 +58,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             return true;
         }
 
-        static bool VerifyMethodCalled(InvocationExpressionSyntax methodCalled,SyntaxNodeAnalysisContext nodeContext)
+        static bool VerifyMethodCalled(InvocationExpressionSyntax methodCalled, SyntaxNodeAnalysisContext nodeContext)
         {
-            if(methodCalled == null)
+            if (methodCalled == null)
                 throw new ArgumentNullException();
             var expression = methodCalled.Expression as MemberAccessExpressionSyntax;
             var symbol = nodeContext.SemanticModel.GetSymbolInfo(expression).Symbol;
-            return (symbol.Name == "ToCharArray");
+            return symbol.ContainingType.SpecialType == SpecialType.System_String && symbol.Name == "ToCharArray";
         }
     }
 }

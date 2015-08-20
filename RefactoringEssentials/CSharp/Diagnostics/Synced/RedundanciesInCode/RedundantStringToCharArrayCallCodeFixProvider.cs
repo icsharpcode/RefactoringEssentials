@@ -48,8 +48,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             token =>
             {
                 var newRoot = root.ReplaceNode(toCharArrayInvocation.Parent, toCharArrayInvocation.Expression
-                    .WithoutLeadingTrivia()
-                    .WithoutTrailingTrivia()
                     .WithAdditionalAnnotations(Formatter.Annotation));
                 return Task.FromResult(context.Document.WithSyntaxRoot(newRoot));
             }), diagnostic);
