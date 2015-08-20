@@ -12,15 +12,15 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"
 class TestClass
 {
-    void TestMethod ()
+    void TestMethod()
     {
-        var a = new int[] ${ 1, 2, }$;
+        var a = new int[] { 1, 2$,$ };
     }
 }";
             var output = @"
 class TestClass
 {
-    void TestMethod ()
+    void TestMethod()
     {
         var a = new int[] { 1, 2 };
     }
@@ -34,9 +34,9 @@ class TestClass
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
 class TestClass
 {
-	void TestMethod ()
+	void TestMethod()
 	{
-		var a = new int[] { 1, 2, };
+		var a = new int[] { 1, 2$,$ };
 	}
 }");
         }
@@ -50,7 +50,7 @@ class TestClass
 	int Prop { get; set; }
 	void TestMethod ()
 	{
-		var a = new TestClass { Prop = 1, };
+		var a = new TestClass { Prop = 1$,$ };
 	}
 }");
         }
@@ -63,7 +63,7 @@ class TestClass
 {
 	void TestMethod ()
 	{
-		var a = new TestClass { 1, };
+		var a = new TestClass { 1$,$ };
 	}
 }");
         }
@@ -76,8 +76,7 @@ class TestClass
 {
 	void TestMethod ()
 	{            
-// ReSharper disable once RedundantCommaInArrayInitializer
-++#pragma warning disable " + CSharpDiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID +@"
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID +@"
 		var a = new TestClass { 1, };
 	}
 }";
