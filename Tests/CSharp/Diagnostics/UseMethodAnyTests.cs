@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class UseMethodAnyTests : CSharpDiagnosticTestBase
     {
         static string ConstructExpression(string expr)
@@ -26,7 +25,7 @@ class Bar
         [Test]
         public void TestAnyNotEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () != 0"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () != 0"), ConstructExpression("args.Any ()"));
         }
 
         [Test]
