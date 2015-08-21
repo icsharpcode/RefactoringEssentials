@@ -25,7 +25,7 @@ class Bar
         [Test]
         public void TestAnyNotEqual()
         {
-            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("args.$Count() != 0$"), ConstructExpression("args.Any()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count()$ != 0"), ConstructExpression("args.Any()"));
         }
 
         [Test]

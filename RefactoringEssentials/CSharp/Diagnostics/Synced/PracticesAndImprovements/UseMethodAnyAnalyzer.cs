@@ -56,7 +56,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
             }
 
-            diagnostic = Diagnostic.Create(Descriptor, memberAccessExpression.Parent.Parent.GetLocation());
+            diagnostic = Diagnostic.Create(Descriptor, memberAccessExpression.Parent.GetLocation());
             return true;
         }
     }
