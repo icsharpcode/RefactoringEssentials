@@ -49,10 +49,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var invocationSymbol = nodeContext.SemanticModel.GetSymbolInfo(node).Symbol;
             if (invocationSymbol == null)
                 return false;
-            System.Array.CreateInstance(typeof(int), 10);
-            //new int[10, 20, i];
 
-            if (invocationSymbol.Name != "CreateInstance") // || !invocationSymbol.ContainingType)
+            if (invocationSymbol.Name != "CreateInstance")
                 return false;
 
             if (node.ArgumentList == null ||
@@ -66,66 +64,25 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (firstArgument == null)
                 return false;
 
-            var argumentChildLiteralExpression =
-                node.ArgumentList.Arguments[1].ChildNodes().FirstOrDefault() as LiteralExpressionSyntax;
+            var argumentChildLiteralExpression = node.ArgumentList.Arguments[1].Expression as LiteralExpressionSyntax;
             if (argumentChildLiteralExpression == null)
                 return false;
 
             if (!argumentChildLiteralExpression.IsKind(SyntaxKind.NumericLiteralExpression))
                 return false;
 
-            var typeOfFirstArgument = nodeContext.SemanticModel.GetTypeInfo(node.ArgumentList.Arguments[1]).ConvertedType;
-            if (typeOfFirstArgument != null && !typeOfFirstArgument.IsValueType)
+            var typeOfFirstArgument = node.ArgumentList.Arguments[0].Expression as TypeOfExpressionSyntax;
+            if (typeOfFirstArgument == null)
             {
                 return false;
             }
-            ////				var argRR = ctx.Resolve(invocationExpression.Arguments.ElementAt(1));
-            ////				if (!argRR.Type.IsKnownType(KnownTypeCode.Int32))
-            ////					return;
+
+            var typeSymbol = nodeContext.SemanticModel.GetSymbolInfo((typeOfFirstArgument).Type).Symbol;
+            if (!typeSymbol.OriginalDefinition.Equals(nodeContext.SemanticModel.Compilation.GetTypeByMetadataName("System.Int32")))
+                return false;
 
             diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
             return true;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<UseArrayCreationExpressionAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitInvocationExpression(InvocationExpression invocationExpression)
-        ////			{
-        ////				base.VisitInvocationExpression(invocationExpression);
-        ////
-        ////				var rr = ctx.Resolve(invocationExpression) as CSharpInvocationResolveResult;
-        ////				if (rr == null || rr.IsError)
-        ////					return;
-        ////
-        ////				if (rr.Member.Name != "CreateInstance" ||
-        ////				    !rr.Member.DeclaringType.IsKnownType(KnownTypeCode.Array))
-        ////					return;
-        ////				var firstArg = invocationExpression.Arguments.FirstOrDefault() as TypeOfExpression;
-        ////				if (firstArg == null)
-        ////					return;
-        ////				var argRR = ctx.Resolve(invocationExpression.Arguments.ElementAt(1));
-        ////				if (!argRR.Type.IsKnownType(KnownTypeCode.Int32))
-        ////					return;
-        ////
-        ////				AddDiagnosticAnalyzer(new CodeIssue(
-        ////					invocationExpression,
-        ////					ctx.TranslateString(""),
-        ////					ctx.TranslateString(""),
-        ////					script => {
-        ////						var ac = new ArrayCreateExpression {
-        ////							Type = firstArg.Type.Clone()
-        ////						};
-        ////						foreach (var arg in invocationExpression.Arguments.Skip(1))
-        ////							ac.Arguments.Add(arg.Clone()) ;
-        ////						script.Replace(invocationExpression, ac);
-        ////					}
-        ////				));
-        ////			}
-        //		}
     }
 }
