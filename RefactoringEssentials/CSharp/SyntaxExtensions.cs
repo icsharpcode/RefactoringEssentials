@@ -20,5 +20,24 @@ namespace RefactoringEssentials.CSharp
                     )
                 );
         }
+
+        public static BlockSyntax EnsureBlock(this StatementSyntax statement)
+        {
+            var asBlock = statement as BlockSyntax;
+
+            if (asBlock != null)
+            {
+                return asBlock;
+            }
+
+            var emptyStatement = statement as EmptyStatementSyntax;
+
+            if (emptyStatement != null)
+            {
+                return SyntaxFactory.Block();
+            }
+
+            return SyntaxFactory.Block(statement);
+        }
     }
 }
