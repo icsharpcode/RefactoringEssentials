@@ -1,15 +1,15 @@
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class UseMethodAnyAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.UseMethodAnyAnalyzerID,
             GettextCatalog.GetString("Replace usages of 'Count()' with call to 'Any()'"),
             GettextCatalog.GetString("Use 'Any()' method for increased performance"),
@@ -19,7 +19,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.UseMethodAnyAnalyzerID)
         );
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Descriptor);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -36,7 +36,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
@@ -56,7 +56,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
             }
 
-            diagnostic = Diagnostic.Create(descriptor, memberAccessExpression.GetLocation());
+            diagnostic = Diagnostic.Create(Descriptor, memberAccessExpression.Parent.Parent.GetLocation());
             return true;
         }
     }
