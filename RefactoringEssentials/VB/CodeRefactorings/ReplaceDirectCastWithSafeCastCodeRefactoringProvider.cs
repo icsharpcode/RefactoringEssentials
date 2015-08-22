@@ -10,7 +10,6 @@ namespace RefactoringEssentials.VB.CodeRefactorings
     /// <summary>
     /// Converts a cast expression to a 'TryCast' expression
     /// </summary>
-
     [ExportCodeRefactoringProvider(LanguageNames.VisualBasic, Name = "Convert cast to 'TryCast'.")]
     public class ReplaceDirectCastWithSafeCastCodeRefactoringProvider : CodeRefactoringProvider
     {
@@ -53,6 +52,5 @@ namespace RefactoringEssentials.VB.CodeRefactorings
             var newRoot = root.ReplaceNode(castExpr, nodeToReplace);
             return document.WithSyntaxRoot(newRoot);
         }
-
     }
 }
