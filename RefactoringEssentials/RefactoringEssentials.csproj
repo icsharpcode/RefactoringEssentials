@@ -489,6 +489,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Util\ClassDeclarationSyntaxExtensions.cs" />
     <Compile Include="Util\GettextCatalog.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertInterpolatedStringToStringFormatCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertStringFormatToInterpolatedStringCodeRefactoringProvider.cs" />

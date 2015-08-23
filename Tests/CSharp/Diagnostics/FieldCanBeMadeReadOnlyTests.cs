@@ -55,6 +55,27 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Test]
+        public void TestInitializedFieldAssignedInAnotherClassPart()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"partial class Test
+{
+    object fooBar = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}
+class Test
+{
+    public void SomeMethod()
+    {
+        fooBar = null;
+    }
+}
+");
+        }
+
+        [Test]
         public void TestInitializedStaticField()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test

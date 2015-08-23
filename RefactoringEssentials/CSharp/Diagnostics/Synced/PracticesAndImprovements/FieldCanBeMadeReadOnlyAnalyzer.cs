@@ -45,6 +45,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         return;
                     foreach (var type in root.DescendantNodesAndSelf(SkipMembers).OfType<ClassDeclarationSyntax>())
                     {
+                        var allMembers = type.GetMembersFromAllParts(model);
+                        if (allMembers == null)
+                            continue;
+
                         var fieldDeclarations = type
                             .ChildNodes()
                             .OfType<FieldDeclarationSyntax>()
@@ -68,7 +72,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                             }
                             bool wasAltered = false;
                             bool wasUsed = false;
-                            foreach (var member in type.Members)
+                            foreach (var member in allMembers)
                             {
                                 if (member == candidateField.Field)
                                     continue;
