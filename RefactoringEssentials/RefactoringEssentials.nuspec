@@ -15,9 +15,6 @@
 		<releaseNotes>First release for Visual Studio 2015 RTM, some bug fixes and new VB refactorings.</releaseNotes>
 		<copyright>Copyright (c) 2014-2015 AlphaSierraPapa</copyright>
 		<tags>VS 2015 Roslyn Analyzer Refactoring</tags>
-		<frameworkAssemblies>
-			<frameworkAssembly assemblyName="System" targetFramework="" />
-		</frameworkAssemblies>
 	</metadata>
 	<files>
 		<file src="RefactoringEssentials.dll" target="analyzers\dotnet\" />
