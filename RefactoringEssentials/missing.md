@@ -63,10 +63,8 @@
 * RedundantAssignmentAnalyzer
 * RedundantBoolCompareAnalyzer
 * RedundantCatchClauseAnalyzer
-* RedundantCheckBeforeAssignmentAnalyzer
 * RedundantComparisonWithNullAnalyzer
 * RedundantDefaultFieldInitializerAnalyzer
-* RedundantDelegateCreationAnalyzer
 * RedundantEmptyFinallyBlockAnalyzer
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer
