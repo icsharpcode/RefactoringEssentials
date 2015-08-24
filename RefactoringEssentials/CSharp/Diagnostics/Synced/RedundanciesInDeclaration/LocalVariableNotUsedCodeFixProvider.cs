@@ -34,8 +34,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = root.FindNode(context.Span) as VariableDeclaratorSyntax;
             if (node == null)
                 return;
-            int i, j;
-            j = 1;
             var variableDeclarationSyntax = node.Parent as VariableDeclarationSyntax;
             if (variableDeclarationSyntax == null)
                 return;

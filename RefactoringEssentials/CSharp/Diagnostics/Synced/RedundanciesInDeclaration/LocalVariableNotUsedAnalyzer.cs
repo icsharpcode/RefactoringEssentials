@@ -44,7 +44,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var method = nodeContext.Node as MethodDeclarationSyntax;
-            if (method == null)
+            if ((method == null) || (method.Body == null))
                 return false;
 
             var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(method.Body);
