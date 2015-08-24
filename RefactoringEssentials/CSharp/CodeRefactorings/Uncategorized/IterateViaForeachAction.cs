@@ -41,9 +41,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
             }
 
-            var variableDeclarator = node as VariableDeclaratorSyntax;
+            var variableDeclarator = node.GetAncestorOrThis<VariableDeclaratorSyntax>();
+            var localDeclaration = node.GetAncestor<LocalDeclarationStatementSyntax>();
 
-            if (variableDeclarator != null && IsEnumerable(model.GetDeclaredSymbol(variableDeclarator)) == true)
+            if (localDeclaration != null && variableDeclarator != null && IsEnumerable(model.GetDeclaredSymbol(variableDeclarator)) == true)
             {
                 context.RegisterRefactoring(Handle(document, span, root, node, SyntaxFactory.IdentifierName(variableDeclarator.Identifier), false));
                 return;

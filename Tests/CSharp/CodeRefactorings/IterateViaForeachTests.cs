@@ -344,7 +344,32 @@ class TestClass
 using System.Collections.Generic;
 class TestClass
 {
-    List<int> list = $new List<int>();
+    List<int> list$ = new List<int>();
+}");
+        }
+
+        [Test]
+        public void HandlesLocalDeclarationWithObjectCreation()
+        {
+            Test<IterateViaForeachAction>(@"
+using System.Collections.Generic;
+class TestClass
+{
+    void Method()
+    {
+        List<int> list = $new List<int>();
+    }
+}", @"
+using System.Collections.Generic;
+class TestClass
+{
+    void Method()
+    {
+        List<int> list = new List<int>();
+        foreach (var item in list)
+        {
+        }
+    }
 }");
         }
     }
