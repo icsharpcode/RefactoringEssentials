@@ -3,7 +3,7 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture, Ignore("Not implemented!")]
+    [TestFixture]
     public class IterateViaForeachTests : CSharpCodeRefactoringTestBase
     {
         [Test]
@@ -13,20 +13,21 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 using System.Collections;
 class TestClass
 {
-	public void F()
-	{
-		var $list = new ArrayList ();
-	}
+    public void F()
+    {
+        var $list = new ArrayList();
+    }
 }", @"
 using System.Collections;
 class TestClass
 {
-	public void F()
-	{
-		var list = new ArrayList ();
-		foreach (var o in list) {
-		}
-	}
+    public void F()
+    {
+        var list = new ArrayList();
+        foreach (var item in list)
+        {
+        }
+    }
 }");
         }
 
@@ -37,29 +38,30 @@ class TestClass
 using System.Collections.Generic;
 class TestClass
 {
-	public IEnumerable<int> GetInts()
-	{
-		return new int[] { };
-	}
+    public IEnumerable<int> GetInts()
+    {
+        return new int[] { };
+    }
 
-	public void F()
-	{
-		GetInts$();
-	}
+    public void F()
+    {
+        GetInts$();
+    }
 }", @"
 using System.Collections.Generic;
 class TestClass
 {
-	public IEnumerable<int> GetInts()
-	{
-		return new int[] { };
-	}
+    public IEnumerable<int> GetInts()
+    {
+        return new int[] { };
+    }
 
-	public void F()
-	{
-		foreach (var i in GetInts ()) {
-		}
-	}
+    public void F()
+    {
+        foreach (var item in GetInts())
+        {
+        }
+    }
 }");
         }
 
@@ -70,32 +72,33 @@ class TestClass
 using System.Collections.Generic;
 class TestClass
 {
-	public IEnumerable<int> GetInts ()
-	{
-		return new int[] { };
-	}
+    public IEnumerable<int> GetInts()
+    {
+        return new int[] { };
+    }
 
-	public void F()
-	{
-		IEnumerable<int> ints;
-		$ints = GetInts ();
-	}
+    public void F()
+    {
+        IEnumerable<int> ints;
+        $ints = GetInts();
+    }
 }", @"
 using System.Collections.Generic;
 class TestClass
 {
-	public IEnumerable<int> GetInts ()
-	{
-		return new int[] { };
-	}
+    public IEnumerable<int> GetInts()
+    {
+        return new int[] { };
+    }
 
-	public void F()
-	{
-		IEnumerable<int> ints;
-		ints = GetInts ();
-		foreach (var i in ints) {
-		}
-	}
+    public void F()
+    {
+        IEnumerable<int> ints;
+        ints = GetInts();
+        foreach (var item in ints)
+        {
+        }
+    }
 }");
         }
 
@@ -106,21 +109,22 @@ class TestClass
 using System.Collections.Generic;
 class TestClass
 {
-	public void F()
-	{
-		object s = """";
-		s as IEnumerable$<char>;
-	}
+    public void F()
+    {
+        object s = """";
+        s as IEnumerable$<char>;
+    }
 }", @"
 using System.Collections.Generic;
 class TestClass
 {
-	public void F()
-	{
-		object s = """";
-		foreach (var c in s as IEnumerable<char>) {
-		}
-	}
+    public void F()
+    {
+        object s = """";
+        foreach (var item in s as IEnumerable<char>)
+        {
+        }
+    }
 }", 0, false);
         }
 
@@ -131,20 +135,21 @@ class TestClass
 using System.Collections.Generic;
 class TestClass
 {
-	public void F()
-	{
-		var $items = new List<TestClass> ();
-	}
+    public void F()
+    {
+        var $items = new List<TestClass> ();
+    }
 }", @"
 using System.Collections.Generic;
 class TestClass
 {
-	public void F()
-	{
-		var items = new List<TestClass> ();
-		foreach (var testClass in items) {
-		}
-	}
+    public void F()
+    {
+        var items = new List<TestClass> ();
+        foreach (var item in items)
+        {
+        }
+    }
 }");
         }
 
@@ -155,21 +160,22 @@ class TestClass
 using System.Collections.Generic;
 class TestClass
 {
-	public void F()
-	{
-		object s = """";
-		s as IEnumerable$<char>
-	}
+    public void F()
+    {
+        object s = """";
+        s as IEnumerable$<char>
+    }
 }", @"
 using System.Collections.Generic;
 class TestClass
 {
-	public void F()
-	{
-		object s = """";
-		foreach (var c in s as IEnumerable<char>) {
-		}
-	}
+    public void F()
+    {
+        object s = """";
+        foreach (var item in s as IEnumerable<char>)
+        {
+        }
+    }
 }", 0, true);
         }
 
@@ -181,35 +187,36 @@ using System.Collections.Generic;
 using System.Linq;
 class TestClass
 {
-	public IEnumerable<int> GetInts()
-	{
-		return new int[] { };
-	}
+    public IEnumerable<int> GetInts()
+    {
+        return new int[] { };
+    }
 
-	public void F()
-	{
-		var $filteredInts = from item in GetInts ()
-							where item > 0
-							select item;
-	}
+    public void F()
+    {
+        var $filteredInts = from item in GetInts ()
+                            where item > 0
+                            select item;
+    }
 }", @"
 using System.Collections.Generic;
 using System.Linq;
 class TestClass
 {
-	public IEnumerable<int> GetInts()
-	{
-		return new int[] { };
-	}
+    public IEnumerable<int> GetInts()
+    {
+        return new int[] { };
+    }
 
-	public void F()
-	{
-		var filteredInts = from item in GetInts ()
-							where item > 0
-							select item;
-		foreach (var i in filteredInts) {
-		}
-	}
+    public void F()
+    {
+        var filteredInts = from item in GetInts ()
+                            where item > 0
+                            select item;
+        foreach (var item in filteredInts)
+        {
+        }
+    }
 }");
         }
 
@@ -220,16 +227,16 @@ class TestClass
 using System.Collections.Generic;
 class TestClass
 {
-	public IEnumerable<int> GetInts()
-	{
-		return new int[] { };
-	}
+    public IEnumerable<int> GetInts()
+    {
+        return new int[] { };
+    }
 
-	public void F()
-	{
-		foreach (var i in $GetInts ()) {
-		}
-	}
+    public void F()
+    {
+        foreach (var i in $GetInts ()) {
+        }
+    }
 }");
         }
 
@@ -239,11 +246,11 @@ class TestClass
             TestWrongContext<IterateViaForeachAction>(@"
 class TestClass
 {
-	public void F()
-	{
-		for (int[] i = new $int[] {} ;;) {
-		}
-	}
+    public void F()
+    {
+        for (int[] i = new $int[] {} ;;) {
+        }
+    }
 }");
         }
 
@@ -253,21 +260,27 @@ class TestClass
             Test<IterateViaForeachAction>(@"
 class TestClass
 {
-	public void F()
-	{
-		using (int[] $i = new int[] {}) {
-		}
-	}
+    public void F()
+    {
+        using (int[] $i = new int[] {})
+        {
+            Console.WriteLine(42);
+        }
+    }
 }", @"
 class TestClass
 {
-	public void F()
-	{
-		using (int[] i = new int[] {}) {
-			foreach (var j in i) {
-			}
-		}
-	}
+    public void F()
+    {
+        using (int[] i = new int[] {})
+        {
+            foreach (var item in i)
+            {
+            }
+
+            Console.WriteLine(42);
+        }
+    }
 }");
         }
 
@@ -277,20 +290,50 @@ class TestClass
             Test<IterateViaForeachAction>(@"
 class TestClass
 {
-	public void F()
-	{
-		using (int[] $i = new int[] {});
-	}
+    public void F()
+    {
+        using (int[] $i = new int[] {});
+    }
 }", @"
 class TestClass
 {
-	public void F()
-	{
-		using (int[] i = new int[] { }) {
-			foreach (var j in i) {
-			}
-		}
-	}
+    public void F()
+    {
+        using (int[] i = new int[] {})
+        {
+            foreach (var item in i)
+            {
+            }
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void ConvertsSingleStatementInUsingToBlock()
+        {
+            Test<IterateViaForeachAction>(@"
+class TestClass
+{
+    public void F()
+    {
+        using (int[] $i = new int[] {})
+            Console.WriteLine(42);
+    }
+}", @"
+class TestClass
+{
+    public void F()
+    {
+        using (int[] i = new int[] {})
+        {
+            foreach (var item in i)
+            {
+            }
+
+            Console.WriteLine(42);
+        }
+    }
 }");
         }
 
@@ -301,7 +344,7 @@ class TestClass
 using System.Collections.Generic;
 class TestClass
 {
-	List<int> list = $new List<int>();
+    List<int> list = $new List<int>();
 }");
         }
     }

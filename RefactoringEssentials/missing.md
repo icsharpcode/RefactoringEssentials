@@ -13,7 +13,6 @@
 * ExtractAnonymousMethodAction
 * GenerateGetterAction
 * IntroduceConstantAction
-* IterateViaForeachAction
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
 * MoveToOuterScopeAction

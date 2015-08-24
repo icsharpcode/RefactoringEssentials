@@ -128,7 +128,7 @@
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\ExtractAnonymousMethodAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\GenerateGetterAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\IntroduceConstantAction.cs" />
-    <Compile Include="CSharp\CodeRefactorings\Uncategorized\IterateViaForeachAction.cs" />
+    <Compile Include="CSharp\CodeRefactorings\Synced\IterateViaForeachAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\LinqFluentToQueryAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\LinqQueryToFluentAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\MoveToOuterScopeAction.cs" />
