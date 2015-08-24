@@ -43,8 +43,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             {
                 var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
                 var syntaxList = new List<SyntaxNode>{node.Statement};
+                editor.InsertBefore(node, syntaxList);
                 editor.RemoveNode(node);
-                editor.InsertBefore(node,syntaxList);
                 var newDocument = editor.GetChangedDocument();
                 return newDocument;
             }, string.Empty), diagnostic);
