@@ -24,8 +24,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
             var node = root.FindNode(span);
             
-            var assignment = node.Parent as AssignmentExpressionSyntax;
-
+            var assignment = node.GetAncestor<AssignmentExpressionSyntax>();
             if (assignment != null && IsEnumerable(model.GetTypeInfo(assignment.Left).ConvertedType) == true)
             {
                 context.RegisterRefactoring(Handle(document, span, root, node, assignment.Left, false));

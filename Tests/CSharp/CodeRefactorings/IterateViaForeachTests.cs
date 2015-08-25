@@ -103,6 +103,43 @@ class TestClass
         }
 
         [Test]
+        public void HandlesStringPropertyAssignmentExpressionStatement()
+        {
+            Test<IterateViaForeachAction>(@"
+using System.Collections.Generic;
+class Label
+{
+    public string Text { get; set; }
+}
+
+class TestClass
+{
+    public void F()
+    {
+        Label label = new Label();
+        label.$Text = ""Some text"";
+    }
+}", @"
+using System.Collections.Generic;
+class Label
+{
+    public string Text { get; set; }
+}
+
+class TestClass
+{
+    public void F()
+    {
+        Label label = new Label();
+        label.Text = ""Some text"";
+        foreach (var item in label.Text)
+        {
+        }
+    }
+}");
+        }
+
+        [Test]
         public void HandlesAsExpressionStatement()
         {
             Test<IterateViaForeachAction>(@"
