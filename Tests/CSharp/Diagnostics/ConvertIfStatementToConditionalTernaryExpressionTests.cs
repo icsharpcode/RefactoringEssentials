@@ -132,6 +132,33 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
+
+
+        [Test]
+        public void TestCommentsIgnoredWhenFindingLeftOfExpression()
+        {
+            Analyze<ConvertIfStatementToConditionalTernaryExpressionAnalyzer>(@"
+    public class Class1
+    {
+        string DoIt(bool a)
+        {
+            string status;
+
+            $if$ (a)
+            {                
+                    // Comment
+                    status = ""A"";
+            }
+            else
+            {                
+                    // Different comment
+                    status = ""B"";              
+            }
+
+            return status;
+        }
+    }", issueToFix: 1);
+        }
     }
 }
 

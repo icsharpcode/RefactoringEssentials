@@ -54,7 +54,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             whenTrue = whenTrueExprStatement.Expression as AssignmentExpressionSyntax;
             whenFalse = whenFalseExprStatement.Expression as AssignmentExpressionSyntax;
             if (whenTrue == null || whenFalse == null || whenTrue.Kind() != whenFalse.Kind() ||
-                !whenTrue.Left.IsEquivalentTo(whenFalse.Left))
+                !SyntaxFactory.AreEquivalent(whenTrue.Left, whenFalse.Left))
                 return false;
 
             return true;
