@@ -78,6 +78,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
                 var checkLeftSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(check.Left);
                 var assignmentLeftSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(assignment.Left);
+                if ((checkLeftSymbol == null) || (assignmentLeftSymbol == null))
+                    return false;
+
                 if (!checkLeftSymbol.Name.Equals(assignmentLeftSymbol.Name))
                     return false;
 
