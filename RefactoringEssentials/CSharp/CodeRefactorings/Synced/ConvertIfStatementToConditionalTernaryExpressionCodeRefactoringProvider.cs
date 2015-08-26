@@ -29,7 +29,14 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             {
                 if (embeddedBlock.Statements.Count > 1)
                     return false;
-                whenTrueExprStatement = node.Statement.DescendantNodesAndSelf().OfType<ExpressionStatementSyntax>().FirstOrDefault();
+
+                var descendentExpressions = node.Statement.DescendantNodesAndSelf().OfType<ExpressionStatementSyntax>();
+
+                if (descendentExpressions.Count() > 1)
+                    return false;
+
+                whenTrueExprStatement = descendentExpressions.FirstOrDefault();
+
             }
             else
             {
@@ -41,7 +48,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             {
                 if (elseBlock.Statements.Count > 1)
                     return false;
-                whenFalseExprStatement = node.Else.Statement.DescendantNodesAndSelf().OfType<ExpressionStatementSyntax>().FirstOrDefault();
+
+                var descendentExpressions = node.Else.Statement.DescendantNodesAndSelf().OfType<ExpressionStatementSyntax>();
+
+                if (descendentExpressions.Count() > 1)
+                    return false;
+
+                whenFalseExprStatement = descendentExpressions.FirstOrDefault();
             }
             else
             {
