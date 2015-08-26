@@ -18,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Removes 'private' modifiers that are not required"),
             GettextCatalog.GetString("'private' modifier is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantPrivateAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

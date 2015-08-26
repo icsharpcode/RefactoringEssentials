@@ -18,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Removes 'internal' modifiers that are not required"),
             GettextCatalog.GetString("'internal' modifier is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantInternalAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
