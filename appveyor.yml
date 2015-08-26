@@ -1,10 +1,9 @@
-
-version: 1.2.{build}
-
 -
   branches:
     only:
       - master
+  
+  version: 1.2.{build}
   
   os: Visual Studio 2015
   
@@ -25,7 +24,9 @@ version: 1.2.{build}
   branches:
     only:
       - release
-
+  
+  version: 1.2.{build}
+  
   os: Visual Studio 2015
 
   install: 
