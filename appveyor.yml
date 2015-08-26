@@ -20,7 +20,7 @@ version: 1.2.{build}
   
   after_test:
     - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
-	
+  
 -
   branches:
     only:
@@ -37,12 +37,11 @@ version: 1.2.{build}
   
   after_test:
     - cmd: bin\Release\buildpackage.cmd
-	- cmd: bin\Release\buildlibrarypackage.cmd
+    - cmd: bin\Release\buildlibrarypackage.cmd
   
   artifacts:
     - path: bin\**\*.nupkg
-	  name: NuGet
-	
-	- path: bin\**\*.vsix
-	  name: VSIX
-	
+      name: NuGet
+  
+    - path: bin\**\*.vsix
+      name: VSIX
