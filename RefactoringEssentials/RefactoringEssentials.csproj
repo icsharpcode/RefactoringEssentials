@@ -99,7 +99,7 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertHasFlagsToBitwiseFlagComparisonCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider.cs" />
-    <Compile Include="CSharp\CodeRefactorings\SpecializedCodeRefactoringProvider.cs" />
+    <Compile Include="Common\SpecializedCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\UseAsAndNullCheckCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\UseSystemStringEmptyCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\UseSystemEnvironmentNewLineCodeRefactoringProvider.cs" />
@@ -543,6 +543,7 @@
     <Compile Include="Util\TokenComparer.cs" />
     <Compile Include="Util\NamespaceDeclarationSyntaxExtensions.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\CheckIfParameterIsNothingCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ComputeConstantValueCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertToCustomEventCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CheckDictionaryKeyValueCodeRefactoringProvider.cs" />

@@ -47,5 +47,20 @@ namespace RefactoringEssentials.Util
                 return false;
             return mr.Expression is MyClassExpressionSyntax;
         }
+
+        public static MethodBlockBaseSyntax WithStatements(this MethodBlockBaseSyntax syntax, SyntaxList<StatementSyntax> statements)
+        {
+            if (syntax == null)
+                throw new System.ArgumentNullException(nameof(syntax));
+            if (syntax is MethodBlockSyntax)
+                return ((MethodBlockSyntax)syntax).WithStatements(statements);
+            if (syntax is ConstructorBlockSyntax)
+                return ((ConstructorBlockSyntax)syntax).WithStatements(statements);
+            if (syntax is AccessorBlockSyntax)
+                return ((AccessorBlockSyntax)syntax).WithStatements(statements);
+            if (syntax is OperatorBlockSyntax)
+                return ((OperatorBlockSyntax)syntax).WithStatements(statements);
+            throw new System.NotSupportedException(syntax.GetType() + " is not supported!");
+        }
     }
 }
