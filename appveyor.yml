@@ -1,21 +1,48 @@
 
-version: 1.0.{build}
+version: 1.2.{build}
 
-branches:
-  only:
-    - master
+-
+  branches:
+    only:
+      - master
+  
+  os: Visual Studio 2015
+  
+  install: 
+    - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+    - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+  
+  before_build: 
+    - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
+  
+  build_script:
+    - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  
+  after_test:
+    - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
+	
+-
+  branches:
+    only:
+      - release
 
-os: Visual Studio 2015
+  os: Visual Studio 2015
 
-install: 
-  - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
-  - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
-
-before_build: 
-  - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
-
-build_script:
-  - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
-
-after_test:
-  - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
+  install: 
+    - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
+    - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+  
+  build_script:
+    - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  
+  after_test:
+    - cmd: bin\Release\buildpackage.cmd
+	- cmd: bin\Release\buildlibrarypackage.cmd
+  
+  artifacts:
+    - path: bin\**\*.nupkg
+	  name: NuGet
+	
+	- path: bin\**\*.vsix
+	  name: VSIX
+	
