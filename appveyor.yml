@@ -15,7 +15,8 @@
     - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
   
   after_test:
-    - cmd: bin\Release\buildpackages_appveyor.cmd
+    - cmd: nuget pack bin\Release\RefactoringEssentials.nuspec -NoPackageAnalysis -BasePath bin\Release -OutputDirectory bin\Release
+    - cmd: nuget pack bin\Release\RefactoringEssentials.Library.nuspec -NoPackageAnalysis -BasePath bin\Release -OutputDirectory bin\Release
   
   artifacts:
     - path: bin\**\*.nupkg
