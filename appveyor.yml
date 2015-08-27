@@ -15,6 +15,7 @@
     - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
   
   after_test:
+    - cmd: dir
     - cmd: bin\Release\buildpackage.cmd
     - cmd: bin\Release\buildlibrarypackage.cmd
   
