@@ -29,7 +29,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             {
                 if (embeddedBlock.Statements.Count > 1)
                     return false;
-                whenTrueExprStatement = node.Statement.DescendantNodesAndSelf().OfType<ExpressionStatementSyntax>().FirstOrDefault();
+                var childNodes = embeddedBlock.ChildNodes();
+                if (childNodes.Count() > 1)
+                    return false;
+                whenTrueExprStatement = childNodes.OfType<ExpressionStatementSyntax>().FirstOrDefault();
             }
             else
             {
@@ -41,7 +44,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             {
                 if (elseBlock.Statements.Count > 1)
                     return false;
-                whenFalseExprStatement = node.Else.Statement.DescendantNodesAndSelf().OfType<ExpressionStatementSyntax>().FirstOrDefault();
+                var childNodes = elseBlock.ChildNodes();
+                if (childNodes.Count() > 1)
+                    return false;
+                whenFalseExprStatement = childNodes.OfType<ExpressionStatementSyntax>().FirstOrDefault();
             }
             else
             {
