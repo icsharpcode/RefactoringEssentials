@@ -1,4 +1,6 @@
-﻿cd bin\Release
+﻿rem @echo off
+
+cd bin\Release
 
 echo Building Analyzers NuGet package...
 buildpackage.cmd
