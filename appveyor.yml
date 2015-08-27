@@ -16,8 +16,8 @@
   
   after_test:
     - cmd: dir
-	- cmd: dir bin
-	- cmd: dir bin\Release
+    - cmd: dir bin
+    - cmd: dir bin\Release
     - cmd: bin\Release\buildpackage.cmd
     - cmd: bin\Release\buildlibrarypackage.cmd
   
