@@ -15,11 +15,7 @@
     - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
   
   after_test:
-    - cmd: dir
-    - cmd: dir bin
-    - cmd: dir bin\Release
-    - cmd: bin\Release\buildpackage.cmd
-    - cmd: bin\Release\buildlibrarypackage.cmd
+    - cmd: bin\Release\buildpackages_appveyor.cmd
   
   artifacts:
     - path: bin\**\*.nupkg

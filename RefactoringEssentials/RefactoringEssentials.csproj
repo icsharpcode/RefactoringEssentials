@@ -631,6 +631,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RefactoringEssentials.Library.nuspec</LastGenOutput>
     </Content>
+    <None Include="buildpackages_appveyor.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="RefactoringEssentials.Library.nuspec">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
