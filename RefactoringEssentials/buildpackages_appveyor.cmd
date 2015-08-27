@@ -1,5 +1,6 @@
-﻿@echo off
+﻿cd bin\Release
 
-cd bin\Release
+echo Building Analyzers NuGet package...
 buildpackage.cmd
+echo Building Library NuGet package...
 buildlibrarypackage.cmd
