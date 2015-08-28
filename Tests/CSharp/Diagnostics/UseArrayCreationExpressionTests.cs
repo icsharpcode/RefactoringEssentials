@@ -4,13 +4,12 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class UseArrayCreationExpressionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestTypeOfIsAssignableFrom()
         {
-            Test<UseArrayCreationExpressionAnalyzer>(@"
+            Analyze<UseArrayCreationExpressionAnalyzer>(@"
 class Test
 {
 	void Foo()
@@ -32,7 +31,7 @@ class Test
         [Test]
         public void MultiDim()
         {
-            Test<UseArrayCreationExpressionAnalyzer>(@"
+            Analyze<UseArrayCreationExpressionAnalyzer>(@"
 class Test
 {
 	void Foo(int i)
