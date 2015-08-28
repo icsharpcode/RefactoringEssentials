@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class UseMethodAnyTests : CSharpDiagnosticTestBase
     {
         static string ConstructExpression(string expr)
@@ -26,63 +25,63 @@ class Bar
         [Test]
         public void TestAnyNotEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () != 0"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count()$ != 0"), ConstructExpression("args.Any()"));
         }
 
         [Test]
         public void TestAnyGreater()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () > 0"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("args.$Count() > 0$"), ConstructExpression("args.Any ()"));
         }
 
         [Test]
         public void TestAnyLower()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("0 < args.Count ()"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$0 < args.Count()$"), ConstructExpression("args.Any ()"));
         }
 
 
         [Test]
         public void TestAnyGreaterEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () >= 1"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() >= 1$"), ConstructExpression("args.Any ()"));
         }
 
         [Test]
         public void TestAnyLessEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("1 <= args.Count ()"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$1 <= args.Count()$"), ConstructExpression("args.Any ()"));
         }
 
 
         [Test]
         public void TestNotAnyEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () == 0"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() == 0$"), ConstructExpression("!args.Any ()"));
         }
 
         [Test]
         public void TestNotAnyLess()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () < 1"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() < 1$"), ConstructExpression("!args.Any ()"));
         }
 
         [Test]
         public void TestNotAnyGreater()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("1 > args.Count ()"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$1 > args.Count()$"), ConstructExpression("!args.Any ()"));
         }
 
         [Test]
         public void TestNotAnyLessEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () <= 0"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() <= 0$"), ConstructExpression("!args.Any ()"));
         }
 
         [Test]
         public void TestNotAnyGreaterEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("0 >= args.Count ()"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$0 >= args.Count()$"), ConstructExpression("!args.Any ()"));
         }
 
         [Test]
@@ -96,6 +95,7 @@ class Bar
 	public void Foo (string[] args)
 	{
 		// ReSharper disable once UseMethodAny
+#pragma warning disable " + CSharpDiagnosticIDs.UseMethodAnyAnalyzerID  + @"
 		if (args.Count () > 0)
 			Console.WriteLine();
 	}
