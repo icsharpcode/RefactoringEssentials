@@ -51,6 +51,33 @@ namespace RefactoringEssentials
             }
         }
 
+        public static bool ImplementsSpecialTypeInterface(this ITypeSymbol symbol, SpecialType type)
+        {
+            if (symbol.SpecialType == type)
+            {
+                return true;
+            }
+
+            var namedType = symbol as INamedTypeSymbol;
+            if (namedType != null && namedType.IsGenericType && namedType != namedType.ConstructedFrom)
+            {
+                return namedType.ConstructedFrom.ImplementsSpecialTypeInterface(type);
+            }
+
+            var typeParam = symbol as ITypeParameterSymbol;
+            if (typeParam != null)
+            {
+                return typeParam.ConstraintTypes.Any(x => x.ImplementsSpecialTypeInterface(type));
+            }
+
+            if (symbol.AllInterfaces.Any(x => x.ImplementsSpecialTypeInterface(type)))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
         public static TypeSyntax GenerateTypeSyntax(this ITypeSymbol typeSymbol)
         {
             return (TypeSyntax)generateTypeSyntax.Invoke(null, new[] { typeSymbol });
