@@ -1,12 +1,16 @@
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
+using Microsoft.CodeAnalysis.Formatting;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantIfElseBlockCodeFixProvider : CodeFixProvider
     {
@@ -31,11 +35,19 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant 'else'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var node = root.FindNode(context.Span) as ElseClauseSyntax;
+            if (node == null)
+                return;
+
+            context.RegisterCodeFix(CodeAction.Create("Remove redundant 'else'", async token =>
+            {
+                var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
+                var syntaxList = new List<SyntaxNode>{node.Statement};
+                editor.InsertBefore(node, syntaxList);
+                editor.RemoveNode(node);
+                var newDocument = editor.GetChangedDocument();
+                return newDocument;
+            }, string.Empty), diagnostic);
         }
     }
 }
