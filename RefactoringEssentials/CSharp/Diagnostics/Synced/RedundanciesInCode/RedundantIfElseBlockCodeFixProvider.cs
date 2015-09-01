@@ -35,18 +35,27 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span) as ElseClauseSyntax;
+            var node = root.FindToken(context.Span.Start).Parent as ElseClauseSyntax;
             if (node == null)
                 return;
 
-            context.RegisterCodeFix(CodeAction.Create("Remove redundant 'else'", async token =>
+            context.RegisterCodeFix(CodeAction.Create("Remove redundant 'else'", token =>
             {
-                var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
-                var syntaxList = new List<SyntaxNode>{node.Statement};
-                editor.InsertBefore(node, syntaxList);
-                editor.RemoveNode(node);
-                var newDocument = editor.GetChangedDocument();
-                return newDocument;
+                var replacementNodes = new List<SyntaxNode>();
+                replacementNodes.Add(((IfStatementSyntax)node.Parent).WithElse(null).WithAdditionalAnnotations(Formatter.Annotation));
+
+                if (node.Statement is BlockSyntax)
+                {
+                    var bs = (BlockSyntax)node.Statement;
+                    replacementNodes.AddRange(bs.Statements.Select(s => s.WithAdditionalAnnotations(Formatter.Annotation)));
+                }
+                else
+                {
+                    replacementNodes.Add(node.Statement.WithAdditionalAnnotations(Formatter.Annotation));
+                }
+
+                var newRoot = root.ReplaceNode(node.Parent, replacementNodes);
+                return Task.FromResult(document.WithSyntaxRoot(newRoot));
             }, string.Empty), diagnostic);
         }
     }

@@ -3,13 +3,15 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantIfElseBlockAnalyzer : DiagnosticAnalyzer
     {
-        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantIfElseBlockAnalyzerID,
             GettextCatalog.GetString("Redundant 'else' keyword"),
             GettextCatalog.GetString("Redundant 'else' keyword"),
@@ -33,34 +35,63 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-             SyntaxKind.ElseClause
+                SyntaxKind.IfStatement
             );
         }
 
-        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            var node = nodeContext.Node as ElseClauseSyntax;
-            if (node == null)
+            var ifElseStatement = nodeContext.Node as IfStatementSyntax;
+            if (ifElseStatement == null)
                 return false;
 
-            if (!ElseIsRedundantControlFlow(node, nodeContext))
+            if (!ElseIsRedundantControlFlow(ifElseStatement, nodeContext) || HasConflictingNames(nodeContext, ifElseStatement))
                 return false;
 
-            diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, ifElseStatement.Else.ElseKeyword.GetLocation());
             return true;
         }
 
-        private static bool ElseIsRedundantControlFlow(ElseClauseSyntax elseClause, SyntaxNodeAnalysisContext syntaxNode)
+        static bool ElseIsRedundantControlFlow(IfStatementSyntax ifElseStatement, SyntaxNodeAnalysisContext syntaxNode)
         {
-            var blockSyntax = elseClause.Statement as BlockSyntax;
-            if (blockSyntax == null || !blockSyntax.Statements.Any())
+            if (ifElseStatement.Else == null || ifElseStatement.Parent is ElseClauseSyntax)
+                return false;
+
+            var blockSyntax = ifElseStatement.Else.Statement as BlockSyntax;
+            if (blockSyntax != null && blockSyntax.Statements.Count == 0)
                 return true;
 
-            var result = syntaxNode.SemanticModel.AnalyzeControlFlow(blockSyntax);
+            var result = syntaxNode.SemanticModel.AnalyzeControlFlow(ifElseStatement.Statement);
             return !result.EndPointIsReachable;
+        }
+
+        static bool HasConflictingNames(SyntaxNodeAnalysisContext nodeContext, IfStatementSyntax ifElseStatement)
+        {
+            var block = ifElseStatement.Else.Statement as BlockSyntax;
+            if (block == null || block.Statements.Count == 0)
+                return false;
+
+            var member = ifElseStatement.Ancestors().FirstOrDefault(a => a is MemberDeclarationSyntax);
+
+            var priorLocalDeclarations = new List<string>();
+            foreach (var localDecl in member.DescendantNodes().Where(n => n.SpanStart < ifElseStatement.Else.SpanStart).OfType<LocalDeclarationStatementSyntax>()) {
+                foreach (var v in localDecl.Declaration.Variables)
+                    priorLocalDeclarations.Add(v.Identifier.ValueText);
+            }
+
+            foreach (var sym in block.Statements)
+            {
+                var decl = sym as LocalDeclarationStatementSyntax;
+                if (decl == null)
+                    continue;
+                
+                if (priorLocalDeclarations.Contains(s => decl.Declaration.Variables.Any(v => v.Identifier.ValueText == s)))
+                    return true;
+            }
+            return false;
         }
     }
 }
