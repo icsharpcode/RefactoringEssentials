@@ -68,7 +68,6 @@
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer
 * RedundantExtendsListEntryAnalyzer
-* RedundantIfElseBlockAnalyzer
 * RedundantLambdaParameterTypeAnalyzer
 * RedundantLambdaSignatureParenthesesAnalyzer
 * RedundantLogicalConditionalExpressionOperandAnalyzer
