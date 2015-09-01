@@ -7,20 +7,15 @@
 
 * AutoLinqSumAction
 * ChangeAccessModifierAction
-* ConvertStatementBodyToExpressionBodyCodeRefactoringProvider
 * CreateDelegateAction
 * CreateIndexerAction
 * CreateOverloadWithoutParameterAction
 * ExtractAnonymousMethodAction
 * GenerateGetterAction
-* GeneratePropertyAction
 * IntroduceConstantAction
-* IterateViaForeachAction
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
-* MergeNestedIfAction
 * MoveToOuterScopeAction
-* PutInsideUsingAction
 * UseStringFormatAction
 
 *Analyzers*
@@ -49,9 +44,7 @@
 * FunctionNeverReturnsAnalyzer
 * InconsistentNamingAnalyzer
 * LocalVariableHidesMemberAnalyzer
-* LocalVariableNotUsedAnalyzer
 * LockThisAnalyzer
-* MemberCanBeMadeStaticAnalyzer
 * MemberHidesStaticFromOuterClassAnalyzer
 * MethodOverloadWithOptionalParameterAnalyzer
 * MissingInterfaceMemberImplementationAnalyzer
@@ -60,7 +53,6 @@
 * OptionalParameterHierarchyMismatchAnalyzer
 * ParameterCanBeDeclaredWithBaseTypeAnalyzer
 * ParameterHidesMemberAnalyzer
-* ParameterOnlyAssignedAnalyzer
 * PartialMethodParameterNameMismatchAnalyzer
 * PolymorphicFieldLikeEventInvocationAnalyzer
 * PossibleAssignmentToReadonlyFieldAnalyzer
@@ -68,35 +60,25 @@
 * ProhibitedModifiersAnalyzer
 * RedundantArgumentDefaultValueAnalyzer
 * RedundantAssignmentAnalyzer
-* RedundantBaseConstructorCallAnalyzer
 * RedundantBoolCompareAnalyzer
 * RedundantCatchClauseAnalyzer
-* RedundantCheckBeforeAssignmentAnalyzer
-* RedundantCommaInArrayInitializerAnalyzer
 * RedundantComparisonWithNullAnalyzer
 * RedundantDefaultFieldInitializerAnalyzer
-* RedundantDelegateCreationAnalyzer
 * RedundantEmptyFinallyBlockAnalyzer
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer
-* RedundantExplicitArraySizeAnalyzer
-* RedundantExplicitNullableCreationAnalyzer
 * RedundantExtendsListEntryAnalyzer
 * RedundantIfElseBlockAnalyzer
-* RedundantInternalAnalyzer
 * RedundantLambdaParameterTypeAnalyzer
 * RedundantLambdaSignatureParenthesesAnalyzer
 * RedundantLogicalConditionalExpressionOperandAnalyzer
-* RedundantObjectCreationArgumentListAnalyzer
 * RedundantObjectOrCollectionInitializerAnalyzer
 * RedundantOverriddenMemberAnalyzer
 * RedundantParamsAnalyzer
-* RedundantStringToCharArrayCallAnalyzer
 * RedundantToStringCallAnalyzer
 * RedundantUnsafeContextAnalyzer
 * ReferenceEqualsWithValueTypeAnalyzer
 * ReplaceWithStringIsNullOrEmptyAnalyzer
-* RewriteIfReturnToReturnAnalyzer
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
 * StaticFieldInGenericTypeAnalyzer

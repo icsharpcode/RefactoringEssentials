@@ -52,9 +52,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (firstArgument == null || firstArgument.Expression.IsKind(SyntaxKind.NullLiteralExpression))
                 return false;
             var expressionSymbol = semanticModel.GetSymbolInfo(node.Expression).Symbol as IMethodSymbol;
-            //ignore non-extensions and reduced extensions (so a.Ext, as opposed to B.Ext(a))
+            // Ignore non-extensions and reduced extensions (so a.Ext, as opposed to B.Ext(a))
             if (expressionSymbol == null || !expressionSymbol.IsExtensionMethod || expressionSymbol.MethodKind == MethodKind.ReducedExtension)
                 return false;
+
+            // Don't allow conversion if first parameter is a method name instead of variable (extension method on delegate type)
+            var firstParameter = node.ArgumentList?.Arguments.FirstOrDefault();
+            if ((firstParameter != null) && (firstParameter.Expression is IdentifierNameSyntax))
+            {
+                var extensionMethodTargetExpression = semanticModel.GetSymbolInfo(firstParameter.Expression).Symbol as IMethodSymbol;
+                if (extensionMethodTargetExpression != null)
+                    return false;
+            }
 
             diagnostic = Diagnostic.Create(
                 descriptor,

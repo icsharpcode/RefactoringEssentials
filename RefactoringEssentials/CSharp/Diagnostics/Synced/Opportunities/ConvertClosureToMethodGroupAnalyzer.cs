@@ -71,6 +71,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             IReadOnlyList<ParameterSyntax> lambdaParameters = parenLambda?.ParameterList?.Parameters ?? anoMethod?.ParameterList?.Parameters;
             if (simpleLambda != null)
                 lambdaParameters = new[] { simpleLambda.Parameter };
+            if (lambdaParameters == null)
+                lambdaParameters = new ParameterSyntax[] { };
 
             var arguments = invocation.ArgumentList.Arguments;
             if (method.Parameters.Length != arguments.Count || lambdaParameters.Count != arguments.Count)
@@ -123,6 +125,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (!validTypes.Contains(method.ContainingType))
                     return false;
             }
+
+            // Method group used in an invocation expression might be ambiguos, keep the lambda instead
+            if ((validTypes.Count > 1) && IsUsageInInvocation(nodeContext))
+                return false;
 
             diagnostic = Diagnostic.Create(
                 descriptor,
@@ -180,6 +186,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     result = returnStmt.Expression as InvocationExpressionSyntax;
             }
             return result;
+        }
+
+        internal static bool IsUsageInInvocation(SyntaxNodeAnalysisContext nodeContext)
+        {
+            ArgumentSyntax parentArgument = nodeContext.Node.Parent as ArgumentSyntax;
+            if (parentArgument == null)
+                return false;
+            ArgumentListSyntax parentArgumentList = parentArgument.Parent as ArgumentListSyntax;
+            if (parentArgumentList == null)
+                return false;
+            InvocationExpressionSyntax parentInvocation = parentArgumentList.Parent as InvocationExpressionSyntax;
+            return (parentInvocation != null);
         }
     }
 }

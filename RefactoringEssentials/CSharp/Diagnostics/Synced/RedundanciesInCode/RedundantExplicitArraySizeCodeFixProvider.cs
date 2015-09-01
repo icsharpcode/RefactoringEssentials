@@ -1,12 +1,13 @@
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantExplicitArraySizeCodeFixProvider : CodeFixProvider
     {
@@ -32,10 +33,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
+            if (node == null)
+                return;
             var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove '{0}'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove the redundant size indicator", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }

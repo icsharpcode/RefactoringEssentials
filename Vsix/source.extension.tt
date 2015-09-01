@@ -5,10 +5,12 @@
 <# ReadVersions(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), "../RefactoringEssentials/RefactoringEssentials.version")); #>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="NR6Pack.Refactorings.Vsix..cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="<#= generatedFullVersion #>" Language="en-US" Publisher="IC#Code"/>
+    <Identity Id="NR6Pack.Refactorings.Vsix..cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="<#= generatedShortVersion #>.<#= generatedRevision #>" Language="en-US" Publisher="IC#Code"/>
     <DisplayName>Refactoring Essentials for Visual Studio</DisplayName>
-    <Description xml:space="preserve">Roslyn-based refactorings and diagnostics.</Description>
+    <Description xml:space="preserve">Free refactorings for C# and Visual Basic (VB) - plus more!</Description>
     <License>license.txt</License>
+    <GettingStartedGuide><#= releaseNotesLink #></GettingStartedGuide>
+    <ReleaseNotes><#= releaseNotesLink #></ReleaseNotes>
     <Icon>Images\refactoringessentials-logo90.png</Icon>
     <PreviewImage>Images\refactoringessentials-preview.png</PreviewImage>
   </Metadata>

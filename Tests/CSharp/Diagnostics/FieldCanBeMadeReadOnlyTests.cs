@@ -55,6 +55,104 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Test]
+        public void TestInitializedFieldAssignedInAnotherClassPart()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"partial class Test
+{
+    object fooBar = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}
+class Test
+{
+    public void SomeMethod()
+    {
+        fooBar = null;
+    }
+}
+");
+        }
+
+        [Test]
+        public void TestInitializedStaticField()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
+{
+    static object $fooBar$ = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}", @"class Test
+{
+    static readonly object fooBar = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}");
+        }
+
+        [Test]
+        public void TestInitializedStaticFieldUsedInInstanceMember()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
+{
+    static object $fooBar$ = new object();
+    public void TestMethod()
+    {
+        Console.WriteLine(fooBar);
+    }
+}", @"class Test
+{
+    static readonly object fooBar = new object();
+    public void TestMethod()
+    {
+        Console.WriteLine(fooBar);
+    }
+}");
+        }
+
+        [Test]
+        public void TestStaticFieldAssignedInStaticConstructor()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
+{
+    static object $fooBar$;
+    static Test()
+    {
+        fooBar = new object();
+    }
+}", @"class Test
+{
+    static readonly object fooBar;
+    static Test()
+    {
+        fooBar = new object();
+    }
+}");
+        }
+
+        [Test]
+        public void TestStaticFieldAlsoAssignedInInstanceConstructor()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
+{
+    static object fooBar;
+    static Test()
+    {
+        fooBar = new object();
+    }
+    public Test()
+    {
+        fooBar = new object();
+    }
+}");
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -102,7 +200,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
 
         [Test]
-        public void TestUninitalizedValueTypeField()
+        public void TestUninitializedValueTypeField()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
 {
@@ -218,7 +316,6 @@ struct MutableStruct {
     }
 }");
         }
-
     }
 }
 

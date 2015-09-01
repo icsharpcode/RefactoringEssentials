@@ -4,20 +4,19 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantCheckBeforeAssignmentTests : CSharpDiagnosticTestBase
     {
 
         [Test]
         public void TestInspectorCase1()
         {
-            Test<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
+            Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
 class baseClass
 {
 	public void method()
 	{
 		int q = 1;
-		if (q != 1) {
+		if ($q != 1$) {
 			q = 1;
 		}
 	}
@@ -28,8 +27,8 @@ class baseClass
 	public void method()
 	{
 		int q = 1;
-		q = 1;
-	}
+			q = 1;
+    }
 }
 ");
         }
@@ -37,7 +36,7 @@ class baseClass
         [Test]
         public void TestInspectorCase2()
         {
-            TestIssue<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
+            Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
 namespace resharper_test
 {
 	public class baseClass
@@ -111,11 +110,14 @@ namespace resharper_test
 		{
 			int q = 1;
 //Resharper disable RedundantCheckBeforeAssignment
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID + @"
 			if (q != 1)
 			{
 				q = 1;
 			}
 //Resharper restore RedundantCheckBeforeAssignment
+#pragma warning restore " + CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID + @"
+
 		}
 	}
 }

@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("The override of a virtual member is redundant because it consists of only a call to the base"),
             GettextCatalog.GetString("Redundant method override"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantOverriddenMemberAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

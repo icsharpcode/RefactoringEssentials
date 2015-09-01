@@ -238,7 +238,25 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
+        [Test]
+        public void TestNullCheckBug2()
+        {
+            Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
+{
+    class FooChild
+    {
+        public bool Enabled { get; set; }
+    }
+    public FooChild Child { get; set; }
+	
 
+	int Bar(Foo fileChangeWatcher)
+	{
+		if (fileChangeWatcher.Child != null)
+			fileChangeWatcher.Child.Enabled = true;
+	}
+}");
+        }
 
     }
 }

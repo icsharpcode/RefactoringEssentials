@@ -148,10 +148,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return !expr.DescendantNodesAndSelf().Any(
                         n =>
                         {
+                            // StartsWith() is a very simple solution, but should be enough in usual cases
                             if (n.IsKind(SyntaxKind.IdentifierName))
-                                return ((MemberAccessExpressionSyntax)target).Expression.ToString() == ((IdentifierNameSyntax)n).Identifier.ValueText;
+                                return ((MemberAccessExpressionSyntax)target).Expression.ToString().StartsWith(((IdentifierNameSyntax)n).Identifier.ValueText);
                             if (n.IsKind(SyntaxKind.SimpleMemberAccessExpression))
-                                return ((MemberAccessExpressionSyntax)target).Expression.ToString() == ((MemberAccessExpressionSyntax)n).Expression.ToString();
+                                return ((MemberAccessExpressionSyntax)target).Expression.ToString().StartsWith(((MemberAccessExpressionSyntax)n).Expression.ToString());
                             return false;
                         }
                     );

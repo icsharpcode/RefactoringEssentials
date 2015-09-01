@@ -58,8 +58,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                                 )
                             ).WithAdditionalAnnotations(Formatter.Annotation);
 
-                            root = root.TrackNodes(ctor);
-                            var newRoot = root.InsertNodesBefore(root.GetCurrentNode(ctor), new List<SyntaxNode>() {
+                            var trackedRoot = root.TrackNodes(ctor);
+                            var newRoot = trackedRoot.InsertNodesBefore(trackedRoot.GetCurrentNode(ctor), new List<SyntaxNode>() {
                                 newProperty
                             });
                             newRoot = newRoot.ReplaceNode(newRoot.GetCurrentNode(ctor), ctor.WithBody(

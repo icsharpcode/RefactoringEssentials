@@ -1,16 +1,16 @@
+using System;
 using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantParamsTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestBasicCase()
         {
-            Test<RedundantParamsAnalyzer>(@"class FooBar
+            Analyze<RedundantParamsAnalyzer>(@"class FooBar
 {
 	public virtual void Foo(string fmt, object[] args)
 	{
@@ -19,7 +19,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
 class FooBar2 : FooBar
 {
-	public override void Foo(string fmt, params object[] args)
+	public override void Foo(string fmt, $params$ object[] args)
 	{
 		System.Console.WriteLine(fmt, args);
 	}
@@ -59,6 +59,25 @@ class FooBar2 : FooBar
         }
 
         [Test]
+        public void ValideParamsUsageTests()
+        {
+            Analyze<RedundantParamsAnalyzer>(@"class FooBar
+{
+	public virtual void Foo(string fmt, params object[] args)
+	{
+	}
+}
+
+class FooBar2 : FooBar
+{
+	public override void Foo(string fmt, $params$ object[] args)
+	{
+		System.Console.WriteLine(fmt, args);
+	}
+}");
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<RedundantParamsAnalyzer>(@"class FooBar
@@ -71,6 +90,7 @@ class FooBar2 : FooBar
 class FooBar2 : FooBar
 {
 	// ReSharper disable once RedundantParams
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantParamsAnalyzerID + @"
 	public override void Foo(string fmt, params object[] args)
 	{
 		System.Console.WriteLine(fmt, args);

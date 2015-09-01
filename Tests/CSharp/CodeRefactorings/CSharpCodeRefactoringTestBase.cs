@@ -25,6 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         public void Test(CodeRefactoringProvider provider, string input, string output, int action = 0, bool expectErrors = false, CSharpParseOptions parseOptions = null)
         {
             string result = HomogenizeEol(RunContextAction(provider, HomogenizeEol(input), action, expectErrors, parseOptions));
+            output = HomogenizeEol(output);
             bool passed = result == output;
             if (!passed)
             {
@@ -33,7 +34,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 Console.WriteLine("-----------Got:");
                 Console.WriteLine(result);
             }
-            Assert.AreEqual(HomogenizeEol(output), result);
+            Assert.AreEqual(output, result);
         }
 
         internal static List<Microsoft.CodeAnalysis.CodeActions.CodeAction> GetActions<T>(string input) where T : CodeRefactoringProvider, new()
@@ -119,7 +120,10 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             {
                 op.Apply(workspace, default(CancellationToken));
             }
-            return workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            var result = workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            if (Environment.NewLine != "\r\n")
+                result = result.Replace("\r\n", Environment.NewLine);
+            return result;
         }
 
 

@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant conditional expression"),
             GettextCatalog.GetString("Redundant conditional expression"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantTernaryExpressionAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

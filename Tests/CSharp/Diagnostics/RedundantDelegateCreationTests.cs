@@ -4,13 +4,12 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantDelegateCreationTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestAdd()
         {
-            Test<RedundantDelegateCreationAnalyzer>(@"
+            var input = @"
 using System;
 
 public class FooBase
@@ -19,13 +18,14 @@ public class FooBase
 
 	FooBase()
 	{
-		Changed += new EventHandler<EventArgs>(HandleChanged);
+		Changed += $new EventHandler<EventArgs>(HandleChanged)$;
 	}
 
 	void HandleChanged(object sender, EventArgs e)
 	{
 	}
-}", @"
+}";
+            var output = @"
 using System;
 
 public class FooBase
@@ -40,13 +40,15 @@ public class FooBase
 	void HandleChanged(object sender, EventArgs e)
 	{
 	}
-}");
+}";
+
+            Analyze<RedundantDelegateCreationAnalyzer>(input, output);
         }
 
         [Test]
         public void TestRemove()
         {
-            Test<RedundantDelegateCreationAnalyzer>(@"
+            Analyze<RedundantDelegateCreationAnalyzer>(@"
 using System;
 
 public class FooBase
@@ -55,7 +57,7 @@ public class FooBase
 
 	FooBase()
 	{
-		Changed -= new EventHandler<EventArgs>(HandleChanged);
+		Changed -= $new EventHandler<EventArgs>(HandleChanged)$;
 	}
 
 	void HandleChanged(object sender, EventArgs e)
@@ -92,6 +94,7 @@ public class FooBase
 	FooBase()
 	{
 		// ReSharper disable once RedundantDelegateCreation
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantDelegateCreationAnalyzerID + @"
 		Changed += new EventHandler<EventArgs>(HandleChanged);
 	}
 
@@ -102,4 +105,3 @@ public class FooBase
         }
     }
 }
-

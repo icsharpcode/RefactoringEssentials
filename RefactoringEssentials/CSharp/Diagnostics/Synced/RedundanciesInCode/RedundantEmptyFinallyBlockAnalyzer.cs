@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant empty finally block"),
             GettextCatalog.GetString("Redundant empty finally block"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantEmptyFinallyBlockAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

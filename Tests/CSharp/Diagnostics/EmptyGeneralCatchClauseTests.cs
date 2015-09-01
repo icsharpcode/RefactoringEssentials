@@ -79,6 +79,55 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Test]
+        public void TestCatchWhenWithoutDeclaration()
+        {
+            Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;
+	using System.IO;
+	namespace Application
+	{
+		public class BaseClass
+		{
+			public void method()
+			{
+				try
+				{
+					F ();
+				}
+				catch when (ex.Message != null)
+				{
+				}
+			}
+		}
+	}
+");
+        }
+
+        [Test]
+        public void TestCatchWithReturnStatement()
+        {
+            Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;
+	using System.IO;
+	namespace Application
+	{
+		public class BaseClass
+		{
+			public bool Method()
+			{
+				try
+				{
+					return true;
+				}
+				catch
+				{
+                    return false;
+				}
+			}
+		}
+	}
+");
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;

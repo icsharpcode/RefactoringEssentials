@@ -14,7 +14,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 class A { }
 static class B
 {
-    public static void Ext (this A a, int i);
+    public static void Ext (this A a, int i) { }
 }
 class C
 {
@@ -27,7 +27,7 @@ class C
 class A { }
 static class B
 {
-    public static void Ext (this A a, int i);
+    public static void Ext (this A a, int i) { }
 }
 class C
 {
@@ -46,7 +46,7 @@ class C
 class A { }
 static class B
 {
-    public static void Ext (this A a, int i);
+    public static void Ext (this A a, int i) { }
 }
 class C
 {
@@ -60,7 +60,7 @@ class C
 class A { }
 static class B
 {
-    public static void Ext (this A a, int i);
+    public static void Ext (this A a, int i) { }
 }
 class C
 {
@@ -120,12 +120,13 @@ class C
 class A { }
 static class B
 {
-    public static void Ext (this A a);
+    public static void Ext (this A a, int i) { }
 }
 class C
 {
     void F()
     {
+        A a = new A();
         B.$Ext(a, 1);
     }
 }");
@@ -137,7 +138,7 @@ class C
             TestWrongContext<InvokeAsStaticMethodCodeRefactoringProvider>(@"
 class A
 {
-    public void Ext (int i);
+    public void Ext (int i) { }
 }
 class C
 {

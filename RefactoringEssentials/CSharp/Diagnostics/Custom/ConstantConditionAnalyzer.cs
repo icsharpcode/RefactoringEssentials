@@ -69,6 +69,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (nodeContext.IsFromGeneratedCode())
                 return;
 
+            if (condition == null)
+                return;
+
             if (condition.IsKind(SyntaxKind.TrueLiteralExpression) || condition.IsKind(SyntaxKind.FalseLiteralExpression))
                 return;
 

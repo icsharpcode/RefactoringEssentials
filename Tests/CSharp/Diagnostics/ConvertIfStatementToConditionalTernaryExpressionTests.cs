@@ -131,7 +131,67 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
+        [Test]
+        public void TestSkipMultipleDescendantExpressions()
+        {
+            Analyze<ConvertIfStatementToConditionalTernaryExpressionAnalyzer>(@"
+    public class Class1
+    {
+        string DoIt(bool a, int b, int c)
+        {
+            string s;
+            bool z = false;
 
+            if (a)
+            {
+                if (b < c)
+                    s = ""a"";
+                else
+                {
+                    s = ""b"";
+                    z = true;
+                }
+            }
+            else
+            {
+                if (b > 0)
+                    s = ""c"";
+                else
+                {
+                    s = ""d"";
+                    z = true;
+                }
+            }
+            return s;
+        }
+    }");
+        }
+
+        [Test]
+        public void TestCommentsIgnoredWhenFindingLeftOfExpression()
+        {
+            Analyze<ConvertIfStatementToConditionalTernaryExpressionAnalyzer>(@"
+    public class Class1
+    {
+        string DoIt(bool a)
+        {
+            string status;
+
+            $if$ (a)
+            {                
+                    // Comment
+                    status = ""A"";
+            }
+            else
+            {                
+                    // Different comment
+                    status = ""B"";              
+            }
+
+            return status;
+        }
+    }", issueToFix: 1);
+        }
     }
 }
 

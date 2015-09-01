@@ -12,23 +12,53 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             Test<AddCatchExceptionCodeRefactoringProvider>(@"
 class TestClass
 {
-	public void F()
-	{
-		try {
-		}
-		catch$ {
-		}
+    public void F()
+    {
+        try {
+        }
+        catch$ {
+        }
     }
 }", @"
 class TestClass
 {
-	public void F()
-	{
-		try {
-		}
-		catch (System.Exception e)
+    public void F()
+    {
+        try {
+        }
+        catch (System.Exception e)
         {
-		}
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void HandlesBasicCaseWithBraceOnOwnLine()
+        {
+            Test<AddCatchExceptionCodeRefactoringProvider>(@"
+class TestClass
+{
+    public void F()
+    {
+        try
+        {
+        }
+        catch$
+        {
+        }
+    }
+}", @"
+class TestClass
+{
+    public void F()
+    {
+        try
+        {
+        }
+        catch (System.Exception e)
+        {
+        }
     }
 }");
         }
@@ -39,26 +69,26 @@ class TestClass
             Test<AddCatchExceptionCodeRefactoringProvider>(@"
 class TestClass
 {
-	public void F()
-	{
-		try {
-		}
-		catch$ {
+    public void F()
+    {
+        try {
+        }
+        catch$ {
 
-		}
-	}
+        }
+    }
 }", @"
 class TestClass
 {
-	public void F()
-	{
-		try {
-		}
-		catch (System.Exception e)
+    public void F()
+    {
+        try {
+        }
+        catch (System.Exception e)
         {
 
-		}
-	}
+        }
+    }
 }");
         }
 
@@ -69,25 +99,25 @@ class TestClass
 using System;
 class TestClass
 {
-	public void F()
-	{
-		try {
-		}
-		catch$ {
-		}
-	}
+    public void F()
+    {
+        try {
+        }
+        catch$ {
+        }
+    }
 }", @"
 using System;
 class TestClass
 {
-	public void F()
-	{
-		try {
-		}
-		catch (Exception e)
+    public void F()
+    {
+        try {
+        }
+        catch (Exception e)
         {
-		}
-	}
+        }
+    }
 }");
         }
 
@@ -98,13 +128,13 @@ class TestClass
 using System;
 class TestClass
 {
-	public void F()
-	{
-		try {
-		}
-		catch$ (Exception) {
-		}
-	}
+    public void F()
+    {
+        try {
+        }
+        catch$ (Exception) {
+        }
+    }
 }");
         }
     }

@@ -96,15 +96,15 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "    }" + Environment.NewLine +
                                          "}"
                                      );
-            Assert.AreEqual(
-                @"class TestClass
+            string expected = @"class TestClass
 {
     void Test ()
     {
         int i;
         for (i = 1; i < 10; i++) {}
     }
-}", result);
+}";
+            Assert.AreEqual(HomogenizeEol(expected), HomogenizeEol(result));
         }
 
         [Test]
@@ -162,6 +162,48 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         int a, b, foo, c;
         foo = 5 + 12;
         Console.WriteLine(foo);
+    }
+}");
+        }
+
+        [Test]
+        public void TestVarDeclarationWithComment()
+        {
+            Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
+{
+    public void T()
+    {
+        // Some comment
+        int $i = 5;
+    }
+}", @"class Test
+{
+    public void T()
+    {
+        // Some comment
+        int i;
+        i = 5;
+    }
+}");
+        }
+
+        [Test]
+        public void TestForStatementWithComment()
+        {
+            Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
+{
+    public void T()
+    {
+        // Some comment
+        for (int $i = 1; i < 10; i++) {}
+    }
+}", @"class Test
+{
+    public void T()
+    {
+        // Some comment
+        int i;
+        for (i = 1; i < 10; i++) {}
     }
 }");
         }

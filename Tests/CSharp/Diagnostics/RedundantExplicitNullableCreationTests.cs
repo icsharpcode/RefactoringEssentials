@@ -4,18 +4,17 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantExplicitNullableCreationTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestVariableCreation()
         {
-            Test<RedundantExplicitNullableCreationAnalyzer>(@"
+            Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
 class FooBar
 {
 	void Test()
 	{
-		int? i = new int?(5);
+		int? i = $new int?(5)$;
 	}
 }
 ", @"
@@ -32,12 +31,12 @@ class FooBar
         [Test]
         public void TestLongForm()
         {
-            Test<RedundantExplicitNullableCreationAnalyzer>(@"
+            Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
 class FooBar
 {
 	void Test()
 	{
-		int? i = new System.Nullable<int>(5);
+		int? i = $new System.Nullable<int>(5)$;
 	}
 }
 ", @"
@@ -74,6 +73,7 @@ class FooBar
 	void Test()
 	{
 		// ReSharper disable once RedundantExplicitNullableCreation
++#pragma warning disable " + CSharpDiagnosticIDs.RedundantExplicitNullableCreationAnalyzerID + @"
 		int? i = new int?(5);
 	}
 }

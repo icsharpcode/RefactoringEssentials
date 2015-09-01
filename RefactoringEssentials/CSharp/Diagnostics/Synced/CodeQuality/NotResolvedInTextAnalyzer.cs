@@ -149,7 +149,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var anonymousMethod = node as AnonymousMethodExpressionSyntax;
                 if (anonymousMethod != null)
                     names.AddRange(anonymousMethod.ParameterList.Parameters.Select(p => p.Identifier.ToString()));
-
+                
                 var indexer = node as IndexerDeclarationSyntax;
                 if (indexer != null)
                 {
@@ -179,7 +179,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     {
                         names.Add("value");
                     }
-                    break;
+                    if (!accessor.Parent.Parent.IsKind(SyntaxKind.IndexerDeclaration))
+                    {
+                        break;
+                    }
                 }
                 node = node.Parent;
             }

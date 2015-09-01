@@ -11,6 +11,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         public void TestCreateIndexer(string input, string output)
         {
             string result = RunContextAction(new CreateIndexerAction(), HomogenizeEol(input));
+            output = HomogenizeEol(output);
             bool passed = result == output;
             if (!passed)
             {
@@ -19,7 +20,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 Console.WriteLine("-----------Got:");
                 Console.WriteLine(result);
             }
-            Assert.AreEqual(HomogenizeEol(output), result);
+            Assert.AreEqual(output, result);
         }
 
 

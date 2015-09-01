@@ -38,27 +38,50 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (elementAccess == null)
                 return;
             var elementType = model.GetTypeInfo(elementAccess.Expression);
-            if (!IsDictionary(elementType.Type as INamedTypeSymbol) && !elementType.Type.AllInterfaces.Any(IsDictionary))
+            var type = elementType.Type;
+            if (type == null)
                 return;
-
+            if (!IsDictionary(type as INamedTypeSymbol) && !type.AllInterfaces.Any(IsDictionary))
+                return;
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
                     span,
                     DiagnosticSeverity.Info,
-                    string.Format(GettextCatalog.GetString("Check 'if ({0}.ContainsKey({1}))'"), elementAccess.Expression, elementAccess.ArgumentList.Arguments.First()),
+                    string.Format(GettextCatalog.GetString("Use 'if ({0}.TryGetValue({1}, out val))'"), elementAccess.Expression, elementAccess.ArgumentList.Arguments.First()),
                     t2 =>
                     {
+                        var reservedNames = model.LookupSymbols(elementAccess.SpanStart).Select(s => s.Name);
+                        string localVariableName = NameGenerator.EnsureUniqueness("val", reservedNames, true);
+                        
                         var parentStatement = elementAccess.Parent.AncestorsAndSelf().OfType<StatementSyntax>().FirstOrDefault();
-
                         var newParent = SyntaxFactory.IfStatement(
-                            SyntaxFactory.InvocationExpression(
-                                SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, elementAccess.Expression, SyntaxFactory.IdentifierName("ContainsKey")),
-                                SyntaxFactory.ArgumentList(elementAccess.ArgumentList.Arguments)
-                            ),
-                            parentStatement
-                        );
+                                SyntaxFactory.InvocationExpression(
+                                    SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, elementAccess.Expression, SyntaxFactory.IdentifierName("TryGetValue")),
+                                    SyntaxFactory.ArgumentList(elementAccess.ArgumentList.Arguments.Add(SyntaxFactory.Argument(SyntaxFactory.IdentifierName(localVariableName)).WithRefOrOutKeyword(SyntaxFactory.Token(SyntaxKind.OutKeyword))))
+                                ),
+                                parentStatement.ReplaceNode(elementAccess, SyntaxFactory.IdentifierName(localVariableName))
+                            ).WithAdditionalAnnotations(Formatter.Annotation);
+                        var dict = IsDictionary(elementType.Type as INamedTypeSymbol) ? elementType.Type : elementType.Type.AllInterfaces.First(IsDictionary);
 
-                        return Task.FromResult(document.WithSyntaxRoot(root.ReplaceNode((SyntaxNode)parentStatement, newParent.WithAdditionalAnnotations(Formatter.Annotation))));
+                        var varDecl = SyntaxFactory.LocalDeclarationStatement(
+                            SyntaxFactory.VariableDeclaration(
+                                dict.GetTypeArguments()[1].GenerateTypeSyntax(),
+                                SyntaxFactory.SeparatedList(new[] { SyntaxFactory.VariableDeclarator(localVariableName) })
+                            )
+                        ).WithAdditionalAnnotations(Formatter.Annotation);
+
+                        SyntaxNode newRoot;
+
+                        if (parentStatement.Parent.IsKind(SyntaxKind.Block))
+                        {
+                            newRoot = root.ReplaceNode(parentStatement, new SyntaxNode[] { varDecl, newParent });
+                        }
+                        else
+                        {
+                            newRoot = root.ReplaceNode(parentStatement, SyntaxFactory.Block(varDecl, newParent).WithAdditionalAnnotations(Formatter.Annotation));
+                        }
+
+                        return Task.FromResult(document.WithSyntaxRoot(newRoot));
                     }
                 )
             );
@@ -68,6 +91,5 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         {
             return type != null && type.Name == "IDictionary" && type.ContainingNamespace.ToDisplayString() == "System.Collections.Generic";
         }
-
     }
 }

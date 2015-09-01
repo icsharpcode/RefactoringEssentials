@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Finds calls to ToString() which would be generated automatically by the compiler"),
             GettextCatalog.GetString("Redundant 'ToString()' call"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantToStringCallAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

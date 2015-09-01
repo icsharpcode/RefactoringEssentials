@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantObjectCreationArgumentListTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -16,7 +15,7 @@ class TestClass
 	public int Prop { get; set; }
 	void TestMethod ()
 	{
-		var x = new TestClass () {
+		var x = new TestClass $()$ {
 			Prop = 1
 		};
 	}
@@ -27,12 +26,12 @@ class TestClass
 	public int Prop { get; set; }
 	void TestMethod ()
 	{
-		var x = new TestClass {
+		var x = new TestClass  {
 			Prop = 1
 		};
 	}
 }";
-            Test<RedundantObjectCreationArgumentListAnalyzer>(input, 1, output);
+            Analyze<RedundantObjectCreationArgumentListAnalyzer>(input, output);
         }
 
         [Test]
@@ -50,7 +49,7 @@ class TestClass
 		var y = new TestClass (1) { };
 	}
 }";
-            Test<RedundantObjectCreationArgumentListAnalyzer>(input, 0);
+            Analyze<RedundantObjectCreationArgumentListAnalyzer>(input);
         }
 
         [Test]
@@ -63,12 +62,13 @@ class TestClass
 	void TestMethod ()
 	{
 		// ReSharper disable once RedundantEmptyObjectCreationArgumentList
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantObjectCreationArgumentListAnalyzerID + @"
 		var x = new TestClass () {
 			Prop = 1
 		};
 	}
 }";
-            Test<RedundantObjectCreationArgumentListAnalyzer>(input, 0);
+            Analyze<RedundantObjectCreationArgumentListAnalyzer>(input);
         }
 
     }

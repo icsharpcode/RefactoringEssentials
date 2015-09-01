@@ -76,11 +76,11 @@ namespace RefactoringEssentials.Tests
 
             public TestWorkspace(string workspaceKind = "Test") : base(services, workspaceKind)
             {
-
+                /*
                 foreach (var a in MefHostServices.DefaultAssemblies)
                 {
                     Console.WriteLine(a.FullName);
-                }
+                }*/
             }
 
             public void ChangeDocument(DocumentId id, SourceText text)
@@ -292,6 +292,8 @@ namespace RefactoringEssentials.Tests
             }
 
             var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
+            output = CodeFixTestBase.HomogenizeEol(output);
+            txt = CodeFixTestBase.HomogenizeEol(txt);
             if (output != txt)
             {
                 Console.WriteLine("expected:");
@@ -406,6 +408,8 @@ namespace RefactoringEssentials.Tests
             }
 
             var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
+            txt = CodeFixTestBase.HomogenizeEol(txt);
+            output = CodeFixTestBase.HomogenizeEol(output);
             if (output != txt)
             {
                 Console.WriteLine("expected:");

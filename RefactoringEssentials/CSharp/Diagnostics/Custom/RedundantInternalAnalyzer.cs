@@ -8,7 +8,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     /// <summary>
     /// Finds redundant internal modifiers.
     /// </summary>
@@ -19,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Removes 'internal' modifiers that are not required"),
             GettextCatalog.GetString("'internal' modifier is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantInternalAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
@@ -48,6 +47,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (nodeContext.IsFromGeneratedCode())
                 return false;
             var node = nodeContext.Node as BaseTypeDeclarationSyntax;
+            if (node == null)
+                return false;
             if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.InternalKeyword)))
                 return false;
             if (node.Parent is BaseTypeDeclarationSyntax)

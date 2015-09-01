@@ -8,6 +8,7 @@ string generatedNuGetVersion = "";
 string generatedFullVersion = "";
 string generatedShortVersion = "";
 string generatedRevision = "";
+string releaseNotesLink = "";
 
 void ReadVersions(string inputFileName)
 {
@@ -21,6 +22,13 @@ void ReadVersions(string inputFileName)
 				string[] settingParts = setting.Split(new char[] { '=' }, 2);
 				switch (settingParts[0])
 				{
+					case "release_notes_link":
+						if (settingParts.Length > 1)
+						{
+							releaseNotesLink = settingParts[1];
+						}
+						break;
+
 					case "nuget_version":
 						if (settingParts.Length > 1)
 						{
@@ -46,8 +54,15 @@ void ReadVersions(string inputFileName)
 		{
 		}
 
-		DateTime now = DateTime.Now;
-		generatedRevision = ((int) (((now - (new DateTime(now.Year, 1, 1))).TotalMinutes / 20) + ((now.Year - 2015) * 10000))).ToString();
+		if (File.Exists(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), "__debug.versioning")))
+		{
+			DateTime now = DateTime.Now;
+			generatedRevision = ((int) (((now - (new DateTime(now.Year, 1, 1))).TotalMinutes / 20) + ((now.Year - 2015) * 10000))).ToString();
+		}
+		else
+		{
+			generatedRevision = "0";
+		}
 	}
 }
 #>

@@ -1118,6 +1118,11 @@ namespace RefactoringEssentials
 
             return symbol;
         }
+
+        public static bool IsIEnumerable(this ITypeSymbol typeSymbol)
+        {            
+            return typeSymbol.GetAllInterfacesIncludingThis().Any(x => x.SpecialType == SpecialType.System_Collections_IEnumerable);
+        }
     }
 }
 

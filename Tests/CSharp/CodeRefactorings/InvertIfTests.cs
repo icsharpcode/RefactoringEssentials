@@ -225,5 +225,49 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             );
         }
 
+        /// <summary>
+        /// InvertIfCodeRefactoringProvider: InvalidOperationException on nested "if ... if ... else" #62
+        /// </summary>
+        [Test]
+        public void TestIssue62()
+        {
+            Test<InvertIfCodeRefactoringProvider>(
+                @"class TestClass
+{
+    int TestMethod(int a)
+    {
+        if (a > 0)
+            $if (a < 5)
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+
+        return 0;
+    }
+}",
+            @"class TestClass
+{
+    int TestMethod(int a)
+    {
+        if (a > 0)
+            if (a >= 5)
+            {
+                return 2;
+            }
+            else
+            {
+                return 1;
+            }
+
+        return 0;
+    }
+}"
+            );
+        }
+
     }
 }

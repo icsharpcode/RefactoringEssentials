@@ -1,6 +1,9 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -8,12 +11,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     [NotPortedYet]
     public class RedundantParamsAnalyzer : DiagnosticAnalyzer
     {
-        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantParamsAnalyzerID,
             GettextCatalog.GetString("'params' is ignored on overrides"),
             GettextCatalog.GetString("'params' is always ignored in overrides"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantParamsAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
@@ -23,26 +26,54 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetParamsDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.ParameterList
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        //I think it's a better decision to head in this direction instead of MethodDeclaration.
+        private static bool TryGetParamsDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+
+            var paramList = nodeContext.Node as ParameterListSyntax;
+            var declaration = paramList?.Parent as MethodDeclarationSyntax;
+
+            if (declaration == null)
+                return false;
+
+            if (declaration.Modifiers.Count == 0 || !declaration.Modifiers.Any(SyntaxKind.OverrideKeyword))
+                return false;
+
+            var lastParam = declaration.ParameterList.Parameters.LastOrDefault();
+            SyntaxToken? paramsModifierToken = null;
+            if (lastParam == null)
+                return false;
+
+            foreach (var x in lastParam.Modifiers)
+            {
+                if (x.IsKind(SyntaxKind.ParamsKeyword))
+                {
+                    paramsModifierToken = x;
+                    break;
+                }
+            }
+
+            if (!paramsModifierToken.HasValue)
+                return false;
+
+            diagnostic = Diagnostic.Create(descriptor, paramsModifierToken.Value.GetLocation());
+            return true;
         }
 
         //		class GatherVisitor : GatherVisitorBase<RedundantParamsAnalyzer>
@@ -86,7 +117,4 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         ////			}
         //		}
     }
-
-
 }
-

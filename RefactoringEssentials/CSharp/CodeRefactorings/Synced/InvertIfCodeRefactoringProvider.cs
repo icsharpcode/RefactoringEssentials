@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.CSharp;
+using System;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
@@ -40,7 +41,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         invertIfFixMessage,
                         t2 =>
                         {
-                            var newRoot = root.ReplaceNode((SyntaxNode)complexIfElseStatement, GenerateNewScript(complexIfElseStatement));
+                            var statements = GenerateReplacementStatements(complexIfElseStatement);
+                            var newRoot = statements.Count == 1 ?  root.ReplaceNode(complexIfElseStatement, statements[0]) : root.ReplaceNode(complexIfElseStatement, statements);
                             return Task.FromResult(document.WithSyntaxRoot(newRoot));
                         }
                     )
@@ -129,25 +131,34 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             return falseStatement;
         }
 
-        static IEnumerable<SyntaxNode> GenerateNewScript(IfStatementSyntax ifStatement)
+        static IReadOnlyList<SyntaxNode> GenerateReplacementStatements(IfStatementSyntax ifStatement)
         {
-            yield return SyntaxFactory.IfStatement(
+            if (!(ifStatement.Parent is BlockSyntax)) {
+                return new [] { SyntaxFactory.IfStatement(
+                    CSharpUtil.InvertCondition(ifStatement.Condition),
+                    ifStatement.Else.Statement
+                ).WithElse(ifStatement.Else.WithStatement(ifStatement.Statement)).WithAdditionalAnnotations(Formatter.Annotation) };
+            }
+            var result = new List<StatementSyntax>();
+
+            result.Add(SyntaxFactory.IfStatement(
                 CSharpUtil.InvertCondition(ifStatement.Condition),
                 GenerateNewTrueStatement(ifStatement.Else.Statement)
-            ).WithAdditionalAnnotations(Formatter.Annotation);
+            ).WithAdditionalAnnotations(Formatter.Annotation));
 
             var body = ifStatement.Statement as BlockSyntax;
             if (body != null)
             {
                 foreach (var stmt in body.Statements)
                 {
-                    yield return stmt.WithAdditionalAnnotations(Formatter.Annotation);
+                    result.Add(stmt.WithAdditionalAnnotations(Formatter.Annotation));
                 }
             }
             else
             {
-                yield return ifStatement.Statement.WithAdditionalAnnotations(Formatter.Annotation);
+                result.Add(ifStatement.Statement.WithAdditionalAnnotations(Formatter.Annotation));
             }
+            return result;
         }
 
         static IfStatementSyntax GetIfElseStatement(SyntaxNode root, TextSpan span)
