@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantIfElseBlockTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -17,8 +16,8 @@ class TestClass
 	{
 		if (i > 0)
 			return 1;
-		else
-			return 0;
+		$else
+			return 0;$
 	}
 }";
             var output = @"
@@ -31,7 +30,7 @@ class TestClass
 		return 0;
 	}
 }";
-            Test<RedundantIfElseBlockAnalyzer>(input, 1, output);
+            Analyze<RedundantIfElseBlockAnalyzer>(input, output);
         }
 
         [Test]
