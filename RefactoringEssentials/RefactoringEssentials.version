@@ -1,3 +1,4 @@
+appveyor_version=1.2
 nuget_version=1.2.0
 full_version=1.2.0.0
 release_notes_link=https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-1.2

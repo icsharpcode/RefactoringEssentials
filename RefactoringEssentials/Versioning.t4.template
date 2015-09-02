@@ -4,6 +4,7 @@
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#+
+string generatedAppVeyorVersion = "";
 string generatedNuGetVersion = "";
 string generatedFullVersion = "";
 string generatedShortVersion = "";
@@ -26,6 +27,13 @@ void ReadVersions(string inputFileName)
 						if (settingParts.Length > 1)
 						{
 							releaseNotesLink = settingParts[1];
+						}
+						break;
+
+					case "appveyor_version":
+						if (settingParts.Length > 1)
+						{
+							generatedAppVeyorVersion = settingParts[1];
 						}
 						break;
 
