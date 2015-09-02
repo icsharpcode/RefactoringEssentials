@@ -30,13 +30,6 @@ void ReadVersions(string inputFileName)
 						}
 						break;
 
-					case "appveyor_version":
-						if (settingParts.Length > 1)
-						{
-							generatedAppVeyorVersion = settingParts[1];
-						}
-						break;
-
 					case "nuget_version":
 						if (settingParts.Length > 1)
 						{
@@ -52,6 +45,7 @@ void ReadVersions(string inputFileName)
 							{
 								Version version = new Version(generatedFullVersion);
 								generatedShortVersion = string.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
+								generatedAppVeyorVersion = string.Format("{0}.{1}", version.Major, version.Minor);
 							}
 						}
 						break;
