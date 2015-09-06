@@ -37,7 +37,7 @@ namespace RefactoringEssentials.VB.CodeRefactorings
             return new[] { CodeActionFactory.Create(
                 node.Identifier.Span,
                 DiagnosticSeverity.Info,
-                GettextCatalog.GetString ("Add Nothing check for parameter"),
+                GettextCatalog.GetString ("Add 'Is Nothing' check for parameter"),
                 t2 => {
                     var paramName = node.Identifier.ToString();
 
