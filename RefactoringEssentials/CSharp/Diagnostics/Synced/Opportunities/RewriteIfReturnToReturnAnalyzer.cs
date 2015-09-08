@@ -42,11 +42,19 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var node = nodeContext.Node as IfStatementSyntax;
-            var methodBody = node?.Parent as BlockSyntax;
-            var ifStatementIndex = methodBody?.Statements.IndexOf(node);
+            if (node == null)
+                return false;
 
-            if (node?.Statement is ReturnStatementSyntax &&
-                methodBody?.Statements[ifStatementIndex.Value + 1] is ReturnStatementSyntax)
+            var methodBody = node.Parent as BlockSyntax;
+            if (methodBody == null)
+                return false;
+
+            var ifStatementIndex = methodBody.Statements.IndexOf(node);
+            if (ifStatementIndex == methodBody.Statements.Count - 1)
+                return false;
+
+            if (node.Statement is ReturnStatementSyntax &&
+                methodBody.Statements[ifStatementIndex + 1] is ReturnStatementSyntax)
             {
                 diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
                 return true;

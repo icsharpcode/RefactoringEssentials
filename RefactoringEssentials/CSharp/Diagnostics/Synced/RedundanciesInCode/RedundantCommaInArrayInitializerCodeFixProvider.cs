@@ -41,11 +41,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (node == null)
                 return;
 
-            var commaCount = node.Expressions.Count;
-            if (commaCount<=1)
+            var elementCount = node.Expressions.Count;
+            if (elementCount > node.Expressions.GetSeparators().Count())
                 return;
 
-            var redundantComma = node.Expressions.GetSeparator(commaCount - 1);
+            var redundantComma = node.Expressions.GetSeparator(elementCount - 1);
             var newRoot = root.ReplaceNode(
                 node,
                 node

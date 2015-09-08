@@ -71,7 +71,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                                 var newBlock = innerBlock.WithStatements(innerBlock.Statements.Insert(0, foreachStmt)).WithAdditionalAnnotations(Formatter.Annotation);
                                 var newUsing = usingStatement.WithStatement(newBlock);
-                                var newRoot = root.ReplaceNode(usingStatement, newUsing);
+                                var newRoot = root.ReplaceNode(usingStatement, newUsing.WithTrailingTrivia(usingStatement.GetTrailingTrivia()));
 
                                 return Task.FromResult(document.WithSyntaxRoot(newRoot));
                             }
@@ -89,13 +89,14 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     ForEachStatementSyntax foreachStmt = BuildForeach(iterateOver);
 
                     SyntaxNode newRoot;
+                    var ancestor = node.GetAncestor<StatementSyntax>();
                     if (replaceNode)
                     {
-                        newRoot = root.ReplaceNode(node.GetAncestor<StatementSyntax>(), new[] { foreachStmt });
+                        newRoot = root.ReplaceNode(ancestor, new[] { foreachStmt.WithTrailingTrivia(ancestor.GetTrailingTrivia()) });
                     }
                     else
                     {
-                        newRoot = root.InsertNodesAfter(node.GetAncestor<StatementSyntax>(), new[] { foreachStmt });
+                        newRoot = root.InsertNodesAfter(ancestor, new[] { foreachStmt.WithTrailingTrivia(ancestor.GetTrailingTrivia()) });
                     }
                     return Task.FromResult(document.WithSyntaxRoot(newRoot));
                 }

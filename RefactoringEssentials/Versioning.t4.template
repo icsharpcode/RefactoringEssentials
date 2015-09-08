@@ -4,6 +4,7 @@
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#+
+string generatedAppVeyorVersion = "";
 string generatedNuGetVersion = "";
 string generatedFullVersion = "";
 string generatedShortVersion = "";
@@ -44,6 +45,7 @@ void ReadVersions(string inputFileName)
 							{
 								Version version = new Version(generatedFullVersion);
 								generatedShortVersion = string.Format("{0}.{1}.{2}", version.Major, version.Minor, version.Build);
+								generatedAppVeyorVersion = string.Format("{0}.{1}", version.Major, version.Minor);
 							}
 						}
 						break;

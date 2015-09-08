@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Text;
 
-namespace RefactoringEssentials.CSharp.CodeRefactorings
+namespace RefactoringEssentials
 {
     /// <summary>
     /// A specialized code action creates a code action assoziated with one special type of ast nodes.
@@ -53,6 +53,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (model.IsFromGeneratedCode(cancellationToken))
                 return;
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+			if (!root.Span.Contains (span))
+                return;
             var node = root.FindNode(span, false, true);
             var foundNode = (T)node.AncestorsAndSelf().FirstOrDefault(n => n is T);
             if (foundNode == null)

@@ -101,7 +101,7 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertHasFlagsToBitwiseFlagComparisonCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider.cs" />
-    <Compile Include="CSharp\CodeRefactorings\SpecializedCodeRefactoringProvider.cs" />
+    <Compile Include="Common\SpecializedCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\UseAsAndNullCheckCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\UseSystemStringEmptyCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\UseSystemEnvironmentNewLineCodeRefactoringProvider.cs" />
@@ -545,7 +545,12 @@
     <Compile Include="Util\TokenComparer.cs" />
     <Compile Include="Util\NamespaceDeclarationSyntaxExtensions.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\CheckIfParameterIsNothingCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ComputeConstantValueCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertDecToHexCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertHexToDecCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertSelectCaseToIfCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertToCustomEventCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CheckDictionaryKeyValueCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider.cs" />
@@ -554,6 +559,7 @@
     <Compile Include="VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\InvertIfCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticIDs.cs" />

@@ -415,7 +415,12 @@
     <Compile Include="Common\DiagnosticTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorTests.cs" />
+    <Compile Include="VB\CodeRefactorings\CheckIfParameterIsNothingTests.cs" />
     <Compile Include="VB\CodeRefactorings\ComputeConstantValueTests.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertDecToHexTests.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertHexToDecTests.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertIfStatementToSelectCaseStatementTests.cs" />
+    <Compile Include="VB\CodeRefactorings\ConvertSelectCaseToIfTests.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertToCustomEventTests.cs" />
     <Compile Include="VB\CodeRefactorings\CheckDictionaryKeyValueTests.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileTests.cs" />
@@ -424,6 +429,7 @@
     <Compile Include="VB\CodeRefactorings\CreateChangedEventTests.cs" />
     <Compile Include="VB\CodeRefactorings\InvertIfTests.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastTests.cs" />
+    <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\VBCodeRefactoringTestBase.cs" />
     <Compile Include="VB\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />

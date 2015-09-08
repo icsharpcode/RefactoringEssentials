@@ -47,5 +47,60 @@ namespace RefactoringEssentials.Util
                 return false;
             return mr.Expression is MyClassExpressionSyntax;
         }
+
+		public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
+		{
+			if (node == null) {
+				return false;
+			}
+
+			var vbKind = node.Kind();
+			return vbKind == kind1 || vbKind == kind2;
+		}
+
+		public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3)
+		{
+			if (node == null) {
+				return false;
+			}
+
+			var vbKind = node.Kind();
+			return vbKind == kind1 || vbKind == kind2 || vbKind == kind3;
+		}
+
+		public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3, SyntaxKind kind4)
+		{
+			if (node == null) {
+				return false;
+			}
+
+			var vbKind = node.Kind();
+			return vbKind == kind1 || vbKind == kind2 || vbKind == kind3 || vbKind == kind4;
+		}
+
+		public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3, SyntaxKind kind4, SyntaxKind kind5)
+		{
+			if (node == null) {
+				return false;
+			}
+
+			var vbKind = node.Kind();
+			return vbKind == kind1 || vbKind == kind2 || vbKind == kind3 || vbKind == kind4 || vbKind == kind5;
+		}
+
+		public static MethodBlockBaseSyntax WithStatements(this MethodBlockBaseSyntax syntax, SyntaxList<StatementSyntax> statements)
+        {
+            if (syntax == null)
+                throw new System.ArgumentNullException(nameof(syntax));
+            if (syntax is MethodBlockSyntax)
+                return ((MethodBlockSyntax)syntax).WithStatements(statements);
+            if (syntax is ConstructorBlockSyntax)
+                return ((ConstructorBlockSyntax)syntax).WithStatements(statements);
+            if (syntax is AccessorBlockSyntax)
+                return ((AccessorBlockSyntax)syntax).WithStatements(statements);
+            if (syntax is OperatorBlockSyntax)
+                return ((OperatorBlockSyntax)syntax).WithStatements(statements);
+            throw new System.NotSupportedException(syntax.GetType() + " is not supported!");
+        }
     }
 }
