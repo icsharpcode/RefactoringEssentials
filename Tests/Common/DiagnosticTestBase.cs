@@ -7,10 +7,10 @@ using Microsoft.CodeAnalysis;
 using System.Threading;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.Host.Mef;
 using System.Text;
 using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.CodeActions;
+using RefactoringEssentials.Tests.Common;
 
 namespace RefactoringEssentials.Tests
 {
@@ -292,8 +292,8 @@ namespace RefactoringEssentials.Tests
             }
 
             var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
-            output = CodeFixTestBase.HomogenizeEol(output);
-            txt = CodeFixTestBase.HomogenizeEol(txt);
+            output = Utils.HomogenizeEol(output);
+            txt =  Utils.HomogenizeEol(txt);
             if (output != txt)
             {
                 Console.WriteLine("expected:");
@@ -408,8 +408,8 @@ namespace RefactoringEssentials.Tests
             }
 
             var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
-            txt = CodeFixTestBase.HomogenizeEol(txt);
-            output = CodeFixTestBase.HomogenizeEol(output);
+            txt = Utils.HomogenizeEol(txt);
+            output = Utils.HomogenizeEol(output);
             if (output != txt)
             {
                 Console.WriteLine("expected:");
