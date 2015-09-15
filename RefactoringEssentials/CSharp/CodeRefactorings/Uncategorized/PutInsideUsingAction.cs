@@ -28,7 +28,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (symbol == null)
                 yield break;
 
-            if (!IsDisposable(semanticModel, symbol.Type))
+            if (!symbol.Type.ImplementsSpecialTypeInterface(SpecialType.System_IDisposable))
                 yield break;
 
             var containingBlock = node.GetAncestor<BlockSyntax>();
@@ -184,21 +184,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
 
             return true;
-        }
-
-        private static bool IsDisposable(SemanticModel semanticModel, ITypeSymbol type)
-        {
-            var disposable = semanticModel.Compilation.GetSpecialType(SpecialType.System_IDisposable);
-
-            if (type.GetAllInterfacesIncludingThis().Contains(disposable))
-                return true;
-
-            var parameterType = type as ITypeParameterSymbol;
-
-            if (parameterType != null && parameterType.ConstraintTypes.Any(x => IsDisposable(semanticModel, x)))
-                return true;
-
-            return false;
         }
     }
 }
