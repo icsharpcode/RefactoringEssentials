@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Common\CodeFixTestBase.cs" />
     <Compile Include="Common\CodeRefactoringTestBase.cs" />
+    <Compile Include="Common\Utils.cs" />
     <Compile Include="CSharp\CodeFixes\CSharpCodeFixTestBase.cs" />
     <Compile Include="CSharp\CodeFixes\CS0108UseNewKeywordIfHidingIntendedTests.cs" />
     <Compile Include="CSharp\CodeFixes\CS0152DuplicateCaseLabelValueTests.cs" />
