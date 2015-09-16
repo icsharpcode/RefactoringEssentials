@@ -56,6 +56,96 @@ public class Test
         }
 
         [Test]
+        public void TestAddRethrowToExistingDocumentation1()
+        {
+            Test<AddExceptionDescriptionCodeRefactoringProvider>(@"using System;
+public class Test
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""test""></param>
+    public void Bar(Test test)
+    {
+        try
+        {
+            // Something throwing exception
+        }
+        catch (ArgumentNullException)
+        {
+            $throw;
+        }
+    }
+}
+", @"using System;
+public class Test
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""test""></param>
+    /// <exception cref=""T:System.ArgumentNullException""></exception>
+    public void Bar(Test test)
+    {
+        try
+        {
+            // Something throwing exception
+        }
+        catch (ArgumentNullException)
+        {
+            throw;
+        }
+    }
+}
+");
+        }
+
+        [Test]
+        public void TestAddRethrowToExistingDocumentation2()
+        {
+            Test<AddExceptionDescriptionCodeRefactoringProvider>(@"using System;
+public class Test
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""test""></param>
+    public void Bar(Test test)
+    {
+        try
+        {
+            // Something throwing exception
+        }
+        catch (ArgumentNullException ex)
+        {
+            $throw ex;
+        }
+    }
+}
+", @"using System;
+public class Test
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name=""test""></param>
+    /// <exception cref=""T:System.ArgumentNullException""></exception>
+    public void Bar(Test test)
+    {
+        try
+        {
+            // Something throwing exception
+        }
+        catch (ArgumentNullException ex)
+        {
+            throw ex;
+        }
+    }
+}
+");
+        }
+
+        [Test]
         public void TestAlreadyAdded()
         {
             TestWrongContext<AddExceptionDescriptionCodeRefactoringProvider>(@"

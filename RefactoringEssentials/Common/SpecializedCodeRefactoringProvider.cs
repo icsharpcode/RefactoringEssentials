@@ -53,6 +53,8 @@ namespace RefactoringEssentials
             if (model.IsFromGeneratedCode(cancellationToken))
                 return;
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+			if (!root.Span.Contains (span))
+                return;
             var node = root.FindNode(span, false, true);
             var foundNode = (T)node.AncestorsAndSelf().FirstOrDefault(n => n is T);
             if (foundNode == null)

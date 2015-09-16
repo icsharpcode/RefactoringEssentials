@@ -9,7 +9,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantDelegateCreationAnalyzer : DiagnosticAnalyzer
     {
-        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+        static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantDelegateCreationAnalyzerID,
             GettextCatalog.GetString("Explicit delegate creation expression is redundant"),
             GettextCatalog.GetString("Redundant explicit delegate declaration"),
@@ -33,19 +33,19 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         nodeContext.ReportDiagnostic(diagnostic);
                     }
                 },
-                 SyntaxKind.ExpressionStatement
+                SyntaxKind.AddAssignmentExpression,
+                SyntaxKind.SubtractAssignmentExpression
             );
         }
 
-        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
 
             var semanticModel = nodeContext.SemanticModel;
-            var expressionStatement = nodeContext.Node as ExpressionStatementSyntax;
-            var addOrSubstractExpression = expressionStatement?.Expression as AssignmentExpressionSyntax;
+            var addOrSubstractExpression = nodeContext.Node as AssignmentExpressionSyntax;
             var rightMember = addOrSubstractExpression?.Right as ObjectCreationExpressionSyntax;
 
             if (rightMember == null || rightMember.ArgumentList.Arguments.Count != 1)
