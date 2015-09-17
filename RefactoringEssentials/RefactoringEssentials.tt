@@ -4,7 +4,7 @@
 <#@ include file="Versioning.t4.template" #>
 <# ReadVersions(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), "RefactoringEssentials.version")); #>
 <package>
-	<metadata>
+	<metadata minClientVersion="2.8">
 		<id>RefactoringEssentials</id>
 		<version><#= generatedNuGetVersion #></version>
 		<title>Refactoring Essentials</title>
@@ -18,6 +18,7 @@
 		<releaseNotes>First release for Visual Studio 2015 RTM, some bug fixes and new VB refactorings.</releaseNotes>
 		<copyright>Copyright (c) 2014-2015 AlphaSierraPapa</copyright>
 		<tags>VS 2015 Roslyn Analyzer Refactoring</tags>
+		<developmentDependency>true</developmentDependency>
 	</metadata>
 	<files>
 		<file src="RefactoringEssentials.dll" target="analyzers\dotnet\" />
