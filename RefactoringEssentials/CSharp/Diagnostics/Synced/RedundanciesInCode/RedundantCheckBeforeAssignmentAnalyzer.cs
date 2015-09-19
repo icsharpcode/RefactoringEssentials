@@ -7,86 +7,134 @@ using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class RedundantCheckBeforeAssignmentAnalyzer : DiagnosticAnalyzer
-    {
-        private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
-            CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID,
-            GettextCatalog.GetString("Check for inequality before assignment is redundant if (x != value) x = value;"),
-            GettextCatalog.GetString("Redundant condition check before assignment"),
-            DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
-            isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID),
-            customTags: DiagnosticCustomTags.Unnecessary
-        );
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
+	public class RedundantCheckBeforeAssignmentAnalyzer : DiagnosticAnalyzer
+	{
+		private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
+			CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID,
+			GettextCatalog.GetString("Check for inequality before assignment is redundant if (x != value) x = value;"),
+			GettextCatalog.GetString("Redundant condition check before assignment"),
+			DiagnosticAnalyzerCategories.RedundanciesInCode,
+			DiagnosticSeverity.Info,
+			isEnabledByDefault: true,
+			helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID),
+			customTags: DiagnosticCustomTags.Unnecessary
+		);
 
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
+		public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
 
-        public override void Initialize(AnalysisContext context)
-        {
-            context.RegisterSyntaxNodeAction(
-                (nodeContext) =>
-                {
-                    Diagnostic diagnostic;
-                    if (TryGetDiagnostic(nodeContext, out diagnostic))
-                    {
-                        nodeContext.ReportDiagnostic(diagnostic);
-                    }
-                },
-                SyntaxKind.IfStatement
-            );
-        }
+		public override void Initialize(AnalysisContext context)
+		{
+			context.RegisterSyntaxNodeAction(
+				(nodeContext) => {
+					Diagnostic diagnostic;
+					if (TryGetDiagnostic(nodeContext, out diagnostic))
+					{
+						nodeContext.ReportDiagnostic(diagnostic);
+					}
+				},
+				SyntaxKind.IfStatement
+			);
+		}
 
-        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
-        {
-            diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
+		static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+		{
+			diagnostic = default(Diagnostic);
+			if (nodeContext.IsFromGeneratedCode())
+				return false;
 
-            var node = nodeContext.Node as IfStatementSyntax;
-            var check = node?.Condition as BinaryExpressionSyntax;
-            if (check == null)
-                return false;
-            var block = node.Statement as BlockSyntax;
-            if (block?.Statements.Count > 0)
-            {
-                var statement = block.Statements.ElementAt(0) as ExpressionStatementSyntax;
-                var assignmentExpression = statement?.Expression as AssignmentExpressionSyntax;
-                if (assignmentExpression == null ||
-                    !(check.Left is IdentifierNameSyntax ||
-                    !(assignmentExpression.Left is IdentifierNameSyntax)))
-                    return false;
+			var ifStatement = nodeContext.Node as IfStatementSyntax;
 
-                var checkLeftSymbol = nodeContext.SemanticModel.GetSymbolInfo(check.Left).Symbol;
-                var assignmentLeftSymbol = nodeContext.SemanticModel.GetSymbolInfo(assignmentExpression.Left).Symbol;
-                
-                if (checkLeftSymbol == null||
-                    assignmentLeftSymbol == null||
-                    !checkLeftSymbol.Name.Equals(assignmentLeftSymbol.Name))
-                    return false;
-                diagnostic = Diagnostic.Create(descriptor, check.GetLocation());
-                return true;
-            }
-            else
-            {
-                var statement = node.Statement as ExpressionStatementSyntax;
-                var expression = statement;
-                var assignment = expression?.Expression as AssignmentExpressionSyntax;
-                if (assignment == null)
-                    return false;
+			if (ifStatement.Else != null)
+			{
+				var elseStmt = ifStatement.Else?.Statement;
+				var block = elseStmt as BlockSyntax;
+				if (block != null)
+				{
+					if (block.Statements.Count > 0)
+						return false;
+				}
+				else
+				{
+					if (!(elseStmt is EmptyStatementSyntax))
+						return false;
+				}
+			}
 
-                var checkLeftSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(check.Left);
-                var assignmentLeftSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(assignment.Left);
-                if ((checkLeftSymbol == null) || (assignmentLeftSymbol == null))
-                    return false;
+			var condition = ifStatement?.Condition as BinaryExpressionSyntax;
+			if (condition == null || !condition.OperatorToken.IsKind(SyntaxKind.ExclamationEqualsToken))
+				return false;
+			AssignmentExpressionSyntax assignment;
+			if (ifStatement.Statement is BlockSyntax)
+			{
+				var block = (BlockSyntax)ifStatement.Statement;
+				if (block.Statements.Count != 1)
+					return false;
+				var statement = (block.Statements[0] as ExpressionStatementSyntax)?.Expression;
+				assignment = statement as AssignmentExpressionSyntax;
+			}
+			else
+			{
+				var statement = (ifStatement.Statement as ExpressionStatementSyntax)?.Expression;
+				assignment = statement as AssignmentExpressionSyntax;
+			}
+			if (!CheckConditionAndAssignment(nodeContext, assignment, condition))
+				return false;
+			diagnostic = Diagnostic.Create(descriptor, condition.GetLocation());
+			return true;
+		}
 
-                if (!checkLeftSymbol.Name.Equals(assignmentLeftSymbol.Name))
-                    return false;
+		static bool CheckConditionAndAssignment(SyntaxNodeAnalysisContext nodeContext, AssignmentExpressionSyntax assignment, BinaryExpressionSyntax condition)
+		{
+			if (assignment == null)
+				return false;
 
-                diagnostic = Diagnostic.Create(descriptor, check.GetLocation());
-                return true;
-            }
-        }
-    }
+			var assignmentTarget = nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol;
+			if (assignmentTarget == null)
+				return false;
+
+			var condLeftSymbol = nodeContext.SemanticModel.GetSymbolInfo(condition.Left).Symbol;
+			var condRightSymbol = nodeContext.SemanticModel.GetSymbolInfo(condition.Right).Symbol;
+
+			var assignmentValue = nodeContext.SemanticModel.GetSymbolInfo(assignment.Right).Symbol;
+			var constant = nodeContext.SemanticModel.GetConstantValue(assignment.Right);
+
+			bool constantAssignment = assignmentValue == null && constant.HasValue;
+
+			if (assignmentTarget.Equals(condLeftSymbol))
+			{
+				if (constantAssignment)
+				{
+					var condRightValue = nodeContext.SemanticModel.GetConstantValue(condition.Right);
+					if (condRightValue.HasValue)
+						return condRightValue.Value == constant.Value;
+				}
+				else
+				{
+					if (!assignmentValue.Equals(condRightSymbol))
+						return false;
+				}
+				return true;
+			}
+
+			// flipped operands
+			if (assignmentTarget.Equals(condRightSymbol))
+			{
+				if (constantAssignment)
+				{
+					var condLeftValue = nodeContext.SemanticModel.GetConstantValue(condition.Left);
+					if (condLeftValue.HasValue)
+						return condLeftValue.Value == constant.Value;
+				}
+				else
+				{
+					if (!assignmentValue.Equals(condLeftSymbol))
+						return false;
+				}
+				return true;
+			}
+
+			return false;
+		}
+	}
 }
