@@ -238,6 +238,9 @@ namespace RefactoringEssentials.Tests
             var result = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
             diagnostics.AddRange(result);
 
+            diagnostics.Sort((d1, d2) => d1.Location.SourceSpan.Start.CompareTo(d2.Location.SourceSpan.Start));
+            expectedDiagnosics.Sort((d1, d2) => d1.Start.CompareTo(d2.Start));
+
             if (expectedDiagnosics.Count != diagnostics.Count)
             {
                 foreach (var diag in diagnostics)
