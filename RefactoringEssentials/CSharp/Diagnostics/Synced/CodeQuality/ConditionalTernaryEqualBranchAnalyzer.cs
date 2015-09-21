@@ -40,7 +40,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (nodeContext.IsFromGeneratedCode())
                 return false;
             var node = nodeContext.Node as ConditionalExpressionSyntax;
-            if (!node.WhenTrue.IsEquivalentTo(node.WhenFalse, true))
+            if (!node.WhenTrue.IsEquivalentTo(node.WhenFalse, false))
                 return false;
             diagnostic = Diagnostic.Create(
                 descriptor,

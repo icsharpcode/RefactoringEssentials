@@ -58,6 +58,20 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Test]
+        public void TestNotEqualBranchesWithLambdas()
+        {
+            Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
+{
+	void Bar (string str)
+	{
+		List<string> someList;
+		string c = str != null ? someList.FirstOrDefault(s => { return s == s.ToLower(); } : someList.FirstOrDefault(s => { return s == s.ToUpper(); };
+	}
+}");
+
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
