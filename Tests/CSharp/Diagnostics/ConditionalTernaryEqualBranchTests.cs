@@ -65,7 +65,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 	void Bar (string str)
 	{
 		List<string> someList;
-		string c = str != null ? someList.FirstOrDefault(s => { return s == s.ToLower(); } : someList.FirstOrDefault(s => { return s == s.ToUpper(); };
+		string c = str != null ? someList.FirstOrDefault(s => { return s == s.ToLower(); }) : someList.FirstOrDefault(s => { return s == s.ToUpper(); });
 	}
 }");
 
