@@ -47,9 +47,6 @@ namespace RefactoringEssentials.CSharp.CodeFixes
 
             var message = diagnostic.GetMessage();
 
-            // Test
-            message = message.Replace('\'', '"');
-
             var idx2 = message.LastIndexOf('\'');
             if (idx2 < 0)
             {
