@@ -872,7 +872,35 @@ namespace RefactoringEssentials
             return node.WithLeadingTrivia(leadingTrivia).WithTrailingTrivia(trailingTrivia);
         }
 
-        public static TNode ConvertToSingleLine<TNode>(this TNode node)
+		public static T WithOrderedTriviaFromSubTree<T>(
+			this T node,
+			SyntaxNode subTree) where T : SyntaxNode
+		{
+			if (!subTree.Contains(node))
+				throw new InvalidOperationException(nameof(node) + " must be a descendant of " + nameof(subTree));
+
+			var location = node.FullSpan;
+			var leadingTrivia = new List<SyntaxTrivia>();
+			var trailingTrivia = new List<SyntaxTrivia>();
+
+			bool wasWSOrEOL = false;
+
+			foreach (var trivia in subTree.DescendantTrivia())
+			{
+				// ignore superfluous eol
+				if (wasWSOrEOL && trivia.IsWhitespaceOrEndOfLine())
+					continue;
+				if (trivia.Span.End <= location.Start)
+					leadingTrivia.Add(trivia);
+				else if (trivia.Span.Start >= location.End)
+					trailingTrivia.Add(trivia);
+				wasWSOrEOL = trivia.IsWhitespaceOrEndOfLine();
+			}
+
+			return node.With(leadingTrivia.Concat(node.GetLeadingTrivia()), node.GetTrailingTrivia().Concat(trailingTrivia)); 
+		}
+
+		public static TNode ConvertToSingleLine<TNode>(this TNode node)
             where TNode : SyntaxNode
         {
             if (node == null)

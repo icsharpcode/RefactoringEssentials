@@ -7,6 +7,19 @@ using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
+	/// <summary>
+	/// The analyzer checks patterns like the following:
+	/// <code>
+	/// if (var != value)
+	///		var = value;
+	/// </code>
+	/// In addition to that, it works with if-statements using block-syntax (containing a single statement),
+	/// and empty else-blocks or empty-statement else-blocks.
+	/// 
+	/// The Fix removes the redundant check. This works on locals, parameters, fields and properties.
+	/// If a property setter does something expensive, it is recommended to do such a check *inside*
+	/// the property setter, *not* in the calling code. Hence, the check is redundant anyway.
+	/// </summary>
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
 	public class RedundantCheckBeforeAssignmentAnalyzer : DiagnosticAnalyzer
 	{
