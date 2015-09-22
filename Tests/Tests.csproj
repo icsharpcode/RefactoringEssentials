@@ -294,7 +294,6 @@
     <Compile Include="CSharp\Diagnostics\RedundantObjectCreationArgumentListTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantObjectOrCollectionInitializerTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantOverriddenMemberTests.cs" />
-    <Compile Include="CSharp\Diagnostics\RedundantParamsTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantPrivateInspectorTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantStringToCharArrayCallTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantTernaryExpressionTests.cs" />

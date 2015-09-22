@@ -231,7 +231,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantOverriddenMemberAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantParamsAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\SealedMemberInSealedClassAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedTypeParameterAnalyzer.cs" />
@@ -354,7 +353,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantOverriddenMemberCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantParamsCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\SealedMemberInSealedClassCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />

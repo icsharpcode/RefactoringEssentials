@@ -152,7 +152,7 @@ namespace RefactoringEssentials.VB.Diagnostics
         public const string UseIsOperatorAnalyzerID = "REVB0148";
         public const string CallToObjectEqualsViaBaseAnalyzerID = "REVB0149";
         public const string RedundantToStringCallForValueTypesAnalyzerID = "REVB0150";
-        public const string RedundantParamsAnalyzerID = "REVB0151";
+//        public const string RedundantParamsAnalyzerID = "REVB0151";
         public const string ConvertIfStatementToNullCoalescingExpressionAnalyzerID = "REVB0152";
         public const string ConvertToConstantAnalyzerID = "REVB0153";
         public const string UnusedParameterAnalyzerID = "REVB0154";

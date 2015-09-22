@@ -73,7 +73,6 @@
 * RedundantLogicalConditionalExpressionOperandAnalyzer
 * RedundantObjectOrCollectionInitializerAnalyzer
 * RedundantOverriddenMemberAnalyzer
-* RedundantParamsAnalyzer
 * RedundantToStringCallAnalyzer
 * RedundantUnsafeContextAnalyzer
 * ReferenceEqualsWithValueTypeAnalyzer

@@ -152,7 +152,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public const string UseIsOperatorAnalyzerID = "RECS0148";
         public const string CallToObjectEqualsViaBaseAnalyzerID = "RECS0149";
         public const string RedundantToStringCallForValueTypesAnalyzerID = "RECS0150";
-        public const string RedundantParamsAnalyzerID = "RECS0151";
+//        public const string RedundantParamsAnalyzerID = "RECS0151";
         public const string ConvertIfStatementToNullCoalescingExpressionAnalyzerID = "RECS0152";
         public const string ConvertToConstantAnalyzerID = "RECS0153";
         public const string UnusedParameterAnalyzerID = "RECS0154";
