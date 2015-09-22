@@ -161,7 +161,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public const string ThreadStaticAtInstanceFieldAnalyzerID = "RECS0157";
         public const string RedundantUnsafeContextAnalyzerID = "RECS0158";
         public const string RedundantOverriddenMemberAnalyzerID = "RECS0159";
-        public const string RewriteIfReturnToReturnAnalyzerID = "RECS0160";
+//        public const string RewriteIfReturnToReturnAnalyzerID = "RECS0160";
         public const string ConvertToAutoPropertyAnalyzerID = "RECS0161";
         public const string NotResolvedInTextAnalyzer_SwapID = "RECS0162";
         public const string NameOfSuggestionAnalyzerID = "RECS0163";

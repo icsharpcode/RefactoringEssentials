@@ -221,7 +221,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertToStaticTypeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\RewriteIfReturnToReturnAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyConstructorAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyDestructorAnalyzer.cs" />
@@ -369,7 +368,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertToStaticTypeCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\RewriteIfReturnToReturnCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CanBeReplacedWithTryCastAndCheckForNullCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullCodeFixProvider.cs" />

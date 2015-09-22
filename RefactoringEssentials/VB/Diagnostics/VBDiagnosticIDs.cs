@@ -161,7 +161,7 @@ namespace RefactoringEssentials.VB.Diagnostics
         public const string ThreadStaticAtInstanceFieldAnalyzerID = "REVB0157";
         public const string RedundantUnsafeContextAnalyzerID = "REVB0158";
         public const string RedundantOverriddenMemberAnalyzerID = "REVB0159";
-        public const string RewriteIfReturnToReturnAnalyzerID = "REVB0160";
+//        public const string RewriteIfReturnToReturnAnalyzerID = "REVB0160";
         public const string ConvertToAutoPropertyAnalyzerID = "REVB0161";
         public const string NotResolvedInTextAnalyzer_SwapID = "REVB0162";
         public const string NameOfSuggestionAnalyzerID = "REVB0163";
