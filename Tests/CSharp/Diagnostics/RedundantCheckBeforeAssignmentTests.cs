@@ -63,7 +63,7 @@ class RedundantCheckBeforeAssignmentTests
         }
         set
         {
-                test = value;
+            test = value;
         }
     }
 }
@@ -106,7 +106,7 @@ class RedundantCheckBeforeAssignmentTests
         }
         set
         {
-                test = value;
+            test = value;
         }
     }
 }
