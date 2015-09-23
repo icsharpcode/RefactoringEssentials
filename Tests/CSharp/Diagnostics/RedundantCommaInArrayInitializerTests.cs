@@ -29,6 +29,19 @@ class TestClass
         }
 
         [Test]
+        public void TestArrayInitializerNoRedundance()
+        {
+            Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
+class TestClass
+{
+	void TestMethod()
+	{
+		var a = new int[] { 1, 2 };
+	}
+}");
+        }
+
+        [Test]
         public void TestArrayInitializerDescription()
         {
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
@@ -76,7 +89,7 @@ class TestClass
 {
 	void TestMethod ()
 	{            
-#pragma warning disable " + CSharpDiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID +@"
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantCommaInArrayInitializerAnalyzerID + @"
 		var a = new TestClass { 1, };
 	}
 }";
