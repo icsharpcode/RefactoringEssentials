@@ -53,7 +53,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     replace &= arg != node.Parent;
 
                 }
-                newRoot = newRoot.ReplaceNodes(args, (arg, arg2) => SyntaxFactory.Argument(arg.Expression).WithAdditionalAnnotations(Formatter.Annotation));
+                newRoot = newRoot.ReplaceNodes(args, (arg, arg2) => SyntaxFactory.Argument(arg.Expression).WithTriviaFrom(arg).WithAdditionalAnnotations(Formatter.Annotation));
 
                 context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, CodeActionMessage, document.WithSyntaxRoot(newRoot)), diagnostic);
                 return;
@@ -74,7 +74,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     replace &= arg != node.Parent;
 
                 }
-                newRoot = newRoot.ReplaceNodes(args, (arg, arg2) => SyntaxFactory.AttributeArgument(arg.Expression).WithAdditionalAnnotations(Formatter.Annotation));
+                newRoot = newRoot.ReplaceNodes(args, (arg, arg2) => SyntaxFactory.AttributeArgument(arg.Expression).WithTriviaFrom(arg).WithAdditionalAnnotations(Formatter.Annotation));
 
                 context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, CodeActionMessage, document.WithSyntaxRoot(newRoot)), diagnostic);
                 return;
