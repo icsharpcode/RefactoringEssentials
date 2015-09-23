@@ -16,14 +16,15 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 		if (t == $null$) {
 		}
 	}
-}", @"public class Bar
+}"
+/*, @"public class Bar
 {
 	public void Foo<T> (T t)
 	{
 		if (t == default(T)) {
 		}
 	}
-}");
+}"*/);
         }
 
         [Test]
@@ -37,7 +38,8 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 		if (t == $null$) {
 		}
 	}
-}", @"public class Bar<T>
+}"
+/*, @"public class Bar<T>
 {
 	T t;
 	public void Foo ()
@@ -45,7 +47,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 		if (t == default(T)) {
 		}
 	}
-}");
+}"*/);
         }
 
         [Test]
