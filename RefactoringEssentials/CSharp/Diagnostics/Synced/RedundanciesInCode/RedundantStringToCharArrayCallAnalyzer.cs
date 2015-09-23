@@ -63,6 +63,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (methodCalled == null)
                 throw new ArgumentNullException();
             var expression = methodCalled.Expression as MemberAccessExpressionSyntax;
+            if (expression == null)
+                return false;
             var symbol = nodeContext.SemanticModel.GetSymbolInfo(expression).Symbol;
             return symbol.ContainingType.SpecialType == SpecialType.System_String && symbol.Name == "ToCharArray";
         }
