@@ -40,7 +40,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             context.RegisterCodeFix(CodeActionFactory.Create(objectCreation.Span, diagnostic.Severity, "Redundant explicit nullable type creation", token =>
             {
-                var newRoot = root.ReplaceNode(objectCreation, argumentListArgument.Expression.WithAdditionalAnnotations(Formatter.Annotation));
+                var newRoot = root.ReplaceNode(objectCreation,
+                    argumentListArgument.Expression.WithLeadingTrivia(objectCreation.GetLeadingTrivia()).WithAdditionalAnnotations(Formatter.Annotation));
 
                 return Task.FromResult(document.WithSyntaxRoot(newRoot));
             }), diagnostic);
