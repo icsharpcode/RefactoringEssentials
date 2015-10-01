@@ -126,7 +126,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 {
                     foreach (var member in node.Members)
                     {
-                        result.Add(GetNameToken(member).ValueText);
+                        var nameTokenText = GetNameToken(member).ValueText;
+                        if (nameTokenText != null)
+                            result.Add(nameTokenText);
                     }
                 }
                 return result;
