@@ -212,7 +212,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertClosureToMethodGroupAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToConditionalTernaryExpressionAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormAnalyzer.cs" />
@@ -357,7 +356,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToConditionalTernaryExpressionCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormCodeFixProvider.cs" />

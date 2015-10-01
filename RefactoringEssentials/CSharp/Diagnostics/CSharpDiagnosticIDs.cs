@@ -12,7 +12,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public const string SealedMemberInSealedClassAnalyzerID = "RECS0008";
         public const string NonPublicMethodWithTestAttributeAnalyzerID = "RECS0009";
         public const string ConvertConditionalTernaryToNullCoalescingAnalyzerID = "RECS0010";
-        public const string ConvertIfStatementToConditionalTernaryExpressionAnalyzerID = "RECS0011";
+        //public const string ConvertIfStatementToConditionalTernaryExpressionAnalyzerID = "RECS0011";
         public const string ConvertIfStatementToSwitchStatementAnalyzerID = "RECS0012";
         public const string ConvertNullableToShortFormAnalyzerID = "RECS0013";
         public const string ConvertToStaticTypeAnalyzerID = "RECS0014";
