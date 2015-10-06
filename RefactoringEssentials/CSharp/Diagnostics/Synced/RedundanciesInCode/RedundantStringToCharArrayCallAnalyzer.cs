@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -53,8 +54,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var accessExpression = (MemberAccessExpressionSyntax)node.Expression;
+            if (accessExpression == null)
+                return false;
 
-            diagnostic = Diagnostic.Create(descriptor, accessExpression.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, accessExpression.Name.GetLocation(),
+                (IEnumerable<Location>) new[] { node.ArgumentList.GetLocation() });
             return true;
         }
 
@@ -62,10 +66,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             if (methodCalled == null)
                 throw new ArgumentNullException();
+            if ((methodCalled.ArgumentList != null) && (methodCalled.ArgumentList.Arguments.Count > 0))
+                return false;
             var expression = methodCalled.Expression as MemberAccessExpressionSyntax;
             if (expression == null)
                 return false;
             var symbol = nodeContext.SemanticModel.GetSymbolInfo(expression).Symbol;
+            if (symbol == null)
+                return false;
             return symbol.ContainingType.SpecialType == SpecialType.System_String && symbol.Name == "ToCharArray";
         }
     }

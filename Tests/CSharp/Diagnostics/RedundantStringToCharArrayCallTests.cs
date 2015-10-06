@@ -15,7 +15,7 @@ class FooBar
 {
 	public void Test (string str)
 	{
-		foreach (char c in $str.ToCharArray$ ()) {
+		foreach (char c in str.$ToCharArray ()$) {
 			Console.WriteLine (c);
 		}
 	}
@@ -35,6 +35,23 @@ class FooBar
         }
 
         [Test]
+        public void TestForeachEachWichParametrizedCharToArray()
+        {
+            Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
+using System;
+class FooBar
+{
+	public void Test (string str)
+	{
+		foreach (char c in str.ToCharArray (1, 5)) {
+			Console.WriteLine (c);
+		}
+	}
+}
+");
+        }
+
+        [Test]
         public void TestVarForeachCase()
         {
             Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
@@ -43,7 +60,7 @@ class FooBar
 {
 	public void Test (string str)
 	{
-		foreach (var c in $str.ToCharArray$ ()) {
+		foreach (var c in str.$ToCharArray ()$) {
 			Console.WriteLine (c);
 		}
 	}
@@ -71,7 +88,7 @@ class FooBar
 {
 	public void Test (string str)
 	{
-		Console.WriteLine ($str.ToCharArray$ ()[5]);
+		Console.WriteLine (str.$ToCharArray ()$[5]);
 	}
 }
 ", @"
