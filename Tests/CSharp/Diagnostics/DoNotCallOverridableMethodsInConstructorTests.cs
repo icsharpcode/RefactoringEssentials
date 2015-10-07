@@ -184,6 +184,20 @@ public class Test {
         }
 
         [Test]
+        public void GetVirtualPropertyWithPrivateSetter()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
+{
+	Foo()
+	{
+		var val = $AutoProperty$;
+	}
+
+	public virtual int AutoProperty { get; private set; }
+}");
+        }
+
+        [Test]
         public void SetVirtualPropertyWithPrivateSetter()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo

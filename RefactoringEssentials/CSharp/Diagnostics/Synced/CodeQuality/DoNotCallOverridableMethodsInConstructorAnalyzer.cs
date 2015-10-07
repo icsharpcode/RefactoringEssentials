@@ -81,9 +81,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         var propertySymbol = symbol as IPropertySymbol;
                         if (propertySymbol != null)
                         {
-                            var setterMethodSymbol = propertySymbol.SetMethod;
-                            if ((setterMethodSymbol != null) && (setterMethodSymbol.DeclaredAccessibility.HasFlag(Accessibility.Private)))
-                                return;
+                            if (n.Ancestors().Any(a => a is AssignmentExpressionSyntax))
+                            {
+                                var setterMethodSymbol = propertySymbol.SetMethod;
+                                if ((setterMethodSymbol != null) && (setterMethodSymbol.DeclaredAccessibility == Accessibility.Private))
+                                    return;
+                            }
+                            else
+                            {
+                                var getterMethodSymbol = propertySymbol.GetMethod;
+                                if ((getterMethodSymbol != null) && (getterMethodSymbol.DeclaredAccessibility == Accessibility.Private))
+                                    return;
+                            }
                         }
                         else
                         {
