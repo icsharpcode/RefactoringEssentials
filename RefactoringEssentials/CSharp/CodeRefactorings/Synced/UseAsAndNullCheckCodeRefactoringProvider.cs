@@ -102,7 +102,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     DiagnosticSeverity.Info,
                     GettextCatalog.GetString ("Use 'as' and check for null"),
                     t2 => {
-                        var varName = ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider.GetNameProposal(RefactoringHelpers.GuessNameFromType(rr.Type), ctx, isExpression);
+                        var varName = NameGenerator.GenerateSafeCSharpName(
+                            ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider.GetNameProposal(RefactoringHelpers.GuessNameFromType(rr.Type), ctx, isExpression));
 
                         var varDec = SyntaxFactory.LocalDeclarationStatement(
                             SyntaxFactory.VariableDeclaration(
