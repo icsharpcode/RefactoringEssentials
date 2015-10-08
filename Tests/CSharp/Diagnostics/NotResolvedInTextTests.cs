@@ -416,5 +416,39 @@ class A
     }
 }");
         }
+
+        [Test]
+        public void TestIssue120_ConversionOperator()
+        {
+            Analyze<NotResolvedInTextAnalyzer>(@"
+using System;
+class A
+{
+    public static implicit operator A(string key)
+    {
+       set
+       {
+           if (key == null) throw new ArgumentNullException(""key"");
+       }
+    }
+}");
+        }
+
+        [Test]
+        public void TestOperator()
+        {
+            Analyze<NotResolvedInTextAnalyzer>(@"
+using System;
+class A
+{
+    public static implicit operator true(A x)
+    {
+       set
+       {
+           if (x == null) throw new ArgumentNullException(""x"");
+       }
+    }
+}");
+        }
     }
 }
