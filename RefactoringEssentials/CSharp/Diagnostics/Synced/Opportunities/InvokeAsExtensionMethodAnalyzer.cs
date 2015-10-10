@@ -56,6 +56,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (expressionSymbol == null || !expressionSymbol.IsExtensionMethod || expressionSymbol.MethodKind == MethodKind.ReducedExtension)
                 return false;
 
+            var extensionMethodDeclaringType = expressionSymbol.ContainingType;
+            if (extensionMethodDeclaringType.Name != memberReference.Expression.ToString())
+                return false;
+
             // Don't allow conversion if first parameter is a method name instead of variable (extension method on delegate type)
             var firstParameter = node.ArgumentList?.Arguments.FirstOrDefault();
             if ((firstParameter != null) && (firstParameter.Expression is IdentifierNameSyntax))

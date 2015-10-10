@@ -74,6 +74,28 @@ class C
         }
 
         [Test]
+        public void HandlesBasicCaseWithFullNamespace()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"
+namespace TestNamespace
+{
+    class A { }
+    static class B
+    {
+        public static bool Ext (this A a, int i);
+    }
+}
+class C
+{
+	void F()
+	{
+		TestNamespace.A a = new TestNamespace.A();
+		TestNamespace.B.Ext(a, 1);
+	}
+}");
+        }
+
+        [Test]
         public void HandlesReturnValueUsage()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
