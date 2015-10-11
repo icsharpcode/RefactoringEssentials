@@ -42,7 +42,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         static Document PerformAction(Document document, SyntaxNode root, BinaryExpressionSyntax bop)
         {
             var nodeToReplace = bop.IsParentKind(SyntaxKind.ParenthesizedExpression) ? bop.Parent : bop;
-            var castExpr = (ExpressionSyntax)SyntaxFactory.CastExpression(bop.Right as TypeSyntax, FlipEqualsTargetAndArgumentCodeRefactoringProvider.AddParensIfRequired(bop.Left.WithoutLeadingTrivia().WithoutTrailingTrivia())).WithLeadingTrivia(bop.GetLeadingTrivia()).WithTrailingTrivia(bop.GetTrailingTrivia());
+            var castExpr = (ExpressionSyntax)SyntaxFactory.CastExpression(bop.Right as TypeSyntax, CSharpUtil.AddParensIfRequired(bop.Left.WithoutLeadingTrivia().WithoutTrailingTrivia())).WithLeadingTrivia(bop.GetLeadingTrivia()).WithTrailingTrivia(bop.GetTrailingTrivia());
 
             var newRoot = root.ReplaceNode((SyntaxNode)nodeToReplace, castExpr);
             return document.WithSyntaxRoot(newRoot);

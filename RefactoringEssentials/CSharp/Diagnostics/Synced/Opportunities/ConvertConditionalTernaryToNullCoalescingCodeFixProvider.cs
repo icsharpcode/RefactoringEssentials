@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Formatting;
+using System;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -64,14 +65,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
                 a = UnpackNullableValueAccess(model, a, token);
 
-                ExpressionSyntax newNode = SyntaxFactory.BinaryExpression(SyntaxKind.CoalesceExpression, a, other);
+                ExpressionSyntax newNode = SyntaxFactory.BinaryExpression(SyntaxKind.CoalesceExpression, a, CSharpUtil.AddParensIfRequired(other));
 
                 var newRoot = root.ReplaceNode((SyntaxNode)node, newNode.WithLeadingTrivia(node.GetLeadingTrivia()).WithAdditionalAnnotations(Formatter.Annotation));
                 return Task.FromResult(document.WithSyntaxRoot(newRoot));
             }), diagnostic);
         }
 
-        internal static ExpressionSyntax UnpackNullableValueAccess(SemanticModel semanticModel, ExpressionSyntax expression, CancellationToken cancellationToken)
+		internal static ExpressionSyntax UnpackNullableValueAccess(SemanticModel semanticModel, ExpressionSyntax expression, CancellationToken cancellationToken)
         {
             var expr = expression.SkipParens();
             if (!expr.IsKind(SyntaxKind.SimpleMemberAccessExpression))
