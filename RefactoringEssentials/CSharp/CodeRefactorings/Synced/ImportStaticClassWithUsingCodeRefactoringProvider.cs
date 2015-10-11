@@ -34,11 +34,20 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
             var node = root.FindToken(span.Start).Parent;
-            if (!(node.Parent is MemberAccessExpressionSyntax))
+            var memberAccessExpr = node.Parent as MemberAccessExpressionSyntax;
+            if (memberAccessExpr == null)
                 return;
             var info = model.GetSymbolInfo(node, cancellationToken);
             if (info.Symbol == null || info.Symbol.Kind != SymbolKind.NamedType || !info.Symbol.IsStatic)
                 return;
+
+            var parentMemberAccessExpr = memberAccessExpr.Parent as MemberAccessExpressionSyntax;
+            if (parentMemberAccessExpr != null)
+            {
+                var memberInfoSymbol = model.GetSymbolInfo(parentMemberAccessExpr).Symbol;
+                if ((memberInfoSymbol == null) || memberInfoSymbol.IsExtensionMethod())
+                    return;
+            }
 
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
