@@ -20,6 +20,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (variableDecl == null || node.Initializer != null)
                 yield break;
             var block = variableDecl.Parent as BlockSyntax;
+            if (block == null)
+                yield break;
             StatementSyntax nextStatement = null;
             for (int i = 0; i < block.Statements.Count; i++)
             {
