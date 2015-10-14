@@ -32,6 +32,96 @@ class Foo
         }
 
         [Test]
+        public void TestStaticClassInSameCompilationUnit1()
+        {
+            Test<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
+using System;
+using Namespace1.Namespace2;
+
+namespace Namespace1.Namespace2
+{
+    public static class StaticLinqClass
+    {
+        public static int? First(System.Collections.Generic.IEnumerable<int> enumerable)
+        {
+            return null;
+        }
+    }
+}
+
+class Foo
+{
+    public void Test()
+    {
+        var f = $StaticLinqClass.First(new[] { 1 });
+    }
+}", @"
+using System;
+using Namespace1.Namespace2;
+using static Namespace1.Namespace2.StaticLinqClass;
+
+namespace Namespace1.Namespace2
+{
+    public static class StaticLinqClass
+    {
+        public static int? First(System.Collections.Generic.IEnumerable<int> enumerable)
+        {
+            return null;
+        }
+    }
+}
+
+class Foo
+{
+    public void Test()
+    {
+        var f = First(new[] { 1 });
+    }
+}");
+        }
+
+        [Test]
+        public void TestStaticClassInSameCompilationUnit2()
+        {
+            Test<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
+using System;
+
+static class StaticLinqClass
+{
+    public static int? First(System.Collections.Generic.IEnumerable<int> enumerable)
+    {
+        return null;
+    }
+}
+
+class Foo
+{
+    public void Test()
+    {
+        var f = $StaticLinqClass.First(new[] { 1 });
+    }
+}", @"
+using System;
+using static StaticLinqClass;
+
+static class StaticLinqClass
+{
+    public static int? First(System.Collections.Generic.IEnumerable<int> enumerable)
+    {
+        return null;
+    }
+}
+
+class Foo
+{
+    public void Test()
+    {
+        var f = First(new[] { 1 });
+    }
+}");
+        }
+
+        [Test]
         public void TestExtensionMethod()
         {
             TestWrongContext<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
