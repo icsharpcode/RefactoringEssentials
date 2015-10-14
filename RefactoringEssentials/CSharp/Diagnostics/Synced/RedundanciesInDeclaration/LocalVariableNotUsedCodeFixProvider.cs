@@ -37,23 +37,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var variableDeclarationSyntax = node.Parent as VariableDeclarationSyntax;
             if (variableDeclarationSyntax == null)
                 return;
+            // This is a workaround to avoid working with implausible syntax tree on syntax errors
+            var block = variableDeclarationSyntax.Parent.Parent as BlockSyntax;
+            if (block == null)
+                return;
 
             if (variableDeclarationSyntax.Variables.Count == 1)
             {
                 var newRoot = root.RemoveNode(node.Parent.Parent, SyntaxRemoveOptions.KeepNoTrivia);
                 context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove unused local variable", document.WithSyntaxRoot(newRoot)), diagnostic);
             }
-            else
-            {
-                var methodDeclaration = variableDeclarationSyntax.Parent.Parent as MethodDeclarationSyntax;
-                if (methodDeclaration == null)
-                    return; 
 
-                foreach (var variable in variableDeclarationSyntax.Variables)
-                {
-                    
-                }
-            }
+            // TODO Support declarations with multiple variables.
         }
     }
 }
