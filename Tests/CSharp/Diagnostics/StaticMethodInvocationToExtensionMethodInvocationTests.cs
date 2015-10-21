@@ -238,6 +238,38 @@ class C
         }
 
         [Test]
+        public void AddParenthesesIfNecessary()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
+
+static class Foo
+{
+    public static decimal Abs(this decimal value) => Math.Abs(value);
+}
+
+class Program
+{
+    static void Main()
+    {
+        Foo.$Abs$(-1.0m); // Apply code fix here
+    }
+}", @"using System;
+
+static class Foo
+{
+    public static decimal Abs(this decimal value) => Math.Abs(value);
+}
+
+class Program
+{
+    static void Main()
+    {
+        (-1.0m).Abs(); // Apply code fix here
+    }
+}");
+        }
+
+        [Test]
         public void IgnoresDelegateExtensionMethodOnMethod()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
