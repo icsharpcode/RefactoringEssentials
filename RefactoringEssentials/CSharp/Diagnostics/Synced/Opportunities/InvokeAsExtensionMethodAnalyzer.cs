@@ -48,8 +48,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var memberReference = node.Expression as MemberAccessExpressionSyntax;
             if (memberReference == null)
                 return false;
-            var firstArgument = node.ArgumentList.Arguments.FirstOrDefault();
-            if (firstArgument == null || firstArgument.Expression.IsKind(SyntaxKind.NullLiteralExpression))
+            var firstArgument = node.ArgumentList?.Arguments.FirstOrDefault()?.Expression;
+            if (firstArgument == null || firstArgument.IsKind(SyntaxKind.NullLiteralExpression))
                 return false;
             var expressionSymbol = semanticModel.GetSymbolInfo(node.Expression).Symbol as IMethodSymbol;
             // Ignore non-extensions and reduced extensions (so a.Ext, as opposed to B.Ext(a))
@@ -60,11 +60,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (extensionMethodDeclaringType.Name != memberReference.Expression.ToString())
                 return false;
 
-            // Don't allow conversion if first parameter is a method name instead of variable (extension method on delegate type)
-            var firstParameter = node.ArgumentList?.Arguments.FirstOrDefault();
-            if ((firstParameter != null) && (firstParameter.Expression is IdentifierNameSyntax))
+            var firstArgumentType = semanticModel.GetTypeInfo(firstArgument).Type;
+            if (firstArgumentType != null)
             {
-                var extensionMethodTargetExpression = semanticModel.GetSymbolInfo(firstParameter.Expression).Symbol as IMethodSymbol;
+                if (!firstArgumentType.Equals(expressionSymbol.Parameters[0].Type))
+                    return false;
+            }
+
+            // Don't allow conversion if first parameter is a method name instead of variable (extension method on delegate type)
+            if (firstArgument is IdentifierNameSyntax)
+            {
+                var extensionMethodTargetExpression = semanticModel.GetSymbolInfo(firstArgument).Symbol as IMethodSymbol;
                 if (extensionMethodTargetExpression != null)
                     return false;
             }

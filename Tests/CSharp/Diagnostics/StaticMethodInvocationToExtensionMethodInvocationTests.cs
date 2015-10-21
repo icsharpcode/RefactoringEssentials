@@ -202,6 +202,51 @@ class C
         }
 
         [Test]
+        public void IgnoresTypeMismatchImplicitConversion()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"
+using System;
+
+static class Foo
+{
+    public static decimal? Abs(this decimal? value)
+    {
+        return value != null ? Math.Abs(value.Value) : (decimal?) null;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(Foo.Abs(1.0m));
+    }
+}");
+
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"
+using System;
+
+struct ImplicitDecimal
+{
+    public static implicit operator decimal(ImplicitDecimal x) => 0;
+}
+
+static class Bar
+{
+    public static decimal Abs(this decimal value) => Math.Abs(value);
+}
+
+class Program
+{
+    static void Main()
+    {
+        var x = new ImplicitDecimal();
+        Console.WriteLine(Bar.Abs(x));
+    }
+}");
+        }
+
+        [Test]
         public void HandlesDelegateExtensionMethodOnVariable()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
