@@ -167,7 +167,6 @@
     <Compile Include="CSharp\Diagnostics\Custom\XmlDocAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\BaseMethodCallWithDefaultParameterAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\BitwiseOperatorOnEnumWithoutFlagsAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CanBeReplacedWithTryCastAndCheckForNullAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareOfFloatsByEqualityOperatorAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\ConditionalTernaryEqualBranchAnalyzer.cs" />
@@ -212,7 +211,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertClosureToMethodGroupAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToConditionalTernaryExpressionAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormAnalyzer.cs" />
@@ -357,7 +355,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToConditionalTernaryExpressionCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormCodeFixProvider.cs" />
@@ -367,7 +364,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CanBeReplacedWithTryCastAndCheckForNullCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareOfFloatsByEqualityOperatorCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\ConditionalTernaryEqualBranchCodeFixProvider.cs" />

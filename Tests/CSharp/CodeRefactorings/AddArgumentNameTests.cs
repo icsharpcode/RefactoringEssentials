@@ -157,6 +157,28 @@ public class Test
         }
 
         [Test]
+        public void AttributeWithParams()
+        {
+            TestWrongContext<AddNameToArgumentCodeRefactoringProvider>(@"using System;
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
+class AlsoNotifyForAttribute : System.Attribute
+{
+    public AlsoNotifyForAttribute(string property) {}
+    public AlsoNotifyForAttribute(string property, params string[] otherProperties) {}
+}
+
+public class TestClass
+{
+    [AlsoNotifyFor(nameof(Test2), nameof(Test3), …""Test4"")]
+    public int Test { get; set; }
+    public int Test2 { get; set; }
+    public int Test3 { get; set; }
+    public int Test4 { get; set; }
+}
+");
+        }
+
+        [Test]
         public void AttributeNamedArgumentInvalidCase()
         {
             TestWrongContext<AddNameToArgumentCodeRefactoringProvider>(@"

@@ -54,7 +54,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     {
                         var newRoot = root.ReplaceNode((SyntaxNode)invocation,
                             invocation
-                            .WithExpression(SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, AddParensIfRequired(invocation.ArgumentList.Arguments[0].Expression), memberAccess.Name))
+                            .WithExpression(SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, CSharpUtil.AddParensIfRequired(invocation.ArgumentList.Arguments[0].Expression), memberAccess.Name))
                             .WithArgumentList(SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList<ArgumentSyntax>(new[] { SyntaxFactory.Argument(memberAccess.Expression.SkipParens()) })))
                             .WithAdditionalAnnotations(Formatter.Annotation)
                         );
@@ -62,23 +62,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     }
                 )
             );
-        }
-
-        internal static ExpressionSyntax AddParensIfRequired(ExpressionSyntax expression)
-        {
-            if ((expression is BinaryExpressionSyntax) ||
-                (expression is PostfixUnaryExpressionSyntax) ||
-                (expression is PrefixUnaryExpressionSyntax) ||
-                (expression is AssignmentExpressionSyntax) ||
-                (expression is CastExpressionSyntax) ||
-                (expression is ParenthesizedLambdaExpressionSyntax) ||
-                (expression is SimpleLambdaExpressionSyntax) ||
-                (expression is ConditionalExpressionSyntax))
-            {
-                return SyntaxFactory.ParenthesizedExpression(expression);
-            }
-
-            return expression;
         }
     }
 }

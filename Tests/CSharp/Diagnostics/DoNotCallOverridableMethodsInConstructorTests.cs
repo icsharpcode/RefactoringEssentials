@@ -128,7 +128,7 @@ public class Test {
         }
 
         [Test]
-        public void SetVirtualProperty()
+        public void SetVirtualPropertyThroughThis()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
@@ -138,6 +138,90 @@ public class Test {
 	}
 
 	public virtual int AutoProperty { get; set; }
+}");
+        }
+
+        [Test]
+        public void SetVirtualProperty()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
+{
+	Foo()
+	{
+		$AutoProperty$ = 1;
+	}
+
+	public virtual int AutoProperty { get; set; }
+}");
+        }
+
+        [Test]
+        public void GetVirtualPropertyThroughThis()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
+{
+	Foo()
+	{
+		var val = $this.AutoProperty$;
+	}
+
+	public virtual int AutoProperty { get; set; }
+}");
+        }
+
+        [Test]
+        public void GetVirtualProperty()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
+{
+	Foo()
+	{
+		var val = $AutoProperty$;
+	}
+
+	public virtual int AutoProperty { get; set; }
+}");
+        }
+
+        [Test]
+        public void GetVirtualPropertyWithPrivateSetter()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
+{
+	Foo()
+	{
+		var val = $AutoProperty$;
+	}
+
+	public virtual int AutoProperty { get; private set; }
+}");
+        }
+
+        [Test]
+        public void SetVirtualPropertyWithPrivateSetter()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
+{
+	Foo()
+	{
+		AutoProperty = 1;
+	}
+
+	public virtual int AutoProperty { get; private set; }
+}");
+        }
+
+        [Test]
+        public void SetVirtualPropertyWithPrivateSetterThroughThis()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
+{
+	Foo()
+	{
+		this.AutoProperty = 1;
+	}
+
+	public virtual int AutoProperty { get; private set; }
 }");
         }
     }

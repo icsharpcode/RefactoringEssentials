@@ -3,9 +3,88 @@ using RefactoringEssentials.CSharp.CodeRefactorings;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture, Ignore("Not implemented!")]
+    [TestFixture]
     public class UseStringFormatTests : CSharpCodeRefactoringTestBase
     {
+        [Test]
+        [Description("String concatenation alone should not be replaced by concatenated string.")]
+        public void TestSimpleStringConcatenation()
+        {
+            Test<UseStringFormatAction>(
+                @"var s = ""Hello"" + …""World!"";",
+                @"var s = ""HelloWorld!"";");
+        }
+
+        [Test]
+        [Description("String concatenation alone should not be replaced by concatenated string.")]
+        public void TestSimpleVerbatimStringConcatenation()
+        {
+            Test<UseStringFormatAction>(
+                @"var s = @""Hello"" + …@""World!"";",
+                @"var s = @""HelloWorld!"";");
+        }
+
+        [Test]
+        [Description("Concatenation between verbatim and non-verbatim strings is messy, so leave it alone.")]
+        public void TestWrongContextForVerbatimAndNonVerbatimStrings()
+        {
+            TestWrongContext<UseStringFormatAction>(@"var s = @""Hello"" + …""World!"";");
+        }
+
+        [Test]
+        [Description("Ensure action is not applied to addition syntax without string literals.")]
+        public void TestWrongContextForAddition()
+        {
+            TestWrongContext<UseStringFormatAction>(@"var s = 1 + …2;");
+        }
+
+        [Test]
+        [Description("Concatenation with member access to identifiers should be modified to use string.Format()")]
+        public void TestIdentifiersWithMemberAccess()
+        {
+            Test<UseStringFormatAction>(
+                @"class TestClass
+                {
+                    void TestMethod()
+                    {
+                        string str = ""Hello \x143 "" + …a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");
+                    }
+                }",
+                @"class TestClass
+                {
+                    void TestMethod()
+                    {
+                        string str = string.Format(""Hello \x143 {0} world! {1}"", a.Foo(""asdf""), a.Bar(""jkl;""));
+                    }
+                }");
+        }
+
+
+        [Test]
+        [Description("Concatenation between verbatim strings and expressions is replaced with string.Format()")]
+        public void TestVerbatimStringConcatenation()
+        {
+            Test<UseStringFormatAction>(
+                @"class TestClass
+                {
+                    void TestMethod()
+                    {
+                        string str = @""Hello
+                            "" + …a.Blah(""asdf"") + @""
+                            world!"";
+                    }
+                }",
+                @"class TestClass
+                {
+                    void TestMethod()
+                    {
+                        string str = string.Format(@""Hello
+                            {0}
+                            world!"", a.Blah(""asdf""));
+                    }
+                }");
+        }
+
         [Test]
         public void Test()
         {
@@ -21,7 +100,7 @@ class TestClass
 {
 	void TestMethod ()
 	{
-		string str = string.Format (""{0}test{1}test{2}"", 1 + 2, 1, 1.1);
+		string str = string.Format(""{0}test{1}test{2}"", 1 + 2, 1, 1.1);
 	}
 }");
         }
@@ -42,7 +121,7 @@ class TestClass
 {
 	void TestMethod ()
 	{
-		string str = string.Format (@""
+		string str = string.Format(@""
 test {0}"", 1);
 	}
 }");
@@ -57,7 +136,7 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 0;
-		string str = $""test"" + i + ""test"" + i;
+		string str = …""test"" + i + ""test"" + i;
 	}
 }", @"
 class TestClass
@@ -65,7 +144,7 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 0;
-		string str = string.Format (""test{0}test{0}"", i);
+		string str = string.Format(""test{0}test{0}"", i);
 	}
 }");
         }
@@ -79,7 +158,7 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 42;
-		string res = $""A test number: "" + i.ToString(""N2"");
+		string res = …""A test number: "" + i.ToString(""N2"");
 	}
 }", @"
 class TestClass
@@ -87,7 +166,29 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 42;
-		string res = string.Format (""A test number: {0:N2}"", i);
+		string res = string.Format(""A test number: {0:N2}"", i);
+	}
+}");
+        }
+
+        [Test]
+        public void TestComplexFormatString()
+        {
+            Test<UseStringFormatAction>(@"
+class TestClass
+{
+	void TestMethod ()
+	{
+		int i = 42;
+		string res = …""A test number: "" + i.ToString(""N2"", culture);
+	}
+}", @"
+class TestClass
+{
+	void TestMethod ()
+	{
+		int i = 42;
+		string res = string.Format(""A test number: {0}"", i.ToString(""N2"", culture));
 	}
 }");
         }
@@ -101,7 +202,7 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 42;
-		string res = $""A test number: {"" + i + ""}"";
+		string res = …""A test number: {"" + i + ""}"";
 	}
 }", @"
 class TestClass
@@ -109,7 +210,7 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 42;
-		string res = string.Format (""A test number: {{{0}}}"", i);
+		string res = string.Format(""A test number: {{{0}}}"", i);
 	}
 }");
         }
@@ -146,7 +247,7 @@ class TestClass
 {
 	void TestMethod ()
 	{
-		string res = $""String 1"" + ""String 2"";
+		string res = …""String 1"" + ""String 2"";
 	}
 }", @"
 class TestClass
@@ -167,7 +268,7 @@ class TestClass
 	void TestMethod ()
 	{
         int i = 42;
-		string res = $""String 1"" + i.ToString();
+		string res = …""String 1"" + i.ToString();
 	}
 }", @"
 class TestClass
@@ -175,7 +276,7 @@ class TestClass
 	void TestMethod ()
 	{
         int i = 42;
-		string res = string.Format (""String 1{0}"", i);
+		string res = string.Format(""String 1{0}"", i);
 	}
 }");
         }
@@ -189,7 +290,7 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 0;
-		string str = $""{"" + i + ""}"";
+		string str = …""{"" + i + ""}"";
 	}
 }", @"
 class TestClass
@@ -197,10 +298,17 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 0;
-		string str = string.Format (""{{{0}}}"", i);
+		string str = string.Format(""{{{0}}}"", i);
 	}
 }");
         }
+        
+        /*
+        This is far too complicated and likely to cause trouble.
+        Imagine how an IDE might react to unique and Unicode chars like backspace, EOL, etc. inside a verbatim string.
+        Escapded unicode chars in strings must be converted to literal chars, yuck.
+        Looking at the original UseStringFormatAction, this complication does not seem to be accounted for and would have resulted in
+        escaped sequences being rendered.
 
         [Test]
         public void QuotesMixedVerbatim()
@@ -211,7 +319,7 @@ class TestClass
 	void TestMethod ()
 	{
 		int i = 0;
-		string str = $""\"""" + i + @"""""""";
+		string str = …""\"""" + i + @"""""""";
 	}
 }", @"
 class TestClass
@@ -223,5 +331,6 @@ class TestClass
 	}
 }");
         }
+        */
     }
 }

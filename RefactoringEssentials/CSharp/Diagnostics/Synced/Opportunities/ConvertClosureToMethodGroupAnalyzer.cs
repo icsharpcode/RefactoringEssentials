@@ -62,6 +62,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (method == null)
                 return false;
 
+            var memberAttributes = method.GetAttributes();
+            if ((memberAttributes != null) && memberAttributes.Any(ad => (ad.AttributeClass != null) && (ad.AttributeClass.GetFullName() == "System.Diagnostics.ConditionalAttribute")))
+                return false;
+
             foreach (var param in method.Parameters)
             {
                 if (param.RefKind == RefKind.Ref || param.RefKind == RefKind.Out || param.IsParams)

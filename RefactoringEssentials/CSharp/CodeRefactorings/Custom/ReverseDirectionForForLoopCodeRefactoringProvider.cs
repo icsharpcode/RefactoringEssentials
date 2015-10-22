@@ -219,7 +219,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (step == null)
                 return SyntaxFactory.BinaryExpression(SyntaxKind.SubtractExpression, expr, SyntaxFactory.ParseExpression("1"));
 
-            return SyntaxFactory.BinaryExpression(SyntaxKind.SubtractExpression, expr, CSharpUtil.AddParensForUnaryExpressionIfRequired(step));
+            return SyntaxFactory.BinaryExpression(SyntaxKind.SubtractExpression, expr, CSharpUtil.AddParensIfRequired(step, false));
         }
 
         static ExpressionSyntax Add(ExpressionSyntax expr, ExpressionSyntax step)
@@ -255,7 +255,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (step == null)
                 return SyntaxFactory.BinaryExpression(SyntaxKind.AddExpression, expr, SyntaxFactory.ParseExpression("1"));
 
-            return SyntaxFactory.BinaryExpression(SyntaxKind.AddExpression, expr, CSharpUtil.AddParensForUnaryExpressionIfRequired(step));
+            return SyntaxFactory.BinaryExpression(SyntaxKind.AddExpression, expr, CSharpUtil.AddParensIfRequired(step, false));
         }
 
         static ExpressionSyntax GetNewBound(string name, bool? direction, ExpressionSyntax initializer, ExpressionSyntax step)
