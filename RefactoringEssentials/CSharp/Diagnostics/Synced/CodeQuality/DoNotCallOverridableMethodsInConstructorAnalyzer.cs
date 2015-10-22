@@ -122,6 +122,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 Check(node);
             }
 
+            public override void VisitDelegateDeclaration(DelegateDeclarationSyntax node)
+            {
+                // delegates with virtual calls are allowed
+            }
+
+            public override void VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
+            {
+                // arrow expressions with virtual calls are allowed
+            }
+
             static bool IsSimpleThisCall(ExpressionSyntax expression)
             {
                 var ma = expression as MemberAccessExpressionSyntax;
