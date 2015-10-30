@@ -9,7 +9,6 @@
 * ChangeAccessModifierAction
 * CreateDelegateAction
 * CreateIndexerAction
-* CreateOverloadWithoutParameterAction
 * ExtractAnonymousMethodAction
 * GenerateGetterAction
 * IntroduceConstantAction

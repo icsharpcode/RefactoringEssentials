@@ -124,7 +124,7 @@
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateCustomEventImplementationAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateDelegateAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateIndexerAction.cs" />
-    <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateOverloadWithoutParameterAction.cs" />
+    <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateOverloadWithoutParameterCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\ExtractAnonymousMethodAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\GenerateGetterAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\IntroduceConstantAction.cs" />
