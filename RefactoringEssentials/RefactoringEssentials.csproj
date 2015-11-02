@@ -550,6 +550,7 @@
     <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\CreateOverloadWithoutParameterCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\InvertIfCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs" />
