@@ -124,7 +124,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 				}
 				else
 				{
-					if (!assignmentValue.Equals(condRightSymbol))
+					if ((assignmentValue == null) || !assignmentValue.Equals(condRightSymbol))
 						return false;
 				}
 				return true;
@@ -141,7 +141,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 				}
 				else
 				{
-					if (!assignmentValue.Equals(condLeftSymbol))
+					if ((assignmentValue == null) || !assignmentValue.Equals(condLeftSymbol))
 						return false;
 				}
 				return true;

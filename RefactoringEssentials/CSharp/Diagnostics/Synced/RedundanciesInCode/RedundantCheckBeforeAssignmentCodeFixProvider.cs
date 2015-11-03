@@ -49,14 +49,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 			if (expression == null)
 				return;
 
-			context.RegisterCodeFix(CodeAction.Create("Remove redundant check", async token => {
-				var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
-				expression = expression
-					.WithOrderedTriviaFromSubTree(ifStatement)
-					.WithAdditionalAnnotations(Formatter.Annotation);
-                editor.ReplaceNode(ifStatement, expression);
-				return editor.GetChangedDocument();
-			}, string.Empty), diagnostic);
+            expression = expression
+                    .WithOrderedTriviaFromSubTree(ifStatement)
+                    .WithAdditionalAnnotations(Formatter.Annotation);
+            var newRoot = root.ReplaceNode(ifStatement, expression);
+
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant check", document.WithSyntaxRoot(newRoot)), diagnostic);
 		}
 	}
 }
