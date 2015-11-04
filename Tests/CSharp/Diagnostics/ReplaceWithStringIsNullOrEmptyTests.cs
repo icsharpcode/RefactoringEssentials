@@ -4,13 +4,33 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
+    //[Ignore("TODO: Issue not ported yet")]
     public class ReplaceWithStringIsNullOrEmptyTests : CSharpDiagnosticTestBase
     {
         [Test]
+        public void Sim()
+        {
+            Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
+{
+	void Bar (string str)
+	{
+		if (str != """" && str != """")
+			;
+	}
+}", @"class Foo
+{
+	void Bar (string str)
+	{
+		if (!string.IsNullOrEmpty (str))
+			;
+	}
+}");
+        }
+
+        [Test]
         public void TestInspectorCaseNS1()
         {
-            Test<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
+            Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
 {
 	void Bar (string str)
 	{
@@ -75,6 +95,26 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 	void Bar (string str)
 	{
 		if (null == str || str == string.Empty)
+			;
+	}
+}", @"class Foo
+{
+	void Bar (string str)
+	{
+		if (string.IsNullOrEmpty (str))
+			;
+	}
+}");
+        }
+
+        [Test]
+        public void TestInspectorStringEmptyAlt()
+        {
+            Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
+{
+	void Bar (string str)
+	{
+		if (str == string.Empty || null == str)
 			;
 	}
 }", @"class Foo
