@@ -43,45 +43,50 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             yield return CodeActionFactory.Create(node.Span, DiagnosticSeverity.Info, GettextCatalog.GetString("Create overload without parameter"),
                 t2 =>
                 {
-                    var defaultExpression = GetDefaultValueExpression(semanticModel, node.Type);
-                    List<StatementSyntax> bodyStatements = new List<StatementSyntax>();
-                    ArgumentSyntax argumentExpression = null;
-
-                    if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.RefKeyword)))
+                    BlockSyntax body = null;
+                    if (methodDeclaration.Body != null)
                     {
-                        bodyStatements.Add(SyntaxFactory.LocalDeclarationStatement(
-                            SyntaxFactory.VariableDeclaration(
-                                node.Type,
-                                SyntaxFactory.SeparatedList(new[] {
+                        var defaultExpression = GetDefaultValueExpression(semanticModel, methodDeclaration, node.Type);
+                        List<StatementSyntax> bodyStatements = new List<StatementSyntax>();
+                        ArgumentSyntax argumentExpression = null;
+
+                        if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.RefKeyword)))
+                        {
+                            bodyStatements.Add(SyntaxFactory.LocalDeclarationStatement(
+                                SyntaxFactory.VariableDeclaration(
+                                    node.Type,
+                                    SyntaxFactory.SeparatedList(new[] {
                                     SyntaxFactory.VariableDeclarator(node.Identifier, null, SyntaxFactory.EqualsValueClause(defaultExpression))
-                                }))));
-                        argumentExpression = GetArgumentExpression(node);
-                    }
-                    else if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.OutKeyword)))
-                    {
-                        bodyStatements.Add(SyntaxFactory.LocalDeclarationStatement(
-                            SyntaxFactory.VariableDeclaration(
-                                node.Type,
-                                SyntaxFactory.SeparatedList(new[] {
+                                    }))));
+                            argumentExpression = GetArgumentExpression(node);
+                        }
+                        else if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.OutKeyword)))
+                        {
+                            bodyStatements.Add(SyntaxFactory.LocalDeclarationStatement(
+                                SyntaxFactory.VariableDeclaration(
+                                    node.Type,
+                                    SyntaxFactory.SeparatedList(new[] {
                                     SyntaxFactory.VariableDeclarator(node.Identifier)
-                                }))));
-                        argumentExpression = GetArgumentExpression(node);
+                                    }))));
+                            argumentExpression = GetArgumentExpression(node);
+                        }
+                        else
+                        {
+                            argumentExpression = SyntaxFactory.Argument(defaultExpression);
+                        }
+
+                        var methodInvocation = SyntaxFactory.InvocationExpression(
+                            SyntaxFactory.IdentifierName(methodDeclaration.Identifier),
+                            SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(methodDeclaration.ParameterList.Parameters.Select(p => (p == node) ? argumentExpression : GetArgumentExpression(p)))));
+
+                        if (method.ReturnType.SpecialType == SpecialType.System_Void)
+                            bodyStatements.Add(SyntaxFactory.ExpressionStatement(methodInvocation));
+                        else
+                            bodyStatements.Add(SyntaxFactory.ReturnStatement(methodInvocation));
+
+
+                        body = SyntaxFactory.Block(bodyStatements).WithTrailingTrivia(methodDeclaration.Body?.GetTrailingTrivia());
                     }
-                    else
-                    {
-                        argumentExpression = SyntaxFactory.Argument(defaultExpression);
-                    }
-
-                    var methodInvocation = SyntaxFactory.InvocationExpression(
-                        SyntaxFactory.IdentifierName(methodDeclaration.Identifier),
-                        SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(methodDeclaration.ParameterList.Parameters.Select(p => p == node ? argumentExpression : GetArgumentExpression(p)))));
-
-                    if (method.ReturnType.SpecialType == SpecialType.System_Void)
-                        bodyStatements.Add(SyntaxFactory.ExpressionStatement(methodInvocation));
-                    else
-                        bodyStatements.Add(SyntaxFactory.ReturnStatement(methodInvocation));
-
-                    var body = SyntaxFactory.Block(bodyStatements).WithTrailingTrivia(methodDeclaration.Body?.GetTrailingTrivia());
 
                     var newMethod = methodDeclaration
                         .WithParameterList(SyntaxFactory.ParameterList(
@@ -107,7 +112,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             return SyntaxFactory.Argument(identifier);
         }
 
-        static ExpressionSyntax GetDefaultValueExpression(SemanticModel semanticModel, TypeSyntax type)
+        static ExpressionSyntax GetDefaultValueExpression(SemanticModel semanticModel, MethodDeclarationSyntax methodDeclaration, TypeSyntax type)
         {
             var typeSymbol = semanticModel.GetTypeInfo(type).Type;
             if (typeSymbol == null)
@@ -129,7 +134,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression);
             if (typeSymbol.IsReferenceType)
             {
-                if (typeSymbol.GetTypeParameters().Any())
+                if (typeSymbol.GetTypeParameters().Any() && (methodDeclaration.TypeParameterList != null) && methodDeclaration.TypeParameterList.Parameters.Any())
                     return SyntaxFactory.DefaultExpression(type);
                 return SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression);
             }

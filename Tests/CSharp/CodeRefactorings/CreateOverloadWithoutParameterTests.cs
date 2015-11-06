@@ -129,15 +129,16 @@ class Test
         [Test]
         public void TestDefaultValue()
         {
-            TestDefaultValue("object", "null");
-            TestDefaultValue("dynamic", "null");
-            TestDefaultValue("int?", "null");
-            TestDefaultValue("System.Nullable<int>", "null");
-            TestDefaultValue("System.Collections.Generics.IEnumerable<T>", "default(System.Collections.Generics.IEnumerable<T>)");
-            TestDefaultValue("bool", "false");
-            TestDefaultValue("double", "0");
-            TestDefaultValue("char", "'\\0'");
-            TestDefaultValue("System.DateTime", "new System.DateTime()");
+            TestDefaultValue("object", null, "null");
+            TestDefaultValue("dynamic", null, "null");
+            TestDefaultValue("int?", null, "null");
+            TestDefaultValue("System.Nullable<T>", null, "null");
+            TestDefaultValue("System.Collections.Generic.IEnumerable<int>", null, "null");
+            TestDefaultValue("System.Collections.Generic.IEnumerable", "T", "default(System.Collections.Generic.IEnumerable<T>)");
+            TestDefaultValue("bool", null, "false");
+            TestDefaultValue("double", null, "0");
+            TestDefaultValue("char", null, "'\\0'");
+            TestDefaultValue("System.DateTime", null, "new System.DateTime()");
 
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
 class Test
@@ -158,22 +159,24 @@ class Test
 }");
         }
 
-        void TestDefaultValue(string type, string expectedValue)
+        void TestDefaultValue(string type, string typeParameter, string expectedValue)
         {
+            string generic = string.IsNullOrEmpty(typeParameter) ? "" : ("<" + typeParameter + ">");
+
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
 class Test
 {
-    void TestMethod (" + type + @" $i)
+    void TestMethod" + generic + " (" + type + generic + @" $i)
     {
     }
 }", @"
 class Test
 {
-    void TestMethod()
+    void TestMethod" + generic + @"()
     {
         TestMethod(" + expectedValue + @");
     }
-    void TestMethod (" + type + @" i)
+    void TestMethod" + generic + " (" + type + generic + @" i)
     {
     }
 }");
@@ -213,6 +216,21 @@ class Test
     void TestMethod <T> (T a, T $b)
     {
     }
+}");
+        }
+
+        [Test]
+        public void TestInterface()
+        {
+            Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
+interface ITest
+{
+    void Test (int $a, int b);
+}", @"
+interface ITest
+{
+    void Test(int b);
+    void Test (int a, int b);
 }");
         }
 
