@@ -5,9 +5,8 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using RefactoringEssentials;
 using RefactoringEssentials.Util;
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -15,72 +14,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     /// Checks for str == null &amp;&amp; str == " "
     /// Converts to: string.IsNullOrEmpty (str)
     /// </summary>
-    /// [NotPortedYet]
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class ReplaceWithStringIsNullOrEmptyAnalyzer : DiagnosticAnalyzer
     {
-        //static readonly Pattern pattern = new Choice {
-        //			// str == null || str == ""
-        //			// str == null || str.Length == 0
-        //			new BinaryOperatorExpression (
-        //                PatternHelper.CommutativeOperatorWithOptionalParentheses (new AnyNode ("str"), BinaryOperatorType.Equality, new NullReferenceExpression ()),
-        //                BinaryOperatorType.ConditionalOr,
-        //                new Choice {
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (new Backreference ("str"), BinaryOperatorType.Equality, new PrimitiveExpression ("")),
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (new Backreference ("str"), BinaryOperatorType.Equality,
-        //                                                       new PrimitiveType("string").Member("Empty")),
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (
-        //                        new MemberReferenceExpression (new Backreference ("str"), "Length"),
-        //                        BinaryOperatorType.Equality,
-        //                        new PrimitiveExpression (0)
-        //                    )
-        //                }
-        //            ),
-        //			// str == "" || str == null
-        //			new BinaryOperatorExpression (
-        //                new Choice {
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (new AnyNode ("str"), BinaryOperatorType.Equality, new PrimitiveExpression ("")),
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (new AnyNode ("str"), BinaryOperatorType.Equality,
-        //                                                       new PrimitiveType("string").Member("Empty"))
-        //                },
-        //                BinaryOperatorType.ConditionalOr,
-        //                PatternHelper.CommutativeOperator(new Backreference ("str"), BinaryOperatorType.Equality, new NullReferenceExpression ())
-        //            )
-        //        };
-        //static readonly Pattern negPattern = new Choice {
-        //			// str != null && str != ""
-        //			// str != null && str.Length != 0
-        //			// str != null && str.Length > 0
-        //			new BinaryOperatorExpression (
-        //                PatternHelper.CommutativeOperatorWithOptionalParentheses(new AnyNode ("str"), BinaryOperatorType.InEquality, new NullReferenceExpression ()),
-        //                BinaryOperatorType.ConditionalAnd,
-        //                new Choice {
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (new Backreference ("str"), BinaryOperatorType.InEquality, new PrimitiveExpression ("")),
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (new Backreference ("str"), BinaryOperatorType.InEquality,
-        //                                                          new PrimitiveType("string").Member("Empty")),
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (
-        //                        new MemberReferenceExpression (new Backreference ("str"), "Length"),
-        //                        BinaryOperatorType.InEquality,
-        //                        new PrimitiveExpression (0)
-        //                    ),
-        //                    new BinaryOperatorExpression (
-        //                        new MemberReferenceExpression (new Backreference ("str"), "Length"),
-        //                        BinaryOperatorType.GreaterThan,
-        //                        new PrimitiveExpression (0)
-        //                    )
-        //                }
-        //            ),
-        //			// str != "" && str != null
-        //			new BinaryOperatorExpression (
-        //                new Choice {
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (new AnyNode ("str"), BinaryOperatorType.InEquality, new PrimitiveExpression ("")),
-        //                    PatternHelper.CommutativeOperatorWithOptionalParentheses (new AnyNode ("str"), BinaryOperatorType.Equality,
-        //                                                          new PrimitiveType("string").Member("Empty"))
-        //                },
-        //                BinaryOperatorType.ConditionalAnd,
-        //                PatternHelper.CommutativeOperatorWithOptionalParentheses(new Backreference ("str"), BinaryOperatorType.InEquality, new NullReferenceExpression ())
-        //            )
-        //        };
+        /// <summary>
+        /// The name of the property referred to by the <see cref="Diagnostic"/> for the replacement code.
+        /// </summary>
+        public static readonly string ReplacementPropertyName = "Replacement";
 
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.ReplaceWithStringIsNullOrEmptyAnalyzerID,
@@ -110,10 +50,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             );
         }
 
-        static readonly SyntaxKind[] EqualitySyntaxKinds = {
-            SyntaxKind.EqualsExpression,
-            SyntaxKind.NotEqualsExpression };
-
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
@@ -122,150 +58,342 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             var node = nodeContext.Node as BinaryExpressionSyntax;
 
+            // Must be of binary expression of 2 binary expressions.
             if (!node.IsKind(SyntaxKind.LogicalAndExpression, SyntaxKind.LogicalOrExpression))
                 return false;
 
-            if (!EqualitySyntaxKinds.Any(sk => node.Left.IsKind(sk)) || !EqualitySyntaxKinds.Any(sk => node.Left.IsKind(sk)))
+            // Verify left is a binary expression.
+            var left = SimplifySyntax(node.Left) as BinaryExpressionSyntax;
+            if (left == null)
                 return false;
 
-            var leftReplace = ShouldReplace(node.Left as BinaryExpressionSyntax);
-            var rightReplace = ShouldReplace(node.Right as BinaryExpressionSyntax);
+            // Verify right is a binary expression.
+            var right = SimplifySyntax(node.Right) as BinaryExpressionSyntax;
+            if (right == null)
+                return false;
 
+            // Ensure left and right are binary and not assignment.
+            if (!SyntaxFacts.IsBinaryExpression(left.OperatorToken.Kind()) || !SyntaxFacts.IsBinaryExpression(right.OperatorToken.Kind()))
+                return false;
 
+            // Test if left and right are suitable for replacement.
+            var leftReplace = ShouldReplace(nodeContext, left);
+            var rightReplace = ShouldReplace(nodeContext, right);
 
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            // Test both are suitable for replacement.
+            if (!leftReplace.ShouldReplace || !rightReplace.ShouldReplace)
+                return false;
+
+            // Test that both are either positive or negative tests.
+            if (!(leftReplace.IsNegative == rightReplace.IsNegative))
+                return false;
+
+            // Ensure that one tests for null and the other tests for empty.
+            var isNullOrEmptyTest = (leftReplace.IsNullTest && rightReplace.IsEmptyTest) || (leftReplace.IsEmptyTest && rightReplace.IsNullTest);
+
+            if (!isNullOrEmptyTest)
+                return false;
+
+            // Ensure that both refer to the same identifier.
+            // Good: foo != null && foo != ""
+            // Bad: foo != null && bar != ""
+            if (!string.Equals(leftReplace.IdentifierNode.ToString(),
+                rightReplace.IdentifierNode.ToString(),
+                StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Generate replacement string and negate if necessary.
+            // Used within diagnostic message and also passed down for replacement.
+            var replacementString = string.Format("string.IsNullOrEmpty({0})", leftReplace.IdentifierNode);
+
+            if (leftReplace.IsNegative)
+                replacementString = "!" + replacementString;
+
+            // We already did the work now pass it down to the code fix provider via a property.
+            var props = new Dictionary<string, string>
+                {
+                    { ReplacementPropertyName, replacementString }
+                };
+
+            diagnostic = Diagnostic.Create(
+                descriptor,
+                node.GetLocation(),
+                ImmutableDictionary.CreateRange(props),
+                replacementString);
+            return true;
         }
 
-        private static readonly SyntaxKind[] LiteralKinds = { SyntaxKind.NullLiteralExpression, SyntaxKind.StringLiteralExpression };
-
-        static ShouldReplaceResult ShouldReplace(BinaryExpressionSyntax node)
+        /// <summary>
+        /// Indicates whether a binary expression is suitable for replacement and info about it.
+        /// </summary>
+        class ShouldReplaceResult
         {
-            // string is null || string is empty
-            // str == null || str == ""
-            // str == null || str == string.Empty
-            // str == null || str.Length == 0
+            /// <summary>
+            /// Is the expression suitable for replacement.
+            /// </summary>
+            public bool ShouldReplace { get; set; } = false;
 
-            // str != null && str != ""
-            // str != null && str.Length != 0
-            // str != null && str.Length > 0
-            // str == null || str == ""
-            // str == null || str.Length == 0
-            // str != "" && str != null
+            /// <summary>
+            /// Is the expression a test for null?
+            /// </summary>
+            public bool IsNullTest { get; set; } = false;
 
-            //SyntaxKind.EqualsExpression,
-            //SyntaxKind.NotEqualsExpression,
-            //SyntaxKind.GreaterThanExpression,
-            //SyntaxKind.GreaterThanOrEqualExpression
+            /// <summary>
+            /// Is the expression a test for empty?
+            /// </summary>
+            public bool IsEmptyTest { get; set; } = false;
 
+            /// <summary>
+            /// Is the expression negated?
+            /// </summary>
+            public bool IsNegative { get; set; } = false;
+
+            /// <summary>
+            /// What string symbol is being tested for null or empty?
+            /// </summary>
+            public ExpressionSyntax IdentifierNode { get; set; } = null;
+
+        }
+
+        /// <summary>
+        /// Test whether a binary expression is suitable for replacement. 
+        /// </summary>
+        /// <returns>
+        /// A <see cref="ShouldReplaceResult"/> indicating whether the node is suitable for replacement.
+        /// </returns>
+        static ShouldReplaceResult ShouldReplace(SyntaxNodeAnalysisContext nodeContext, BinaryExpressionSyntax node)
+        {
+            // input (left, right, operator) output Result
+            var left = SimplifySyntax(node.Left);
+            var right = SimplifySyntax(node.Right);
+
+            // str ==
+            if (IsStringSyntax(nodeContext, left))
+            {
+                return ShouldReplaceString(nodeContext, left, right, node.OperatorToken);
+            }
+
+            // == str
+            if (IsStringSyntax(nodeContext, right))
+            {
+                return ShouldReplaceString(nodeContext, right, left, node.OperatorToken);
+            }
+
+            // str.Length ==
+            if (IsStringLengthSyntax(nodeContext, left))
+            {
+                return ShouldReplaceStringLength(left as MemberAccessExpressionSyntax, right, node.OperatorToken);
+            }
+
+            // == str.Length
+            if (IsStringLengthSyntax(nodeContext, right))
+            {
+                return ShouldReplaceStringLength(right as MemberAccessExpressionSyntax, left, node.OperatorToken);
+            }
+
+            // We did not find a suitable replacement.
+            return new ShouldReplaceResult
+            {
+                ShouldReplace = false
+            };
+        }
+
+        /// <summary>
+        /// Determine whether a binary expression with a string expression is suitable for replacement.
+        /// </summary>
+        /// <param name="left">A node representing a string expression.</param>
+        /// <param name="right">A node to be tested.</param>
+        /// <param name="operatorToken">The operator separating the nodes.</param>
+        /// <returns></returns>
+        static ShouldReplaceResult ShouldReplaceString(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax left, ExpressionSyntax right, SyntaxToken operatorToken)
+        {
             var result = new ShouldReplaceResult();
+            result.ShouldReplace = false;
 
-            IdentifierNameSyntax identifierNode;
-
-            if (node.Left.IsKind(SyntaxKind.IdentifierName))
+            // str == null or str != null
+            if (IsNullSyntax(nodeContext, right))
             {
-                identifierNode = (IdentifierNameSyntax)node.Left;
-
-                if (node.Right.IsKind(SyntaxKind.NullLiteralExpression))
-                {
-                    result.ShouldReplace = true;
-                    result.IsNullTest = true;
-                }
-                else if (node.Right.IsKind(SyntaxKind.StringLiteralExpression))
-                {
-                    if (!string.Equals("\"\"", node.Right.ToString()))
-                        return result;
-
-                    result.ShouldReplace = true;
-                    result.IsEmptyTest = true;
-                }
-                else if (node.Right.IsKind(SyntaxKind.SimpleMemberAccessExpression))
-                {
-                    var sma = node.Right as MemberAccessExpressionSyntax;
-
-                    if (!string.Equals("string", sma.Expression.ToString(), StringComparison.OrdinalIgnoreCase))
-                        return result;
-
-                    if (!string.Equals("Empty", sma.Name.ToString(), StringComparison.OrdinalIgnoreCase))
-                        return result;
-
-                    result.ShouldReplace = true;
-                    result.IsEmptyTest = true;
-                }
-
-                if (result.ShouldReplace)
-                    result.IdentifierName = ((IdentifierNameSyntax)node.Left).Identifier.Text;
+                result.IsNullTest = true;
+                result.ShouldReplace = true;
             }
-            else if (node.Right.IsKind(SyntaxKind.IdentifierName))
+            // str == "" or str != ""
+            // str == string.Empty or str != string.Empty
+            else if (IsEmptySyntax(nodeContext, right))
             {
-                identifierNode = (IdentifierNameSyntax)node.Right;
+                result.IsEmptyTest = true;
+                result.ShouldReplace = true;
             }
 
-            if (node.IsKind(SyntaxKind.EqualsExpression))
+            if (result.ShouldReplace)
             {
-                
-                //var eNode = node as Microsoft.CodeAnalysis.CSharp.Syntax.
+                result.IdentifierNode = left;
+
+                if (operatorToken.IsKind(SyntaxKind.ExclamationEqualsToken))
+                {
+                    result.IsNegative = true;
+                }
             }
+
             return result;
         }
 
-        private class ShouldReplaceResult
+        /// <summary>
+        /// Determines whether a binary expression with a string length expression is suitable for replacement.
+        /// </summary>
+        /// <param name="left">A node representing a string length expression.</param>
+        /// <param name="right">A node to be tested.</param>
+        /// <param name="operatorToken">The operator separating the nodes.</param>
+        /// <returns></returns>
+        static ShouldReplaceResult ShouldReplaceStringLength(MemberAccessExpressionSyntax left, ExpressionSyntax right, SyntaxToken operatorToken)
         {
-            public bool ShouldReplace { get; set; } = false;
+            const string zeroLiteral = "0";
+            const string oneLiteral = "1";
 
-            public bool IsNullTest { get; set; } = false;
+            var result = new ShouldReplaceResult();
+            result.ShouldReplace = false;
 
-            public bool IsEmptyTest { get; set; } = false;
+            // str.Length == 0 or str.Length <= 0
+            if (operatorToken.IsKind(SyntaxKind.EqualsEqualsToken, SyntaxKind.LessThanEqualsToken) && string.Equals(zeroLiteral, right.ToString()))
+            {
+                result.IsEmptyTest = true;
+                result.ShouldReplace = true;
+            }
+            // str.Length < 1
+            else if (operatorToken.IsKind(SyntaxKind.LessThanToken) && string.Equals(oneLiteral, right.ToString()))
+            {
+                result.IsEmptyTest = true;
+                result.ShouldReplace = true;
+            }
+            // str.Length != 0 or str.Length > 0
+            else if (operatorToken.IsKind(SyntaxKind.ExclamationEqualsToken, SyntaxKind.GreaterThanToken) && string.Equals(zeroLiteral, right.ToString()))
+            {
+                result.IsEmptyTest = true;
+                result.IsNegative = true;
+                result.ShouldReplace = true;
+            }
+            // str.Length >= 1
+            else if (operatorToken.IsKind(SyntaxKind.GreaterThanEqualsToken) && string.Equals(oneLiteral, right.ToString()))
+            {
+                result.IsEmptyTest = true;
+                result.IsNegative = true;
+                result.ShouldReplace = true;
+            }
 
-            public bool IsNegative { get; set; } = true;
+            if (result.ShouldReplace)
+            {
+                result.IdentifierNode = left.Expression;
+            }
 
-            public string IdentifierName { get; set; } = string.Empty;
+            return result;
 
         }
 
-        //		class GatherVisitor : GatherVisitorBase<ReplaceWithStringIsNullOrEmptyAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-        ////
-        ////			public override void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
-        ////			{
-        ////				base.VisitBinaryOperatorExpression(binaryOperatorExpression);
-        ////				Match m = pattern.Match(binaryOperatorExpression);
-        ////				bool isNegated = false;
-        ////				if (!m.Success) {
-        ////					m = negPattern.Match(binaryOperatorExpression);
-        ////					isNegated = true;
-        ////				}
-        ////				if (m.Success) {
-        ////					var str = m.Get<Expression>("str").Single();
-        ////					var def = ctx.Resolve(str).Type.GetDefinition();
-        ////					if (def == null || def.KnownTypeCode != ICSharpCode.NRefactory.TypeSystem.KnownTypeCode.String)
-        ////						return;
-        ////					AddDiagnosticAnalyzer(new CodeIssue(
-        ////						binaryOperatorExpression,
-        //			//						isNegated ? ctx.TranslateString("Expression can be replaced with !string.IsNullOrEmpty") : ctx.TranslateString(""),
-        ////						new CodeAction (
-        //			//							isNegated ? ctx.TranslateString("Use !string.IsNullOrEmpty") : ctx.TranslateString("Use string.IsNullOrEmpty"),
-        ////							script => {
-        ////								Expression expr = new PrimitiveType("string").Invoke("IsNullOrEmpty", str.Clone());
-        ////								if (isNegated)
-        ////									expr = new UnaryOperatorExpression(UnaryOperatorType.Not, expr);
-        ////								script.Replace(binaryOperatorExpression, expr);
-        ////							},
-        ////							binaryOperatorExpression
-        ////						)
-        ////					));
-        ////					return;
-        ////				}
-        ////			}
-        ////	
-        //		}
+        /// <summary>
+        /// Does the expression look like a string type?
+        /// </summary>
+        static bool IsStringSyntax(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax node)
+        {
+            if (!IsStringType(nodeContext, node))
+                return false;
+
+            return node.IsKind(SyntaxKind.IdentifierName, SyntaxKind.InvocationExpression, SyntaxKind.SimpleMemberAccessExpression);
+        }
+
+        /// <summary>
+        /// Does the expression look like a string length call?
+        /// </summary>
+        static bool IsStringLengthSyntax(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax node)
+        {
+            if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression))
+            {
+                var smaNode = node as MemberAccessExpressionSyntax;
+
+                if (smaNode.Name.Identifier.Text == "Length")
+                {
+                    if (!IsStringType(nodeContext, smaNode.Expression))
+                        return false;
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Does the expression look like a null?
+        /// </summary>
+        static bool IsNullSyntax(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax node)
+        {
+            if (!IsStringType(nodeContext, node))
+                return false;
+
+            return node.IsKind(SyntaxKind.NullLiteralExpression);
+        }
+
+        /// <summary>
+        /// Does the expression look like a test for empty string ("" or string.Empty)?
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        static bool IsEmptySyntax(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax node)
+        {
+            if (!IsStringType(nodeContext, node))
+                return false;
+            
+            if (node.IsKind(SyntaxKind.StringLiteralExpression))
+            {
+                if (string.Equals("\"\"", node.ToString()))
+                    return true;
+            }
+            else if (node.IsKind(SyntaxKind.SimpleMemberAccessExpression))
+            {
+                var sma = node as MemberAccessExpressionSyntax;
+
+                if (!string.Equals("string", sma.Expression.ToString(), StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+                if (!string.Equals("Empty", sma.Name.ToString(), StringComparison.OrdinalIgnoreCase))
+                    return false;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Test if expression is a string type.
+        /// </summary>
+        static bool IsStringType(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax node)
+        {
+            var typeInfo = nodeContext.SemanticModel.GetTypeInfo(node);
+
+            if (typeInfo.ConvertedType == null)
+                return false;
+
+            if (!string.Equals("String", typeInfo.ConvertedType.Name, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Simplify an <see cref="ExpressionSyntax"/> by removing unecessary parenthesis.
+        /// </summary>
+        /// <returns>
+        /// A simplified <see cref="ExpressionSyntax"/>.
+        /// </returns>
+        static ExpressionSyntax SimplifySyntax(ExpressionSyntax syntax)
+        {
+            if (syntax.IsKind(SyntaxKind.ParenthesizedExpression))
+            {
+                syntax = (syntax as ParenthesizedExpressionSyntax).Expression;
+
+                syntax = SimplifySyntax(syntax);
+            }
+
+            return syntax;
+        }
     }
-
-
 }
