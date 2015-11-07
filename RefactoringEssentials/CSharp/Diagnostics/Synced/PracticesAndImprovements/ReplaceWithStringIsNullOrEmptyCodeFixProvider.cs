@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -32,10 +33,20 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Use '{0}'", document.WithSyntaxRoot(newRoot)), diagnostic);
+
+            // Get the replacement code from the diagnostic and fix the node.
+            string replacementCodeString = diagnostic.Properties[ReplaceWithStringIsNullOrEmptyAnalyzer.ReplacementPropertyName];
+            var newNode = SyntaxFactory.ParseExpression(replacementCodeString);
+
+            var newRoot = root.ReplaceNode(node, newNode);
+
+            var codeAction = CodeActionFactory.Create(
+                node.Span,
+                diagnostic.Severity,
+                string.Format("Use '{0}'", replacementCodeString),
+                document.WithSyntaxRoot(newRoot));
+
+            context.RegisterCodeFix(codeAction, diagnostic);
         }
     }
 }
