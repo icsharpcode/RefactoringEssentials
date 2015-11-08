@@ -36,9 +36,20 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
             var node = root.FindNode(span);
+            node = node.SkipArgument();
+
+            // Get ancestor binary expressions and ensure they are string concatenation type.
+            var ancestors = node.AncestorsAndSelf().Where(n => n is BinaryExpressionSyntax);
+
+            // If there is no binary expressions then why are we here?
+            if (!ancestors.Any())
+                return;
+
+            if (!(ancestors.Last().IsKind(SyntaxKind.AddExpression)))
+                return;
 
             // Get highest binary expression available.
-            node = node.Ancestors().LastOrDefault(n => n is BinaryExpressionSyntax);
+            node = ancestors.LastOrDefault(n => n is BinaryExpressionSyntax);
 
             // If there is not a binary expression, then there is no concatenaton to act on.
             if (node == null)
