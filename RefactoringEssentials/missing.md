@@ -74,7 +74,6 @@
 * RedundantToStringCallAnalyzer
 * RedundantUnsafeContextAnalyzer
 * ReferenceEqualsWithValueTypeAnalyzer
-* ReplaceWithStringIsNullOrEmptyAnalyzer
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
 * StaticFieldInGenericTypeAnalyzer
