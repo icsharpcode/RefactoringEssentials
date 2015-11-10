@@ -6,22 +6,126 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     [TestFixture]
     public class UseStringFormatTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
-        [Description("String concatenation alone should not be replaced by concatenated string.")]
-        public void TestSimpleStringConcatenation()
+        [TestCase(@"if (…str != null && str != """") {}")]
+        [TestCase(@"if (str …!= null && str != """") {}")]
+        [TestCase(@"if (str != …null && str != """") {}")]
+        [TestCase(@"if (str != null …&& str != """") {}")]
+        [TestCase(@"if (str != null && …str != """") {}")]
+        [TestCase(@"if (str != null && str …!= """") {}")]
+        [TestCase(@"if (str != null && str != …"""") {}")]
+        [Description(@"Do not suggest action for binary expressions with assignment operators. https://github.com/icsharpcode/RefactoringEssentials/issues/137")]
+        public void Issue137_Case1(string expression)
         {
-            Test<UseStringFormatAction>(
-                @"var s = ""Hello"" + …""World!"";",
-                @"var s = ""HelloWorld!"";");
+            TestWrongContext<UseStringFormatAction>(
+                @"
+class TestClass
+{
+    void TestMethod(string str)
+    {
+        " + expression + @"
+    }
+}
+");
         }
 
         [Test]
-        [Description("String concatenation alone should not be replaced by concatenated string.")]
-        public void TestSimpleVerbatimStringConcatenation()
+        [Description(@"Do not suggest action for binary expressions with assignment operators. https://github.com/icsharpcode/RefactoringEssentials/issues/137")]
+        public void Issue137_Case2()
+        {
+            TestWrongContext<UseStringFormatAction>(
+                @"
+class TestClass
+{
+    void TestMethod(string str)
+    {
+        var x = from w in new int[0]
+                    let two = w * 2
+                    let three = w * 3
+                    let four = w * 4
+                    select w + two + …three + four into sum
+                    select sum * 2;
+    }
+}
+");
+
+        }
+
+        [TestCase(@"Assert.IsTrue(actions == null || actions.Count == 0, …action.GetType() + "" shouldn't be valid there."");")]
+        [TestCase(@"Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() …+ "" shouldn't be valid there."");")]
+        [TestCase(@"Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() + …"" shouldn't be valid there."");")]
+        [Description(@"Ensure proper handling across complication cases. https://github.com/icsharpcode/RefactoringEssentials/issues/137")]
+        public void Issue137_Case3(string expression)
         {
             Test<UseStringFormatAction>(
-                @"var s = @""Hello"" + …@""World!"";",
-                @"var s = @""HelloWorld!"";");
+                @"
+class TestClass
+{
+    void TestMethod(string str, bool option1, bool option2)
+    {
+        " + expression + @"
+    }
+}", @"
+class TestClass
+{
+    void TestMethod(string str, bool option1, bool option2)
+    {
+        Assert.IsTrue(actions == null || actions.Count == 0, string.Format(""{0} shouldn't be valid there."", action.GetType()));
+    }
+}");
+        }
+
+        [TestCase(@"var x = …(option1 && option2 ? ""Hello "" : string.Empty) + ""World"";")]
+        [TestCase(@"var x = (…option1 && option2 ? ""Hello "" : string.Empty) + ""World"";")]
+        [TestCase(@"var x = (option1 …&& option2 ? ""Hello "" : string.Empty) + ""World"";")]
+        [TestCase(@"var x = (option1 && …option2 ? ""Hello "" : string.Empty) + ""World"";")]
+        [TestCase(@"var x = (option1 && option2 …? ""Hello "" : string.Empty) + ""World"";")]
+        [TestCase(@"var x = (option1 && option2 ? …""Hello "" : string.Empty) + ""World"";")]
+        [TestCase(@"var x = (option1 && option2 ? ""Hello "" …: string.Empty) + ""World"";")]
+        [TestCase(@"var x = (option1 && option2 ? ""Hello "" : …string.Empty) + ""World"";")]
+        [TestCase(@"var x = (option1 && option2 ? ""Hello "" : string.Empty…) + ""World"";")]
+        [TestCase(@"var x = (option1 && option2 ? ""Hello "" : string.Empty) …+ ""World"";")]
+        [TestCase(@"var x = (option1 && option2 ? ""Hello "" : string.Empty) + …""World"";")]
+        [Description(@"Ensure proper handling across complication cases. https://github.com/icsharpcode/RefactoringEssentials/issues/137")]
+        public void Issue137_Case4(string expression)
+        {
+            Test<UseStringFormatAction>(
+                @"
+class TestClass
+{
+    void TestMethod(string str, bool option1, bool option2)
+    {
+        " + expression + @"
+    }
+}", @"
+class TestClass
+{
+    void TestMethod(string str, bool option1, bool option2)
+    {
+        var x = string.Format(""{0}World"", (option1 && option2 ? ""Hello "" : string.Empty));
+    }
+}");
+        }
+
+        [TestCase(@"var s = …""Hello"" + ""World!"";", @"var s = ""HelloWorld!"";")]
+        [TestCase(@"var s = ""Hello"" …+ ""World!"";", @"var s = ""HelloWorld!"";")]
+        [TestCase(@"var s = ""Hello"" + …""World!"";", @"var s = ""HelloWorld!"";")]
+        [Description("String concatenation alone should not be replaced by concatenated string.")]
+        public void TestSimpleStringConcatenation(string expression, string expectation)
+        {
+            Test<UseStringFormatAction>(
+                expression,
+                expectation);
+        }
+
+        [TestCase(@"var s = …@""Hello"" + @""World!"";", @"var s = @""HelloWorld!"";")]
+        [TestCase(@"var s = @""Hello"" …+ @""World!"";", @"var s = @""HelloWorld!"";")]
+        [TestCase(@"var s = @""Hello"" + …@""World!"";", @"var s = @""HelloWorld!"";")]
+        [Description("String concatenation alone should not be replaced by concatenated string.")]
+        public void TestSimpleVerbatimStringConcatenation(string expression, string expectation)
+        {
+            Test<UseStringFormatAction>(
+                expression,
+                expectation);
         }
 
         [Test]
@@ -38,16 +142,30 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             TestWrongContext<UseStringFormatAction>(@"var s = 1 + …2;");
         }
 
-        [Test]
+        [TestCase(@"string str = …""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""…Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello …\x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 …"" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" …+ a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + …a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.F…oo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(…""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""…asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") …+ "" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + …"" world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" …world! "" + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! ""… + a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + …a.Bar(""jkl;"");")]
+        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(…""jkl;"");")]
         [Description("Concatenation with member access to identifiers should be modified to use string.Format()")]
-        public void TestIdentifiersWithMemberAccess()
+        public void TestIdentifiersWithMemberAccess(string expression)
         {
             Test<UseStringFormatAction>(
                 @"class TestClass
                 {
                     void TestMethod()
                     {
-                        string str = ""Hello \x143 "" + …a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");
+                        " + expression + @"
                     }
                 }",
                 @"class TestClass
@@ -85,15 +203,25 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 }");
         }
 
-        [Test]
-        public void Test()
+        [TestCase(@"string str = …1 + 2 + ""test"" + 1 + ""test"" + 1.1;")]
+        [TestCase(@"string str = 1 …+ 2 + ""test"" + 1 + ""test"" + 1.1;")]
+        [TestCase(@"string str = 1 + …2 + ""test"" + 1 + ""test"" + 1.1;")]
+        [TestCase(@"string str = 1 + 2 …+ ""test"" + 1 + ""test"" + 1.1;")]
+        [TestCase(@"string str = 1 + 2 + …""test"" + 1 + ""test"" + 1.1;")]
+        [TestCase(@"string str = 1 + 2 + ""test"" …+ 1 + ""test"" + 1.1;")]
+        [TestCase(@"string str = 1 + 2 + ""test"" + …1 + ""test"" + 1.1;")]
+        [TestCase(@"string str = 1 + 2 + ""test"" + 1 …+ ""test"" + 1.1;")]
+        [TestCase(@"string str = 1 + 2 + ""test"" + 1 + …""test"" + 1.1;")]
+        [TestCase(@"string str = 1 + 2 + ""test"" + 1 + ""test"" …+ 1.1;")]
+        [TestCase(@"string str = 1 + 2 + ""test"" + 1 + ""test"" + …1.1;")]
+        public void Test(string expression)
         {
             Test<UseStringFormatAction>(@"
 class TestClass
 {
 	void TestMethod ()
 	{
-		string str = 1 + $2 + ""test"" + 1 + ""test"" + 1.1;
+		" + expression + @"
 	}
 }", @"
 class TestClass
@@ -302,7 +430,7 @@ class TestClass
 	}
 }");
         }
-        
+
         /*
         This is far too complicated and likely to cause trouble.
         Imagine how an IDE might react to unique and Unicode chars like backspace, EOL, etc. inside a verbatim string.

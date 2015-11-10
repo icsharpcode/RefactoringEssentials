@@ -9,7 +9,6 @@
 * ChangeAccessModifierAction
 * CreateDelegateAction
 * CreateIndexerAction
-* CreateOverloadWithoutParameterAction
 * ExtractAnonymousMethodAction
 * GenerateGetterAction
 * IntroduceConstantAction
@@ -75,7 +74,6 @@
 * RedundantToStringCallAnalyzer
 * RedundantUnsafeContextAnalyzer
 * ReferenceEqualsWithValueTypeAnalyzer
-* ReplaceWithStringIsNullOrEmptyAnalyzer
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
 * StaticFieldInGenericTypeAnalyzer

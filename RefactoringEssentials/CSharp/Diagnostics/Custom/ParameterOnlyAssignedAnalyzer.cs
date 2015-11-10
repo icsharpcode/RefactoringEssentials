@@ -55,7 +55,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var method = parameter.Parent.Parent as MethodDeclarationSyntax;
-            if ((method == null) || (method.Body == null))
+            if (method == null || method.Body == null)
                 return false;
 
             var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(method.Body);
@@ -66,8 +66,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 {
                     var expression = statement as ExpressionStatementSyntax;
                     var assignment = expression?.Expression as AssignmentExpressionSyntax;
-                    if (assignment != null && 
-                        (nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol)!= null)
+                    if (assignment == null)
+                        continue;
+                    var symbol = nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol;
+                    if (localParamSymbol.Equals(symbol))
                     {
                         diagnostic = Diagnostic.Create(descriptor, assignment.GetLocation());
                         return true;

@@ -124,7 +124,7 @@
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateCustomEventImplementationAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateDelegateAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateIndexerAction.cs" />
-    <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateOverloadWithoutParameterAction.cs" />
+    <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateOverloadWithoutParameterCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\ExtractAnonymousMethodAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\GenerateGetterAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\IntroduceConstantAction.cs" />
@@ -481,6 +481,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Samples\CSharp\SampleAnalyzer.cs" />
+    <Compile Include="Samples\CSharp\SampleCodeFixProvider.cs" />
+    <Compile Include="Samples\CSharp\SampleCodeRefactoringProvider.cs" />
     <Compile Include="Util\ClassDeclarationSyntaxExtensions.cs" />
     <Compile Include="Util\GettextCatalog.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertInterpolatedStringToStringFormatCodeRefactoringProvider.cs" />
@@ -547,6 +550,7 @@
     <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\CreateOverloadWithoutParameterCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\InvertIfCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs" />
@@ -665,6 +669,7 @@
   <ItemGroup>
     <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
+    <Folder Include="Samples\VB\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />
