@@ -178,10 +178,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                             arguments
                         )
                     ),
-                    SyntaxFactory.MemberAccessExpression(
-                        SyntaxKind.SimpleMemberAccessExpression,
-                        SyntaxFactory.ParseTypeName("double"),
-                        SyntaxFactory.IdentifierName("Epsilon"))
+                    SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("EPSILON").WithAdditionalAnnotations(RenameAnnotation.Create()))
                 );
                 expr = expr.WithAdditionalAnnotations(Formatter.Annotation);
                 newRoot = root.ReplaceNode((SyntaxNode)node, expr);
@@ -209,10 +206,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                             arguments
                         )
                     ),
-                    SyntaxFactory.MemberAccessExpression(
-                        SyntaxKind.SimpleMemberAccessExpression,
-                        SyntaxFactory.ParseTypeName("double"),
-                        SyntaxFactory.IdentifierName("Epsilon"))
+                    SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("EPSILON").WithAdditionalAnnotations(RenameAnnotation.Create()))
                 );
                 expr = expr.WithAdditionalAnnotations(Formatter.Annotation);
                 newRoot = root.ReplaceNode((SyntaxNode)node, expr);
