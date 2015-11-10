@@ -12,7 +12,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public const string SealedMemberInSealedClassAnalyzerID = "RECS0008";
         public const string NonPublicMethodWithTestAttributeAnalyzerID = "RECS0009";
         public const string ConvertConditionalTernaryToNullCoalescingAnalyzerID = "RECS0010";
-        public const string ConvertIfStatementToConditionalTernaryExpressionAnalyzerID = "RECS0011";
+        //public const string ConvertIfStatementToConditionalTernaryExpressionAnalyzerID = "RECS0011";
         public const string ConvertIfStatementToSwitchStatementAnalyzerID = "RECS0012";
         public const string ConvertNullableToShortFormAnalyzerID = "RECS0013";
         public const string ConvertToStaticTypeAnalyzerID = "RECS0014";
@@ -152,7 +152,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public const string UseIsOperatorAnalyzerID = "RECS0148";
         public const string CallToObjectEqualsViaBaseAnalyzerID = "RECS0149";
         public const string RedundantToStringCallForValueTypesAnalyzerID = "RECS0150";
-        public const string RedundantParamsAnalyzerID = "RECS0151";
+//        public const string RedundantParamsAnalyzerID = "RECS0151";
         public const string ConvertIfStatementToNullCoalescingExpressionAnalyzerID = "RECS0152";
         public const string ConvertToConstantAnalyzerID = "RECS0153";
         public const string UnusedParameterAnalyzerID = "RECS0154";
@@ -161,10 +161,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public const string ThreadStaticAtInstanceFieldAnalyzerID = "RECS0157";
         public const string RedundantUnsafeContextAnalyzerID = "RECS0158";
         public const string RedundantOverriddenMemberAnalyzerID = "RECS0159";
-        public const string RewriteIfReturnToReturnAnalyzerID = "RECS0160";
+//        public const string RewriteIfReturnToReturnAnalyzerID = "RECS0160";
         public const string ConvertToAutoPropertyAnalyzerID = "RECS0161";
         public const string NotResolvedInTextAnalyzer_SwapID = "RECS0162";
         public const string NameOfSuggestionAnalyzerID = "RECS0163";
         public const string RedundantDelegateCreationAnalyzerID = "RECS0164";
+        public const string SampleAnalyzerID = "RECSSAMPLE";
     }
 }

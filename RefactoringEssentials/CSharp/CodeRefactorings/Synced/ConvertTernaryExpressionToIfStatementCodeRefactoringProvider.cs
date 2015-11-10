@@ -29,6 +29,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var returnStatement = syntaxNode as ReturnStatementSyntax;
             if (returnStatement != null)
             {
+                if (!(returnStatement.Expression is ConditionalExpressionSyntax) && !(returnStatement.Expression is BinaryExpressionSyntax))
+                    return;
                 if (returnStatement.Expression is BinaryExpressionSyntax && !returnStatement.Expression.IsKind(SyntaxKind.CoalesceExpression))
                     return;
 
@@ -40,8 +42,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         t2 =>
                         {
 
-                            StatementSyntax statement;
-                            ReturnStatementSyntax returnAfter;
+                            StatementSyntax statement = null;
+                            ReturnStatementSyntax returnAfter = null;
                             if (returnStatement.Expression is ConditionalExpressionSyntax)
                             {
                                 var condition = (ConditionalExpressionSyntax)returnStatement.Expression;
@@ -56,16 +58,12 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                                     statement = SyntaxFactory.IfStatement(SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, bOp.Left, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)), SyntaxFactory.ReturnStatement(bOp.Left));
                                     returnAfter = SyntaxFactory.ReturnStatement(bOp.Right);
                                 }
-                                else
-                                {
-                                    return null;
-                                }
                             }
 
                             var newRoot = root.ReplaceNode((SyntaxNode)returnStatement, new SyntaxNode[] {
-                            statement.WithAdditionalAnnotations(Formatter.Annotation).WithLeadingTrivia(returnStatement.GetLeadingTrivia()),
-                             returnAfter.WithAdditionalAnnotations(Formatter.Annotation)
-                        });
+                                statement.WithAdditionalAnnotations(Formatter.Annotation).WithLeadingTrivia(returnStatement.GetLeadingTrivia()),
+                                returnAfter.WithAdditionalAnnotations(Formatter.Annotation)
+                            });
                             return Task.FromResult(document.WithSyntaxRoot(newRoot));
                         }
                     )

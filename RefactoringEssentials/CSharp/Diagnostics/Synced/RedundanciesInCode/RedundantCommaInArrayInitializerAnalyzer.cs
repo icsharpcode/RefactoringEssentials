@@ -52,6 +52,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (node == null)
                 return false;
 
+            var elementCount = node.Expressions.Count;
+            if (elementCount > node.Expressions.GetSeparators().Count())
+                return false;
+
             var tokens = node.ChildTokens().ToArray();
             if (tokens.Length < 2)
                 return false;

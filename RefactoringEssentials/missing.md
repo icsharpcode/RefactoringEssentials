@@ -9,14 +9,12 @@
 * ChangeAccessModifierAction
 * CreateDelegateAction
 * CreateIndexerAction
-* CreateOverloadWithoutParameterAction
 * ExtractAnonymousMethodAction
 * GenerateGetterAction
 * IntroduceConstantAction
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
 * MoveToOuterScopeAction
-* UseStringFormatAction
 
 *Analyzers*
 
@@ -73,11 +71,9 @@
 * RedundantLogicalConditionalExpressionOperandAnalyzer
 * RedundantObjectOrCollectionInitializerAnalyzer
 * RedundantOverriddenMemberAnalyzer
-* RedundantParamsAnalyzer
 * RedundantToStringCallAnalyzer
 * RedundantUnsafeContextAnalyzer
 * ReferenceEqualsWithValueTypeAnalyzer
-* ReplaceWithStringIsNullOrEmptyAnalyzer
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
 * StaticFieldInGenericTypeAnalyzer

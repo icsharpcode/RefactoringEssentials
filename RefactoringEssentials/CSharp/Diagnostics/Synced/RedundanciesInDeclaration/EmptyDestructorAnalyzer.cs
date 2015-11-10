@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Empty destructor is redundant"),
             GettextCatalog.GetString("Empty destructor is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EmptyDestructorAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

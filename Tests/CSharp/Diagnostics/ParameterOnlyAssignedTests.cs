@@ -9,29 +9,26 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         [Test]
         public void TestUnusedValue()
         {
-            var input = @"
+            Analyze<ParameterOnlyAssignedAnalyzer>(@"
 class TestClass
 {
 	void TestMethod(int i)
 	{
 		$i = 1$;
 	}
-}";
-
-            var output = @"
+}", @"
 class TestClass
 {
 	void TestMethod(int i)
 	{
 	}
-}";
-            Analyze<ParameterOnlyAssignedAnalyzer>(input,output);
+}");
         }
 
         [Test]
         public void TestUsedValue()
         {
-            var input = @"
+            Analyze<ParameterOnlyAssignedAnalyzer>(@"
 class TestClass
 {
 	int TestMethod(int i)
@@ -39,36 +36,48 @@ class TestClass
 		i = 1;
 		return i;
 	}
-}";
-            Analyze<ParameterOnlyAssignedAnalyzer>(input);
+}");
         }
 
         [Test]
-        public void TestOutParametr()
+        public void TestOutParameter()
         {
-            var input = @"
+            Analyze<ParameterOnlyAssignedAnalyzer>(@"
 class TestClass
 {
 	void TestMethod(out int i)
 	{
 		i = 1;
 	}
-}";
-            Analyze<ParameterOnlyAssignedAnalyzer>(input);
+}");
         }
 
         [Test]
-        public void TestRefParametr()
+        public void TestRefParameter()
         {
-            var input = @"
+            Analyze<ParameterOnlyAssignedAnalyzer>(@"
 class TestClass
 {
 	void TestMethod(ref int i)
 	{
 		i = 1;
 	}
-}";
-            Analyze<ParameterOnlyAssignedAnalyzer>(input);
+}");
+        }
+
+        [Test]
+        public void TestMultipleParameters()
+        {
+            Analyze<ParameterOnlyAssignedAnalyzer>(@"
+class TestClass
+{
+    public static void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class where T2 : struct
+    {
+        argument = null;
+        argument2 = default(T2);
+        $argument3 = default(T3)$;
+    }
+}");
         }
     }
 }

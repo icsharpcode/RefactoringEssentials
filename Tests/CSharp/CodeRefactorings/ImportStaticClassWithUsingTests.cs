@@ -32,6 +32,22 @@ class Foo
         }
 
         [Test]
+        public void TestExtensionMethod()
+        {
+            TestWrongContext<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
+using System;
+
+class Foo
+{
+    public void Test()
+    {
+        int[] array = new[] { 0, 1, 2 };
+        int? first = System.Linq.$Enumerable.FirstOrDefault(array);
+    }
+}");
+        }
+
+        [Test]
         public void TestMemberConflict()
         {
             Test<ImportStaticClassWithUsingCodeRefactoringProvider>(@"

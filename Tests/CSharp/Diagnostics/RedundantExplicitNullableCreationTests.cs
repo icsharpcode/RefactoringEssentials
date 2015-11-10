@@ -14,7 +14,7 @@ class FooBar
 {
 	void Test()
 	{
-		int? i = $new int?(5)$;
+		int? i = $new int?$(5);
 	}
 }
 ", @"
@@ -36,7 +36,7 @@ class FooBar
 {
 	void Test()
 	{
-		int? i = $new System.Nullable<int>(5)$;
+		int? i = $new System.Nullable<int>$(5);
 	}
 }
 ", @"

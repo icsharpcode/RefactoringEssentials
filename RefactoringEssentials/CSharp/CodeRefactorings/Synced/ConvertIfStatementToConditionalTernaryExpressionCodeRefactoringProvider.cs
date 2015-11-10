@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Simplification;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
@@ -88,6 +89,26 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (!ParseIfStatement(node, out condition, out target, out trueAssignment, out falseAssignment))
                 return;
 
+            ExpressionSyntax trueAssignmentExpr = trueAssignment.Right;
+            ExpressionSyntax falseAssignmentExpr = falseAssignment.Right;
+            var assignmentTargetType = model.GetTypeInfo(trueAssignment.Left).Type;
+            var trueAssignmentExprType = model.GetTypeInfo(trueAssignment.Right).Type;
+            var falseAssignmentExprType = model.GetTypeInfo(falseAssignment.Right).Type;
+            if ((trueAssignmentExprType == null) || (falseAssignmentExprType == null))
+                return;
+            if (assignmentTargetType.CompareTo(trueAssignmentExprType) != 0)
+            {
+                trueAssignmentExpr = SyntaxFactory.CastExpression(
+                    assignmentTargetType.GenerateTypeSyntax(Simplifier.Annotation),
+                    trueAssignmentExpr).WithAdditionalAnnotations(Formatter.Annotation);
+            }
+            if (assignmentTargetType.CompareTo(falseAssignmentExprType) != 0)
+            {
+                falseAssignmentExpr = SyntaxFactory.CastExpression(
+                    assignmentTargetType.GenerateTypeSyntax(Simplifier.Annotation),
+                    falseAssignmentExpr).WithAdditionalAnnotations(Formatter.Annotation);
+            }
+
             context.RegisterRefactoring(
                 CodeActionFactory.Create(span, DiagnosticSeverity.Info, GettextCatalog.GetString("To '?:' expression"),
                     t2 =>
@@ -97,7 +118,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                                 SyntaxFactory.AssignmentExpression(
                                     trueAssignment.Kind(),
                                     trueAssignment.Left,
-                                    SyntaxFactory.ConditionalExpression(condition, trueAssignment.Right, falseAssignment.Right)
+                                    SyntaxFactory.ConditionalExpression(condition, trueAssignmentExpr, falseAssignmentExpr)
                                 )
                             ).WithAdditionalAnnotations(Formatter.Annotation).WithLeadingTrivia(node.GetLeadingTrivia())
                         );

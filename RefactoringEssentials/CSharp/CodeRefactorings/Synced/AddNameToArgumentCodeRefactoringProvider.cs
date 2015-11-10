@@ -24,6 +24,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var arguments = attribute.ArgumentList.Arguments;
             var idx = arguments.IndexOf(node.Parent as AttributeArgumentSyntax);
 
+            if (idx >= constructor.Parameters.Length) // this can happen with "params" parameters
+                return null;
             var name = constructor.Parameters[idx].Name;
             return CodeActionFactory.Create(
                 node.Span,
@@ -53,6 +55,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var arguments = elementAccess.ArgumentList.Arguments;
             var idx = arguments.IndexOf(node.Parent as ArgumentSyntax);
 
+            if (idx >= indexer.Parameters.Length) // this can happen with "params" parameters
+                return null;
             var name = indexer.Parameters[idx].Name;
             return CodeActionFactory.Create(
                 node.Span,
@@ -81,7 +85,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         {
             var arguments = invocation.ArgumentList.Arguments;
             var idx = arguments.IndexOf(node.Parent as ArgumentSyntax);
-            if (idx >= method.Parameters.Length)
+
+            if (idx >= method.Parameters.Length) // this can happen with "params" parameters
                 return null;
             var parameters = method.Parameters[idx];
             var name = parameters.Name;
@@ -122,7 +127,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 var constructor = resolvedResult.Symbol as IMethodSymbol;
                 if (constructor == null)
                     yield break;
-                yield return CreateAttributeCodeAction(document, root, node, constructor, attribute);
+                var codeAction = CreateAttributeCodeAction(document, root, node, constructor, attribute);
+                if (codeAction != null)
+                    yield return codeAction;
             }
 
             var indexerExpression = parent as ElementAccessExpressionSyntax;
@@ -132,7 +139,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 var indexer = resolvedResult.Symbol as IPropertySymbol;
                 if (indexer == null)
                     yield break;
-                yield return CreateIndexerCodeAction(document, root, node, indexer, indexerExpression);
+                var codeAction = CreateIndexerCodeAction(document, root, node, indexer, indexerExpression);
+                if (codeAction != null)
+                    yield return codeAction;
             }
 
             var invocationExpression = parent as InvocationExpressionSyntax;

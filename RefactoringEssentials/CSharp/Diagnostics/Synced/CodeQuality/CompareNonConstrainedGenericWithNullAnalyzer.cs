@@ -58,7 +58,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (expr == null)
                 return false;
             var type = nodeContext.SemanticModel.GetTypeInfo(expr).Type;
-            if (type.TypeKind != TypeKind.TypeParameter || type.IsReferenceType)
+            if ((type == null) || (type.TypeKind != TypeKind.TypeParameter) || type.IsReferenceType)
                 return false;
             diagnostic = Diagnostic.Create(
                 descriptor,

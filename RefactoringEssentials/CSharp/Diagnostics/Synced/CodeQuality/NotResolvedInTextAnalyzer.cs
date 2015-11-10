@@ -157,6 +157,20 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     break;
                 }
 
+                var convOperator = node as ConversionOperatorDeclarationSyntax;
+                if (convOperator != null)
+                {
+                    names.AddRange(convOperator.ParameterList.Parameters.Select(p => p.Identifier.ToString()));
+                    break;
+                }
+
+                var op = node as OperatorDeclarationSyntax;
+                if (op != null)
+                {
+                    names.AddRange(op.ParameterList.Parameters.Select(p => p.Identifier.ToString()));
+                    break;
+                }
+
                 var methodDeclaration = node as MethodDeclarationSyntax;
                 if (methodDeclaration != null)
                 {

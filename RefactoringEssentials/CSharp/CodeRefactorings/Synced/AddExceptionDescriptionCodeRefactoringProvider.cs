@@ -24,8 +24,23 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var rr = semanticModel.GetDeclaredSymbol(entity);
             if (rr == null)
                 yield break;
-            var expr = semanticModel.GetTypeInfo(node.Expression);
-            if (expr.Type == null)
+
+            ITypeSymbol exceptionType = null;
+            var throwExpression = node.Expression;
+            if (throwExpression == null)
+            {
+                var catchClause = node.FirstAncestorOrSelf<CatchClauseSyntax>();
+                if (catchClause != null)
+                {
+                    exceptionType = semanticModel.GetTypeInfo(catchClause.Declaration.Type).Type;
+                }
+            }
+            else
+            {
+                var expr = semanticModel.GetTypeInfo(throwExpression);
+                exceptionType = expr.Type;
+            }
+            if (exceptionType == null)
                 yield break;
 
             bool hadDescription = false;
@@ -46,7 +61,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                                 if (n.Name.LocalName.ToString() == "cref")
                                 {
                                     // TODO: That's not a correct cref matching.
-                                    if (n.ToString().Contains(expr.Type.Name))
+                                    if (n.ToString().Contains(exceptionType.Name))
                                         yield break;
                                 }
                             }
@@ -59,7 +74,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             yield return CodeActionFactory.Create(node.Span, DiagnosticSeverity.Info, GettextCatalog.GetString("Add exception description"),
                 t2 =>
                 {
-                    var newComment = SyntaxFactory.ParseLeadingTrivia(string.Format("/// <exception cref=\"{0}\"></exception>\r\n", expr.Type.GetDocumentationCommentId()));
+                    var newComment = SyntaxFactory.ParseLeadingTrivia(string.Format("/// <exception cref=\"{0}\"></exception>\r\n", exceptionType.GetDocumentationCommentId()));
                     var list = entity.GetLeadingTrivia();
                     list = list.Add(newComment.First());
                     var newRoot = root.ReplaceNode((SyntaxNode)entity, entity.WithLeadingTrivia(list).WithAdditionalAnnotations(Formatter.Annotation));

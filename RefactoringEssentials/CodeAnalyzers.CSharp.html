@@ -15,7 +15,7 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>102 code analyzers for C#</p>
+    <p>100 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
@@ -24,7 +24,6 @@
       <li>Parameter name differs in base declaration (BaseMethodParameterNameMismatchAnalyzer)</li>
       <li>Bitwise operation on enum which has no [Flags] attribute (BitwiseOperatorOnEnumWithoutFlagsAnalyzer)</li>
       <li>Finds potentially erroneous calls to Object.Equals (CallToObjectEqualsViaBaseAnalyzer)</li>
-      <li>Type check and casts can be replaced with 'as' and null check (CanBeReplacedWithTryCastAndCheckForNullAnalyzer)</li>
       <li>Possible compare of value type with 'null' (CompareNonConstrainedGenericWithNullAnalyzer)</li>
       <li>Comparison of floating point numbers with equality operator (CompareOfFloatsByEqualityOperatorAnalyzer)</li>
       <li>'?:' expression has identical true and false branches (ConditionalTernaryEqualBranchAnalyzer)</li>
@@ -33,7 +32,6 @@
       <li>Convert anonymous method to method group (ConvertClosureToMethodGroupAnalyzer)</li>
       <li>'?:' expression can be converted to '??' expression (ConvertConditionalTernaryToNullCoalescingAnalyzer)</li>
       <li>Convert 'if-do-while' to 'while' statement (ConvertIfDoToWhileAnalyzer)</li>
-      <li>Convert 'if' to '?:' (ConvertIfStatementToConditionalTernaryExpressionAnalyzer)</li>
       <li>'if' statement can be re-written as 'switch' statement (ConvertIfStatementToSwitchStatementAnalyzer)</li>
       <li>Convert 'if' to '&amp;&amp;' expression (ConvertIfToAndExpressionAnalyzer)</li>
       <li>Convert 'if' to '||' expression (ConvertIfToOrExpressionAnalyzer)</li>
@@ -108,7 +106,7 @@
       <li>Redundant Where() call with predicate followed by LongCount() (ReplaceWithSingleCallToLongCountAnalyzer)</li>
       <li>Redundant Where() call with predicate followed by Single() (ReplaceWithSingleCallToSingleAnalyzer)</li>
       <li>Redundant Where() call with predicate followed by SingleOrDefault() (ReplaceWithSingleCallToSingleOrDefaultAnalyzer)</li>
-      <li>Convert 'if...return' to 'return' (RewriteIfReturnToReturnAnalyzer)</li>
+      <li>Uses shorter string.IsNullOrEmpty call instead of a longer condition (ReplaceWithStringIsNullOrEmptyAnalyzer)</li>
       <li>'sealed' modifier is redundant in sealed classes (SealedMemberInSealedClassAnalyzer)</li>
       <li>Conditional expression can be simplified (SimplifyConditionalTernaryExpressionAnalyzer)</li>
       <li>Warns when a culture-aware 'string.CompareTo' call is used by default (StringCompareToIsCultureSpecificAnalyzer)</li>

@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Common\CodeFixTestBase.cs" />
     <Compile Include="Common\CodeRefactoringTestBase.cs" />
+    <Compile Include="Common\Utils.cs" />
     <Compile Include="CSharp\CodeFixes\CSharpCodeFixTestBase.cs" />
     <Compile Include="CSharp\CodeFixes\CS0108UseNewKeywordIfHidingIntendedTests.cs" />
     <Compile Include="CSharp\CodeFixes\CS0152DuplicateCaseLabelValueTests.cs" />
@@ -186,7 +187,6 @@
     <Compile Include="CSharp\Diagnostics\BaseMethodParameterNameMismatchTests.cs" />
     <Compile Include="CSharp\Diagnostics\BitwiseOperatorOnEnumWithoutFlagsTests.cs" />
     <Compile Include="CSharp\Diagnostics\CallToObjectEqualsViaBaseTests.cs" />
-    <Compile Include="CSharp\Diagnostics\CanBeReplacedWithTryCastAndCheckForNullTests.cs" />
     <Compile Include="CSharp\Diagnostics\CheckNamespaceTests.cs" />
     <Compile Include="CSharp\Diagnostics\CompareNonConstrainedGenericWithNullTests.cs" />
     <Compile Include="CSharp\Diagnostics\CompareOfFloatsByEqualityOperatorTests.cs" />
@@ -197,7 +197,6 @@
     <Compile Include="CSharp\Diagnostics\ConvertClosureToMethodGroupTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertConditionalTernaryToNullCoalescingTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertIfDoToWhileTests.cs" />
-    <Compile Include="CSharp\Diagnostics\ConvertIfStatementToConditionalTernaryExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertIfStatementToSwitchStatementTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertIfToAndExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertIfToOrExpressionTests.cs" />
@@ -293,7 +292,6 @@
     <Compile Include="CSharp\Diagnostics\RedundantObjectCreationArgumentListTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantObjectOrCollectionInitializerTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantOverriddenMemberTests.cs" />
-    <Compile Include="CSharp\Diagnostics\RedundantParamsTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantPrivateInspectorTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantStringToCharArrayCallTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantTernaryExpressionTests.cs" />
@@ -324,7 +322,6 @@
     <Compile Include="CSharp\Diagnostics\ReplaceWithSingleCallToSingleOrDefaultTests.cs" />
     <Compile Include="CSharp\Diagnostics\ReplaceWithSingleCallToSingleTests.cs" />
     <Compile Include="CSharp\Diagnostics\ReplaceWithStringIsNullOrEmptyTests.cs" />
-    <Compile Include="CSharp\Diagnostics\RewriteIfReturnToReturnTests.cs" />
     <Compile Include="CSharp\Diagnostics\SealedMemberInSealedClassTests.cs" />
     <Compile Include="CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticConstructorParameterTests.cs" />
@@ -414,6 +411,7 @@
     <Compile Include="CSharp\CodeRefactorings\ConvertInterpolatedStringToStringFormatTests.cs" />
     <Compile Include="Common\DiagnosticTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SymbolChecksTest.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorTests.cs" />
     <Compile Include="VB\CodeRefactorings\CheckIfParameterIsNothingTests.cs" />
     <Compile Include="VB\CodeRefactorings\ComputeConstantValueTests.cs" />
@@ -427,6 +425,7 @@
     <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopTests.cs" />
     <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseTests.cs" />
     <Compile Include="VB\CodeRefactorings\CreateChangedEventTests.cs" />
+    <Compile Include="VB\CodeRefactorings\CreateOverloadWithoutParameterTests.cs" />
     <Compile Include="VB\CodeRefactorings\InvertIfTests.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs" />

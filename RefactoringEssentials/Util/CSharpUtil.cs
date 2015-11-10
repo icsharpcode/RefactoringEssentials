@@ -76,14 +76,14 @@ namespace RefactoringEssentials
                     return SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression);
             }
 
-            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, AddParensForUnaryExpressionIfRequired(condition));
+            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, AddParensIfRequired(condition, false));
         }
 
         /// <summary>
         /// When negating an expression this is required, otherwise you would end up with
         /// a or b -> !a or b
         /// </summary>
-        public static ExpressionSyntax AddParensForUnaryExpressionIfRequired(ExpressionSyntax expression)
+        public static ExpressionSyntax AddParensIfRequired(ExpressionSyntax expression, bool parenthesesRequiredForUnaryExpressions = true)
         {
             if ((expression is BinaryExpressionSyntax) ||
                 (expression is AssignmentExpressionSyntax) ||
@@ -91,6 +91,13 @@ namespace RefactoringEssentials
                 (expression is ParenthesizedLambdaExpressionSyntax) ||
                 (expression is SimpleLambdaExpressionSyntax) ||
                 (expression is ConditionalExpressionSyntax))
+            {
+                return SyntaxFactory.ParenthesizedExpression(expression);
+            }
+
+            if (parenthesesRequiredForUnaryExpressions &&
+                ((expression is PostfixUnaryExpressionSyntax) ||
+                (expression is PrefixUnaryExpressionSyntax)))
             {
                 return SyntaxFactory.ParenthesizedExpression(expression);
             }

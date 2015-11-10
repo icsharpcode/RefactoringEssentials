@@ -72,10 +72,33 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             {
                 var info = nodeContext.SemanticModel.GetSymbolInfo(n);
                 var symbol = info.Symbol;
-                if (symbol == null || symbol.ContainingType.Locations.Where(loc => loc.IsInSource && loc.SourceTree.FilePath == type.SyntaxTree.FilePath).All(loc => !type.Span.Contains(loc.SourceSpan)))
+                if ((symbol == null) || (symbol.ContainingType == null) || symbol.ContainingType.Locations.Where(loc => loc.IsInSource && loc.SourceTree.FilePath == type.SyntaxTree.FilePath).All(loc => !type.Span.Contains(loc.SourceSpan)))
                     return;
                 if (symbol.IsVirtual || symbol.IsAbstract || symbol.IsOverride)
                 {
+                    if (symbol.Kind == SymbolKind.Property)
+                    {
+                        var propertySymbol = symbol as IPropertySymbol;
+                        if (propertySymbol != null)
+                        {
+                            if (n.Ancestors().Any(a => a is AssignmentExpressionSyntax))
+                            {
+                                var setterMethodSymbol = propertySymbol.SetMethod;
+                                if ((setterMethodSymbol != null) && (setterMethodSymbol.DeclaredAccessibility == Accessibility.Private))
+                                    return;
+                            }
+                            else
+                            {
+                                var getterMethodSymbol = propertySymbol.GetMethod;
+                                if ((getterMethodSymbol != null) && (getterMethodSymbol.DeclaredAccessibility == Accessibility.Private))
+                                    return;
+                            }
+                        }
+                        else
+                        {
+                            return;
+                        }
+                    }
                     Diagnostics.Add(Diagnostic.Create(descriptor, n.GetLocation()));
                 }
             }
@@ -87,6 +110,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     return;
                 if (node.Expression.IsKind(SyntaxKind.ThisExpression))
                     Check(node);
+            }
+
+            public override void VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                base.VisitIdentifierName(node);
+                var ancestors = node.Ancestors();
+                if (ancestors.Any(n => (n is MemberAccessExpressionSyntax) || (n is InvocationExpressionSyntax)))
+                    return;
+
+                Check(node);
             }
 
             static bool IsSimpleThisCall(ExpressionSyntax expression)

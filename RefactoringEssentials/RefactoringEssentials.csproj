@@ -126,7 +126,7 @@
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateCustomEventImplementationAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateDelegateAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateIndexerAction.cs" />
-    <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateOverloadWithoutParameterAction.cs" />
+    <Compile Include="CSharp\CodeRefactorings\Uncategorized\CreateOverloadWithoutParameterCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\ExtractAnonymousMethodAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\GenerateGetterAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\IntroduceConstantAction.cs" />
@@ -169,7 +169,6 @@
     <Compile Include="CSharp\Diagnostics\Custom\XmlDocAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\BaseMethodCallWithDefaultParameterAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\BitwiseOperatorOnEnumWithoutFlagsAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CanBeReplacedWithTryCastAndCheckForNullAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareOfFloatsByEqualityOperatorAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\ConditionalTernaryEqualBranchAnalyzer.cs" />
@@ -214,7 +213,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertClosureToMethodGroupAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToConditionalTernaryExpressionAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormAnalyzer.cs" />
@@ -223,7 +221,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertToStaticTypeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\RewriteIfReturnToReturnAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyConstructorAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyDestructorAnalyzer.cs" />
@@ -234,7 +231,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantOverriddenMemberAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantParamsAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\SealedMemberInSealedClassAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedTypeParameterAnalyzer.cs" />
@@ -357,12 +353,10 @@
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantOverriddenMemberCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantParamsCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\SealedMemberInSealedClassCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToConditionalTernaryExpressionCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormCodeFixProvider.cs" />
@@ -371,9 +365,7 @@
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertToStaticTypeCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\Opportunities\RewriteIfReturnToReturnCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CanBeReplacedWithTryCastAndCheckForNullCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\CompareOfFloatsByEqualityOperatorCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\ConditionalTernaryEqualBranchCodeFixProvider.cs" />
@@ -491,6 +483,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Samples\CSharp\SampleAnalyzer.cs" />
+    <Compile Include="Samples\CSharp\SampleCodeFixProvider.cs" />
+    <Compile Include="Samples\CSharp\SampleCodeRefactoringProvider.cs" />
     <Compile Include="Util\ClassDeclarationSyntaxExtensions.cs" />
     <Compile Include="Util\GettextCatalog.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\ConvertInterpolatedStringToStringFormatCodeRefactoringProvider.cs" />
@@ -557,6 +552,7 @@
     <Compile Include="VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CopyCommentsFromBaseCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\CreateOverloadWithoutParameterCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\InvertIfCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs" />
@@ -608,6 +604,7 @@
   <ItemGroup>
     <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
+    <Folder Include="Samples\VB\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />

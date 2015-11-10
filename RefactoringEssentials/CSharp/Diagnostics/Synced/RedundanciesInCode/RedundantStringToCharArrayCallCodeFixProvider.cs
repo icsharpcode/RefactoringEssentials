@@ -34,7 +34,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
+            var node = root.FindNode(context.Span).Parent;
 
             if (node is MemberAccessExpressionSyntax)
             {

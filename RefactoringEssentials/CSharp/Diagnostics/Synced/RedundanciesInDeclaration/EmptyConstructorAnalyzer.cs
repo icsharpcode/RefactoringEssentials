@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("An empty public constructor without paramaters is redundant."),
             GettextCatalog.GetString("Empty constructor is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EmptyConstructorAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
