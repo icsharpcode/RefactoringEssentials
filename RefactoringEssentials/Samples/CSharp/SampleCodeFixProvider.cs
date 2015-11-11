@@ -10,7 +10,8 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Samples.CSharp
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+    // PLEASE UNCOMMENT THIS LINE TO REGISTER CODE FIX IN IDE.
+    //[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class SampleCodeFixProvider : CodeFixProvider
     {
         // A CodeFixProvider is a complement of an analyzer providing a fix for the

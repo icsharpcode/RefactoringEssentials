@@ -11,7 +11,8 @@ namespace RefactoringEssentials.Samples.CSharp
     /// <summary>
     /// Sample CodeRefactoringProvider for C#.
     /// </summary>
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Sample code refactoring")]
+    // PLEASE UNCOMMENT THIS LINE TO REGISTER REFACTORING IN IDE.
+    //[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Sample code refactoring")]
     public class SampleCodeRefactoringProvider : CodeRefactoringProvider
     {
         /*

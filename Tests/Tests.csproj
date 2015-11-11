@@ -411,6 +411,7 @@
     <Compile Include="CSharp\CodeRefactorings\ConvertInterpolatedStringToStringFormatTests.cs" />
     <Compile Include="Common\DiagnosticTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Samples\CSharp\SampleCodeRefactoringTests.cs" />
     <Compile Include="SymbolChecksTest.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorTests.cs" />
     <Compile Include="VB\CodeRefactorings\CheckIfParameterIsNothingTests.cs" />
