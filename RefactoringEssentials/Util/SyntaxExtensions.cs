@@ -149,8 +149,10 @@ namespace RefactoringEssentials
 
         public static SyntaxNode SkipArgument(this SyntaxNode expression)
         {
-            if (expression is ArgumentSyntax)
-                return ((ArgumentSyntax)expression).Expression;
+            if (expression is Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax)
+                return ((Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax)expression).Expression;
+            if (expression is Microsoft.CodeAnalysis.VisualBasic.Syntax.ArgumentSyntax)
+                return ((Microsoft.CodeAnalysis.VisualBasic.Syntax.ArgumentSyntax)expression).GetExpression();
             return expression;
         }
 

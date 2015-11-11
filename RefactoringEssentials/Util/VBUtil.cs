@@ -198,5 +198,27 @@ namespace RefactoringEssentials
             }
             throw new ArgumentOutOfRangeException(nameof(op));
         }
+
+        /// <summary>
+        /// Returns true, if the specified operator is a relational operator
+        /// </summary>
+        public static bool IsRelationalOperator(SyntaxKind op)
+        {
+            switch (op)
+            {
+                case SyntaxKind.EqualsExpression:
+                case SyntaxKind.NotEqualsExpression:
+                case SyntaxKind.GreaterThanExpression:
+                case SyntaxKind.GreaterThanOrEqualExpression:
+                case SyntaxKind.LessThanExpression:
+                case SyntaxKind.LessThanOrEqualExpression:
+                case SyntaxKind.OrExpression:
+                case SyntaxKind.OrElseExpression:
+                case SyntaxKind.AndExpression:
+                case SyntaxKind.AndAlsoExpression:
+                    return true;
+            }
+            return false;
+        }
     }
 }
