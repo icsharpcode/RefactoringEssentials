@@ -515,7 +515,7 @@ namespace RefactoringEssentials
 #endif
     class CSharpTypeInferenceService
     {
-        readonly static Type typeInfo;
+        readonly static Type typeInfo, baseTypeInfo;
         readonly static MethodInfo inferTypesMethod;
         readonly static MethodInfo inferTypes2Method;
         readonly object instance;
@@ -523,13 +523,14 @@ namespace RefactoringEssentials
         static CSharpTypeInferenceService()
         {
             typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.CSharpTypeInferenceService" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-
-            inferTypesMethod = typeInfo.GetMethod("InferTypes", new[] {
+            baseTypeInfo = Type.GetType("Microsoft.CodeAnalysis.LanguageServices.TypeInferenceService.AbstractTypeInferenceService`1" + ReflectionNamespaces.WorkspacesAsmName, true)
+                .MakeGenericType(typeof(ExpressionSyntax));
+            inferTypesMethod = baseTypeInfo.GetMethod("InferTypes", new[] {
                 typeof(SemanticModel),
                 typeof(int),
                 typeof(CancellationToken)
             });
-            inferTypes2Method = typeInfo.GetMethod("InferTypes", new[] {
+            inferTypes2Method = baseTypeInfo.GetMethod("InferTypes", new[] {
                 typeof(SemanticModel),
                 typeof(SyntaxNode),
                 typeof(CancellationToken)

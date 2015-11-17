@@ -46,9 +46,12 @@ class Test
 {
 	void Foo (bool a, bool b)
 	{
-		if (a $|| b) {
+		if (a $|| b)
+        {
 			return;
-		} else {
+		}
+        else
+        {
 			Something ();
 		}
 	}
@@ -84,7 +87,8 @@ class Test
 {
 	void Foo (bool a, bool b)
 	{
-		if (!b $|| a && b) {
+		if (!b $|| a && b)
+        {
 			return;
 		}
 	}
