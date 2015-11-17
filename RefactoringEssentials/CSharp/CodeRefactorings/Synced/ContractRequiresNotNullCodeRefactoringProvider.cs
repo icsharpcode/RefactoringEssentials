@@ -13,7 +13,7 @@ using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the paramter must not be null")]
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the parameter must not be null")]
     /// <summary>
     /// Creates a 'Contract.Requires(param != null);' contruct for a parameter.
     /// </summary>
@@ -35,7 +35,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             return new[] { CodeActionFactory.Create(
                 node.Identifier.Span,
                 DiagnosticSeverity.Info,
-                GettextCatalog.GetString ("Add contract requires parameter must not be null"),
+                GettextCatalog.GetString ("Add contract requiring parameter must not be null"),
                 t2 => {
                     var newBody = bodyStatement.WithStatements (SyntaxFactory.List<StatementSyntax>(new [] { CreateContractRequiresCall(node.Identifier.ToString()) }.Concat (bodyStatement.Statements)));
 
