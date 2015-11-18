@@ -1,16 +1,16 @@
+using System;
 using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantEmptyFinallyBlockTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestRedundantTry()
         {
-            Test<RedundantEmptyFinallyBlockAnalyzer>(@"
+            Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
 using System;
 class Test
 {
@@ -19,8 +19,8 @@ class Test
 		try {
 			Console.WriteLine (""1"");
 			Console.WriteLine (""2"");
-		} finally {
-		}
+		} $finally {
+		}$
 	}
 }
 ", @"
@@ -39,7 +39,7 @@ class Test
         [Test]
         public void TestSimpleCase()
         {
-            Test<RedundantEmptyFinallyBlockAnalyzer>(@"
+            Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
 using System;
 class Test
 {
@@ -49,8 +49,8 @@ class Test
 			Console.WriteLine (""1"");
 			Console.WriteLine (""2"");
 		} catch (Exception) {
-		} finally {
-		}
+		} $finally {
+		}$
 	}
 }
 ", @"
@@ -60,11 +60,10 @@ class Test
 	static void Main (string[] args)
 	{
 		try {
-			Console.WriteLine (""1"");
-			Console.WriteLine (""2"");
+			Console.WriteLine(""1"");
+			Console.WriteLine(""2"");
 		} catch (Exception) {
-		}  
-	}
+		} 	}
 }
 ");
         }
@@ -102,6 +101,8 @@ class Test
 			Console.WriteLine(""2"");
 		}
 		// ReSharper disable once RedundantEmptyFinallyBlock
++#pragma warning disable " + CSharpDiagnosticIDs.RedundantEmptyFinallyBlockAnalyzerID + @"
+
  		finally {
 		}
 	}
