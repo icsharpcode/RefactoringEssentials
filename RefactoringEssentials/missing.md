@@ -7,7 +7,6 @@
 
 * AutoLinqSumAction
 * ChangeAccessModifierAction
-* CreateDelegateAction
 * CreateIndexerAction
 * ExtractAnonymousMethodAction
 * GenerateGetterAction
