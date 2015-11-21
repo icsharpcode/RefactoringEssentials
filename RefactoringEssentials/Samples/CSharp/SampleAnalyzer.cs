@@ -7,7 +7,8 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Samples.CSharp
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    // PLEASE UNCOMMENT THIS LINE TO REGISTER ANALYZER IN IDE.
+    //[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class SampleAnalyzer : DiagnosticAnalyzer
     {
         // An analyzer is responsible for finding code elements that are marked in IDE or the build process as

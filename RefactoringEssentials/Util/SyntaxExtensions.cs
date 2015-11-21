@@ -46,9 +46,13 @@ namespace RefactoringEssentials
             typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.MemberDeclarationSyntaxExtensions+LocalDeclarationMap" + ReflectionNamespaces.CSWorkspacesAsmName, true);
             localDeclarationMapIndexer = typeInfo.GetProperties().Single(p => p.GetIndexParameters().Any());
 
-            typeInfo = Type.GetType("Microsoft.CodeAnalysis.Shared.Extensions.CommonSyntaxTokenExtensions" + ReflectionNamespaces.WorkspacesAsmName, true);
+            typeInfo = Type.GetType("Microsoft.CodeAnalysis.Shared.Extensions.CommonSyntaxTokenExtensions" + ReflectionNamespaces.WorkspacesAsmName);
+            if (typeInfo == null)
+            {
+                //the type has been renamed in Update 1
+                typeInfo = Type.GetType("Microsoft.CodeAnalysis.Shared.Extensions.SyntaxTokenExtensions" + ReflectionNamespaces.WorkspacesAsmName, true);
+            }
             getAncestorsMethod = typeInfo.GetMethods().Single(m => m.Name == "GetAncestors" && m.IsGenericMethod);
-
         }
 
 
@@ -145,8 +149,10 @@ namespace RefactoringEssentials
 
         public static SyntaxNode SkipArgument(this SyntaxNode expression)
         {
-            if (expression is ArgumentSyntax)
-                return ((ArgumentSyntax)expression).Expression;
+            if (expression is Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax)
+                return ((Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax)expression).Expression;
+            if (expression is Microsoft.CodeAnalysis.VisualBasic.Syntax.ArgumentSyntax)
+                return ((Microsoft.CodeAnalysis.VisualBasic.Syntax.ArgumentSyntax)expression).GetExpression();
             return expression;
         }
 

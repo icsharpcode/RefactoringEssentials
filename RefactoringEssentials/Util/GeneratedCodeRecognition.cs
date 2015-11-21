@@ -57,74 +57,29 @@ namespace RefactoringEssentials
         static readonly string generatedCodePrefix = "TemporaryGeneratedFile_";
         const int generatedCodePrefixLength = 23;
 
-        public unsafe static bool IsFileNameForGeneratedCode(string fileName)
+        public static bool IsFileNameForGeneratedCode(string fileName)
         {
-            char* curPtr, endPtr;
-            fixed (char* beginPtr = fileName)
+            if (fileName.StartsWith("TemporaryGeneratedFile_", StringComparison.OrdinalIgnoreCase))
             {
-                // Check prefix
-                if (generatedCodePrefixLength < fileName.Length)
-                {
-                    curPtr = beginPtr;
-                    endPtr = beginPtr + generatedCodePrefixLength;
+                return true;
+            }
 
-                    fixed (char* patternPtr = generatedCodePrefix)
-                    {
-                        char* curPatternPtr = patternPtr;
-                        while (curPtr != endPtr)
-                        {
-                            if (char.ToUpperInvariant (*curPtr) != char.ToUpperInvariant (*curPatternPtr))
-                            {
-                                break;
-                            }
-                            curPtr++;
-                            curPatternPtr++;
-                        }
-                        if (curPtr == endPtr)
-                        {
-                            return true;
-                        }
-                    }
-                }
+            string extension = Path.GetExtension(fileName);
+            if (extension != string.Empty)
+            {
+                fileName = Path.GetFileNameWithoutExtension(fileName);
 
-                // Search last index of '.'
-                curPtr = beginPtr + fileName.Length - 1;
-                while (curPtr >= beginPtr && *curPtr != '.')
+                if (fileName.EndsWith("AssemblyInfo", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.EndsWith(".designer", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.EndsWith(".generated", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.EndsWith(".g", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.EndsWith(".g.i", StringComparison.OrdinalIgnoreCase) ||
+                    fileName.EndsWith(".AssemblyAttributes", StringComparison.OrdinalIgnoreCase))
                 {
-                    curPtr--;
-                }
-                if (curPtr < beginPtr)
-                {
-                    return false;
-                }
-                endPtr = curPtr;
-
-                // Check suffix
-                for (int i = 0; i < generatedCodeSuffixes.Length; i++)
-                {
-                    string str = generatedCodeSuffixes[i];
-                    curPtr = endPtr - str.Length;
-                    if (curPtr < beginPtr)
-                        continue;
-                    fixed (char* patternPtr = str)
-                    {
-                        char* curPatternPtr = patternPtr;
-                        while (curPtr != endPtr)
-                        {
-                            if (char.ToUpperInvariant (*curPtr) != char.ToUpperInvariant (*curPatternPtr))
-                            {
-                                break;
-                            }
-                            curPtr++;
-                            curPatternPtr++;
-                        }
-                        if (curPtr == endPtr)
-                        {
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
+
             return false;
         }
 

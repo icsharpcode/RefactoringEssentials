@@ -48,47 +48,51 @@ namespace RefactoringEssentials.Util
             return mr.Expression is MyClassExpressionSyntax;
         }
 
-		public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
-		{
-			if (node == null) {
-				return false;
-			}
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
+        {
+            if (node == null)
+            {
+                return false;
+            }
 
-			var vbKind = node.Kind();
-			return vbKind == kind1 || vbKind == kind2;
-		}
+            var vbKind = node.Kind();
+            return vbKind == kind1 || vbKind == kind2;
+        }
 
-		public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3)
-		{
-			if (node == null) {
-				return false;
-			}
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3)
+        {
+            if (node == null)
+            {
+                return false;
+            }
 
-			var vbKind = node.Kind();
-			return vbKind == kind1 || vbKind == kind2 || vbKind == kind3;
-		}
+            var vbKind = node.Kind();
+            return vbKind == kind1 || vbKind == kind2 || vbKind == kind3;
+        }
 
-		public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3, SyntaxKind kind4)
-		{
-			if (node == null) {
-				return false;
-			}
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3, SyntaxKind kind4)
+        {
+            if (node == null)
+            {
+                return false;
+            }
 
-			var vbKind = node.Kind();
-			return vbKind == kind1 || vbKind == kind2 || vbKind == kind3 || vbKind == kind4;
-		}
+            var vbKind = node.Kind();
+            return vbKind == kind1 || vbKind == kind2 || vbKind == kind3 || vbKind == kind4;
+        }
 
-		public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3, SyntaxKind kind4, SyntaxKind kind5)
-		{
-			if (node == null) {
-				return false;
-			}
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3, SyntaxKind kind4, SyntaxKind kind5)
+        {
+            if (node == null)
+            {
+                return false;
+            }
 
-			var vbKind = node.Kind();
-			return vbKind == kind1 || vbKind == kind2 || vbKind == kind3 || vbKind == kind4 || vbKind == kind5;
-		}
+            var vbKind = node.Kind();
+            return vbKind == kind1 || vbKind == kind2 || vbKind == kind3 || vbKind == kind4 || vbKind == kind5;
+        }
 
-		public static MethodBlockBaseSyntax WithStatements(this MethodBlockBaseSyntax syntax, SyntaxList<StatementSyntax> statements)
+        public static MethodBlockBaseSyntax WithStatements(this MethodBlockBaseSyntax syntax, SyntaxList<StatementSyntax> statements)
         {
             if (syntax == null)
                 throw new System.ArgumentNullException(nameof(syntax));
@@ -101,6 +105,17 @@ namespace RefactoringEssentials.Util
             if (syntax is OperatorBlockSyntax)
                 return ((OperatorBlockSyntax)syntax).WithStatements(statements);
             throw new System.NotSupportedException(syntax.GetType() + " is not supported!");
+        }
+
+        public static ExpressionSyntax SkipParens(this ExpressionSyntax expression)
+        {
+            if (expression == null)
+                return null;
+            while (expression != null && expression.IsKind(SyntaxKind.ParenthesizedExpression))
+            {
+                expression = ((ParenthesizedExpressionSyntax)expression).Expression;
+            }
+            return expression;
         }
     }
 }

@@ -72,6 +72,20 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Test]
+        [Ignore("Won't work with Roslyn < 1.1 due to a bug with equivalence checking of interpolated strings. Activate with Roslyn 1.1.")]
+        public void TestNotEqualBranchesWithInterpolatedStrings()
+        {
+            Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
+{
+	void Bar (string str)
+	{
+		string c = str != null ? $$""default"" : $$""default2"";
+	}
+}");
+
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
