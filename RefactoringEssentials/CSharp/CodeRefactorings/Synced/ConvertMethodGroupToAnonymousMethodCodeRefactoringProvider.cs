@@ -31,6 +31,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (!node.IsKind(SyntaxKind.IdentifierName))
                 return;
 
+            var nodeGrandparent = node.Parent?.Parent;
+            if ((nodeGrandparent is EventDeclarationSyntax) || (nodeGrandparent is EventFieldDeclarationSyntax))
+                return;
+
             if (node.Parent.IsKind(SyntaxKind.SimpleMemberAccessExpression))
                 node = node.Parent;
 
