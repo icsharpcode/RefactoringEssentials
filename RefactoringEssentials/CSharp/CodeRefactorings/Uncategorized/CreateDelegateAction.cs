@@ -39,7 +39,12 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
 
             // Get the entire event declaration.
+            // We don't know what position in the declaration we are in.
             var eventFieldDeclaration = (EventFieldDeclarationSyntax)node.AncestorsAndSelf().FirstOrDefault(a => a.IsKind(SyntaxKind.EventFieldDeclaration));
+
+            // Ensure we are analyzing an event.
+            if (eventFieldDeclaration == null)
+                return;
 
             // If the event handler type is defined then we should not create a delegate.
             var eventHandlerTypeInfo = model.GetTypeInfo(eventFieldDeclaration.Declaration.Type);
@@ -47,7 +52,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
 
             // C# 5.0 Language Spec 9.6; class, interface or struct
-            // Ensure there is a type declaring this event.
+            // Ensure there is an acceptable type declaring this event.
             var typeDeclarationNode = eventFieldDeclaration.Ancestors().FirstOrDefault(a => a.IsKind(
                 SyntaxKind.ClassDeclaration,
                 SyntaxKind.InterfaceDeclaration,
@@ -55,22 +60,19 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
             if (typeDeclarationNode == null)
                 return;
-            
+
             // Prepare delegate parameters.
             ParameterListSyntax evtParams = SyntaxFactory.ParseParameterList("(object sender, System.EventArgs e)");
 
-            // Prepare delegate modifiers.
-            var modifiers = eventFieldDeclaration.Modifiers;
+            // Prepare delegate modifiers, if the event is exposed externally then make it public else private.
+            var typeIsExternal = typeDeclarationNode.GetModifiers().Any(m => m.IsKind(SyntaxKind.PublicKeyword));
+            var eventIsExternal = eventFieldDeclaration.GetModifiers().Any(m => m.IsKind(SyntaxKind.PublicKeyword, SyntaxKind.ProtectedKeyword));
 
-            if (modifiers.Any())
-            {
-                // C# 5.0 Language Spec 15.1 Delegate Declarations; possible modifiers excluding "new".
-                modifiers = SyntaxFactory.TokenList(modifiers.Where(m => m.IsKind(
-                    SyntaxKind.PublicKeyword,
-                    SyntaxKind.ProtectedKeyword,
-                    SyntaxKind.InternalKeyword,
-                    SyntaxKind.PrivateKeyword)));
-            }
+            SyntaxTokenList modifiers;
+            if (typeIsExternal && eventIsExternal)
+                modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+            else
+                modifiers = SyntaxFactory.TokenList();
 
             // Create delegate node.
             var newDelegateNode = SyntaxFactory.DelegateDeclaration(
