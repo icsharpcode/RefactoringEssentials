@@ -1,7 +1,8 @@
 # Before you file a bug...
 
 * Did you search the issues list to see if someone already reported it?
-* Did you create a simple repro for the problem?
+* Is there a simple repro case for the problem you can provide us with?
+* In case of an *"... encountered an error and has been disabled"* message: Have you obtained additional debugging data from Visual Studio as described [here](https://github.com/icsharpcode/RefactoringEssentials/wiki/...-encountered-an-error-and-has-been-disabled)? 
 
 # Before you submit a PR...
 
