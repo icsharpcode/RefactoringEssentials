@@ -192,7 +192,7 @@ namespace RefactoringEssentials
         /// The offset bias value used in the FNV-1a algorithm
         /// See http://en.wikipedia.org/wiki/Fowler%E2%80%93Noll%E2%80%93Vo_hash_function
         /// </summary>
-        internal const int FnvOffsetBias = unchecked((int)2166136261);
+        //internal const int FnvOffsetBias = unchecked((int)2166136261);
 
         /// <summary>
         /// The generative factor used in the FNV-1a algorithm
@@ -206,17 +206,17 @@ namespace RefactoringEssentials
         /// </summary>
         /// <param name="data">The sequence of bytes</param>
         /// <returns>The FNV-1a hash of <paramref name="data"/></returns>
-        internal static int GetFNVHashCode(byte[] data)
-        {
-            int hashCode = Hash.FnvOffsetBias;
+        //internal static int GetFNVHashCode(byte[] data)
+        //{
+        //    int hashCode = Hash.FnvOffsetBias;
 
-            for (int i = 0; i < data.Length; i++)
-            {
-                hashCode = unchecked((hashCode ^ data[i]) * Hash.FnvPrime);
-            }
+        //    for (int i = 0; i < data.Length; i++)
+        //    {
+        //        hashCode = unchecked((hashCode ^ data[i]) * Hash.FnvPrime);
+        //    }
 
-            return hashCode;
-        }
+        //    return hashCode;
+        //}
 
         /// <summary>
         /// Compute the FNV-1a hash of a sequence of bytes and determines if the byte
@@ -228,22 +228,22 @@ namespace RefactoringEssentials
         /// <param name="length">The length of the sequence.</param>
         /// <param name="isAscii">True if the sequence contains only characters in the ASCII range.</param>
         /// <returns>The FNV-1a hash of <paramref name="data"/></returns>
-        internal static unsafe int GetFNVHashCode(byte* data, int length, out bool isAscii)
-        {
-            int hashCode = Hash.FnvOffsetBias;
+        //internal static unsafe int GetFNVHashCode(byte* data, int length, out bool isAscii)
+        //{
+        //    int hashCode = Hash.FnvOffsetBias;
 
-            byte asciiMask = 0;
+        //    byte asciiMask = 0;
 
-            for (int i = 0; i < length; i++)
-            {
-                byte b = data[i];
-                asciiMask |= b;
-                hashCode = unchecked((hashCode ^ b) * Hash.FnvPrime);
-            }
+        //    for (int i = 0; i < length; i++)
+        //    {
+        //        byte b = data[i];
+        //        asciiMask |= b;
+        //        hashCode = unchecked((hashCode ^ b) * Hash.FnvPrime);
+        //    }
 
-            isAscii = (asciiMask & 0x80) == 0;
-            return hashCode;
-        }
+        //    isAscii = (asciiMask & 0x80) == 0;
+        //    return hashCode;
+        //}
 
         /// <summary>
         /// Compute the FNV-1a hash of a sequence of bytes
@@ -251,17 +251,17 @@ namespace RefactoringEssentials
         /// </summary>
         /// <param name="data">The sequence of bytes</param>
         /// <returns>The FNV-1a hash of <paramref name="data"/></returns>
-        internal static int GetFNVHashCode(ImmutableArray<byte> data)
-        {
-            int hashCode = Hash.FnvOffsetBias;
+        //internal static int GetFNVHashCode(ImmutableArray<byte> data)
+        //{
+        //    int hashCode = Hash.FnvOffsetBias;
 
-            for (int i = 0; i < data.Length; i++)
-            {
-                hashCode = unchecked((hashCode ^ data[i]) * Hash.FnvPrime);
-            }
+        //    for (int i = 0; i < data.Length; i++)
+        //    {
+        //        hashCode = unchecked((hashCode ^ data[i]) * Hash.FnvPrime);
+        //    }
 
-            return hashCode;
-        }
+        //    return hashCode;
+        //}
 
         /// <summary>
         /// Compute the hashcode of a sub-string using FNV-1a
@@ -275,18 +275,18 @@ namespace RefactoringEssentials
         /// <param name="start">The start index of the first character to hash</param>
         /// <param name="length">The number of characters, beginning with <paramref name="start"/> to hash</param>
         /// <returns>The FNV-1a hash code of the substring beginning at <paramref name="start"/> and ending after <paramref name="length"/> characters.</returns>
-        internal static int GetFNVHashCode(string text, int start, int length)
-        {
-            int hashCode = Hash.FnvOffsetBias;
-            int end = start + length;
+        //internal static int GetFNVHashCode(string text, int start, int length)
+        //{
+        //    int hashCode = Hash.FnvOffsetBias;
+        //    int end = start + length;
 
-            for (int i = start; i < end; i++)
-            {
-                hashCode = unchecked((hashCode ^ text[i]) * Hash.FnvPrime);
-            }
+        //    for (int i = start; i < end; i++)
+        //    {
+        //        hashCode = unchecked((hashCode ^ text[i]) * Hash.FnvPrime);
+        //    }
 
-            return hashCode;
-        }
+        //    return hashCode;
+        //}
 
         /// <summary>
         /// Compute the hashcode of a sub-string using FNV-1a
@@ -295,10 +295,10 @@ namespace RefactoringEssentials
         /// <param name="text">The input string</param>
         /// <param name="start">The start index of the first character to hash</param>
         /// <returns>The FNV-1a hash code of the substring beginning at <paramref name="start"/> and ending at the end of the string.</returns>
-        internal static int GetFNVHashCode(string text, int start)
-        {
-            return GetFNVHashCode(text, start, length: text.Length - start);
-        }
+        //internal static int GetFNVHashCode(string text, int start)
+        //{
+        //    return GetFNVHashCode(text, start, length: text.Length - start);
+        //}
 
         /// <summary>
         /// Compute the hashcode of a string using FNV-1a
@@ -306,10 +306,10 @@ namespace RefactoringEssentials
         /// </summary>
         /// <param name="text">The input string</param>
         /// <returns>The FNV-1a hash code of <paramref name="text"/></returns>
-        internal static int GetFNVHashCode(string text)
-        {
-            return CombineFNVHash(Hash.FnvOffsetBias, text);
-        }
+        //internal static int GetFNVHashCode(string text)
+        //{
+        //    return CombineFNVHash(Hash.FnvOffsetBias, text);
+        //}
 
         /// <summary>
         /// Compute the hashcode of a string using FNV-1a
@@ -317,18 +317,18 @@ namespace RefactoringEssentials
         /// </summary>
         /// <param name="text">The input string</param>
         /// <returns>The FNV-1a hash code of <paramref name="text"/></returns>
-        internal static int GetFNVHashCode(System.Text.StringBuilder text)
-        {
-            int hashCode = Hash.FnvOffsetBias;
-            int end = text.Length;
+        //internal static int GetFNVHashCode(System.Text.StringBuilder text)
+        //{
+        //    int hashCode = Hash.FnvOffsetBias;
+        //    int end = text.Length;
 
-            for (int i = 0; i < end; i++)
-            {
-                hashCode = unchecked((hashCode ^ text[i]) * Hash.FnvPrime);
-            }
+        //    for (int i = 0; i < end; i++)
+        //    {
+        //        hashCode = unchecked((hashCode ^ text[i]) * Hash.FnvPrime);
+        //    }
 
-            return hashCode;
-        }
+        //    return hashCode;
+        //}
 
         /// <summary>
         /// Compute the hashcode of a sub string using FNV-1a
@@ -338,18 +338,18 @@ namespace RefactoringEssentials
         /// <param name="start">The start index of the first character to hash</param>
         /// <param name="length">The number of characters, beginning with <paramref name="start"/> to hash</param>
         /// <returns>The FNV-1a hash code of the substring beginning at <paramref name="start"/> and ending after <paramref name="length"/> characters.</returns>
-        internal static int GetFNVHashCode(char[] text, int start, int length)
-        {
-            int hashCode = Hash.FnvOffsetBias;
-            int end = start + length;
+        //internal static int GetFNVHashCode(char[] text, int start, int length)
+        //{
+        //    int hashCode = Hash.FnvOffsetBias;
+        //    int end = start + length;
 
-            for (int i = start; i < end; i++)
-            {
-                hashCode = unchecked((hashCode ^ text[i]) * Hash.FnvPrime);
-            }
+        //    for (int i = start; i < end; i++)
+        //    {
+        //        hashCode = unchecked((hashCode ^ text[i]) * Hash.FnvPrime);
+        //    }
 
-            return hashCode;
-        }
+        //    return hashCode;
+        //}
 
         /// <summary>
         /// Compute the hashcode of a single character using the FNV-1a algorithm
@@ -360,10 +360,10 @@ namespace RefactoringEssentials
         /// </summary>
         /// <param name="ch">The character to hash</param>
         /// <returns>The FNV-1a hash code of the character.</returns>
-        internal static int GetFNVHashCode(char ch)
-        {
-            return Hash.CombineFNVHash(Hash.FnvOffsetBias, ch);
-        }
+        //internal static int GetFNVHashCode(char ch)
+        //{
+        //    return Hash.CombineFNVHash(Hash.FnvOffsetBias, ch);
+        //}
 
         /// <summary>
         /// Combine a string with an existing FNV-1a hash code
@@ -372,15 +372,15 @@ namespace RefactoringEssentials
         /// <param name="hashCode">The accumulated hash code</param>
         /// <param name="text">The string to combine</param>
         /// <returns>The result of combining <paramref name="hashCode"/> with <paramref name="text"/> using the FNV-1a algorithm</returns>
-        internal static int CombineFNVHash(int hashCode, string text)
-        {
-            foreach (char ch in text)
-            {
-                hashCode = unchecked((hashCode ^ ch) * Hash.FnvPrime);
-            }
+        //internal static int CombineFNVHash(int hashCode, string text)
+        //{
+        //    foreach (char ch in text)
+        //    {
+        //        hashCode = unchecked((hashCode ^ ch) * Hash.FnvPrime);
+        //    }
 
-            return hashCode;
-        }
+        //    return hashCode;
+        //}
 
         /// <summary>
         /// Combine a char with an existing FNV-1a hash code

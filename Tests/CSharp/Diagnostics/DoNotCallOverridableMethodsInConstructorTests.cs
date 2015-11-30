@@ -77,6 +77,31 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Test]
+        public void IgnoresOverriddenSealedMethods()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
+class BaseClass
+{
+	protected virtual void Bar ()
+	{
+	}
+}
+
+class DerivedClass : BaseClass
+{
+	DerivedClass()
+	{
+		Bar();
+		Bar();
+	}
+
+	protected override sealed void Bar ()
+	{
+	}
+}");
+        }
+
+        [Test]
         public void IgnoresNonLocalCalls()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo

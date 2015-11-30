@@ -212,7 +212,11 @@ namespace RefactoringEssentials.Tests
             for (int i = 0; i < input.Length; i++)
             {
                 char ch = input[i];
-                if (ch == '$')
+                if (ch == '$' && ((i > 0) && (input[i - 1] == '$')))
+                {
+                    // Ignore 2nd "$" in "$$"
+                }
+                else if (ch == '$' && (i + 1 >= input.Length || input[i + 1] != '$'))
                 {
                     if (start < 0)
                     {

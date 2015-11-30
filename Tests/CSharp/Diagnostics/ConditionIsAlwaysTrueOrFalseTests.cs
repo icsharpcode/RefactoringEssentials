@@ -208,38 +208,63 @@ class Bar
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
 struct Foo 
 {
-	string name;
+    string name;
 
-	public Foo (string name)
-	{
-		this.name = name;
-	}
+    public Foo (string name)
+    {
+        this.name = name;
+    }
 
-	public static bool operator ==(Foo value, Foo o)
-	{
-		return value.name == o.name;
-	}
+    public static bool operator ==(Foo value, Foo o)
+    {
+        return value.name == o.name;
+    }
 
-	public static bool operator !=(Foo value, Foo o)
-	{
-		return !(value == o);
-	}
+    public static bool operator !=(Foo value, Foo o)
+    {
+        return !(value == o);
+    }
 
-	public static implicit operator Foo (string name)
-	{
-		return new Foo (name);
-	}
+    public static implicit operator Foo (string name)
+    {
+        return new Foo (name);
+    }
 }
 
 class Bar
 {
-	public static void Main (string[] args)
-	{
-		var foo = new Foo (null);
-		System.Console.WriteLine (foo == null);
-	}
+    public static void Main (string[] args)
+    {
+        var foo = new Foo (null);
+        System.Console.WriteLine (foo == null);
+    }
 }");
         }
+
+
+        /// <summary>
+        /// Bug 36336 - Invalid Source Analysis on Pointer types
+        /// </summary>
+        [Test]
+        public void TestBug36336()
+        {
+            Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
+            unsafe class MainClass
+            {
+                static extern int *GetInt();
+
+                static void ParseInt()
+                {
+                    var x = GetInt();
+                    if (x != null) {
+                        // Do stuff
+                    }
+                }
+            }
+");
+        }
+
+
 
 
 

@@ -74,7 +74,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var symbol = info.Symbol;
                 if ((symbol == null) || (symbol.ContainingType == null) || symbol.ContainingType.Locations.Where(loc => loc.IsInSource && loc.SourceTree.FilePath == type.SyntaxTree.FilePath).All(loc => !type.Span.Contains(loc.SourceSpan)))
                     return;
-                if (symbol.IsVirtual || symbol.IsAbstract || symbol.IsOverride)
+                if (!symbol.IsSealed && (symbol.IsVirtual || symbol.IsAbstract || symbol.IsOverride))
                 {
                     if (symbol.Kind == SymbolKind.Property)
                     {
