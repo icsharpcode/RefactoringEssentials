@@ -105,7 +105,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (rr.Type == null)
                 return false;
             var returnType = rr.Type;
-            if (returnType != null && returnType.IsValueType)
+            if (returnType != null && returnType.IsValueType && !returnType.IsPointerType())
             {
                 // nullable check
                 if (returnType.IsNullableType())
