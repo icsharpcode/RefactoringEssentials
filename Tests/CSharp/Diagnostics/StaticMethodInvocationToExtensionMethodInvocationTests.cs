@@ -339,6 +339,25 @@ class C
         }
 
         [Test]
+        public void IgnoresLambdaAsExtensionMethodParameter()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
+static class B
+{
+    public static void CallPrintIntHandler(this Action<int> a, int i) { }
+}
+
+class C
+{
+    void F()
+    {
+        int a = 4;
+        B.CallPrintIntHandler(i => Console.WriteLine(i), a);
+    }
+}");
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
