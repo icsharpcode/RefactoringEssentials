@@ -568,6 +568,7 @@
     <Compile Include="Util\NameGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
+
     <Content Include="Properties\AssemblyInfoBase.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>

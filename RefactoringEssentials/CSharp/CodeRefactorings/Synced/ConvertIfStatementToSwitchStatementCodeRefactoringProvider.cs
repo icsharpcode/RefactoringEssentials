@@ -109,7 +109,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 if (type == null || type is IErrorTypeSymbol)
                     return false;
             }
-            return Array.IndexOf(validTypes, type.SpecialType) != -1;
+            return validTypes.Contains (type.SpecialType);
         }
 
         internal static bool CollectSwitchSections(List<SwitchSectionSyntax> result, SemanticModel context,
