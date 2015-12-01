@@ -44,6 +44,7 @@
     <IncludeCopyLocalReferencesInVSIXContainer>false</IncludeCopyLocalReferencesInVSIXContainer>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Common\CodeContractsCodeRefactoringProvider.cs" />
     <Compile Include="Common\NotPortedYetAttribute.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs" />
