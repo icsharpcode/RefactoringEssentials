@@ -15,9 +15,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the parameter must not be null")]
     /// <summary>
-    /// Creates a 'Contract.Requires(param != null);' contruct for a parameter.
+    /// Creates a 'Contract.Requires(param != null);' contract for a parameter.
     /// </summary>
-    public class ContractRequiresNotNullCodeRefactoringProvider : SpecializedCodeRefactoringProvider<ParameterSyntax>
+    public class ContractRequiresNotNullCodeRefactoringProvider : CodeContractsCodeRefactoringProvider<ParameterSyntax>
     {
         protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, ParameterSyntax node, CancellationToken cancellationToken)
         {
@@ -63,19 +63,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 SyntaxFactory.ArgumentList(argumentList)));
 
             return contractRequiresCall.WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
-        }
-
-        static bool UsingStatementNotPresent(CompilationUnitSyntax cu)
-        {
-            return !cu.Usings.Any((UsingDirectiveSyntax u) => u.Name.ToString() == "System.Diagnostics.Contracts");
-        }
-
-        static CompilationUnitSyntax AddUsingStatement(ParameterSyntax node, CompilationUnitSyntax cu)
-        {
-            return cu.AddUsingDirective(
-                SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Diagnostics.Contracts")).WithAdditionalAnnotations(Formatter.Annotation)
-                , node
-                , true);
         }
 
         static bool HasNotNullContract(SemanticModel semanticModel, IParameterSymbol parameterSymbol, BlockSyntax bodyStatement)
