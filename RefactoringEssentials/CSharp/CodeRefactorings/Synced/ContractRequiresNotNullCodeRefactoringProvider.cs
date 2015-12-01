@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the parameter must not be null")]
     /// <summary>
-    /// Creates a 'Contract.Requires(param != null);' contruct for a parameter.
+    /// Creates a 'Contract.Requires(param != null);' contract for a parameter.
     /// </summary>
     public class ContractRequiresNotNullCodeRefactoringProvider : SpecializedCodeRefactoringProvider<ParameterSyntax>
     {
