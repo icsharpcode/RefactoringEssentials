@@ -49,7 +49,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (memberReference == null)
                 return false;
             var firstArgument = node.ArgumentList?.Arguments.FirstOrDefault()?.Expression;
-            if (firstArgument == null || firstArgument.IsKind(SyntaxKind.NullLiteralExpression))
+            if (firstArgument == null|| firstArgument.IsKind(SyntaxKind.NullLiteralExpression))
+                return false;
+            if (firstArgument is AnonymousFunctionExpressionSyntax)
                 return false;
             var expressionSymbol = semanticModel.GetSymbolInfo(node.Expression).Symbol as IMethodSymbol;
             // Ignore non-extensions and reduced extensions (so a.Ext, as opposed to B.Ext(a))
