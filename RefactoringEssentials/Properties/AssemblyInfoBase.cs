@@ -9,8 +9,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("ICSharpCode")]
 [assembly: AssemblyProduct("Refactoring Essentials")]
 [assembly: AssemblyCopyright("Copyright 2010-2015 AlphaSierraPapa and Xamarin Inc.")]
-[assembly: AssemblyVersion("2.1.0.0")]
-[assembly: AssemblyFileVersion("2.1.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
+[assembly: AssemblyFileVersion("3.0.0")]
 
 // This sets the default COM visibility of types in the assembly to invisible.
 // If you need to expose a type to COM, use [ComVisible(true)] on that type.
