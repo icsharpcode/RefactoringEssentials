@@ -48,6 +48,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 trueBranch == true && falseBranch == false) // Handled by RedundantTernaryExpressionIssue
                 return false;
 
+            var typeTrue = nodeContext.SemanticModel.GetTypeInfo(node.WhenTrue);
+            var typeFalse = nodeContext.SemanticModel.GetTypeInfo(node.WhenFalse);
+            if (typeTrue.Type == null || typeTrue.Type.SpecialType != SpecialType.System_Boolean ||
+                typeFalse.Type == null || typeFalse.Type.SpecialType != SpecialType.System_Boolean)
+                return false;
+
+
             diagnostic = Diagnostic.Create(
                 descriptor,
                 node.GetLocation()

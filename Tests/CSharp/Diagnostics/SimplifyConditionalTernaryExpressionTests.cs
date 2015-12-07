@@ -182,6 +182,22 @@ class Foo
 ");
         }
 
+        /// <summary>
+        /// Bug 26669 - Source analysis "simplify conditional expression" generates invalid C# condition
+        /// </summary>
+        [Test]
+        public void TestBug26669()
+        {
+            Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
+class Foo
+{
+    void Bar ()
+    {
+        var a = 1 < 2 ? (object)5 : false;
+    }
+}
+");
+        }
     }
 }
 
