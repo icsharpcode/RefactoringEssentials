@@ -543,6 +543,7 @@
     <Compile Include="Util\TokenComparer.cs" />
     <Compile Include="Util\NamespaceDeclarationSyntaxExtensions.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorCodeRefactoringProvider.cs" />
+    <Compile Include="VB\CodeRefactorings\AddCheckForNothingCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\CheckIfParameterIsNothingCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ComputeConstantValueCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDecToHexCodeRefactoringProvider.cs" />

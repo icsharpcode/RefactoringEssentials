@@ -419,6 +419,7 @@
     <Compile Include="Samples\CSharp\SampleCodeRefactoringTests.cs" />
     <Compile Include="SymbolChecksTest.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorTests.cs" />
+    <Compile Include="VB\CodeRefactorings\AddCheckForNothingTests.cs" />
     <Compile Include="VB\CodeRefactorings\CheckIfParameterIsNothingTests.cs" />
     <Compile Include="VB\CodeRefactorings\ComputeConstantValueTests.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDecToHexTests.cs" />
