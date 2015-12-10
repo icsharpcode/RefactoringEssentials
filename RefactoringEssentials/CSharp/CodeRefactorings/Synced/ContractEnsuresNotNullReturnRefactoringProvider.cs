@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Simplification;
 using Microsoft.CodeAnalysis.Formatting;
+using System.Diagnostics.Contracts;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
@@ -17,7 +18,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
     /// <summary>
     /// Creates a 'Contract.Ensures(return != null);' contract for a method return value.
     /// </summary>
-    public class ContractEnsuresNotNullReturnCodeRefactoringProvider : SpecializedCodeRefactoringProvider<MethodDeclarationSyntax>
+    public class ContractEnsuresNotNullReturnCodeRefactoringProvider : CodeContractsCodeRefactoringProvider<MethodDeclarationSyntax>
     {
         protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, MethodDeclarationSyntax node, CancellationToken cancellationToken)
         {
@@ -33,6 +34,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (bodyStatement == null)
                 return Enumerable.Empty<CodeAction>();
 
+            if (HasReturnContract(bodyStatement, returnType.ToString()))
+                return Enumerable.Empty<CodeAction>();
+
             return new[] { CodeActionFactory.Create(
                 node.Identifier.Span,
                 DiagnosticSeverity.Info,
@@ -42,7 +46,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                     var newRoot = (CompilationUnitSyntax) root.ReplaceNode((SyntaxNode)bodyStatement, newBody);
 
-                    //if (UsingStatementNotPresent(newRoot)) newRoot = AddUsingStatement(node, newRoot);
+                    if (UsingStatementNotPresent(newRoot)) newRoot = AddUsingStatement(node, newRoot);
 
                     return Task.FromResult(document.WithSyntaxRoot(newRoot));
                 }
@@ -54,29 +58,19 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             return SyntaxFactory.ParseStatement($"Contract.Ensures(Contract.Result<{returnType}>() != null);").WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
         }
 
-        static bool UsingStatementNotPresent(CompilationUnitSyntax cu)
+        static bool HasReturnContract(BlockSyntax bodyStatement, string returnType)
         {
-            return !cu.Usings.Any((UsingDirectiveSyntax u) => u.Name.ToString() == "System.Diagnostics.Contracts");
-        }
+            var workspace = new AdhocWorkspace();
 
-        static CompilationUnitSyntax AddUsingStatement(ParameterSyntax node, CompilationUnitSyntax cu)
-        {
-            return cu.AddUsingDirective(
-                SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Diagnostics.Contracts")).WithAdditionalAnnotations(Formatter.Annotation)
-                , node
-                , true);
-        }
-
-        static bool HasNotNullContract(SemanticModel semanticModel, IParameterSymbol parameterSymbol, BlockSyntax bodyStatement)
-        {
-            foreach (var expressions in bodyStatement.DescendantNodes().OfType<ExpressionStatementSyntax>())
+            foreach (var expression in bodyStatement.DescendantNodes().OfType<ExpressionStatementSyntax>())
             {
-                var identifiers = expressions.DescendantNodes().OfType<IdentifierNameSyntax>();
+                var formatted = Formatter.Format(expression, workspace).ToString();
 
-                if (Enumerable.SequenceEqual(identifiers.Select(i => i.Identifier.Text), new List<string>() { "Contract", "Requires", parameterSymbol.Name }))
-                {
+                if (formatted == $"Contract.Ensures(Contract.Result<{returnType}>() != null);")
                     return true;
-                }
+
+                if (formatted == $"Contract.Ensures(null != Contract.Result<{returnType}>());")
+                    return true;
             }
             return false;
         }

@@ -11,17 +11,6 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     [TestFixture]
     public class ContractEnsuresNotNullReturnTests : CSharpCodeRefactoringTestBase
     {
-        public int? play()
-        {
-            Contract.Ensures(Contract.Result<int?>() != null);
-            return null;
-        }
-
-        public ContractEnsuresNotNullReturnCodeRefactoringProvider play2()
-        {
-            return null;
-        }
-
         [Test]
         public void ValueTypeReturnType()
         {
@@ -57,7 +46,9 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     $public int? Foo() 
     { 
     }
-}", @"class Test
+}", @"using System.Diagnostics.Contracts;
+
+class Test
 {
     public int? Foo() 
     {
@@ -75,7 +66,9 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     $public Cedd Foo() 
     { 
     }
-}", @"class Test
+}", @"using System.Diagnostics.Contracts;
+
+class Test
 {
     public Cedd Foo() 
     {
@@ -84,14 +77,89 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        // test add using statement
-        // test statement already exists
-        // TestLambda?
-        // TestAnonymousMethod?
-        // test a different contract.requires is already there
-        // test using statement already there
-        // test old csharp?
-        // anything else? 
+        [Test]
+        public void TestUsingStatementAlreadyThere()
+        {
+            Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"using System.Diagnostics.Contracts;
+
+class Test
+{
+    $public Cedd Foo() 
+    { 
+    }
+}", @"using System.Diagnostics.Contracts;
+
+class Test
+{
+    public Cedd Foo() 
+    {
+        Contract.Ensures(Contract.Result<Cedd>() != null);
+    }
+}");
+        }
+
+        [Test]
+        public void TestContractEnsuresReturnAlreadyThere()
+        {
+            TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(@"class Test
+{
+    public $Cedd Foo() 
+    {
+        Contract.Ensures(Contract.Result<Cedd>() != null);
+    }
+}");
+        }
+
+        [Test]
+        public void TestContractEnsuresReturnAlreadyThereWithWhitespace()
+        {
+            TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(@"class Test
+{
+    public $Cedd Foo() 
+    {
+        Contract.Ensures(Contract.Result<Cedd>() !=     null);
+    }
+}");
+        }
+
+        [Test]
+        public void TestContractEnsuresReturnAlreadyThereReversedParameters()
+        {
+            TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(@"class Test
+{
+    public $Cedd Foo() 
+    {
+        Contract.Ensures(null != Contract.Result<Cedd>());
+    }
+}");
+        }
+
+        [Test]
+        public void Test_OldCSharp()
+        {
+            var parseOptions = new CSharpParseOptions(
+                LanguageVersion.CSharp5,
+                DocumentationMode.Diagnose | DocumentationMode.Parse,
+                SourceCodeKind.Regular,
+                ImmutableArray.Create("DEBUG", "TEST")
+            );
+
+            Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(@"class Foo
+{
+    Cedd $Test ()
+    {
+    }
+}", @"using System.Diagnostics.Contracts;
+
+class Foo
+{
+    Cedd Test ()
+    {
+        Contract.Ensures(Contract.Result<Cedd>() != null);
+    }
+}", parseOptions: parseOptions);
+        }
 
     }
 }
