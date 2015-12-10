@@ -49,6 +49,10 @@ namespace RefactoringEssentials.CSharp
 
             var identifierAncestors = identifier.Ancestors();
 
+            // Don't surround return statements with checks
+            if (identifierAncestors.OfType<ReturnStatementSyntax>().Any())
+                return;
+
             // If identifier is in a conditional ternary expression, skip refactoring is case of present null check in its condition
             var conditionalExprParent = identifierAncestors.OfType<ConditionalExpressionSyntax>().FirstOrDefault();
             if ((conditionalExprParent != null) && ConditionContainsNullCheck(conditionalExprParent.Condition, identifier))
