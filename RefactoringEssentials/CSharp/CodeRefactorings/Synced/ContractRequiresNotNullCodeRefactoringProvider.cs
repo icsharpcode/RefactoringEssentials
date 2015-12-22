@@ -22,59 +22,47 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         #region ICodeActionProvider implementation
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            var document = context.Document;
-            if (document.Project.Solution.Workspace.Kind == WorkspaceKind.MiscellaneousFiles)
-                return;
-            var span = context.Span;
-            if (!span.IsEmpty)
-                return;
-            var cancellationToken = context.CancellationToken;
-            if (cancellationToken.IsCancellationRequested)
+            var codeContractsContext = await CodeContractsContext(context);
+            if (codeContractsContext == null)
                 return;
 
-            var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            if (model.IsFromGeneratedCode(cancellationToken))
-                return;
-            var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            if (!root.Span.Contains(span))
-                return;
-            var node = root.FindNode(span, false, true);
-            var foundNode = (ParameterSyntax)node.AncestorsAndSelf().FirstOrDefault(n => n is ParameterSyntax);
+            var foundNode = (ParameterSyntax)codeContractsContext.Node.AncestorsAndSelf().FirstOrDefault(n => n is ParameterSyntax);
             if (foundNode == null)
                 return;
 
-            foreach (var action in GetActions(document, model, root, span, foundNode, cancellationToken))
+            foreach (var action in GetActions(codeContractsContext.Document, codeContractsContext.SemanticModel, codeContractsContext.Root, codeContractsContext.TextSpan, foundNode))
                 context.RegisterRefactoring(action);
         }
         #endregion
 
-        protected IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, ParameterSyntax node, CancellationToken cancellationToken)
+        protected IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, ParameterSyntax node)
         {
             if (!node.Identifier.Span.Contains(span))
-                return Enumerable.Empty<CodeAction>();
+                yield break;
+
             var parameter = node;
             var bodyStatement = parameter.Parent.Parent.ChildNodes().OfType<BlockSyntax>().FirstOrDefault();
             if (bodyStatement == null)
-                return Enumerable.Empty<CodeAction>();
+                yield break;
 
             var parameterSymbol = semanticModel.GetDeclaredSymbol(node);
             var type = parameterSymbol.Type;
             if (type == null || type.IsValueType || HasNotNullContract(semanticModel, parameterSymbol, bodyStatement))
-                return Enumerable.Empty<CodeAction>();
-            return new[] { CodeActionFactory.Create(
-                node.Identifier.Span,
-                DiagnosticSeverity.Info,
-                GettextCatalog.GetString ("Add contract requiring parameter must not be null"),
-                t2 => {
-                    var newBody = bodyStatement.WithStatements (SyntaxFactory.List<StatementSyntax>(new [] { CreateContractRequiresCall(node.Identifier.ToString()) }.Concat (bodyStatement.Statements)));
+                yield break;
 
-                    var newRoot = (CompilationUnitSyntax) root.ReplaceNode((SyntaxNode)bodyStatement, newBody);
+            yield return CreateAction(
+                node.Identifier.Span
+                , t2 => {
+                    var newBody = bodyStatement.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] { CreateContractRequiresCall(node.Identifier.ToString()) }.Concat(bodyStatement.Statements)));
+
+                    var newRoot = (CompilationUnitSyntax)root.ReplaceNode((SyntaxNode)bodyStatement, newBody);
 
                     if (UsingStatementNotPresent(newRoot)) newRoot = AddUsingStatement(node, newRoot);
 
                     return Task.FromResult(document.WithSyntaxRoot(newRoot));
                 }
-            ) };
+                , "Add contract requiring parameter must not be null"
+            );
         }
 
         static ExpressionStatementSyntax CreateContractRequiresCall(string paramName)

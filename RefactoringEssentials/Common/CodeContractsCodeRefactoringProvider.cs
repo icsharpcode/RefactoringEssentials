@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Text;
 using System.Threading;
 using System.Diagnostics.Contracts;
+using Microsoft.CodeAnalysis.CodeActions;
+using System;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
@@ -121,6 +123,16 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (node == null) return null;
 
             return new Context(document, textSpan, cancellationToken, semanticModel, root, node);
+        }
+
+        protected static CodeAction CreateAction(TextSpan textSpan, Func<CancellationToken, Task<Document>> changedDocument, string description)
+        {
+            return CodeActionFactory.Create(
+                textSpan,
+                DiagnosticSeverity.Info,
+                GettextCatalog.GetString(description),
+                changedDocument
+            );
         }
 
         protected static bool UsingStatementNotPresent(CompilationUnitSyntax cu)

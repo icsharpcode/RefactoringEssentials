@@ -73,29 +73,28 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         {
             var returnType = (CSharpSyntaxNode)nullableType ?? objectType;
             if (returnType == null)
-                return Enumerable.Empty<CodeAction>();
+                yield break;
 
             var bodyStatement = node.ChildNodes().OfType<BlockSyntax>().FirstOrDefault();
             if (bodyStatement == null)
-                return Enumerable.Empty<CodeAction>();
+                yield break; 
 
             if (HasReturnContract(bodyStatement, returnType.ToString()))
-                return Enumerable.Empty<CodeAction>();
+                yield break;
 
-            return new[] { CodeActionFactory.Create(
-                node.Span,
-                DiagnosticSeverity.Info,
-                GettextCatalog.GetString ("Add a Contract to specify the return value must not be null"),
-                t2 => {
-                    var newBody = bodyStatement.WithStatements(SyntaxFactory.List<StatementSyntax>(new [] { CreateContractEnsuresCall(returnType.ToString()) }.Concat (bodyStatement.Statements))).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
+            yield return CreateAction(
+                node.Span
+                ,t2 => {
+                    var newBody = bodyStatement.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] { CreateContractEnsuresCall(returnType.ToString()) }.Concat(bodyStatement.Statements))).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
 
-                    var newRoot = (CompilationUnitSyntax) root.ReplaceNode((SyntaxNode)bodyStatement, newBody).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
+                    var newRoot = (CompilationUnitSyntax)root.ReplaceNode((SyntaxNode)bodyStatement, newBody).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
 
                     if (UsingStatementNotPresent(newRoot)) newRoot = AddUsingStatement(node, newRoot);
 
                     return Task.FromResult(document.WithSyntaxRoot(newRoot));
                 }
-            ) };
+                ,"Add a Contract to specify the return value must not be null"
+            );
         }
 
         static StatementSyntax CreateContractEnsuresCall(string returnType)
