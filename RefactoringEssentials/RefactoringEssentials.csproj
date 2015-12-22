@@ -655,6 +655,7 @@
       <DependentUpon>RefactoringEssentials.tt</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Util\Reflection.md" />
     <None Include="Versioning.t4.template">
       <LastGenOutput>Versioning.cs.cs</LastGenOutput>
     </None>
