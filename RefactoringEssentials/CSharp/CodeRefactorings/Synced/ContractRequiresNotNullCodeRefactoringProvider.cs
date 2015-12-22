@@ -17,9 +17,38 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
     /// <summary>
     /// Creates a 'Contract.Requires(param != null);' contract for a parameter.
     /// </summary>
-    public class ContractRequiresNotNullCodeRefactoringProvider : CodeContractsCodeRefactoringProvider<ParameterSyntax>
+    public class ContractRequiresNotNullCodeRefactoringProvider : CodeContractsCodeRefactoringProvider
     {
-        protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, ParameterSyntax node, CancellationToken cancellationToken)
+        #region ICodeActionProvider implementation
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        {
+            var document = context.Document;
+            if (document.Project.Solution.Workspace.Kind == WorkspaceKind.MiscellaneousFiles)
+                return;
+            var span = context.Span;
+            if (!span.IsEmpty)
+                return;
+            var cancellationToken = context.CancellationToken;
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            if (model.IsFromGeneratedCode(cancellationToken))
+                return;
+            var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+            if (!root.Span.Contains(span))
+                return;
+            var node = root.FindNode(span, false, true);
+            var foundNode = (ParameterSyntax)node.AncestorsAndSelf().FirstOrDefault(n => n is ParameterSyntax);
+            if (foundNode == null)
+                return;
+
+            foreach (var action in GetActions(document, model, root, span, foundNode, cancellationToken))
+                context.RegisterRefactoring(action);
+        }
+        #endregion
+
+        protected IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, ParameterSyntax node, CancellationToken cancellationToken)
         {
             if (!node.Identifier.Span.Contains(span))
                 return Enumerable.Empty<CodeAction>();

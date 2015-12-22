@@ -37,6 +37,18 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
         [Test]
+        public void VoidReturnType()
+        {
+            TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"class Test
+            {
+                public $void Foo() 
+                { 
+                }
+            }");
+        }
+
+        [Test]
         // Not sure why anyone would want this when can just change the return type to be non nullable. Maybe you have to implement an interface you don't control or something strange like that.
         public void NullableValueTypeReturnType()
         {
@@ -50,7 +62,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 
 class Test
 {
-    public int? Foo() 
+    public int? Foo()
     {
         Contract.Ensures(Contract.Result<int?>() != null);
     }
@@ -70,7 +82,7 @@ class Test
 
 class Test
 {
-    public Cedd Foo() 
+    public Cedd Foo()
     {
         Contract.Ensures(Contract.Result<Cedd>() != null);
     }
@@ -78,7 +90,7 @@ class Test
         }
 
         [Test]
-        public void TestUsingStatementAlreadyThere()
+        public void UsingStatementAlreadyThere()
         {
             Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
                 @"using System.Diagnostics.Contracts;
@@ -92,7 +104,7 @@ class Test
 
 class Test
 {
-    public Cedd Foo() 
+    public Cedd Foo()
     {
         Contract.Ensures(Contract.Result<Cedd>() != null);
     }
@@ -136,6 +148,79 @@ class Test
         }
 
         [Test]
+        public void ObjectPropertyGetter()
+        {
+            Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"class Test
+{
+    public Cedd Foo
+    {
+        $get
+        {
+            return null;
+        }
+    }
+}", @"using System.Diagnostics.Contracts;
+
+class Test
+{
+    public Cedd Foo
+    {
+        get
+        {
+            Contract.Ensures(Contract.Result<Cedd>() != null);
+            return null;
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void TestContractEnsuresReturnAlreadyThereForPropertyGetter()
+        {
+            TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"class Test
+{
+    public Cedd Foo
+    {
+        $get
+        {
+            Contract.Ensures(Contract.Result<Cedd>() != null);
+            return null;
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void UsingStatementAlreadyThereForPropertyGetter()
+        {
+            Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"using System.Diagnostics.Contracts;
+class Test
+{
+    public Cedd Foo
+    {
+        $get
+        {
+            return null;
+        }
+    }
+}", @"using System.Diagnostics.Contracts;
+class Test
+{
+    public Cedd Foo
+    {
+        get
+        {
+            Contract.Ensures(Contract.Result<Cedd>() != null);
+            return null;
+        }
+    }
+}");
+        }
+
+        [Test]
         public void Test_OldCSharp()
         {
             var parseOptions = new CSharpParseOptions(
@@ -154,7 +239,7 @@ class Test
 
 class Foo
 {
-    Cedd Test ()
+    Cedd Test()
     {
         Contract.Ensures(Contract.Result<Cedd>() != null);
     }

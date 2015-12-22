@@ -18,15 +18,60 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
     /// <summary>
     /// Creates a 'Contract.Ensures(return != null);' contract for a method return value.
     /// </summary>
-    public class ContractEnsuresNotNullReturnCodeRefactoringProvider : CodeContractsCodeRefactoringProvider<MethodDeclarationSyntax>
+    public class ContractEnsuresNotNullReturnCodeRefactoringProvider : CodeContractsCodeRefactoringProvider
     {
-        protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, MethodDeclarationSyntax node, CancellationToken cancellationToken)
+        #region ICodeActionProvider implementation
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        {
+            var codeContractsContext = await CodeContractsContext(context);
+            if (codeContractsContext == null)
+                return;
+
+            var methodNode = (MethodDeclarationSyntax)codeContractsContext.Node.AncestorsAndSelf().FirstOrDefault(n => n is MethodDeclarationSyntax);
+            var getterNode = (AccessorDeclarationSyntax)codeContractsContext.Node.AncestorsAndSelf().FirstOrDefault(n => n is AccessorDeclarationSyntax && n.Kind() == SyntaxKind.GetAccessorDeclaration);
+                        
+            if (methodNode == null && getterNode == null)
+                return;
+
+            foreach (var action in GetActions(codeContractsContext.Document, codeContractsContext.Root, methodNode, getterNode))
+                context.RegisterRefactoring(action);
+        }
+        #endregion
+
+        protected IEnumerable<CodeAction> GetActions(Document document, SyntaxNode root, MethodDeclarationSyntax methodNode, AccessorDeclarationSyntax getterNode)
+        {
+            if (methodNode != null)
+                return GetActions(document, root, methodNode);
+
+            if (getterNode != null)
+                return GetActions(document, root, getterNode);
+
+            return Enumerable.Empty<CodeAction>();
+        }
+
+        protected IEnumerable<CodeAction> GetActions(Document document, SyntaxNode root, AccessorDeclarationSyntax node)
+        {
+            var propertyDeclaration = node.Ancestors().OfType<PropertyDeclarationSyntax>().FirstOrDefault();
+
+            var nullableType = propertyDeclaration.ChildNodes().OfType<NullableTypeSyntax>().FirstOrDefault();
+            
+            var objectType = propertyDeclaration.ChildNodes().OfType<IdentifierNameSyntax>().FirstOrDefault();
+
+            return GetActions(document, root, node, nullableType, objectType);
+        }
+
+        protected IEnumerable<CodeAction> GetActions(Document document, SyntaxNode root, MethodDeclarationSyntax node)
         {
             var nullableType = node.ChildNodes().OfType<NullableTypeSyntax>().FirstOrDefault();
 
             var objectType = node.ChildNodes().OfType<IdentifierNameSyntax>().FirstOrDefault();
 
-            var returnType = (CSharpSyntaxNode) nullableType ?? objectType;
+            return GetActions(document, root, node, nullableType, objectType);
+        }
+
+        private static IEnumerable<CodeAction> GetActions(Document document, SyntaxNode root, SyntaxNode node, CSharpSyntaxNode nullableType, CSharpSyntaxNode objectType)
+        {
+            var returnType = (CSharpSyntaxNode)nullableType ?? objectType;
             if (returnType == null)
                 return Enumerable.Empty<CodeAction>();
 
@@ -38,13 +83,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return Enumerable.Empty<CodeAction>();
 
             return new[] { CodeActionFactory.Create(
-                node.Identifier.Span,
+                node.Span,
                 DiagnosticSeverity.Info,
                 GettextCatalog.GetString ("Add a Contract to specify the return value must not be null"),
                 t2 => {
-                    var newBody = bodyStatement.WithStatements (SyntaxFactory.List<StatementSyntax>(new [] { CreateContractEnsuresCall(returnType.ToString()) }.Concat (bodyStatement.Statements)));
+                    var newBody = bodyStatement.WithStatements(SyntaxFactory.List<StatementSyntax>(new [] { CreateContractEnsuresCall(returnType.ToString()) }.Concat (bodyStatement.Statements))).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
 
-                    var newRoot = (CompilationUnitSyntax) root.ReplaceNode((SyntaxNode)bodyStatement, newBody);
+                    var newRoot = (CompilationUnitSyntax) root.ReplaceNode((SyntaxNode)bodyStatement, newBody).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
 
                     if (UsingStatementNotPresent(newRoot)) newRoot = AddUsingStatement(node, newRoot);
 
@@ -55,7 +100,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         static StatementSyntax CreateContractEnsuresCall(string returnType)
         {
-            return SyntaxFactory.ParseStatement($"Contract.Ensures(Contract.Result<{returnType}>() != null);").WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
+            return SyntaxFactory.ParseStatement($"Contract.Ensures(Contract.Result<{returnType}>() != null);\n").WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
         }
 
         static bool HasReturnContract(BlockSyntax bodyStatement, string returnType)
