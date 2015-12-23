@@ -15,37 +15,54 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the parameter must not be null")]
     /// <summary>
-    /// Creates a 'Contract.Requires(param != null);' contruct for a parameter.
+    /// Creates a 'Contract.Requires(param != null);' contract for a parameter.
     /// </summary>
-    public class ContractRequiresNotNullCodeRefactoringProvider : SpecializedCodeRefactoringProvider<ParameterSyntax>
+    public class ContractRequiresNotNullCodeRefactoringProvider : CodeContractsCodeRefactoringProvider
     {
-        protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, ParameterSyntax node, CancellationToken cancellationToken)
+        #region ICodeActionProvider implementation
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        {
+            var codeContractsContext = await CodeContractsContext(context);
+            if (codeContractsContext == null)
+                return;
+
+            var foundNode = (ParameterSyntax)codeContractsContext.Node.AncestorsAndSelf().FirstOrDefault(n => n is ParameterSyntax);
+            if (foundNode == null)
+                return;
+
+            foreach (var action in GetActions(codeContractsContext.Document, codeContractsContext.SemanticModel, codeContractsContext.Root, codeContractsContext.TextSpan, foundNode))
+                context.RegisterRefactoring(action);
+        }
+        #endregion
+
+        protected IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, ParameterSyntax node)
         {
             if (!node.Identifier.Span.Contains(span))
-                return Enumerable.Empty<CodeAction>();
+                yield break;
+
             var parameter = node;
             var bodyStatement = parameter.Parent.Parent.ChildNodes().OfType<BlockSyntax>().FirstOrDefault();
             if (bodyStatement == null)
-                return Enumerable.Empty<CodeAction>();
+                yield break;
 
             var parameterSymbol = semanticModel.GetDeclaredSymbol(node);
             var type = parameterSymbol.Type;
             if (type == null || type.IsValueType || HasNotNullContract(semanticModel, parameterSymbol, bodyStatement))
-                return Enumerable.Empty<CodeAction>();
-            return new[] { CodeActionFactory.Create(
-                node.Identifier.Span,
-                DiagnosticSeverity.Info,
-                GettextCatalog.GetString ("Add contract requiring parameter must not be null"),
-                t2 => {
-                    var newBody = bodyStatement.WithStatements (SyntaxFactory.List<StatementSyntax>(new [] { CreateContractRequiresCall(node.Identifier.ToString()) }.Concat (bodyStatement.Statements)));
+                yield break;
 
-                    var newRoot = (CompilationUnitSyntax) root.ReplaceNode((SyntaxNode)bodyStatement, newBody);
+            yield return CreateAction(
+                node.Identifier.Span
+                , t2 => {
+                    var newBody = bodyStatement.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] { CreateContractRequiresCall(node.Identifier.ToString()) }.Concat(bodyStatement.Statements)));
+
+                    var newRoot = (CompilationUnitSyntax)root.ReplaceNode((SyntaxNode)bodyStatement, newBody);
 
                     if (UsingStatementNotPresent(newRoot)) newRoot = AddUsingStatement(node, newRoot);
 
                     return Task.FromResult(document.WithSyntaxRoot(newRoot));
                 }
-            ) };
+                , "Add contract requiring parameter must not be null"
+            );
         }
 
         static ExpressionStatementSyntax CreateContractRequiresCall(string paramName)
@@ -63,19 +80,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 SyntaxFactory.ArgumentList(argumentList)));
 
             return contractRequiresCall.WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
-        }
-
-        static bool UsingStatementNotPresent(CompilationUnitSyntax cu)
-        {
-            return !cu.Usings.Any((UsingDirectiveSyntax u) => u.Name.ToString() == "System.Diagnostics.Contracts");
-        }
-
-        static CompilationUnitSyntax AddUsingStatement(ParameterSyntax node, CompilationUnitSyntax cu)
-        {
-            return cu.AddUsingDirective(
-                SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Diagnostics.Contracts")).WithAdditionalAnnotations(Formatter.Annotation)
-                , node
-                , true);
         }
 
         static bool HasNotNullContract(SemanticModel semanticModel, IParameterSymbol parameterSymbol, BlockSyntax bodyStatement)

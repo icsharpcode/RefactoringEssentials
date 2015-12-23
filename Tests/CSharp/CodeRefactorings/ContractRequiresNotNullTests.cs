@@ -157,7 +157,6 @@ class Foo
 }");
         }
 
-
         [Test]
         public void Test_OldCSharp()
         {
