@@ -13,6 +13,7 @@ using System;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
+
     public class Context
     {
         readonly Document document;

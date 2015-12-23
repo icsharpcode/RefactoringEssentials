@@ -176,7 +176,7 @@ class Test
         }
 
         [Test]
-        public void TestContractEnsuresReturnAlreadyThereForPropertyGetter()
+        public void ContractEnsuresReturnAlreadyThereForPropertyGetter()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
                 @"class Test
@@ -210,6 +210,107 @@ class Test
 class Test
 {
     public Cedd Foo
+    {
+        get
+        {
+            Contract.Ensures(Contract.Result<Cedd>() != null);
+            return null;
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void ObjectPropertyIndexer()
+        {
+            Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"class Test
+{
+    public Cedd this[int index]
+    {
+        $get
+        {
+            return null;
+        }
+    }
+}", @"using System.Diagnostics.Contracts;
+
+class Test
+{
+    public Cedd this[int index]
+    {
+        get
+        {
+            Contract.Ensures(Contract.Result<Cedd>() != null);
+            return null;
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void NullablePropertyIndexer()
+        {
+            Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"class Test
+{
+    public double? this[int index]
+    {
+        $get
+        {
+            return null;
+        }
+    }
+}", @"using System.Diagnostics.Contracts;
+
+class Test
+{
+    public double? this[int index]
+    {
+        get
+        {
+            Contract.Ensures(Contract.Result<double?>() != null);
+            return null;
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void ContractEnsuresReturnAlreadyThereForPropertyIndexer()
+        {
+            TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"class Test
+{
+    public Cedd this[int index]
+    {
+        $get
+        {
+            Contract.Ensures(Contract.Result<Cedd>() != null);
+            return null;
+        }
+    }
+}");
+        }
+
+        [Test]
+        public void UsingStatementAlreadyThereForPropertyIndexer()
+        {
+            Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
+                @"using System.Diagnostics.Contracts;
+class Test
+{
+    public Cedd this[int index]
+    {
+        $get
+        {
+            return null;
+        }
+    }
+}", @"using System.Diagnostics.Contracts;
+class Test
+{
+    public Cedd this[int index]
     {
         get
         {

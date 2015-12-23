@@ -51,11 +51,11 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         protected IEnumerable<CodeAction> GetActions(Document document, SyntaxNode root, AccessorDeclarationSyntax node)
         {
-            var propertyDeclaration = node.Ancestors().OfType<PropertyDeclarationSyntax>().FirstOrDefault();
+            var propertyOrIndexerDeclaration = node.Ancestors().Where(n => n.GetType().Equals(typeof(PropertyDeclarationSyntax)) || n.GetType().Equals(typeof(IndexerDeclarationSyntax))).FirstOrDefault();
 
-            var nullableType = propertyDeclaration.ChildNodes().OfType<NullableTypeSyntax>().FirstOrDefault();
+            var nullableType = propertyOrIndexerDeclaration.ChildNodes().OfType<NullableTypeSyntax>().FirstOrDefault();
             
-            var objectType = propertyDeclaration.ChildNodes().OfType<IdentifierNameSyntax>().FirstOrDefault();
+            var objectType = propertyOrIndexerDeclaration.ChildNodes().OfType<IdentifierNameSyntax>().FirstOrDefault();
 
             return GetActions(document, root, node, nullableType, objectType);
         }
@@ -85,7 +85,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             yield return CreateAction(
                 node.Span
                 ,t2 => {
-                    var newBody = bodyStatement.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] { CreateContractEnsuresCall(returnType.ToString()) }.Concat(bodyStatement.Statements))).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
+                    var newBody = bodyStatement.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] { CreateContractEnsuresCall(returnType.ToString()) }.Concat(bodyStatement.Statements)));
 
                     var newRoot = (CompilationUnitSyntax)root.ReplaceNode((SyntaxNode)bodyStatement, newBody).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
 
@@ -99,7 +99,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         static StatementSyntax CreateContractEnsuresCall(string returnType)
         {
-            return SyntaxFactory.ParseStatement($"Contract.Ensures(Contract.Result<{returnType}>() != null);\n").WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
+            return SyntaxFactory.ParseStatement($"Contract.Ensures(Contract.Result<{returnType}>() != null);\r\n");
         }
 
         static bool HasReturnContract(BlockSyntax bodyStatement, string returnType)
