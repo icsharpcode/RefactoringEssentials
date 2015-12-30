@@ -87,7 +87,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 ,t2 => {
                     var newBody = bodyStatement.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] { CreateContractEnsuresCall(returnType.ToString()) }.Concat(bodyStatement.Statements)));
 
-                    var newRoot = (CompilationUnitSyntax)root.ReplaceNode((SyntaxNode)bodyStatement, newBody).WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
+                    var newRoot = (CompilationUnitSyntax)root.ReplaceNode((SyntaxNode)bodyStatement, newBody);
 
                     if (UsingStatementNotPresent(newRoot)) newRoot = AddUsingStatement(node, newRoot);
 
@@ -99,7 +99,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         static StatementSyntax CreateContractEnsuresCall(string returnType)
         {
-            return SyntaxFactory.ParseStatement($"Contract.Ensures(Contract.Result<{returnType}>() != null);\r\n");
+            return SyntaxFactory.ParseStatement($"Contract.Ensures(Contract.Result<{returnType}>() != null);\r\n").WithAdditionalAnnotations(Formatter.Annotation, Simplifier.Annotation);
         }
 
         static bool HasReturnContract(BlockSyntax bodyStatement, string returnType)

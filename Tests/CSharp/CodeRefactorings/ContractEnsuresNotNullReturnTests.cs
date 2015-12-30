@@ -62,7 +62,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 
 class Test
 {
-    public int? Foo()
+    public int? Foo() 
     {
         Contract.Ensures(Contract.Result<int?>() != null);
     }
@@ -82,7 +82,7 @@ class Test
 
 class Test
 {
-    public Cedd Foo()
+    public Cedd Foo() 
     {
         Contract.Ensures(Contract.Result<Cedd>() != null);
     }
@@ -104,7 +104,7 @@ class Test
 
 class Test
 {
-    public Cedd Foo()
+    public Cedd Foo() 
     {
         Contract.Ensures(Contract.Result<Cedd>() != null);
     }
@@ -340,7 +340,7 @@ class Test
 
 class Foo
 {
-    Cedd Test()
+    Cedd Test ()
     {
         Contract.Ensures(Contract.Result<Cedd>() != null);
     }
