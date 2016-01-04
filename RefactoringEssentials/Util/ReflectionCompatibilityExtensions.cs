@@ -79,6 +79,13 @@ namespace RefactoringEssentials
             return type.GetTypeInfo().DeclaredProperties;
         }
 
+		public static string GetAssemblyLocation(this Type type)
+		{
+			var asm = type.GetTypeInfo().Assembly;
+			var locationProperty = asm.GetType().GetRuntimeProperties().Single(p => p.Name == "Location");
+			return (string)locationProperty.GetValue(asm);
+		}
+
         private static bool TypesAreEqual(Type[] memberTypes, Type[] searchedTypes)
         {
             if (((memberTypes == null) || (searchedTypes == null)) && (memberTypes != searchedTypes))

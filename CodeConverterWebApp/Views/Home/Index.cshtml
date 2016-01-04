@@ -56,6 +56,7 @@
                     // this callback will be called asynchronously
                     // when the response is available
 
+                    $scope.convertedCode = response.data.convertedCode;
                     if (!response.data.conversionOk) {
                         $scope.showErrors = true;
                         $scope.errorMessageOnResponse = response.data.errorMessage;
