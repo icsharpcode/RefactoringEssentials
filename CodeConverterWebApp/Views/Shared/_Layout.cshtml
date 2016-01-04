@@ -17,12 +17,12 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-controller="Home" asp-action="Index" class="navbar-brand">Code Converter</a>
+                <a href="~/" class="navbar-brand">Code Converter</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-controller="Home" asp-action="About">About</a></li>
+                    <li><a href="~/">Home</a></li>
+                    <li><a href="~/Home/About">About</a></li>
                 </ul>
             </div>
         </div>
@@ -31,7 +31,7 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; 2015-2016 - Code Converter by Refactoring Essentials</p>
+            <p>&copy; 2015-@DateTime.Now.Year - Code Converter by Refactoring Essentials</p>
         </footer>
     </div>
 
