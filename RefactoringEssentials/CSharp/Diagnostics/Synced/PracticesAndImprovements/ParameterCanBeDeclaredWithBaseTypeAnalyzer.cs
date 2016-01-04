@@ -349,7 +349,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         //			if (localResolveResult == null)
         //				return;
         //			var resolveResult = context.Resolve(indexerExpression);
-        //			if (localResolveResult == null)
+        //			if (resolveResult == null)
         //				return;
         //			var parent = indexerExpression.Parent;
         //			while (parent is ParenthesizedExpression)
