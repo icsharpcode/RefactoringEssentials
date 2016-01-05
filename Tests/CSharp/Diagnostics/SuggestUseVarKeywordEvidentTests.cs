@@ -61,6 +61,18 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Test]
+        public void WithDynamic()
+        {
+            Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
+{
+	void Bar (object o)
+	{
+		dynamic foo = new Foo();
+	}
+}");
+        }
+
+        [Test]
         public void When_Explicitely_Initializing_An_Array()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo

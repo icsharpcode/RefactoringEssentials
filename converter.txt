@@ -1,0 +1,14 @@
+Converter:
+
+Known limitations and bugs:
+- Web UI does not report syntax errors
+- Comments are not converted
+- lots of NotImplementedExceptions
+
+C# to VB:
+- some expressions are missing
+- Handles clause (on members)
+- Implements clause (on members)
+
+VB to C#:
+- not implemented

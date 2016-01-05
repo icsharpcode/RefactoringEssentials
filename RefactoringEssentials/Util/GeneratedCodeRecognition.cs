@@ -59,7 +59,7 @@ namespace RefactoringEssentials
 
         public static bool IsFileNameForGeneratedCode(string fileName)
         {
-            if (fileName.StartsWith("TemporaryGeneratedFile_", StringComparison.OrdinalIgnoreCase))
+            if (fileName.StartsWith(generatedCodePrefix, StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -69,14 +69,10 @@ namespace RefactoringEssentials
             {
                 fileName = Path.GetFileNameWithoutExtension(fileName);
 
-                if (fileName.EndsWith("AssemblyInfo", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".designer", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".generated", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".g", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".g.i", StringComparison.OrdinalIgnoreCase) ||
-                    fileName.EndsWith(".AssemblyAttributes", StringComparison.OrdinalIgnoreCase))
+                foreach (var suffix in generatedCodeSuffixes)
                 {
-                    return true;
+                    if (fileName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase))
+                        return true;
                 }
             }
 

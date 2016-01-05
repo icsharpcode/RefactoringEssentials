@@ -137,6 +137,7 @@
     <Compile Include="CSharp\CodeFixes\ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests.cs" />
     <Compile Include="CSharp\CodeFixes\UnreachableCodeTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ContractRequiresNotNullTests.cs" />
+    <Compile Include="CSharp\CodeRefactorings\ContractEnsuresNotNullReturnTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\GenerateSwitchLabelsTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ImportStaticClassWithUsingTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InitializeAutoPropertyFromConstructorParameterTests.cs" />
@@ -419,6 +420,7 @@
     <Compile Include="Samples\CSharp\SampleCodeRefactoringTests.cs" />
     <Compile Include="SymbolChecksTest.cs" />
     <Compile Include="VB\CodeRefactorings\AddAnotherAccessorTests.cs" />
+    <Compile Include="VB\CodeRefactorings\AddCheckForNothingTests.cs" />
     <Compile Include="VB\CodeRefactorings\CheckIfParameterIsNothingTests.cs" />
     <Compile Include="VB\CodeRefactorings\ComputeConstantValueTests.cs" />
     <Compile Include="VB\CodeRefactorings\ConvertDecToHexTests.cs" />
@@ -437,6 +439,10 @@
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\VBCodeRefactoringTestBase.cs" />
+    <Compile Include="Common\ConverterTestBase.cs" />
+    <Compile Include="VB\Converter\MemberTests.cs" />
+    <Compile Include="VB\Converter\NamespaceLevelTests.cs" />
+    <Compile Include="VB\Converter\SpecialConversionTests.cs" />
     <Compile Include="VB\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />
     <Compile Include="VB\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />
@@ -466,6 +472,7 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -413,6 +413,21 @@ class TestClass
         }
 
         [Test]
+        public void TestUsageInReturnStatement()
+        {
+            TestWrongContext<AddNullCheckCodeRefactoringProvider>(@"
+using System;
+
+class TestClass
+{
+    public string TestMethod(string str)
+    {
+        return $str.ToLower();
+    }
+}");
+        }
+
+        [Test]
         public void TestUsageInIfCondition()
         {
             Test<AddNullCheckCodeRefactoringProvider>(@"

@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<script src="~/Scripts/angular.min.js"></script>
+
+<div class="row">
+    <div class="col-md-8">
+        <h1>Code Converter by Refactoring Essentials</h1>
+        <div ng-app="ccApp" ng-controller="ccController">
+
+            <div class="form-group">
+                <label>Input code</label>
+                <textarea class="form-control" ng-model="inputCode" rows="10" style="min-width: 100%"></textarea>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="radio" ng-model="requestedConversion" value="cs2vbnet">
+                    C# to VB.NET
+                </label>
+                <label>
+                    <input type="radio" ng-model="requestedConversion" value="vb2csnet">
+                    VB.NET to C#
+                </label>
+                &nbsp;
+                <button class="btn btn-default" ng-click="convert()">Convert Code</button>
+            </div>
+            <div class="form-group">
+                <label>Converted code</label>
+                <textarea class="form-control" ng-model="convertedCode" rows="10" style="min-width: 100%"></textarea>
+            </div>
+
+            <p ng-show="showErrors">Error message: {{errorMessageOnResponse}}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    var app = angular.module('ccApp', []);
+
+    app.controller('ccController', function ($scope, $http) {
+        $scope.inputCode = "public class Test {}";
+        $scope.convertedCode = "";
+        $scope.requestedConversion = "cs2vbnet";
+        $scope.errorMessageOnResponse = "";
+        $scope.showErrors = false;
+
+        $scope.convert = function () {
+            $scope.errorMessageOnResponse = "";
+            $scope.showErrors = false;
+
+            var data = JSON.stringify({ code: $scope.inputCode, requestedConversion: $scope.requestedConversion });
+
+            $http.post('/api/converter/', data)
+                .then(function successCallback(response) {
+                    // this callback will be called asynchronously
+                    // when the response is available
+
+                    $scope.convertedCode = response.data.convertedCode;
+                    if (!response.data.conversionOk) {
+                        $scope.showErrors = true;
+                        $scope.errorMessageOnResponse = response.data.errorMessage;
+                    }
+                }, function errorCallback(response) {
+                    // called asynchronously if an error occurs
+                    // or server returns response with an error status.
+                });
+        };
+    });
+</script>

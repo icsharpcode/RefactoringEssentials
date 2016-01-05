@@ -56,7 +56,11 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (bop == null)
                 return null;
             var outerLeft = GetOuterLeft(bop);
-            if (!((IdentifierNameSyntax)outerLeft).Identifier.Value.Equals(((IdentifierNameSyntax)node.Left).Identifier.Value))
+			var outerLeftId = outerLeft as IdentifierNameSyntax;
+			var leftId = node.Left as IdentifierNameSyntax;
+			if (outerLeftId == null || leftId == null)
+				return null;
+			if (!outerLeftId.Identifier.Value.Equals (leftId.Identifier.Value))
                 return null;
             var op = GetAssignmentOperator(bop.OperatorToken);
             if (op == SyntaxKind.None)

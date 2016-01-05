@@ -40,6 +40,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out IEnumerable<Diagnostic> diagnostic)
         {
             diagnostic = default(IEnumerable<Diagnostic>);
+            if (nodeContext.IsFromGeneratedCode())
+                return false;
 
             var node = nodeContext.Node as ConstructorDeclarationSyntax;
             var type = node.Parent as TypeDeclarationSyntax;

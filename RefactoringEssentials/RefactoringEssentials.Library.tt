@@ -15,23 +15,25 @@
 		<iconUrl>https://raw.githubusercontent.com/icsharpcode/RefactoringEssentials/master/RefactoringEssentials/Images/refactoringessentials-logo32.png</iconUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>Analyzers and Code Fixes as a library, intended for IDE builders</description>
-		<releaseNotes>First release for Visual Studio 2015 RTM, some bug fixes and new VB refactorings.</releaseNotes>
+		<releaseNotes>Please see <#= releaseNotesLink #> for more information.</releaseNotes>
 		<copyright>Copyright (c) 2014-2015 AlphaSierraPapa</copyright>
 		<tags>VS 2015 Roslyn Analyzer Refactoring</tags>
 		<dependencies>
-			<dependency id="Microsoft.CodeAnalysis.Analyzers" version="1.0.0" />
-			<dependency id="Microsoft.CodeAnalysis.Common" version="1.0.0" />
-			<dependency id="Microsoft.CodeAnalysis.CSharp" version="1.0.0" />
-			<dependency id="Microsoft.CodeAnalysis.CSharp.Workspaces" version="1.0.0" />
-			<dependency id="Microsoft.CodeAnalysis.VisualBasic" version="1.0.0" />
-			<dependency id="Microsoft.CodeAnalysis.VisualBasic.Workspaces" version="1.0.0" />
-			<dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.0.0" />
+			<dependency id="Microsoft.CodeAnalysis.Analyzers" version="1.1.0" />
+			<dependency id="Microsoft.CodeAnalysis.Common" version="1.1.0" />
+			<dependency id="Microsoft.CodeAnalysis.CSharp" version="1.1.0" />
+			<dependency id="Microsoft.CodeAnalysis.CSharp.Workspaces" version="1.1.0" />
+			<dependency id="Microsoft.CodeAnalysis.VisualBasic" version="1.1.0" />
+			<dependency id="Microsoft.CodeAnalysis.VisualBasic.Workspaces" version="1.1.0" />
+			<dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.1.0" />
 			<dependency id="Microsoft.Composition" version="1.0.27" />
-			<dependency id="System.Collections.Immutable" version="1.1.36" />
-			<dependency id="System.Reflection.Metadata" version="1.0.21" />
+			<dependency id="System.Collections.Immutable" version="1.1.37" />
+			<dependency id="System.Reflection.Metadata" version="1.1.0" />
 		</dependencies>
 	</metadata>
 	<files>
 		<file src="RefactoringEssentials.dll" target="lib\Net45\" />
+		<file src="RefactoringEssentials.dll" target="lib\dnx451\" />
+		<file src="RefactoringEssentials.dll" target="lib\dnxcore50\" />
 	</files>
 </package>

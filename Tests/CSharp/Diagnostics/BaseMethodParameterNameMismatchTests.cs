@@ -19,6 +19,7 @@ class Bar : Foo
 {
 	public override void FooBar (int $foo$)
 	{
+        System.Console.WriteLine (foo);
 	}
 }
 ", @"
@@ -31,6 +32,7 @@ class Bar : Foo
 {
 	public override void FooBar (int bar)
 	{
+        System.Console.WriteLine (bar);
 	}
 }
 ");
