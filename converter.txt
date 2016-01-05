@@ -11,6 +11,7 @@ Missing features Overview:
 C# to VB:
 1) Namespace level: Done (needs many more tests!)
 2) Type level:
+  - Constructors/Destructors
   - Automatic Events
   - Custom Events
   - Declare Sub|Function instead of DllImport

@@ -440,9 +440,11 @@
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\VBCodeRefactoringTestBase.cs" />
     <Compile Include="Common\ConverterTestBase.cs" />
+    <Compile Include="VB\Converter\ExpressionTests.cs" />
     <Compile Include="VB\Converter\MemberTests.cs" />
     <Compile Include="VB\Converter\NamespaceLevelTests.cs" />
     <Compile Include="VB\Converter\SpecialConversionTests.cs" />
+    <Compile Include="VB\Converter\StatementTests.cs" />
     <Compile Include="VB\Converter\TypeCastTests.cs" />
     <Compile Include="VB\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />

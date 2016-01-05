@@ -1,9 +1,9 @@
-﻿using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NUnit.Framework;
 
 namespace RefactoringEssentials.Tests.VB.Converter
 {
@@ -16,6 +16,44 @@ namespace RefactoringEssentials.Tests.VB.Converter
             TestConversionCSharpToVisualBasic(
                 @"class TestClass
 {
+    public void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class, new where T2 : struct
+    {
+        argument = null;
+        argument2 = default(T2);
+        argument3 = default(T3);
+    }
+}", @"Class TestClass
+    Public Sub TestMethod(Of T As {Class, New}, T2 As Structure, T3)(<Out> ByRef argument As T, ByRef argument2 As T2, ByVal argument3 As T3)
+        argument = Nothing
+        argument2 = Nothing
+        argument3 = Nothing
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void TestMethodWithReturnType()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    public int TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class, new where T2 : struct
+    {
+        return 0;
+    }
+}", @"Class TestClass
+    Public Function TestMethod(Of T As {Class, New}, T2 As Structure, T3)(<Out> ByRef argument As T, ByRef argument2 As T2, ByVal argument3 As T3) As Integer
+        Return 0
+    End Function
+End Class");
+        }
+
+        [Test]
+        public void TestStaticMethod()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
     public static void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class, new where T2 : struct
     {
         argument = null;
@@ -24,6 +62,40 @@ namespace RefactoringEssentials.Tests.VB.Converter
     }
 }", @"Class TestClass
     Public Shared Sub TestMethod(Of T As {Class, New}, T2 As Structure, T3)(<Out> ByRef argument As T, ByRef argument2 As T2, ByVal argument3 As T3)
+        argument = Nothing
+        argument2 = Nothing
+        argument3 = Nothing
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void TestAbstractMethod()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    public abstract void TestMethod();
+}", @"Class TestClass
+    Public MustOverride Sub TestMethod()
+End Class");
+        }
+
+        [Test]
+        [Ignore("'sealed' is not implemented yet")]
+        public void TestSealedMethod()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    public sealed void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class, new where T2 : struct
+    {
+        argument = null;
+        argument2 = default(T2);
+        argument3 = default(T3);
+    }
+}", @"Class TestClass
+    Public NotOverridable Sub TestMethod(Of T As {Class, New}, T2 As Structure, T3)(<Out> ByRef argument As T, ByRef argument2 As T2, ByVal argument3 As T3)
         argument = Nothing
         argument2 = Nothing
         argument3 = Nothing
@@ -69,38 +141,47 @@ End Class");
         }
 
         [Test]
-        public void TestIfStatement()
+        [Ignore("Not implemented yet")]
+        public void TestConstructor()
         {
-            TestConversionCSharpToVisualBasic(@"
-class TestClass
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass<T, T2, T3> where T : class, new where T2 : struct
 {
-	void TestMethod (int a)
-	{
-		int b;
-		if (a == 0) {
-			b = 0;
-		} else if (a == 1) {
-			b = 1;
-		} else if (a == 2 || a == 3) {
-			b = 2;
-		} else {
-			b = 3;
-		}
-	}
-}", @"Class TestClass
-    Sub TestMethod(ByVal a As Integer)
-        Dim b As Integer
-
-        If a = 0 Then
-            b = 0
-        ElseIf a = 1 Then
-            b = 1
-        ElseIf a = 2 OrElse a = 3 Then
-            b = 2
-        Else
-            b = 3
-        End If
+    public TestClass(out T argument, ref T2 argument2, T3 argument3)
+    {
+    }
+}", @"Class TestClass(Of T As {Class, New}, T2 As Structure, T3)
+    Public Sub New(<Out> ByRef argument As T, ByRef argument2 As T2, ByVal argument3 As T3)
     End Sub
+End Class");
+        }
+
+        [Test]
+        [Ignore("Not implemented yet")]
+        public void TestDestructor()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    ~TestClass()
+    {
+    }
+}", @"Class TestClass
+    Protected Overrides Sub Finalize()
+    End Sub
+End Class");
+        }
+
+        [Test]
+        [Ignore("Not implemented yet")]
+        public void TestEvent()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    public event EventHandler MyEvent;
+}", @"Class TestClass
+    Public Event MyEvent As EventHandler
 End Class");
         }
     }
