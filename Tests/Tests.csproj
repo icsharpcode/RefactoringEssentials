@@ -443,6 +443,7 @@
     <Compile Include="VB\Converter\MemberTests.cs" />
     <Compile Include="VB\Converter\NamespaceLevelTests.cs" />
     <Compile Include="VB\Converter\SpecialConversionTests.cs" />
+    <Compile Include="VB\Converter\TypeCastTests.cs" />
     <Compile Include="VB\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />
     <Compile Include="VB\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />
