@@ -104,6 +104,46 @@ End Class");
         }
 
         [Test]
+        [Ignore("Extensions methods not implemented yet.")]
+        public void TestExtensionMethod()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"static class TestClass
+{
+    public static void TestMethod(this String str)
+    {
+    }
+}", @"Imports System.Runtime.CompilerServices
+
+Module TestClass
+    <Extension()> 
+    Public Sub TestMethod(ByVal str As String)
+    End Sub
+End Class");
+        }
+
+        [Test]
+        [Ignore("Extensions methods not implemented yet.")]
+        public void TestExtensionMethodWithExistingImport()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"using System.Runtime.CompilerServices;
+
+static class TestClass
+{
+    public static void TestMethod(this String str)
+    {
+    }
+}", @"Imports System.Runtime.CompilerServices
+
+Module TestClass
+    <Extension()> 
+    Public Sub TestMethod(ByVal str As String)
+    End Sub
+End Class");
+        }
+
+        [Test]
         public void TestProperty()
         {
             TestConversionCSharpToVisualBasic(
@@ -182,6 +222,44 @@ End Class");
     public event EventHandler MyEvent;
 }", @"Class TestClass
     Public Event MyEvent As EventHandler
+End Class");
+        }
+
+        [Test]
+        [Ignore("Indexer support not implemented yet.")]
+        public void TestIndexer()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    public int this[int index] { get; set; }
+    public int this[string index] {
+        get { return 0; }
+    }
+    int m_test3;
+    public int this[double index] {
+        get { return this.m_test3; }
+        set { this.m_test3 = value; }
+    }
+}", @"Class TestClass
+    Default Public Property Item(ByVal index As Integer) As Integer
+
+    Default Public Property Item(ByVal index As String) As Integer
+        Get
+            Return 0
+        End Get
+    End Property
+
+    Private m_test3 As Integer
+
+    Default Public Property Item(ByVal index As Double) As Integer
+        Get
+            Return Me.m_test3
+        End Get
+        Set(value As Integer)
+            Me.m_test3 = value
+        End Set
+    End Property
 End Class");
         }
     }

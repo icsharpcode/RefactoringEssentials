@@ -11,6 +11,24 @@ namespace RefactoringEssentials.Tests.VB.Converter
     public class ExpressionTests : ConverterTestBase
     {
         [Test]
+        [Ignore("Not implemented yet")]
+        public void ConditionalExpression()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod(string str)
+    {
+        bool result = (str == """") ? true : false;
+    }
+}", @"Class TestClass
+    Sub TestMethod(ByVal str As String)
+        Dim result As Boolean = If(str = """", True, False)
+    End Sub
+End Class");
+        }
+
+        [Test]
         public void MemberAccessAndInvocationExpression()
         {
             TestConversionCSharpToVisualBasic(@"
