@@ -11,7 +11,9 @@ namespace RefactoringEssentials.Tests.VB.Converter
     public class ExpressionTests : ConverterTestBase
     {
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ConditionalExpression()
         {
             TestConversionCSharpToVisualBasic(@"

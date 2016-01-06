@@ -82,7 +82,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("'sealed' is not implemented yet")]
+#endif
         public void TestSealedMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -104,7 +106,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Extensions methods not implemented yet.")]
+#endif
         public void TestExtensionMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -123,7 +127,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Extensions methods not implemented yet.")]
+#endif
         public void TestExtensionMethodWithExistingImport()
         {
             TestConversionCSharpToVisualBasic(
@@ -181,7 +187,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void TestConstructor()
         {
             TestConversionCSharpToVisualBasic(
@@ -197,7 +205,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void TestDestructor()
         {
             TestConversionCSharpToVisualBasic(
@@ -213,7 +223,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void TestEvent()
         {
             TestConversionCSharpToVisualBasic(
@@ -226,7 +238,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Indexer support not implemented yet.")]
+#endif
         public void TestIndexer()
         {
             TestConversionCSharpToVisualBasic(

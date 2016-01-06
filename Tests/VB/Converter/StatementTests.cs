@@ -47,7 +47,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void AssignmentStatementInVarDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -101,7 +103,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ObjectInitializationStatementInVarDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -119,7 +123,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ArrayDeclarationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -137,7 +143,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -155,7 +163,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ArrayInitializationStatementInVarDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -173,7 +183,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -191,7 +203,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ArrayInitializationStatementWithLength()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -209,7 +223,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void MultidimensionalArrayDeclarationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -227,7 +243,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void MultidimensionalArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -245,7 +263,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void MultidimensionalArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -263,7 +283,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void MultidimensionalArrayInitializationStatementWithLengths()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -281,7 +303,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void JaggedArrayDeclarationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -299,7 +323,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void JaggedArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -317,7 +343,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void JaggedArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -335,7 +363,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void JaggedArrayInitializationStatementWithLength()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -389,7 +419,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void WhileStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -426,7 +458,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void DoWhileStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -464,7 +498,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ForEachStatementWithExplicitType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -495,7 +531,9 @@ End Class");
         }
 
         [Test]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
         [Ignore("Not implemented yet")]
+#endif
         public void ForEachStatementWithVar()
         {
             TestConversionCSharpToVisualBasic(@"

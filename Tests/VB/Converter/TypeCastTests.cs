@@ -8,7 +8,9 @@ using NUnit.Framework;
 namespace RefactoringEssentials.Tests.VB.Converter
 {
     [TestFixture]
+#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
     [Ignore("Casting is mostly not implemented yet")]
+#endif
     public class TypeCastTests : ConverterTestBase
     {
         [Test]
@@ -120,7 +122,7 @@ End Sub
         }
 
         [Test]
-        public void CastConstantNumberToDouble()
+        public void CastConstantNumberToDecimal()
         {
             TestConversionCSharpToVisualBasic(
                 @"void Test()
