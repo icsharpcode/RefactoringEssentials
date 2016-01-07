@@ -77,9 +77,6 @@ End Namespace");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("'sealed' not implemented yet")]
-#endif
         public void TestSealedClass()
         {
             TestConversionCSharpToVisualBasic(@"namespace Test.@class

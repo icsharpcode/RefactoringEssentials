@@ -82,9 +82,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("'sealed' is not implemented yet")]
-#endif
         public void TestSealedMethod()
         {
             TestConversionCSharpToVisualBasic(
