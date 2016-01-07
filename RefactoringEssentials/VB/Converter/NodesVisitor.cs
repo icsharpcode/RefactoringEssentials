@@ -659,6 +659,20 @@ End Function";
 
             #region Types / Modifiers
 
+            public override VisualBasicSyntaxNode VisitArrayType(CSS.ArrayTypeSyntax node)
+            {
+                return SyntaxFactory.ArrayType((TypeSyntax)node.ElementType.Accept(this),
+                    SyntaxFactory.List(node.RankSpecifiers.Select(rs => (ArrayRankSpecifierSyntax)rs.Accept(this))));
+            }
+
+            public override VisualBasicSyntaxNode VisitArrayRankSpecifier(CSS.ArrayRankSpecifierSyntax node)
+            {
+                return SyntaxFactory.ArrayRankSpecifier(
+                    SyntaxFactory.Token(SyntaxKind.OpenParenToken),
+                    SyntaxFactory.TokenList(Enumerable.Repeat(SyntaxFactory.Token(SyntaxKind.CommaToken), node.Rank - 1)),
+                    SyntaxFactory.Token(SyntaxKind.CloseParenToken));
+            }
+
             public override VisualBasicSyntaxNode VisitTypeParameterList(CSS.TypeParameterListSyntax node)
             {
                 return SyntaxFactory.TypeParameterList(node.Parameters.Select(p => (TypeParameterSyntax)p.Accept(this)).ToArray());
