@@ -81,7 +81,7 @@ namespace RefactoringEssentials.VB.Converter
                     declarators.Add(
                         SyntaxFactory.VariableDeclarator(
                             SyntaxFactory.SingletonSeparatedList(ExtractIdentifier(v)),
-                            SyntaxFactory.SimpleAsClause(type),
+                            declaration.Type.IsVar ? null : SyntaxFactory.SimpleAsClause(type),
                             SyntaxFactory.EqualsValue((ExpressionSyntax)v.Initializer.Value.Accept(nodesVisitor))
                         )
                     );
