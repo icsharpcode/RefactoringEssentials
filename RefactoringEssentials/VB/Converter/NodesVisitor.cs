@@ -632,10 +632,45 @@ End Function";
                 );
             }
 
+            public override VisualBasicSyntaxNode VisitArrayCreationExpression(CSS.ArrayCreationExpressionSyntax node)
+            {
+                var upperBoundArguments = node.Type.RankSpecifiers.First()?.Sizes.Where(s => !(s is CSS.OmittedArraySizeExpressionSyntax)).Select(
+                    s => (ArgumentSyntax) SyntaxFactory.SimpleArgument(ReduceArrayUpperBoundExpression((ExpressionSyntax)s.Accept(this))));
+                var rankSpecifiers = node.Type.RankSpecifiers.Select(rs => (ArrayRankSpecifierSyntax)rs.Accept(this));
+
+                return SyntaxFactory.ArrayCreationExpression(
+                    SyntaxFactory.Token(SyntaxKind.NewKeyword),
+                    SyntaxFactory.List<AttributeListSyntax>(),
+                    (TypeSyntax)node.Type.ElementType.Accept(this),
+                    upperBoundArguments.Any() ? SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList<ArgumentSyntax>(upperBoundArguments)) : null,
+                    upperBoundArguments.Any() ? SyntaxFactory.List(rankSpecifiers.Skip(1)) : SyntaxFactory.List(rankSpecifiers),
+                    (CollectionInitializerSyntax)node.Initializer?.Accept(this)
+                );
+            }
+
+            ExpressionSyntax ReduceArrayUpperBoundExpression(ExpressionSyntax expr)
+            {
+                if (expr.IsKind(SyntaxKind.NumericLiteralExpression))
+                {
+                    var numericLiteral = expr as LiteralExpressionSyntax;
+                    int? upperBound = numericLiteral.Token.Value as int?;
+                    if (upperBound.HasValue)
+                        return SyntaxFactory.NumericLiteralExpression(SyntaxFactory.Literal(upperBound.Value - 1));
+                }
+
+                return SyntaxFactory.BinaryExpression(
+                    SyntaxKind.SubtractExpression,
+                    expr, SyntaxFactory.Token(SyntaxKind.MinusToken), SyntaxFactory.NumericLiteralExpression(SyntaxFactory.Literal(1)));
+            }
+
             public override VisualBasicSyntaxNode VisitInitializerExpression(CSS.InitializerExpressionSyntax node)
             {
-                if (node.Parent is CSS.ObjectCreationExpressionSyntax)
+                if (node.IsKind(CS.SyntaxKind.ObjectInitializerExpression))
                     return SyntaxFactory.ObjectMemberInitializer();
+                if (node.IsKind(CS.SyntaxKind.ArrayInitializerExpression))
+                    return SyntaxFactory.CollectionInitializer(
+                        SyntaxFactory.SeparatedList(node.Expressions.Select(e => (ExpressionSyntax)e.Accept(this)))
+                    );
                 throw new NotImplementedException();
             }
 

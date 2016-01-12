@@ -134,9 +134,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void ArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -148,15 +145,12 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer() = { 1, 2, 3 }
+        Dim b As Integer() = {1, 2, 3}
     End Sub
 End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void ArrayInitializationStatementInVarDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -168,15 +162,12 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b = { 1, 2, 3 }
+        Dim b = {1, 2, 3}
     End Sub
 End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void ArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -188,15 +179,12 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer() = new Integer() { 1, 2, 3 }
+        Dim b As Integer() = New Integer() {1, 2, 3}
     End Sub
 End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void ArrayInitializationStatementWithLength()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -208,7 +196,7 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer() = new Integer(2) { 1, 2, 3 }
+        Dim b As Integer() = New Integer(2) {1, 2, 3}
     End Sub
 End Class");
         }
@@ -231,9 +219,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void MultidimensionalArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -245,15 +230,12 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer(,) = { { 1, 2 }, { 3, 4 } }
+        Dim b As Integer(,) = {{1, 2}, {3, 4}}
     End Sub
 End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void MultidimensionalArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -265,15 +247,12 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer(,) = New Integer(,) { { 1, 2 }, { 3, 4 } }
+        Dim b As Integer(,) = New Integer(,) {{1, 2}, {3, 4}}
     End Sub
 End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void MultidimensionalArrayInitializationStatementWithLengths()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -285,7 +264,7 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer(,) = New Integer(1, 1) { { 1, 2 }, { 3, 4 } }
+        Dim b As Integer(,) = New Integer(1, 1) {{1, 2}, {3, 4}}
     End Sub
 End Class");
         }
@@ -308,9 +287,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void JaggedArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -322,15 +298,12 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer()() = { New Integer() { 1, 2 }, New Integer() { 3, 4 } }
+        Dim b As Integer()() = {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
 End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void JaggedArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -342,15 +315,12 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer()() = New Integer()() { New Integer() { 1, 2 }, New Integer() { 3, 4 } }
+        Dim b As Integer()() = New Integer()() {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
 End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void JaggedArrayInitializationStatementWithLength()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -362,7 +332,7 @@ class TestClass
     }
 }", @"Class TestClass
     Sub TestMethod()
-        Dim b As Integer()() = New Integer(1)() { { New Integer() { 1, 2 }, New Integer() { 3, 4 } } }
+        Dim b As Integer()() = New Integer(1)() {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
 End Class");
         }
