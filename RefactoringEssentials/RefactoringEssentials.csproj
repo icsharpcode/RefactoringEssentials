@@ -567,7 +567,10 @@
     <Compile Include="VB\CodeRefactorings\InvertLogicalExpressionCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs" />
+    <Compile Include="VB\Converter\ConversionExtensions.cs" />
     <Compile Include="VB\Converter\CSharpConverter.cs" />
+    <Compile Include="VB\Converter\MethodBodyVisitor.cs" />
+    <Compile Include="VB\Converter\NodesVisitor.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs" />
     <Compile Include="VB\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticIDs.cs" />

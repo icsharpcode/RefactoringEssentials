@@ -70,6 +70,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                                     continue;
                                 }
                             }
+                            if (field.GetAttributes().Any(ad => ad.AttributeClass.Name == "SerializableAttribute" && ad.AttributeClass.ContainingNamespace.GetFullName() == "System"))
+                                continue;
                             bool wasAltered = false;
                             bool wasUsed = false;
                             foreach (var member in allMembers)

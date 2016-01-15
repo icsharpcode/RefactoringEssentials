@@ -16,28 +16,28 @@ namespace RefactoringEssentials.Tests.VB.Converter
 End Namespace");
         }
 
-		[Test]
-		public void TestTopLevelAttribute()
-		{
-			TestConversionCSharpToVisualBasic(
-				@"[assembly: CLSCompliant(true)]",
-				@"<Assembly: CLSCompliant(True)>");
-		}
+        [Test]
+        public void TestTopLevelAttribute()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"[assembly: CLSCompliant(true)]",
+                @"<Assembly: CLSCompliant(True)>");
+        }
 
-		[Test]
-		public void TestImports()
-		{
-			TestConversionCSharpToVisualBasic(
-				@"using System;
+        [Test]
+        public void TestImports()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"using System;
 using VB = Microsoft.VisualBasic;",
-				@"Imports System
+                @"Imports System
 Imports VB = Microsoft.VisualBasic");
-		}
+        }
 
-		[Test]
-		public void TestClass()
-		{
-			TestConversionCSharpToVisualBasic(@"namespace Test.@class
+        [Test]
+        public void TestClass()
+        {
+            TestConversionCSharpToVisualBasic(@"namespace Test.@class
 {
     class TestClass<T>
     {
@@ -46,7 +46,49 @@ Imports VB = Microsoft.VisualBasic");
     Class TestClass(Of T)
     End Class
 End Namespace");
-		}
+        }
+
+        [Test]
+        public void TestInternalStaticClass()
+        {
+            TestConversionCSharpToVisualBasic(@"namespace Test.@class
+{
+    internal static class TestClass
+    {
+    }
+}", @"Namespace Test.[class]
+    Friend Shared Class TestClass
+    End Class
+End Namespace");
+        }
+
+        [Test]
+        public void TestAbstractClass()
+        {
+            TestConversionCSharpToVisualBasic(@"namespace Test.@class
+{
+    abstract class TestClass
+    {
+    }
+}", @"Namespace Test.[class]
+    MustInherit Class TestClass
+    End Class
+End Namespace");
+        }
+
+        [Test]
+        public void TestSealedClass()
+        {
+            TestConversionCSharpToVisualBasic(@"namespace Test.@class
+{
+    sealed class TestClass
+    {
+    }
+}", @"Namespace Test.[class]
+    NotInheritable Class TestClass
+    End Class
+End Namespace");
+        }
 
         [Test]
         public void TestInterface()
@@ -62,11 +104,11 @@ End Namespace");
 End Interface");
         }
 
-		[Test]
-		public void TestEnum()
-		{
-			TestConversionCSharpToVisualBasic(
-	@"internal enum ExceptionResource
+        [Test]
+        public void TestEnum()
+        {
+            TestConversionCSharpToVisualBasic(
+    @"internal enum ExceptionResource
 {
     Argument_ImplementIComparable,
     ArgumentOutOfRange_NeedNonNegNum,
@@ -78,47 +120,47 @@ End Interface");
     ArgumentOutOfRange_NeedNonNegNumRequired
     Arg_ArrayPlusOffTooSmall
 End Enum");
-		}
+        }
 
-		[Test]
-		public void TestClassInheritanceList()
-		{
-			TestConversionCSharpToVisualBasic(
-	@"abstract class ClassA : System.IDisposable
+        [Test]
+        public void TestClassInheritanceList()
+        {
+            TestConversionCSharpToVisualBasic(
+    @"abstract class ClassA : System.IDisposable
 {
-	abstract void Test();
+    abstract void Test();
 }", @"MustInherit Class ClassA
     Implements System.IDisposable
 
     MustOverride Sub Test()
 End Class");
 
-			TestConversionCSharpToVisualBasic(
-				@"abstract class ClassA : System.EventArgs, System.IDisposable
+            TestConversionCSharpToVisualBasic(
+                @"abstract class ClassA : System.EventArgs, System.IDisposable
 {
-	abstract void Test();
+    abstract void Test();
 }", @"MustInherit Class ClassA
     Inherits System.EventArgs
     Implements System.IDisposable
 
     MustOverride Sub Test()
 End Class");
-		}
+        }
 
-		[Test]
-		public void TestStruct()
-		{
-			TestConversionCSharpToVisualBasic(
-	@"struct MyType : System.IComparable<MyType>
+        [Test]
+        public void TestStruct()
+        {
+            TestConversionCSharpToVisualBasic(
+    @"struct MyType : System.IComparable<MyType>
 {
-	void Test() {}
+    void Test() {}
 }", @"Structure MyType
     Implements System.IComparable(Of MyType)
 
     Sub Test()
     End Sub
 End Structure");
-		}
+        }
 
         [Test]
         public void TestDelegate()
