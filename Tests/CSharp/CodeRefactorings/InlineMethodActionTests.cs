@@ -265,5 +265,36 @@ class Animal
 
 }");
         }
+
+        [Test]
+        [Description("Inline a method with references in another classes.")]
+        public void InlineMethodWithReferenceInAnotherClass()
+        {
+            Test<InlineMethodAction>(
+@"class Dog : Animal
+{
+    public void DoLegs() {
+        Bark();
+    }
+}
+
+class Animal
+{
+    protected void $Bark() {
+        //// Simple math.
+        Console.Writeline(""bark"");
+    }
+}",
+@"class Dog : Animal
+{
+    public void DoLegs() {
+        Console.Writeline(""bark"");
+    }
+}
+
+class Animal
+{
+}");
+        }
     }
 }
