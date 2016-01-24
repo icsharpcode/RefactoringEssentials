@@ -374,9 +374,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void WhileStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -399,13 +396,10 @@ class TestClass
     Sub TestMethod()
         Dim b As Integer
         b = 0
+
         While b = 0
-            If b = 2 Then
-                Continue While
-            End If
-            If b = 3 Then
-                Exit While
-            End If
+            If b = 2 Then Continue While
+            If b = 3 Then Exit While
             b = 1
         End While
     End Sub
@@ -413,9 +407,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void DoWhileStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -439,15 +430,12 @@ class TestClass
     Sub TestMethod()
         Dim b As Integer
         b = 0
+
         Do
-            If b = 2 Then
-                Continue Do
-            End If
-            If b = 3 Then
-                Exit Do
-            End If
+            If b = 2 Then Continue Do
+            If b = 3 Then Exit Do
             b = 1
-        Loop While b = 0 
+        Loop While b = 0
     End Sub
 End Class");
         }

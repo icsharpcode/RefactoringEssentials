@@ -83,7 +83,7 @@ namespace RefactoringEssentials.VB.Converter
                         stmt = SyntaxFactory.SingleLineIfStatement(
                             (ExpressionSyntax)node.Condition.Accept(nodesVisitor),
                             node.Statement.Accept(this),
-                            SyntaxFactory.SingleLineElseClause(elseBlock.Statements)
+                            elseBlock == null ? null : SyntaxFactory.SingleLineElseClause(elseBlock.Statements)
                         ).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword));
                     }
                 }
@@ -128,23 +128,51 @@ namespace RefactoringEssentials.VB.Converter
                 }
             }
 
+            public override SyntaxList<StatementSyntax> VisitDoStatement(CSS.DoStatementSyntax node)
+            {
+                var condition = (ExpressionSyntax)node.Condition.Accept(nodesVisitor);
+                var stmt = ConvertBlock(node.Statement);
+                var block = SyntaxFactory.DoLoopWhileBlock(
+                    SyntaxFactory.DoStatement(SyntaxKind.SimpleDoStatement),
+                    stmt,
+                    SyntaxFactory.LoopStatement(SyntaxKind.LoopWhileStatement, SyntaxFactory.WhileClause(condition))
+                );
+
+                return SyntaxFactory.SingletonList<StatementSyntax>(block);
+            }
+
+            public override SyntaxList<StatementSyntax> VisitWhileStatement(CSS.WhileStatementSyntax node)
+            {
+                var condition = (ExpressionSyntax)node.Condition.Accept(nodesVisitor);
+                var stmt = ConvertBlock(node.Statement);
+                var block = SyntaxFactory.WhileBlock(
+                    SyntaxFactory.WhileStatement(condition),
+                    stmt
+                );
+
+                return SyntaxFactory.SingletonList<StatementSyntax>(block);
+            }
+
             public override SyntaxList<StatementSyntax> VisitUsingStatement(CSS.UsingStatementSyntax node)
             {
                 var stmt = SyntaxFactory.UsingStatement(
                     (ExpressionSyntax)node.Expression?.Accept(nodesVisitor),
                     RemodelVariableDeclaration(node.Declaration, nodesVisitor)
                 );
-                SyntaxList<StatementSyntax> list;
-                if (node.Statement is CSS.BlockSyntax)
+                return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.UsingBlock(stmt, ConvertBlock(node.Statement)));
+            }
+
+            SyntaxList<StatementSyntax> ConvertBlock(CSS.StatementSyntax node)
+            {
+                if (node is CSS.BlockSyntax)
                 {
-                    var b = (CSS.BlockSyntax)node.Statement;
-                    list = SyntaxFactory.List(b.Statements.SelectMany(s => s.Accept(this)));
+                    var b = (CSS.BlockSyntax)node;
+                    return SyntaxFactory.List(b.Statements.SelectMany(s => s.Accept(this)));
                 }
                 else
                 {
-                    list = node.Statement.Accept(this);
+                    return node.Accept(this);
                 }
-                return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.UsingBlock(stmt, list));
             }
 
             public override SyntaxList<StatementSyntax> VisitReturnStatement(CSS.ReturnStatementSyntax node)
@@ -157,9 +185,65 @@ namespace RefactoringEssentials.VB.Converter
                 return SyntaxFactory.SingletonList(stmt);
             }
 
+            public override SyntaxList<StatementSyntax> VisitContinueStatement(CSS.ContinueStatementSyntax node)
+            {
+                var statementKind = SyntaxKind.None;
+                var keywordKind = SyntaxKind.None;
+                foreach (var stmt in node.GetAncestors<CSS.StatementSyntax>())
+                {
+                    if (stmt is CSS.DoStatementSyntax)
+                    {
+                        statementKind = SyntaxKind.ContinueDoStatement;
+                        keywordKind = SyntaxKind.DoKeyword;
+                        break;
+                    }
+                    if (stmt is CSS.WhileStatementSyntax)
+                    {
+                        statementKind = SyntaxKind.ContinueWhileStatement;
+                        keywordKind = SyntaxKind.WhileKeyword;
+                        break;
+                    }
+                    if (stmt is CSS.ForStatementSyntax)
+                    {
+                        statementKind = SyntaxKind.ContinueForStatement;
+                        keywordKind = SyntaxKind.ForKeyword;
+                        break;
+                    }
+                }
+                return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.ContinueStatement(statementKind, SyntaxFactory.Token(keywordKind)));
+            }
+
+            public override SyntaxList<StatementSyntax> VisitBreakStatement(CSS.BreakStatementSyntax node)
+            {
+                var statementKind = SyntaxKind.None;
+                var keywordKind = SyntaxKind.None;
+                foreach (var stmt in node.GetAncestors<CSS.StatementSyntax>())
+                {
+                    if (stmt is CSS.DoStatementSyntax)
+                    {
+                        statementKind = SyntaxKind.ExitDoStatement;
+                        keywordKind = SyntaxKind.DoKeyword;
+                        break;
+                    }
+                    if (stmt is CSS.WhileStatementSyntax)
+                    {
+                        statementKind = SyntaxKind.ExitWhileStatement;
+                        keywordKind = SyntaxKind.WhileKeyword;
+                        break;
+                    }
+                    if (stmt is CSS.ForStatementSyntax)
+                    {
+                        statementKind = SyntaxKind.ExitForStatement;
+                        keywordKind = SyntaxKind.ForKeyword;
+                        break;
+                    }
+                }
+                return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.ExitStatement(statementKind, SyntaxFactory.Token(keywordKind)));
+            }
+
             public override SyntaxList<StatementSyntax> VisitCheckedStatement(CSS.CheckedStatementSyntax node)
             {
-                return WrapInComment(Visit(node.Block), "Visual Basic does not support checked statement!");
+                return WrapInComment(Visit(node.Block), "Visual Basic does not support checked statements!");
             }
 
             private SyntaxList<StatementSyntax> WrapInComment(SyntaxList<StatementSyntax> nodes, string comment)
