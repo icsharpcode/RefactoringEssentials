@@ -142,6 +142,7 @@
     <Compile Include="CSharp\CodeRefactorings\ImportStaticClassWithUsingTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InitializeAutoPropertyFromConstructorParameterTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InitializeFieldFromConstructorParameterTests.cs" />
+    <Compile Include="CSharp\CodeRefactorings\InlineMethodActionTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InsertAnonymousMethodSignatureTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\IntroduceConstantTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\IntroduceFormatItemTests.cs" />
