@@ -34,6 +34,7 @@ namespace RefactoringEssentials
         /// Adds to <paramref name="targetType"/> if it does not contain an anonymous
         /// type and binds to the same type at the given <paramref name="position"/>.
         /// </summary>
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ExpressionSyntax CastIfPossible(
             this ExpressionSyntax expression,
             ITypeSymbol targetType,
@@ -587,6 +588,7 @@ namespace RefactoringEssentials
 
         readonly static MethodInfo tryReduceOrSimplifyExplicitNameMethod;
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool TryReduceOrSimplifyExplicitName(
             this ExpressionSyntax expression,
             SemanticModel semanticModel,

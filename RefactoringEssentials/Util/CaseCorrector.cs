@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 
 namespace RefactoringEssentials
 {
-
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
     class CaseCorrector
     {
         readonly static Type typeInfo;

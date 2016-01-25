@@ -28,6 +28,7 @@ namespace RefactoringEssentials
             findDerivedClassesAsyncMethod = typeInfo.GetMethod("FindDerivedClassesAsync", new[] { typeof(INamedTypeSymbol), typeof(Solution), typeof(IImmutableSet<Project>), typeof(CancellationToken) });
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static TypeSyntax GenerateTypeSyntax(this ITypeSymbol typeSymbol, SyntaxAnnotation simplifierAnnotation = null)
         {
             var typeSyntax = (TypeSyntax)generateTypeSyntaxMethod.Invoke(null, new object[] { typeSymbol });
@@ -53,6 +54,7 @@ namespace RefactoringEssentials
         }
         #endregion
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static Task<IEnumerable<INamedTypeSymbol>> FindDerivedClassesAsync(this INamedTypeSymbol type, Solution solution, IImmutableSet<Project> projects = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             return (Task<IEnumerable<INamedTypeSymbol>>)findDerivedClassesAsyncMethod.Invoke(null, new object[] { type, solution, projects, cancellationToken });

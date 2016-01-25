@@ -5,6 +5,7 @@ using System.Runtime.ExceptionServices;
 
 namespace RefactoringEssentials
 {
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
 #if NR6
     public
 #endif
