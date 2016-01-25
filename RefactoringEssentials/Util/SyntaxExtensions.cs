@@ -104,6 +104,8 @@ namespace RefactoringEssentials
         //			return (INamedTypeSymbol)getEnclosingNamedTypeMethod.Invoke(null, new object[] { semanticModel, position, cancellationToken });
         //		}
         //
+
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         static ImmutableArray<SyntaxToken> GetLocalDeclarationMap(this MemberDeclarationSyntax member, string localName)
         {
             try
@@ -118,6 +120,7 @@ namespace RefactoringEssentials
             }
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         static IEnumerable<T> GetAncestors<T>(this SyntaxToken token) where T : SyntaxNode
         {
             try
@@ -151,6 +154,7 @@ namespace RefactoringEssentials
             return expression;
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool CanRemoveParentheses(this ParenthesizedExpressionSyntax node)
         {
             try
@@ -174,6 +178,7 @@ namespace RefactoringEssentials
             return node.Parent != null && node.Parent.IsKind(kind);
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool CanReplaceWithReducedName(
             this MemberAccessExpressionSyntax memberAccess,
             ExpressionSyntax reducedName,
@@ -423,7 +428,7 @@ namespace RefactoringEssentials
             return semanticModel.GetSymbolInfo(memberAccess.Name).CandidateReason == CandidateReason.LateBound;
         }
 
-
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool CanReplaceWithReducedName(this NameSyntax name, TypeSyntax reducedName, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             var speculationAnalyzer = new SpeculationAnalyzer(name, reducedName, semanticModel, cancellationToken);

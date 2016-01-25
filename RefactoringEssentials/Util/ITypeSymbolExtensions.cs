@@ -78,12 +78,15 @@ namespace RefactoringEssentials
             return false;
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static TypeSyntax GenerateTypeSyntax(this ITypeSymbol typeSymbol)
         {
             return (TypeSyntax)generateTypeSyntax.Invoke(null, new[] { typeSymbol });
         }
 
         readonly static MethodInfo containingTypesOrSelfHasUnsafeKeywordMethod;
+
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool ContainingTypesOrSelfHasUnsafeKeyword(this ITypeSymbol containingType)
         {
             return (bool)containingTypesOrSelfHasUnsafeKeywordMethod.Invoke(null, new object[] { containingType });
@@ -373,6 +376,7 @@ namespace RefactoringEssentials
         //
         // Determine if "type" inherits from "baseType", ignoring constructed types, and dealing
         // only with original types.
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool InheritsFromOrEqualsIgnoringConstruction(
             this ITypeSymbol type, ITypeSymbol baseType)
         {
@@ -441,6 +445,7 @@ namespace RefactoringEssentials
         }
         readonly static MethodInfo removeUnavailableTypeParametersMethod;
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol RemoveUnavailableTypeParameters(
             this ITypeSymbol type,
             Compilation compilation,
@@ -530,6 +535,8 @@ namespace RefactoringEssentials
         }
 
         readonly static MethodInfo replaceTypeParametersBasedOnTypeConstraintsMethod;
+
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol ReplaceTypeParametersBasedOnTypeConstraints(
             this ITypeSymbol type,
             Compilation compilation,
@@ -549,6 +556,8 @@ namespace RefactoringEssentials
         }
 
         readonly static MethodInfo removeUnnamedErrorTypesMethod;
+
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol RemoveUnnamedErrorTypes(
             this ITypeSymbol type,
             Compilation compilation)
@@ -656,6 +665,8 @@ namespace RefactoringEssentials
         }
 
         readonly static MethodInfo substituteTypesMethod;
+
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol SubstituteTypes<TType1, TType2>(
             this ITypeSymbol type,
             IDictionary<TType1, TType2> mapping,
@@ -677,6 +688,8 @@ namespace RefactoringEssentials
         }
 
         readonly static MethodInfo substituteTypesMethod2;
+
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol SubstituteTypes<TType1, TType2>(
             this ITypeSymbol type,
             IDictionary<TType1, TType2> mapping,

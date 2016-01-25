@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace RefactoringEssentials
 {
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
 #if NR6
     public
 #endif

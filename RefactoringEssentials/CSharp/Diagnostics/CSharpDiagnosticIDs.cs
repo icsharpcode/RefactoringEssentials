@@ -167,5 +167,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public const string NameOfSuggestionAnalyzerID = "RECS0163";
         public const string RedundantDelegateCreationAnalyzerID = "RECS0164";
         public const string SampleAnalyzerID = "RECSSAMPLE";
+        public const string RoslynReflectionUsageAnalyzerID = "RECS9000";
     }
 }
