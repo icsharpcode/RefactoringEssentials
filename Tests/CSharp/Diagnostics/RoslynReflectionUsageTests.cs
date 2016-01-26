@@ -10,6 +10,8 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 using System;
 using RefactoringEssentials;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CodeRefactorings;
 
 namespace RefactoringEssentials
 {
@@ -45,6 +47,13 @@ namespace Microsoft.CodeAnalysis.CodeFixes
     {
     }
 }
+namespace Microsoft.CodeAnalysis.CodeRefactorings
+{
+    [AttributeUsage(AttributeTargets.Class)]
+    class ExportCodeRefactoringProviderAttribute : Attribute
+    {
+    }
+}
 ";
 
         [Test]
@@ -53,16 +62,16 @@ namespace Microsoft.CodeAnalysis.CodeFixes
             Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
-    [RoslynReflectionUsageAttribute(RoslynReflectionAllowedContext.CodeFixes)]
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
     public static void ForbiddenMethod(this int i)
     {
     }
 }
 
-[DiagnosticAnalyzerAttribute]
-public class AnalyzerWithForbiddenCode : DiagnosticAnalyzer
+[DiagnosticAnalyzer]
+public class TestAnalyzer : DiagnosticAnalyzer
 {
-    public AnalyzerWithForbiddenCode()
+    public TestAnalyzer()
     {
         int i = 0;
         i.$ForbiddenMethod$();
@@ -74,7 +83,7 @@ public class AnalyzerWithForbiddenCode : DiagnosticAnalyzer
         public void ForbiddenClassInAnalyzer()
         {
             Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
-[RoslynReflectionUsageAttribute(RoslynReflectionAllowedContext.CodeFixes)]
+[RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
 static class SomeUtilityClass
 {
     public static void ForbiddenMethod(this int i)
@@ -82,10 +91,10 @@ static class SomeUtilityClass
     }
 }
 
-[DiagnosticAnalyzerAttribute]
-public class AnalyzerWithForbiddenCode : DiagnosticAnalyzer
+[DiagnosticAnalyzer]
+public class TestAnalyzer : DiagnosticAnalyzer
 {
-    public AnalyzerWithForbiddenCode()
+    public TestAnalyzer()
     {
         int i = 0;
         i.$ForbiddenMethod$();
@@ -94,21 +103,90 @@ public class AnalyzerWithForbiddenCode : DiagnosticAnalyzer
         }
 
         [Test]
-        public void AllowedMethodInAnalyzer()
+        public void ForbiddenMethodInCodeFix()
         {
             Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
-    [RoslynReflectionUsageAttribute(RoslynReflectionAllowedContext.Analyzers)]
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers)]
     public static void ForbiddenMethod(this int i)
     {
     }
 }
 
-[DiagnosticAnalyzerAttribute(LanguageNames.CSharp)]
-public class AnalyzerWithForbiddenCode : DiagnosticAnalyzer
+[ExportCodeFixProvider]
+public class TestCodeFix : CodeFixProvider
 {
-    public AnalyzerWithForbiddenCode()
+    public TestCodeFix()
+    {
+        int i = 0;
+        i.$ForbiddenMethod$();
+    }
+}");
+        }
+
+        [Test]
+        public void ForbiddenMethodInRefactoring()
+        {
+            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+static class SomeUtilityClass
+{
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers)]
+    public static void ForbiddenMethod(this int i)
+    {
+    }
+}
+
+[ExportCodeRefactoringProvider]
+public class TestRefactoring : CodeRefactoringProvider
+{
+    public TestRefactoring()
+    {
+        int i = 0;
+        i.$ForbiddenMethod$();
+    }
+}");
+        }
+
+        [Test]
+        public void AllowedMethodInAnalyzer1()
+        {
+            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+static class SomeUtilityClass
+{
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers)]
+    public static void ForbiddenMethod(this int i)
+    {
+    }
+}
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class TestAnalyzer : DiagnosticAnalyzer
+{
+    public TestAnalyzer()
+    {
+        int i = 0;
+        i.ForbiddenMethod();
+    }
+}");
+        }
+
+        [Test]
+        public void AllowedMethodInAnalyzer2()
+        {
+            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+static class SomeUtilityClass
+{
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers | RoslynReflectionAllowedContext.CodeFixes)]
+    public static void ForbiddenMethod(this int i)
+    {
+    }
+}
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class TestAnalyzer : DiagnosticAnalyzer
+{
+    public TestAnalyzer()
     {
         int i = 0;
         i.ForbiddenMethod();
@@ -122,15 +200,15 @@ public class AnalyzerWithForbiddenCode : DiagnosticAnalyzer
             Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
-    [RoslynReflectionUsageAttribute(RoslynReflectionAllowedContext.Analyzers)]
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers)]
     public static void ForbiddenMethod(this int i)
     {
     }
 }
 
-public class AnalyzerWithForbiddenCode : DiagnosticAnalyzer
+public class TestAnalyzer : DiagnosticAnalyzer
 {
-    public AnalyzerWithForbiddenCode()
+    public TestAnalyzer()
     {
         int i = 0;
         i.ForbiddenMethod();
