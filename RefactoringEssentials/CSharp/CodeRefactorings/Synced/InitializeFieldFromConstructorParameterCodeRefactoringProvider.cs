@@ -43,7 +43,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         GettextCatalog.GetString("Initialize field from parameter"),
                         t2 =>
                         {
-                            var newFieldName = NameProposalService.GetNameProposal(parameter.Identifier.ValueText, SyntaxKind.FieldDeclaration, context.Document, ctor.SpanStart);
+                            var newFieldName = NameProposalService.GetNameProposal(parameter.Identifier.ValueText, SyntaxKind.FieldDeclaration, Accessibility.Private, false, context.Document, ctor.SpanStart);
                             var newField = SyntaxFactory.FieldDeclaration(
                                 SyntaxFactory.VariableDeclaration(
                                     parameter.Type,

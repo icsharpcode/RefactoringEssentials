@@ -593,6 +593,12 @@
       <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="buildlibrarypackage.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="RefactoringEssentials.Library.tt">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Versioning.t4.template">
       <LastGenOutput>Versioning.cs.cs</LastGenOutput>
     </None>
