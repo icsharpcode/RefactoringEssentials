@@ -7,7 +7,7 @@ namespace RefactoringEssentials
 {
     public interface INameProposalStrategy
     {
-        string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Document document, int position);
+        string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Accessibility accessibility, bool isStatic, Document document, int position);
     }
 
     public class NameProposalService
@@ -19,7 +19,7 @@ namespace RefactoringEssentials
             static readonly char[] s_underscoreCharArray = new[] { '_' };
             static readonly CultureInfo EnUSCultureInfo = new CultureInfo("en-US");
 
-            public virtual string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Document document, int position)
+            public virtual string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Accessibility accessibility, bool isStatic, Document document, int position)
             {
                 switch (syntaxKindHint)
                 {
@@ -70,9 +70,9 @@ namespace RefactoringEssentials
             instance = newService;
         }
 
-        public static string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Document document = null, int position = 0)
+        public static string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Accessibility accessibility = Accessibility.Private, bool isStatic = false, Document document = null, int position = 0)
         {
-            return instance.GetNameProposal(baseName, syntaxKindHint, document, position);
+            return instance.GetNameProposal(baseName, syntaxKindHint, accessibility, isStatic, document, position);
         }
     }
 }
