@@ -35,7 +35,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 var ctor = parameter.Parent.Parent as ConstructorDeclarationSyntax;
                 if (ctor == null)
                     return;
-
+                
                 context.RegisterRefactoring(
                     CodeActionFactory.Create(
                         parameter.Span,
@@ -43,18 +43,19 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         GettextCatalog.GetString("Initialize field from parameter"),
                         t2 =>
                         {
+                            var newFieldName = NameProposalService.GetNameProposal(parameter.Identifier.ValueText, SyntaxKind.FieldDeclaration, context.Document, ctor.SpanStart);
                             var newField = SyntaxFactory.FieldDeclaration(
                                 SyntaxFactory.VariableDeclaration(
                                     parameter.Type,
-                                    SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(SyntaxFactory.VariableDeclarator(parameter.Identifier)))
+                                    SyntaxFactory.SingletonSeparatedList<VariableDeclaratorSyntax>(SyntaxFactory.VariableDeclarator(newFieldName)))
                             ).WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword)))
                             .WithAdditionalAnnotations(Formatter.Annotation);
 
                             var assignmentStatement = SyntaxFactory.ExpressionStatement(
                                 SyntaxFactory.AssignmentExpression(
                                     SyntaxKind.SimpleAssignmentExpression,
-                                    SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.ThisExpression(), SyntaxFactory.IdentifierName(parameter.Identifier)),
-                                    SyntaxFactory.IdentifierName(parameter.Identifier)
+                                    SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.ThisExpression(), SyntaxFactory.IdentifierName(newFieldName)),
+                                    SyntaxFactory.IdentifierName(newFieldName)
                                 )
                             ).WithAdditionalAnnotations(Formatter.Annotation);
 
