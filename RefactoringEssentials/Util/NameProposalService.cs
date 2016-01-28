@@ -70,15 +70,9 @@ namespace RefactoringEssentials
             instance = newService;
         }
 
-<<<<<<< HEAD
-        public static string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Document document = null, int position = 0)
-        {
-            return instance.GetNameProposal(baseName, syntaxKindHint, document, position);
-=======
         public static string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Accessibility accessibility = Accessibility.Private, bool isStatic = false, Document document = null, int position = 0)
         {
             return instance.GetNameProposal(baseName, syntaxKindHint, accessibility, isStatic, document, position);
->>>>>>> master
         }
     }
 }
