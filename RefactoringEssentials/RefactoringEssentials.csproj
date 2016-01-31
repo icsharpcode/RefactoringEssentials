@@ -505,6 +505,7 @@
     <Compile Include="Util\GeneratedCodeRecognition.cs" />
     <Compile Include="Util\HelpLink.cs" />
     <Compile Include="Util\NRefactory6Host.cs" />
+    <Compile Include="Util\RoslynReflection.cs" />
     <Compile Include="Util\SyntaxExtensions.cs" />
     <Compile Include="Util\TypeExtensions.cs" />
     <Compile Include="Util\CSharpUtil.cs" />
