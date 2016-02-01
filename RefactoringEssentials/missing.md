@@ -21,7 +21,6 @@
 
 * AdditionalOfTypeAnalyzer
 * CheckNamespaceAnalyzer
-* ConstantNullCoalescingConditionAnalyzer
 * ConvertIfStatementToNullCoalescingExpressionAnalyzer
 * ConvertToAutoPropertyAnalyzer
 * ConvertToConstantAnalyzer

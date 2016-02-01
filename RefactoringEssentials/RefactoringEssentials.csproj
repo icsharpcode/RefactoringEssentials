@@ -581,6 +581,11 @@
     <Compile Include="VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />
     <Compile Include="Util\NameGenerator.cs" />
     <Compile Include="Util\NameProposalService.cs" />
+    <Compile Include="Util\Flow\FlowState.cs" />
+    <Compile Include="Util\Flow\FlowAnalysis.cs" />
+    <Compile Include="Util\Flow\FlowLocation.cs" />
+    <Compile Include="Util\Flow\FlowAnalyzer.cs" />
+    <Compile Include="Util\Flow\NullFlowState.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -693,6 +698,7 @@
     <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
     <Folder Include="Samples\VB\" />
+    <Folder Include="Util\Flow\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />

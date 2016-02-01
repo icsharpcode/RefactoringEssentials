@@ -3,6 +3,10 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using System.Linq.Expressions;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -31,10 +35,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+            var node = root.FindToken(context.Span.Start).Parent;
+            if (node == null || !node.Parent.IsKind(SyntaxKind.CoalesceExpression))
+                return;
+            var bOp = node.Parent as BinaryExpressionSyntax;
+            if (bOp == null)
+                return;
+            var newRoot = root.ReplaceNode(bOp, (node == bOp.Left ? bOp.Right : bOp.Left).WithAdditionalAnnotations (Formatter.Annotation));
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, diagnostic.GetMessage(), document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
