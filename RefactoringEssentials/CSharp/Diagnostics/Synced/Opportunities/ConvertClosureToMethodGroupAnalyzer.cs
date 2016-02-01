@@ -51,6 +51,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (body == null)
                 return false;
 
+            // (Bad) workaround for usage of SignatureComparer in this analyzer, when Roslyn's Workspaces are not loaded
+            if (!RoslynReflection.SignatureComparer.IsAvailable())
+                return false;
+
             var invocation = AnalyzeBody(body);
             if (invocation == null)
                 return false;
@@ -106,8 +110,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 {
                     if (otherMethod == method)
                         continue;
+#pragma warning disable RECS9000 // Using internal Roslyn features through reflection in wrong context.
                     if (SignatureComparer.HaveSameSignature(otherMethod.GetParameters(), invokeMethod.Parameters))
                         return false;
+#pragma warning restore RECS9000 // Using internal Roslyn features through reflection in wrong context.
                 }
             }
 
