@@ -1,6 +1,16 @@
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Diagnostics;
+using System;
+using System.Linq;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis.FindSymbols;
+using System.Threading;
+using Microsoft.CodeAnalysis.Text;
+using System.Text;
+using RefactoringEssentials.Xml;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -22,294 +32,309 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterCompilationStartAction(nodeContext => Analyze(nodeContext));
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        void Analyze(CompilationStartAnalysisContext compilationContext)
         {
-            diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            var compilation = compilationContext.Compilation;
+            compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext context)
+            {
+                try
+                {
+                    if (!compilation.SyntaxTrees.Contains(context.Tree))
+                        return;
+                    var semanticModel = compilation.GetSemanticModel(context.Tree);
+                    var root = await context.Tree.GetRootAsync(context.CancellationToken).ConfigureAwait(false);
+                    var model = compilationContext.Compilation.GetSemanticModel(context.Tree);
+                    if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
+                        return;
+                    new GatherVisitor(context, semanticModel).Visit(root);
+                }
+                catch (OperationCanceledException) {}
+            });
         }
 
-        //		class GatherVisitor : GatherVisitorBase<XmlDocAnalyzer>
-        //		{
-        //			//readonly List<Comment> storedXmlComment = new List<Comment>();
+        class GatherVisitor : CSharpSyntaxWalker
+        {
+            readonly List<DocumentationCommentTriviaSyntax> storedXmlComment = new List<DocumentationCommentTriviaSyntax>();
+            readonly SyntaxTreeAnalysisContext context;
+            readonly StringBuilder xml = new StringBuilder();
+            SemanticModel semanticModel;
 
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base(semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
+            public GatherVisitor(SyntaxTreeAnalysisContext context, SemanticModel semanticModel)
+            {
+                this.context = context;
+                this.semanticModel = semanticModel;
+            }
 
-        ////			void InvalideXmlComments()
-        ////			{
-        ////				if (storedXmlComment.Count == 0)
-        ////					return;
-        ////				var from = storedXmlComment.First().StartLocation;
-        ////				var to = storedXmlComment.Last().EndLocation;
-        ////				AddDiagnosticAnalyzer(new CodeIssue(
-        ////					from,
-        ////					to,
-        ////					ctx.TranslateString("Xml comment is not placed before a valid language element"),
-        ////					ctx.TranslateString("Remove comment"),
-        ////					script => {
-        ////						var startOffset = script.GetCurrentOffset(from);
-        ////						var endOffset = script.GetCurrentOffset(to);
-        ////						endOffset += ctx.GetLineByOffset(endOffset).DelimiterLength;
-        ////						script.RemoveText(startOffset, endOffset - startOffset);
-        ////					}
-        ////				));
-        ////				storedXmlComment.Clear();
-        ////			}
-        ////
-        ////			public override void VisitComment(Comment comment)
-        ////			{
-        ////				if (comment.CommentType == CommentType.Documentation)
-        ////					storedXmlComment.Add(comment);
-        ////			}
-        ////
-        ////			public override void VisitNamespaceDeclaration(NamespaceDeclaration namespaceDeclaration)
-        ////			{
-        ////				InvalideXmlComments();
-        ////				base.VisitNamespaceDeclaration(namespaceDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitUsingDeclaration(UsingDeclaration usingDeclaration)
-        ////			{
-        ////				InvalideXmlComments();
-        ////				base.VisitUsingDeclaration(usingDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitUsingAliasDeclaration(UsingAliasDeclaration usingDeclaration)
-        ////			{
-        ////				InvalideXmlComments();
-        ////				base.VisitUsingAliasDeclaration(usingDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitExternAliasDeclaration(ExternAliasDeclaration externAliasDeclaration)
-        ////			{
-        ////				InvalideXmlComments();
-        ////				base.VisitExternAliasDeclaration(externAliasDeclaration);
-        ////			}
-        ////
-        ////			TextLocation TranslateOffset(int offset)
-        ////			{
-        ////				int line = storedXmlComment.First().StartLocation.Line;
-        ////				foreach (var cmt in storedXmlComment) {
-        ////					var next = offset - cmt.Content.Length - "\n".Length;
-        ////					if (next <= 0)
-        ////						return new TextLocation(line, cmt.StartLocation.Column + "///".Length + offset);
-        ////					offset = next;
-        ////					line++;
-        ////				}
-        ////				return TextLocation.Empty;
-        ////			}
-        ////
-        ////			void AddXmlIssue(int offset, int length, string str)
-        ////			{
-        ////				var textLocation = TranslateOffset(offset);
-        ////				var textLocation2 = TranslateOffset(offset + length);
-        ////				if (textLocation.IsEmpty && textLocation2.IsEmpty) {
-        ////					AddDiagnosticAnalyzer(new CodeIssue(storedXmlComment.Last(), str));
-        ////				} else if (textLocation.IsEmpty) {
-        ////					AddDiagnosticAnalyzer(new CodeIssue(storedXmlComment.First().StartLocation, textLocation2, str));
-        ////				} else if (textLocation2.IsEmpty) {
-        ////					AddDiagnosticAnalyzer(new CodeIssue(textLocation, storedXmlComment.Last().EndLocation, str));
-        ////				} else {
-        ////					AddDiagnosticAnalyzer(new CodeIssue(textLocation, textLocation2, str));
-        ////				}
-        ////			}
-        ////			readonly StringTextSource emptySource = new StringTextSource("");
-        ////			void CheckXmlDoc(AstNode node)
-        ////			{
-        ////				ResolveResult resolveResult = ctx.Resolve(node);
-        ////				IEntity member = null;
-        ////				if (resolveResult is TypeResolveResult)
-        ////					member = resolveResult.Type.GetDefinition();
-        ////				if (resolveResult is MemberResolveResult)
-        ////					member = ((MemberResolveResult)resolveResult).Member;
-        ////				var xml = new StringBuilder();
-        ////				var firstline = "<root>\n";
-        ////				xml.Append(firstline);
-        ////				foreach (var cmt in storedXmlComment)
-        ////					xml.Append(cmt.Content + "\n");
-        ////				xml.Append("</root>\n");
-        ////
-        ////				var doc = new AXmlParser().Parse(new StringTextSource(xml.ToString()));
-        ////
-        ////				var stack = new Stack<AXmlObject>();
-        ////				stack.Push(doc);
-        ////				foreach (var err in doc.SyntaxErrors)
-        ////					AddXmlIssue(err.StartOffset - firstline.Length, err.EndOffset - err.StartOffset, err.Description);
-        ////
-        ////				while (stack.Count > 0) {
-        ////					var cur = stack.Pop();
-        ////					var el = cur as AXmlElement;
-        ////					if (el != null) {
-        ////						switch (el.Name) {
-        ////							case "typeparam":
-        ////							case "typeparamref":
-        ////								var name = el.Attributes.FirstOrDefault(attr => attr.Name == "name");
-        ////								if (name == null)
-        ////									break;
-        ////								if (member != null && member.SymbolKind == SymbolKind.TypeDefinition) {
-        ////									var type = (ITypeDefinition)member;
-        ////									if (!type.TypeArguments.Any(arg => arg.Name == name.Value)) {
-        ////										AddXmlIssue(name.ValueSegment.Offset - firstline.Length + 1, name.ValueSegment.Length - 2, string.Format(ctx.TranslateString("Type parameter '{0}' not found"), name.Value));
-        ////									}
-        ////								}
-        ////								break;
-        ////							case "param":
-        ////							case "paramref":
-        ////								name = el.Attributes.FirstOrDefault(attr => attr.Name == "name");
-        ////								if (name == null)
-        ////									break;
-        ////								var m = member as IParameterizedMember;
-        ////								if (m != null && m.Parameters.Any(p => p.Name == name.Value))
-        ////									break;
-        ////								if (name.Value == "value" && member != null && (member.SymbolKind == SymbolKind.Property || member.SymbolKind == SymbolKind.Indexer || member.SymbolKind == SymbolKind.Event) && el.Name == "paramref")
-        ////									break;
-        ////								AddXmlIssue(name.ValueSegment.Offset - firstline.Length + 1, name.ValueSegment.Length - 2, string.Format(ctx.TranslateString("Parameter '{0}' not found"), name.Value));
-        ////								break;
-        ////							case "exception":
-        ////							case "seealso":
-        ////							case "see":
-        ////								var cref = el.Attributes.FirstOrDefault(attr => attr.Name == "cref");
-        ////								if (cref == null)
-        ////									break;
-        ////								try {
-        ////									var trctx = ctx.Resolver.TypeResolveContext;
-        ////									if (member is IMember)
-        ////										trctx = trctx.WithCurrentTypeDefinition(member.DeclaringTypeDefinition).WithCurrentMember((IMember)member);
-        ////									if (member is ITypeDefinition)
-        ////										trctx = trctx.WithCurrentTypeDefinition((ITypeDefinition)member);
-        ////									var state = ctx.Resolver.GetResolverStateBefore(node);
-        ////									if (state.CurrentUsingScope != null)
-        ////										trctx = trctx.WithUsingScope(state.CurrentUsingScope);
-        ////									var cdc = new CSharpDocumentationComment (emptySource, trctx);
-        ////									var entity = cdc.ResolveCref(cref.Value);
-        ////
-        ////									if (entity == null) {
-        ////										AddXmlIssue(cref.ValueSegment.Offset - firstline.Length + 1, cref.ValueSegment.Length - 2, string.Format(ctx.TranslateString("Cannot find reference '{0}'"), cref.Value));
-        ////									}
-        ////								} catch (Exception e) {
-        ////									AddXmlIssue(cref.ValueSegment.Offset - firstline.Length + 1, cref.ValueSegment.Length - 2, string.Format(ctx.TranslateString("Reference parsing error '{0}'."), e.Message));
-        ////								}
-        ////								break;
-        ////
-        ////						}
-        ////					}
-        ////					foreach (var child in cur.Children)
-        ////						stack.Push(child);
-        ////				}
-        ////				storedXmlComment.Clear();
-        ////			}
-        ////
-        ////			protected virtual void VisitXmlChildren(AstNode node, Action checkDocumentationAction)
-        ////			{
-        ////				AstNode next;
-        ////				var child = node.FirstChild;
-        ////				while (child != null && (child is Comment || child.Role == Roles.NewLine)) {
-        ////					next = child.NextSibling;
-        ////					child.AcceptVisitor(this);
-        ////					child = next;
-        ////				}
-        ////				checkDocumentationAction();
-        ////
-        ////				for (; child != null; child = next) {
-        ////					// Store next to allow the loop to continue
-        ////					// if the visitor removes/replaces child.
-        ////					next = child.NextSibling;
-        ////					child.AcceptVisitor(this);
-        ////				}
-        ////				InvalideXmlComments();
-        ////			}
-        ////
-        ////			protected virtual void VisitXmlChildren(AstNode node)
-        ////			{
-        ////				VisitXmlChildren(node, () => CheckXmlDoc(node));
-        ////			}
-        ////
-        ////			public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
-        ////			{
-        ////				VisitXmlChildren(typeDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitMethodDeclaration(MethodDeclaration methodDeclaration)
-        ////			{
-        ////				VisitXmlChildren(methodDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitDelegateDeclaration(DelegateDeclaration delegateDeclaration)
-        ////			{
-        ////				VisitXmlChildren(delegateDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitConstructorDeclaration(ConstructorDeclaration constructorDeclaration)
-        ////			{
-        ////				VisitXmlChildren(constructorDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitCustomEventDeclaration(CustomEventDeclaration eventDeclaration)
-        ////			{
-        ////				VisitXmlChildren(eventDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitDestructorDeclaration(DestructorDeclaration destructorDeclaration)
-        ////			{
-        ////				VisitXmlChildren(destructorDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitEnumMemberDeclaration(EnumMemberDeclaration enumMemberDeclaration)
-        ////			{
-        ////				VisitXmlChildren(enumMemberDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitEventDeclaration(EventDeclaration eventDeclaration)
-        ////			{
-        ////				VisitXmlChildren(eventDeclaration, () => {
-        ////					foreach (var e in eventDeclaration.Variables) {
-        ////						CheckXmlDoc(e);
-        ////					}
-        ////				});
-        ////			}
-        ////
-        ////			public override void VisitFieldDeclaration(FieldDeclaration fieldDeclaration)
-        ////			{
-        ////				VisitXmlChildren(fieldDeclaration, () => {
-        ////					foreach (var e in fieldDeclaration.Variables) {
-        ////						CheckXmlDoc(e);
-        ////					}
-        ////				});
-        ////			}
-        ////
-        ////			public override void VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration)
-        ////			{
-        ////				VisitXmlChildren(indexerDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitPropertyDeclaration(PropertyDeclaration propertyDeclaration)
-        ////			{
-        ////				VisitXmlChildren(propertyDeclaration);
-        ////			}
-        ////
-        ////			public override void VisitOperatorDeclaration(OperatorDeclaration operatorDeclaration)
-        ////			{
-        ////				VisitXmlChildren(operatorDeclaration);
-        ////			}
-        //		}
+            public override void VisitDocumentationCommentTrivia(DocumentationCommentTriviaSyntax node)
+            {
+                storedXmlComment.Add(node);
+            }
+
+            void AddXmlIssue(int offset, int length, string str)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(
+                    descriptor, 
+                    Location .Create(context.Tree, new TextSpan(offset, length)),
+                    str
+                ));
+            }
+
+            void CheckForInvalid(SyntaxNode node)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                foreach (var triva in node.GetLeadingTrivia())
+                {
+                    if (triva.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia))
+                        storedXmlComment.Add((DocumentationCommentTriviaSyntax)triva.GetStructure());
+                }
+
+                if (storedXmlComment.Count == 0)
+                    return;
+
+                context.ReportDiagnostic(Diagnostic.Create(
+                    descriptor, 
+                    Location .Create(context.Tree, storedXmlComment[0].FullSpan),
+                    storedXmlComment.Skip(1).Select(cmt => Location .Create(context.Tree, cmt.FullSpan)), 
+                    GettextCatalog.GetString("Xml comment is not placed before a valid language element")
+                ));
+                storedXmlComment.Clear();
+            }
+
+            public override void VisitNamespaceDeclaration(NamespaceDeclarationSyntax node)
+            {
+                CheckForInvalid(node);
+                base.VisitNamespaceDeclaration(node);
+            }
+
+            public override void VisitUsingDirective(UsingDirectiveSyntax node)
+            {
+                CheckForInvalid(node);
+                base.VisitUsingDirective(node);
+            }
+
+            public override void VisitExternAliasDirective(ExternAliasDirectiveSyntax node)
+            {
+                CheckForInvalid(node);
+                base.VisitExternAliasDirective(node);
+            }
+
+            const string firstline = "<root>\n";
+
+            class CRefVisistor : CSharpSyntaxWalker
+            {
+                GatherVisitor parent;
+
+                public CRefVisistor(GatherVisitor parent)
+                {
+                    this.parent = parent;
+                }
+
+                public override void Visit(SyntaxNode node)
+                {
+                    base.Visit(node);
+                }
+
+                public override void VisitNameMemberCref(NameMemberCrefSyntax node)
+                {
+                    base.VisitNameMemberCref(node);
+                    var sym = parent.semanticModel.GetSymbolInfo(node).Symbol;
+                    if (sym == null)
+                        parent.AddXmlIssue(node.Span.Start, node.Span.Length, string.Format(GettextCatalog.GetString("Cannot find reference '{0}'"), node.Name));
+                }
+            }
+
+            void CheckXmlDocForErrors(SyntaxNode node, ISymbol member)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+
+                foreach (var triva in node.GetLeadingTrivia())
+                {
+                    if (triva.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia))
+                    {
+                        storedXmlComment.Add((DocumentationCommentTriviaSyntax)triva.GetStructure());
+                        new CRefVisistor(this).Visit(triva.GetStructure ());
+                    }
+                }
+
+                if (storedXmlComment.Count == 0)
+                    return;
+                
+                xml.Clear();
+                xml.Append(firstline);
+                List<int> OffsetTable = new List<int>();
+                foreach (var cmt in storedXmlComment)
+                {
+                    OffsetTable.Add(xml.Length - firstline.Length);
+                    xml.Append(cmt.Content + "\n");
+                }
+                xml.Append("</root>\n");
+
+                var doc = new AXmlParser().Parse(SourceText.From(xml.ToString()));
+
+                var stack = new Stack<AXmlObject>();
+                stack.Push(doc);
+                foreach (var err in doc.SyntaxErrors)
+                {
+                    AddXmlIssue(CalculateRealStartOffset(OffsetTable, err.StartOffset), err.EndOffset - err.StartOffset, err.Description);
+                }
+
+                while (stack.Count > 0) {
+                    var cur = stack.Pop();
+                    var el = cur as AXmlElement;
+                    if (el != null) {
+                        switch (el.Name)
+                        {
+                            case "typeparam":
+                            case "typeparamref":
+                                var name = el.Attributes.FirstOrDefault(attr => attr.Name == "name");
+                                if (name == null)
+                                    break;
+                                if (member != null && member.IsKind(SymbolKind.NamedType))
+                                {
+                                    var type = (INamedTypeSymbol)member;
+                                    if (!type.TypeArguments.Any(arg => arg.Name == name.Value))
+                                    {
+                                        AddXmlIssue(CalculateRealStartOffset(OffsetTable, name.ValueSegment.Start + 1), name.ValueSegment.Length - 2, string.Format(GettextCatalog.GetString("Type parameter '{0}' not found"), name.Value));
+                                    }
+                                }
+                                break;
+                            case "param":
+                            case "paramref":
+                                name = el.Attributes.FirstOrDefault(attr => attr.Name == "name");
+                                if (name == null)
+                                    break;
+                                var m = member as IMethodSymbol;
+                                if (m != null)
+                                {
+                                    if (m.Parameters.Any(p => p.Name == name.Value))
+                                        break;
+                                    AddXmlIssue(CalculateRealStartOffset(OffsetTable, name.ValueSegment.Start + 1), name.ValueSegment.Length - 2, string.Format(GettextCatalog.GetString("Parameter '{0}' not found"), name.Value));
+                                    break;
+                                }
+                                var prop = member as IPropertySymbol;
+                                if (prop != null)
+                                {
+                                    if (prop.Parameters.Any(p => p.Name == name.Value))
+                                        break;
+                                    if (name.Value == "value")
+                                        break;
+                                    AddXmlIssue(CalculateRealStartOffset(OffsetTable, name.ValueSegment.Start + 1), name.ValueSegment.Length - 2, string.Format(GettextCatalog.GetString("Parameter '{0}' not found"), name.Value));
+                                    break;
+                                }
+                                var evt = member as IEventSymbol;
+                                if (evt != null)
+                                {
+                                    if (name.Value == "value")
+                                        break;
+                                    AddXmlIssue(CalculateRealStartOffset(OffsetTable, name.ValueSegment.Start + 1), name.ValueSegment.Length - 2, string.Format(GettextCatalog.GetString("Parameter '{0}' not found"), name.Value));
+                                    break;
+                                }
+                                AddXmlIssue(CalculateRealStartOffset(OffsetTable, name.ValueSegment.Start + 1), name.ValueSegment.Length - 2, string.Format(GettextCatalog.GetString("Parameter '{0}' not found"), name.Value));
+                                break;
+                        }
+                    }
+                    foreach (var child in cur.Children)
+                        stack.Push(child);
+                }
+
+
+                storedXmlComment.Clear();
+            }
+
+            int CalculateRealStartOffset(List<int> OffsetTable, int offset)
+            {
+                int lineNumber = 0;
+                for (int i = 0; i < OffsetTable.Count; i++)
+                {
+                    if (OffsetTable[i] > offset)
+                        lineNumber = i - 1;
+                }
+                int realStartOffset = storedXmlComment[lineNumber].ParentTrivia.Span.Start + offset - firstline.Length - OffsetTable[lineNumber];
+                return realStartOffset;
+            }
+
+            public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+                base.VisitClassDeclaration(node);
+            }
+
+            public override void VisitStructDeclaration(StructDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+                base.VisitStructDeclaration(node);
+            }
+
+            public override void VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+                base.VisitInterfaceDeclaration(node);
+            }
+
+            public override void VisitEnumDeclaration(EnumDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+                base.VisitEnumDeclaration(node);
+            }
+
+            public override void VisitDelegateDeclaration(DelegateDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+
+            public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+
+            public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+
+            public override void VisitEventDeclaration(EventDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+
+            public override void VisitEventFieldDeclaration(EventFieldDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node.Declaration.Variables.FirstOrDefault()));
+            }
+
+            public override void VisitDestructorDeclaration(DestructorDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+
+            public override void VisitEnumMemberDeclaration(EnumMemberDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+
+            public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node.Declaration.Variables.FirstOrDefault()));
+            }
+
+            public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+
+            public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+
+            public override void VisitOperatorDeclaration(OperatorDeclarationSyntax node)
+            {
+                CheckXmlDocForErrors(node, semanticModel.GetDeclaredSymbol(node));
+            }
+		}
     }
 
 

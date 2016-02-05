@@ -107,7 +107,7 @@ namespace RefactoringEssentials.CSharp.CodeFixes
         //			var typeDeclaration = entity.GetParent<TypeDeclaration>();
         //
         //			yield return new CodeAction(context.TranslateString("This is a constructor"), script => script.Replace(entity.NameToken, Identifier.Create(typeDeclaration.Name, TextLocation.Empty)), entity) {
-        //				Severity = ICSharpCode.NRefactory.Refactoring.Severity.Error
+        //				Severity = RefactoringEssentials.Refactoring.Severity.Error
         //			};
         //
         //			yield return new CodeAction(context.TranslateString("This is a void method"), script => {
@@ -121,7 +121,7 @@ namespace RefactoringEssentials.CSharp.CodeFixes
         //
         //				script.Replace(entity, generatedMethod);
         //			}, entity) {
-        //				Severity = ICSharpCode.NRefactory.Refactoring.Severity.Error
+        //				Severity = RefactoringEssentials.Refactoring.Severity.Error
         //			};
         //		}
     }

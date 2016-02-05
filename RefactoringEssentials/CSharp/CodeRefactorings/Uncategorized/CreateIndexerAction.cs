@@ -80,7 +80,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         //				}
         //
         //				script.InsertWithCursor(context.TranslateString("Create indexer"), Script.InsertPosition.Before, decl);
-        //			}, indexer) { Severity = ICSharpCode.NRefactory.Refactoring.Severity.Error };
+        //			}, indexer) { Severity = RefactoringEssentials.Refactoring.Severity.Error };
         //		}
 
     }
