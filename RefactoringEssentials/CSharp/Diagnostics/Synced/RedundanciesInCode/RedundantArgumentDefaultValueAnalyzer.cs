@@ -52,7 +52,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         //			{
         //			}
 
-        ////			bool IsDefaultValue(Expression arg, ICSharpCode.NRefactory.TypeSystem.IParameter par)
+        ////			bool IsDefaultValue(Expression arg, RefactoringEssentials.TypeSystem.IParameter par)
         ////			{
         ////				var ne = arg as NamedArgumentExpression;
         ////				if (ne != null) {
