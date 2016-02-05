@@ -146,7 +146,6 @@
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\LinqQueryToFluentAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\MoveToOuterScopeAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\PutInsideUsingAction.cs" />
-    <Compile Include="CSharp\CodeRefactorings\Uncategorized\SortUsingsAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\UseStringFormatAction.cs" />
     <Compile Include="CSharp\Diagnostics\CodeActionFactory.cs" />
     <Compile Include="CSharp\Diagnostics\DiagnosticFactory.cs" />
@@ -581,6 +580,11 @@
     <Compile Include="VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />
     <Compile Include="Util\NameGenerator.cs" />
     <Compile Include="Util\NameProposalService.cs" />
+    <Compile Include="Util\Flow\FlowState.cs" />
+    <Compile Include="Util\Flow\FlowAnalysis.cs" />
+    <Compile Include="Util\Flow\FlowLocation.cs" />
+    <Compile Include="Util\Flow\FlowAnalyzer.cs" />
+    <Compile Include="Util\Flow\NullFlowState.cs" />
   </ItemGroup>
   <ItemGroup>
 
@@ -636,6 +640,7 @@
     <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
     <Folder Include="Samples\VB\" />
+    <Folder Include="Util\Flow\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />

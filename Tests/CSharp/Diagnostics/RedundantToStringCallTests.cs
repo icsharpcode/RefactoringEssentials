@@ -4,28 +4,27 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantToStringCallTests : CSharpDiagnosticTestBase
     {
 
         [Test]
         public void ConcatenationOperator()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = """" + i.ToString() + """" + i.ToString();
+		string s = """" + i.$ToString$() + """" + i.$ToString$();
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = """" + i + """" + i;
+		string s = """" + i + """" + i.ToString();
 	}
-}");
+}", 0);
         }
 
         [Test]
@@ -36,7 +35,7 @@ class Foo
 {
 	void Bar (int i)
 	{
-		string s = """" + i.ToString() + """" + i.ToString();
+		string s = """" + i.$ToString$() + """" + i.$ToString$();
 	}
 }");
         }
@@ -71,15 +70,15 @@ class Foo
         [Test]
         public void StringTarget()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (string str)
 	{
-		string s = str.ToString();
-		string inOperator = """" + str.ToString();
+		string s = str.$ToString$();
+		string inOperator = """" + str.$ToString$();
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (string str)
@@ -90,10 +89,10 @@ class Foo
 }");
         }
 
-        [Test]
+        [Test, Ignore("TODO - port me (needs string format helper)")]
         public void FormatStringTests()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
@@ -110,10 +109,10 @@ class Foo
 }");
         }
 
-        [Test]
+        [Test, Ignore("TODO - port me (needs string format helper)")]
         public void HandlesNonLiteralFormatParameter()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
@@ -132,10 +131,10 @@ class Foo
 }");
         }
 
-        [Test]
+        [Test, Ignore("TODO - port me (needs string format helper)")]
         public void FormatStringWithNonObjectParameterTests()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
@@ -166,10 +165,10 @@ class Foo
 }");
         }
 
-        [Test]
+        [Test, Ignore("TODO - port me (needs string format helper)")]
         public void FormatMethodWithObjectParamsArray()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
@@ -180,7 +179,7 @@ class Foo
 	void FakeFormat(string format, params object[] args)
 	{
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (object i)
@@ -194,19 +193,19 @@ class Foo
 }");
         }
 
-        [Test, Ignore("broken")]
+        [Test]
         public void DetectsBlacklistedCalls()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
 	{
 		var w = new System.IO.StringWriter ();
-		w.Write (i.ToString());
-		w.WriteLine (i.ToString());
+		w.Write (i.$ToString$());
+		w.WriteLine (i.$ToString$());
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (object i)
@@ -221,21 +220,21 @@ class Foo
         [Test]
         public void ConcatenationOperator2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = """" + i.ToString() + """" + i.ToString();
+		string s = """" + i.$ToString$() + """" + i.$ToString$();
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = """" + i + """" + i;
+		string s = """" + i.ToString() + """" + i;
 	}
-}");
+}", 1);
         }
 
         [Test]
@@ -246,7 +245,7 @@ class Foo
 {
 	void Bar (object i)
 	{
-		string s = """" + i.ToString() + """" + i.ToString();
+		string s = """" + i.$ToString$() + """" + i.$ToString$();
 	}
 }");
         }
@@ -277,10 +276,10 @@ class Foo
 }");
         }
 
-        [Test]
+        [Test, Ignore("TODO - port me (needs string format helper)")]
         public void FormatStringTests2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
@@ -297,10 +296,10 @@ class Foo
 }");
         }
 
-        [Test]
+        [Test, Ignore("TODO - port me (needs string format helper)")]
         public void HandlesNonLiteralFormatParameter2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
@@ -319,10 +318,10 @@ class Foo
 }");
         }
 
-        [Test]
+        [Test, Ignore("TODO - port me (needs string format helper)")]
         public void FormatStringWithNonObjectParameterTests2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
@@ -353,10 +352,10 @@ class Foo
 }");
         }
 
-        [Test]
+        [Test, Ignore("TODO - port me (needs string format helper)")]
         public void FormatMethodWithObjectParamsArray2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
@@ -367,7 +366,7 @@ class Foo
 	void FakeFormat(string format, params object[] args)
 	{
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (int i)
@@ -384,16 +383,16 @@ class Foo
         [Test]
         public void DetectsBlacklistedCalls2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
 	{
 		var w = new System.IO.StringWriter ();
-		w.Write (i.ToString());
-		w.WriteLine (i.ToString());
+		w.Write (i.$ToString$());
+		w.WriteLine (i.$ToString$());
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (int i)

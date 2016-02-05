@@ -15,7 +15,7 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>101 code analyzers for C#</p>
+    <p>102 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
@@ -29,6 +29,7 @@
       <li>'?:' expression has identical true and false branches (ConditionalTernaryEqualBranchAnalyzer)</li>
       <li>Expression is always 'true' or always 'false' (ConditionIsAlwaysTrueOrFalseAnalyzer)</li>
       <li>Condition is always 'true' or always 'false' (ConstantConditionAnalyzer)</li>
+      <li>Finds redundant null coalescing expressions such as expr ?? expr (ConstantNullCoalescingConditionAnalyzer)</li>
       <li>Convert anonymous method to method group (ConvertClosureToMethodGroupAnalyzer)</li>
       <li>'?:' expression can be converted to '??' expression (ConvertConditionalTernaryToNullCoalescingAnalyzer)</li>
       <li>Convert 'if-do-while' to 'while' statement (ConvertIfDoToWhileAnalyzer)</li>
