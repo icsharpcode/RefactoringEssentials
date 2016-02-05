@@ -712,9 +712,6 @@ namespace RefactoringEssentials
                 Matcher.Sequence(
                     Matcher.OneOrMore(commentLine),
                     s_oneOrMoreBlankLines);
-
-            var typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-            containsInterleavedDirectiveMethod = typeInfo.GetMethod("ContainsInterleavedDirective", new[] { typeof(SyntaxNode), typeof(CancellationToken) });
         }
 
         private static Matcher<SyntaxTrivia> Match(SyntaxKind kind, string description)
@@ -961,8 +958,6 @@ namespace RefactoringEssentials
             return node.IsAnyLambda() || node.IsKind(SyntaxKind.AnonymousMethodExpression);
         }
 
-        readonly static MethodInfo containsInterleavedDirectiveMethod;
-
         /// <summary>
         /// Returns true if the passed in node contains an interleaved pp directive.
         /// 
@@ -1000,11 +995,12 @@ namespace RefactoringEssentials
         /// constructs (like #if/#endif or #region/#endregion), but the grouping construct isn't
         /// entirely contained within the span of the node.
         /// </summary>
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool ContainsInterleavedDirective(
             this SyntaxNode syntaxNode,
             CancellationToken cancellationToken)
         {
-            return (bool)containsInterleavedDirectiveMethod.Invoke(null, new object[] { syntaxNode, cancellationToken });
+            return (bool)RoslynReflection.SyntaxNodeExtensions.ContainsInterleavedDirectiveMethod.Invoke(null, new object[] { syntaxNode, cancellationToken });
         }
 
 

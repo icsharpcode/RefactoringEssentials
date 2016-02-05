@@ -85,6 +85,10 @@
     * `Microsoft.CodeAnalysis.Shared.Extensions.SyntaxTokenExtensions` (*Microsoft.CodeAnalysis.Workspaces*)
         * `GetAncestors()`
         * `CanReplaceWithReducedName()` (2x)
+        
+* SyntaxNodeExtensions
+    * `Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions`(*Microsoft.CodeAnalysis.CSharp.Workspaces*)
+        * `ContainsInterleavedDirective()`
     
 * TypeExtensions
     * `Microsoft.CodeAnalysis.CSharp.Extensions.ITypeSymbolExtensions` (*Microsoft.CodeAnalysis.CSharp.Workspaces*)
