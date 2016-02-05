@@ -83,3 +83,4 @@
 * UseIsOperatorAnalyzer
 * UseMethodAnyAnalyzer
 * UseMethodIsInstanceOfTypeAnalyzer
+

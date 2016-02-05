@@ -10,7 +10,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantToStringCallAnalyzer : DiagnosticAnalyzer
     {
         static Tuple<int, int> onlyFirst = Tuple.Create(0, 0);
