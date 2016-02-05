@@ -15,8 +15,7 @@ using RefactoringEssentials.Xml;
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
-    public class XmlDocAnalyzer : DiagnosticAnalyzer
+	public class XmlDocAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.XmlDocAnalyzerID,
