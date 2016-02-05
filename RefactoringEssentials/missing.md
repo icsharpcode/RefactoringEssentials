@@ -83,5 +83,3 @@
 * UseIsOperatorAnalyzer
 * UseMethodAnyAnalyzer
 * UseMethodIsInstanceOfTypeAnalyzer
-* XmlDocAnalyzer
-
