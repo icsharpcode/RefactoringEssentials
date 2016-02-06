@@ -26,7 +26,7 @@ namespace RefactoringEssentials.Tests
             for (int i = 0; i < upper; i++)
             {
                 var ch = input[i];
-                if (ch == '$' && (i + 1 >= upper || input[i + 1] != '"') || ch == '…')
+                if (ch == '$' && (i + 1 >= upper || input[i + 1] != '"') || ch == '…' || (int)ch == 65533)
                 {
                     start = end = i;
                     continue;
@@ -71,8 +71,7 @@ namespace RefactoringEssentials.Tests
                     result.Append(lastChar);
                 }
             }
-
-            selectedSpan = TextSpan.FromBounds(start, end);
+            selectedSpan = start < 0 ? new TextSpan(0, 0) : TextSpan.FromBounds(start, end);
             markedSpan = start2 < 0 ? new TextSpan(0, 0) : TextSpan.FromBounds(start2, end2);
             return result.ToString();
         }

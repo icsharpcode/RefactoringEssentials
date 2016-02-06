@@ -20,37 +20,6 @@ namespace RefactoringEssentials
 #endif
     static class SyntaxExtensions
     {
-        readonly static MethodInfo canRemoveParenthesesMethod;
-        //		readonly static MethodInfo isLeftSideOfDotMethod;
-        //		readonly static MethodInfo isRightSideOfDotMethod;
-        //		readonly static MethodInfo getEnclosingNamedTypeMethod;
-        readonly static MethodInfo getLocalDeclarationMapMethod;
-        readonly static PropertyInfo localDeclarationMapIndexer;
-        readonly static MethodInfo getAncestorsMethod;
-
-        static SyntaxExtensions()
-        {
-            var typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.ParenthesizedExpressionSyntaxExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-            canRemoveParenthesesMethod = typeInfo.GetMethod("CanRemoveParentheses", new[] { typeof(ParenthesizedExpressionSyntax) });
-
-            //			typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-            //			isLeftSideOfDotMethod = typeInfo.GetMethod("IsLeftSideOfDot", new[] { typeof(ExpressionSyntax) });
-            //			isRightSideOfDotMethod = typeInfo.GetMethod("IsRightSideOfDot", new[] { typeof(ExpressionSyntax) });
-            //
-            //			typeInfo = Type.GetType("Microsoft.CodeAnalysis.Shared.Extensions.SemanticModelExtensions" + ReflectionNamespaces.WorkspacesAsmName, true);
-            //			getEnclosingNamedTypeMethod = typeInfo.GetMethod("GetEnclosingNamedType", new[] { typeof(SemanticModel), typeof(int), typeof(CancellationToken) });
-            //
-            typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.MemberDeclarationSyntaxExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-            getLocalDeclarationMapMethod = typeInfo.GetMethod("GetLocalDeclarationMap", new[] { typeof(MemberDeclarationSyntax) });
-
-            typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.MemberDeclarationSyntaxExtensions+LocalDeclarationMap" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-            localDeclarationMapIndexer = typeInfo.GetProperties().Single(p => p.GetIndexParameters().Any());
-
-            typeInfo = Type.GetType("Microsoft.CodeAnalysis.Shared.Extensions.SyntaxTokenExtensions" + ReflectionNamespaces.WorkspacesAsmName, true);
-            getAncestorsMethod = typeInfo.GetMethods().Single(m => m.Name == "GetAncestors" && m.IsGenericMethod);
-        }
-
-
         /// <summary>
         /// Look inside a trivia list for a skipped token that contains the given position.
         /// </summary>
@@ -104,12 +73,14 @@ namespace RefactoringEssentials
         //			return (INamedTypeSymbol)getEnclosingNamedTypeMethod.Invoke(null, new object[] { semanticModel, position, cancellationToken });
         //		}
         //
+
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         static ImmutableArray<SyntaxToken> GetLocalDeclarationMap(this MemberDeclarationSyntax member, string localName)
         {
             try
             {
-                object map = getLocalDeclarationMapMethod.Invoke(null, new object[] { member });
-                return (ImmutableArray<SyntaxToken>)localDeclarationMapIndexer.GetValue(map, new object[] { localName });
+                object map = RoslynReflection.MemberDeclarationSyntaxExtensions.GetLocalDeclarationMapMethod.Invoke(null, new object[] { member });
+                return (ImmutableArray<SyntaxToken>)RoslynReflection.MemberDeclarationSyntaxExtensions_LocalDeclarationMap.LocalDeclarationMapIndexer.GetValue(map, new object[] { localName });
             }
             catch (TargetInvocationException ex)
             {
@@ -118,11 +89,12 @@ namespace RefactoringEssentials
             }
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         static IEnumerable<T> GetAncestors<T>(this SyntaxToken token) where T : SyntaxNode
         {
             try
             {
-                return (IEnumerable<T>)getAncestorsMethod.MakeGenericMethod(typeof(T)).Invoke(null, new object[] { token });
+                return (IEnumerable<T>)RoslynReflection.SyntaxTokenExtensions.GetAncestorsMethod.MakeGenericMethod(typeof(T)).Invoke(null, new object[] { token });
             }
             catch (TargetInvocationException ex)
             {
@@ -151,11 +123,12 @@ namespace RefactoringEssentials
             return expression;
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool CanRemoveParentheses(this ParenthesizedExpressionSyntax node)
         {
             try
             {
-                return (bool)canRemoveParenthesesMethod.Invoke(null, new object[] { node });
+                return (bool)RoslynReflection.ParenthesizedExpressionSyntaxExtensions.CanRemoveParenthesesMethod.Invoke(null, new object[] { node });
             }
             catch (TargetInvocationException ex)
             {
@@ -174,6 +147,7 @@ namespace RefactoringEssentials
             return node.Parent != null && node.Parent.IsKind(kind);
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool CanReplaceWithReducedName(
             this MemberAccessExpressionSyntax memberAccess,
             ExpressionSyntax reducedName,
@@ -423,7 +397,7 @@ namespace RefactoringEssentials
             return semanticModel.GetSymbolInfo(memberAccess.Name).CandidateReason == CandidateReason.LateBound;
         }
 
-
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool CanReplaceWithReducedName(this NameSyntax name, TypeSyntax reducedName, SemanticModel semanticModel, CancellationToken cancellationToken)
         {
             var speculationAnalyzer = new SpeculationAnalyzer(name, reducedName, semanticModel, cancellationToken);

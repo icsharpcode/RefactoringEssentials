@@ -335,6 +335,12 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             }
 
             var collection = context.GetTypeInfo(result.Expression);
+            if (collection.Type == null)
+            {
+                hasIndexAccess = false;
+                return null;
+            }
+
             hasIndexAccess = collection.Type.TypeKind == TypeKind.Array || collection.Type.GetMembers().OfType<IPropertySymbol>().Any(p => p.IsIndexer);
             return result;
         }

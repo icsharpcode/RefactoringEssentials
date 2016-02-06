@@ -12,18 +12,18 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
 class FooBar
 {
-	void Test()
-	{
-		int? i = $new int?$(5);
-	}
+    void Test()
+    {
+        int? i = $new int?$(5);
+    }
 }
 ", @"
 class FooBar
 {
-	void Test()
-	{
-		int? i = 5;
-	}
+    void Test()
+    {
+        int? i = 5;
+    }
 }
 ");
         }
@@ -34,18 +34,48 @@ class FooBar
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
 class FooBar
 {
-	void Test()
-	{
-		int? i = $new System.Nullable<int>$(5);
-	}
+    void Test()
+    {
+        int? i = $new System.Nullable<int>$(5);
+    }
 }
 ", @"
 class FooBar
 {
-	void Test()
-	{
-		int? i = 5;
-	}
+    void Test()
+    {
+        int? i = 5;
+    }
+}
+");
+        }
+
+        [Test]
+        public void TestCreationInArgument()
+        {
+            Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
+class FooBar
+{
+    void NullableMethod(int? param)
+    {
+    }
+
+    void Test()
+    {
+        NullableMethod($new int?$(5));
+    }
+}
+", @"
+class FooBar
+{
+    void NullableMethod(int? param)
+    {
+    }
+
+    void Test()
+    {
+        NullableMethod(5);
+    }
 }
 ");
         }
@@ -56,10 +86,10 @@ class FooBar
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
 class FooBar
 {
-	void Test()
-	{
-		var i = new int?(5);
-	}
+    void Test()
+    {
+        var i = new int?(5);
+    }
 }
 ");
         }
@@ -70,12 +100,12 @@ class FooBar
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
 class FooBar
 {
-	void Test()
-	{
-		// ReSharper disable once RedundantExplicitNullableCreation
+    void Test()
+    {
+        // ReSharper disable once RedundantExplicitNullableCreation
 +#pragma warning disable " + CSharpDiagnosticIDs.RedundantExplicitNullableCreationAnalyzerID + @"
-		int? i = new int?(5);
-	}
+        int? i = new int?(5);
+    }
 }
 ");
         }

@@ -255,5 +255,27 @@ class TestClass
 }");
         }
 
+
+        [Test]
+        public void Expression()
+        {
+            Test<AddNameToArgumentCodeRefactoringProvider>(@"
+class TestClass
+{
+    public void Foo(int a, int b, float c = 0.1) { }
+    public void F()
+    {
+        Foo($1 + 2,b: 2);
+    }
+}", @"
+class TestClass
+{
+    public void Foo(int a, int b, float c = 0.1) { }
+    public void F()
+    {
+        Foo(a: 1 + 2, b: 2);
+    }
+}");
+        }
     }
 }

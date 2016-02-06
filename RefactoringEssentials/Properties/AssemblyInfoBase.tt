@@ -11,7 +11,7 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 [assembly: AssemblyCompany("ICSharpCode")]
 [assembly: AssemblyProduct("Refactoring Essentials")]
-[assembly: AssemblyCopyright("Copyright 2010-2015 AlphaSierraPapa and Xamarin Inc.")]
+[assembly: AssemblyCopyright("Copyright 2010-2016 AlphaSierraPapa and Xamarin Inc.")]
 [assembly: AssemblyVersion("<#= generatedFullVersion #>")]
 [assembly: AssemblyFileVersion("<#= generatedNuGetVersion #>")]
 

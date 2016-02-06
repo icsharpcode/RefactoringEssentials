@@ -38,11 +38,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span) as IfStatementSyntax;
 
-            var switchExpr = ConvertIfStatementToSwitchStatementCodeRefactoringProvider.GetSwitchExpression(semanticModel, node.Condition);
+            var switchExpr = ConvertIfStatementToSwitchStatementAnalyzer.GetSwitchExpression(semanticModel, node.Condition);
             if (switchExpr == null)
                 return;
             var switchSections = new List<SwitchSectionSyntax>();
-            if (!ConvertIfStatementToSwitchStatementCodeRefactoringProvider.CollectSwitchSections(switchSections, semanticModel, node, switchExpr))
+            if (!ConvertIfStatementToSwitchStatementAnalyzer.CollectSwitchSections(switchSections, semanticModel, node, switchExpr))
                 return;
             if (switchSections.Count(s => !s.Labels.OfType<DefaultSwitchLabelSyntax>().Any()) <= 2)
                 return;

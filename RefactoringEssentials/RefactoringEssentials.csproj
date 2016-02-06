@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Common\CodeContractsCodeRefactoringProvider.cs" />
     <Compile Include="Common\NotPortedYetAttribute.cs" />
+    <Compile Include="Common\RoslynReflectionUsageAttribute.cs" />
     <Compile Include="Converter\CodeConverter.cs" />
     <Compile Include="Converter\CodeWithOptions.cs" />
     <Compile Include="Converter\ConversionResult.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs" />
     <Compile Include="CSharp\ConvertUnitTestToVB.cs" />
+    <Compile Include="CSharp\Diagnostics\Custom\RoslynReflectionUsageAnalyzer.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\InlineMethodAction.cs" />
     <Compile Include="CSharp\SyntaxExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -145,7 +147,6 @@
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\LinqQueryToFluentAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\MoveToOuterScopeAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\PutInsideUsingAction.cs" />
-    <Compile Include="CSharp\CodeRefactorings\Uncategorized\SortUsingsAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\UseStringFormatAction.cs" />
     <Compile Include="CSharp\Diagnostics\CodeActionFactory.cs" />
     <Compile Include="CSharp\Diagnostics\DiagnosticFactory.cs" />
@@ -481,7 +482,6 @@
     <Compile Include="CSharp\Diagnostics\Custom\RedundantAssignmentCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\RedundantInternalCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\RedundantPrivateCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\XmlDocCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\DocumentChangeAction.cs" />
@@ -504,6 +504,7 @@
     <Compile Include="Util\GeneratedCodeRecognition.cs" />
     <Compile Include="Util\HelpLink.cs" />
     <Compile Include="Util\NRefactory6Host.cs" />
+    <Compile Include="Util\RoslynReflection.cs" />
     <Compile Include="Util\SyntaxExtensions.cs" />
     <Compile Include="Util\TypeExtensions.cs" />
     <Compile Include="Util\CSharpUtil.cs" />
@@ -578,6 +579,34 @@
     <Compile Include="VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs" />
     <Compile Include="VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs" />
     <Compile Include="Util\NameGenerator.cs" />
+    <Compile Include="Util\NameProposalService.cs" />
+    <Compile Include="Util\Flow\FlowState.cs" />
+    <Compile Include="Util\Flow\FlowAnalysis.cs" />
+    <Compile Include="Util\Flow\FlowLocation.cs" />
+    <Compile Include="Util\Flow\FlowAnalyzer.cs" />
+    <Compile Include="Util\Flow\NullFlowState.cs" />
+    <Compile Include="Xml\TokenReader.cs" />
+    <Compile Include="Xml\TextType.cs" />
+    <Compile Include="Xml\TagReader.cs" />
+    <Compile Include="Xml\TagMatchingHeuristics.cs" />
+    <Compile Include="Xml\SyntaxError.cs" />
+    <Compile Include="Xml\ReuseEqualityComparer.cs" />
+    <Compile Include="Xml\ObjectIterator.cs" />
+    <Compile Include="Xml\Log.cs" />
+    <Compile Include="Xml\InternalDocument.cs" />
+    <Compile Include="Xml\IncrementalParserState.cs" />
+    <Compile Include="Xml\DocumentationElement.cs" />
+    <Compile Include="Xml\AXmlVisitor.cs" />
+    <Compile Include="Xml\AXmlText.cs" />
+    <Compile Include="Xml\AXmlTag.cs" />
+    <Compile Include="Xml\AXmlReader.cs" />
+    <Compile Include="Xml\AXmlParser.cs" />
+    <Compile Include="Xml\AXmlObject.cs" />
+    <Compile Include="Xml\AXmlElement.cs" />
+    <Compile Include="Xml\AXmlDocument.cs" />
+    <Compile Include="Xml\AXmlAttribute.cs" />
+    <Compile Include="Xml\LazyInit.cs" />
+    <Compile Include="Xml\TreeTraversal.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -642,6 +671,7 @@
     <Content Include="RefactoringEssentials.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="buildlibrarypackage.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -681,6 +711,7 @@
     <None Include="tools\uninstall.ps1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Xml\ICSharpCode.NRefactory.Xml.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="missing.md" />
@@ -689,6 +720,8 @@
     <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
     <Folder Include="Samples\VB\" />
+    <Folder Include="Util\Flow\" />
+    <Folder Include="Xml\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />

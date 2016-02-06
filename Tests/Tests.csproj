@@ -177,7 +177,6 @@
     <Compile Include="CSharp\CodeRefactorings\ReplaceWithOperatorAssignmentTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReverseDirectionForForLoopTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\AddNullCheckTests.cs" />
-    <Compile Include="CSharp\CodeRefactorings\SortUsingsTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitIfWithAndConditionInTwoTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitIfWithOrConditionInTwoTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitLocalVariableDeclarationAndAssignmentTests.cs" />
@@ -335,6 +334,7 @@
     <Compile Include="CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticConstructorParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticEventSubscriptionTests.cs" />
+    <Compile Include="CSharp\Diagnostics\RoslynReflectionUsageTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticFieldInGenericTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticMethodInvocationToExtensionMethodInvocationTests.cs" />
     <Compile Include="CSharp\Diagnostics\StringCompareIsCultureSpecificTests.cs" />
@@ -479,8 +479,8 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets') And '$(Configuration)'!='Mono_Debug' And  '$(Configuration)'!='Mono_Release'" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(Configuration)'!='Mono_Debug' And  '$(Configuration)'!='Mono_Release'">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>

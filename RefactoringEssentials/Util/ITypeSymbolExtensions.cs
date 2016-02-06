@@ -13,44 +13,10 @@ namespace RefactoringEssentials
 {
     [EditorBrowsableAttribute(EditorBrowsableState.Never)]
 #if NR6
-	public
+    public
 #endif
     static class ITypeSymbolExtensions
     {
-        readonly static MethodInfo generateTypeSyntax;
-        readonly static MethodInfo inheritsFromOrEqualsIgnoringConstructionMethod;
-
-        static ITypeSymbolExtensions()
-        {
-            var typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.ITypeSymbolExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-            generateTypeSyntax = typeInfo.GetMethod("GenerateTypeSyntax", new[] { typeof(ITypeSymbol) });
-            containingTypesOrSelfHasUnsafeKeywordMethod = typeInfo.GetMethod("ContainingTypesOrSelfHasUnsafeKeyword", BindingFlags.Public | BindingFlags.Static);
-
-            typeInfo = Type.GetType("Microsoft.CodeAnalysis.Shared.Extensions.ITypeSymbolExtensions" + ReflectionNamespaces.WorkspacesAsmName, true);
-            inheritsFromOrEqualsIgnoringConstructionMethod = typeInfo.GetMethod("InheritsFromOrEqualsIgnoringConstruction");
-            removeUnavailableTypeParametersMethod = typeInfo.GetMethod("RemoveUnavailableTypeParameters");
-            removeUnnamedErrorTypesMethod = typeInfo.GetMethod("RemoveUnnamedErrorTypes");
-            replaceTypeParametersBasedOnTypeConstraintsMethod = typeInfo.GetMethod("ReplaceTypeParametersBasedOnTypeConstraints");
-            foreach (var m in typeInfo.GetMethods(BindingFlags.Public | BindingFlags.Static))
-            {
-                if (m.Name != "SubstituteTypes")
-                    continue;
-                var parameters = m.GetParameters();
-                if (parameters.Length != 3)
-                    continue;
-
-                if (parameters[2].Name == "typeGenerator")
-                {
-                    substituteTypesMethod2 = m;
-                }
-                else if (parameters[2].Name == "compilation")
-                {
-                    substituteTypesMethod = m;
-                }
-                break;
-            }
-        }
-
         public static bool ImplementsSpecialTypeInterface(this ITypeSymbol symbol, SpecialType type)
         {
             if (symbol.SpecialType == type)
@@ -78,15 +44,16 @@ namespace RefactoringEssentials
             return false;
         }
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static TypeSyntax GenerateTypeSyntax(this ITypeSymbol typeSymbol)
         {
-            return (TypeSyntax)generateTypeSyntax.Invoke(null, new[] { typeSymbol });
+            return (TypeSyntax)RoslynReflection.CSharpITypeSymbolExtensions.GenerateTypeSyntaxMethod.Invoke(null, new[] { typeSymbol });
         }
 
-        readonly static MethodInfo containingTypesOrSelfHasUnsafeKeywordMethod;
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool ContainingTypesOrSelfHasUnsafeKeyword(this ITypeSymbol containingType)
         {
-            return (bool)containingTypesOrSelfHasUnsafeKeywordMethod.Invoke(null, new object[] { containingType });
+            return (bool)RoslynReflection.CSharpITypeSymbolExtensions.ContainingTypesOrSelfHasUnsafeKeywordMethod.Invoke(null, new object[] { containingType });
         }
 
 
@@ -373,10 +340,11 @@ namespace RefactoringEssentials
         //
         // Determine if "type" inherits from "baseType", ignoring constructed types, and dealing
         // only with original types.
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool InheritsFromOrEqualsIgnoringConstruction(
             this ITypeSymbol type, ITypeSymbol baseType)
         {
-            return (bool)inheritsFromOrEqualsIgnoringConstructionMethod.Invoke(null, new[] { type, baseType });
+            return (bool)RoslynReflection.SharedITypeSymbolExtensions.InheritsFromOrEqualsIgnoringConstructionMethod.Invoke(null, new[] { type, baseType });
         }
         //
         //		// Determine if "type" inherits from "baseType", ignoring constructed types, and dealing
@@ -439,8 +407,8 @@ namespace RefactoringEssentials
 
             return false;
         }
-        readonly static MethodInfo removeUnavailableTypeParametersMethod;
 
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol RemoveUnavailableTypeParameters(
             this ITypeSymbol type,
             Compilation compilation,
@@ -448,7 +416,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return (ITypeSymbol)removeUnavailableTypeParametersMethod.Invoke(null, new object[] { type, compilation, availableTypeParameters });
+                return (ITypeSymbol)RoslynReflection.SharedITypeSymbolExtensions.RemoveUnavailableTypeParametersMethod.Invoke(null, new object[] { type, compilation, availableTypeParameters });
             }
             catch (TargetInvocationException ex)
             {
@@ -529,7 +497,7 @@ namespace RefactoringEssentials
             }
         }
 
-        readonly static MethodInfo replaceTypeParametersBasedOnTypeConstraintsMethod;
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol ReplaceTypeParametersBasedOnTypeConstraints(
             this ITypeSymbol type,
             Compilation compilation,
@@ -539,7 +507,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return (ITypeSymbol)replaceTypeParametersBasedOnTypeConstraintsMethod.Invoke(null, new object[] { type, compilation, availableTypeParameters, solution, cancellationToken });
+                return (ITypeSymbol)RoslynReflection.SharedITypeSymbolExtensions.ReplaceTypeParametersBasedOnTypeConstraintsMethod.Invoke(null, new object[] { type, compilation, availableTypeParameters, solution, cancellationToken });
             }
             catch (TargetInvocationException ex)
             {
@@ -548,14 +516,14 @@ namespace RefactoringEssentials
             }
         }
 
-        readonly static MethodInfo removeUnnamedErrorTypesMethod;
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol RemoveUnnamedErrorTypes(
             this ITypeSymbol type,
             Compilation compilation)
         {
             try
             {
-                return (ITypeSymbol)removeUnnamedErrorTypesMethod.Invoke(null, new object[] { type, compilation });
+                return (ITypeSymbol)RoslynReflection.SharedITypeSymbolExtensions.RemoveUnnamedErrorTypesMethod.Invoke(null, new object[] { type, compilation });
             }
             catch (TargetInvocationException ex)
             {
@@ -655,7 +623,7 @@ namespace RefactoringEssentials
             }
         }
 
-        readonly static MethodInfo substituteTypesMethod;
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol SubstituteTypes<TType1, TType2>(
             this ITypeSymbol type,
             IDictionary<TType1, TType2> mapping,
@@ -667,7 +635,7 @@ namespace RefactoringEssentials
                 throw new ArgumentNullException("type");
             try
             {
-                return (ITypeSymbol)substituteTypesMethod.MakeGenericMethod(typeof(TType1), typeof(TType2)).Invoke(null, new object[] { type, mapping, compilation });
+                return (ITypeSymbol)RoslynReflection.SharedITypeSymbolExtensions.SubstituteTypesMethod.MakeGenericMethod(typeof(TType1), typeof(TType2)).Invoke(null, new object[] { type, mapping, compilation });
             }
             catch (TargetInvocationException ex)
             {
@@ -676,7 +644,7 @@ namespace RefactoringEssentials
             }
         }
 
-        readonly static MethodInfo substituteTypesMethod2;
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ITypeSymbol SubstituteTypes<TType1, TType2>(
             this ITypeSymbol type,
             IDictionary<TType1, TType2> mapping,
@@ -686,7 +654,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return (ITypeSymbol)substituteTypesMethod2.MakeGenericMethod(typeof(TType1), typeof(TType2)).Invoke(null, new object[] { type, mapping, typeGenerator.Instance });
+                return (ITypeSymbol)RoslynReflection.SharedITypeSymbolExtensions.SubstituteTypesMethod2.MakeGenericMethod(typeof(TType1), typeof(TType2)).Invoke(null, new object[] { type, mapping, typeGenerator.Instance });
             }
             catch (TargetInvocationException ex)
             {
