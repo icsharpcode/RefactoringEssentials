@@ -50,6 +50,12 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings.Uncategorized
             if (method.ContainsDiagnostics)
                 return;
 
+            // Ensure the method body is simple.
+            var isSimpleMethodBody = method.Body.Statements.Count() == 1;
+
+            if (!isSimpleMethodBody)
+                return;
+
             var methodSymbol = model.GetDeclaredSymbol(method);
             var methodContainer = methodSymbol.ContainingType;
 
@@ -76,14 +82,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings.Uncategorized
             // Ensure there are references.
             if (!methodReferences.Any())
                 return;
+
             // Ensure the reference has locations.
             if (!methodReferences.First().Locations.Any())
-                return;
-
-            // Ensure the method body is simple.
-            var isSimpleMethodBody = method.Body.Statements.Count() == 1;
-
-            if (!isSimpleMethodBody)
                 return;
 
             // Are any references made from external types?
@@ -190,26 +191,46 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings.Uncategorized
                     {
                         var node = root.FindNode(location.Location.SourceSpan);
 
-                        var invocationNode = node.AncestorsAndSelf().FirstOrDefault(n => n.IsKind(SyntaxKind.InvocationExpression)) as InvocationExpressionSyntax;
-
-                        var replacementNode = methodBody;
-
-                        // Replace method body's params with actual values.
-                        var args = invocationNode.ArgumentList.Arguments;
-                        for (var paramIdx = 0; paramIdx < methodParams.Count(); paramIdx++)
+                        // If location is invocation, replace it.
+                        if (node.Parent.IsKind(SyntaxKind.InvocationExpression))
                         {
-                            var param = methodParams[paramIdx];
-                            var arg = (paramIdx < args.Count) ? args[paramIdx].Expression : param.Default.Value;
-
-                            var ids = replacementNode.DescendantNodesAndSelf()
-                                .Where(n => n.IsKind(SyntaxKind.IdentifierName))
-                                .Where(n => (n as IdentifierNameSyntax).Identifier.ValueText == param.Identifier.ValueText);
-
-                            replacementNode = replacementNode.ReplaceNodes(ids, (n1, n2) => arg).WithAdditionalAnnotations(Formatter.Annotation);
+                            var invocationNode = node.Parent as InvocationExpressionSyntax;
+                            root = ReplaceInvocationExpression(root, invocationNode, methodBody, methodParams);
                         }
 
-                        // Replace location with final method body.
-                        root = root.ReplaceNode(invocationNode, replacementNode.WithAdditionalAnnotations(Formatter.Annotation));
+                        // If the location is member access. foo.Bar(1, 2);
+                        if (node.Parent != null
+                            && node.Parent.IsKind(SyntaxKind.SimpleMemberAccessExpression)
+                            && node.Parent.Parent != null
+                            && node.Parent.Parent.IsKind(SyntaxKind.InvocationExpression))
+                        {
+                            var invocationNode = node.Parent.Parent as InvocationExpressionSyntax;
+                            root = ReplaceInvocationExpression(root, invocationNode, methodBody, methodParams);
+                        }
+
+                        // If location is argument, convert to lambda expression.
+                        if (node.IsKind(SyntaxKind.Argument))
+                        {
+                            var argument = node as ArgumentSyntax;
+
+                            SyntaxNode newArgument;
+                            ParameterListSyntax paramList = SyntaxFactory.ParameterList();
+
+                            // If method has params, prep them for the lambda.
+                            if (methodParams.Any())
+                            {
+                                var lambdaParams = from methodParam in methodParams
+                                                   select SyntaxFactory.Parameter(methodParam.AttributeLists, methodParam.Modifiers, methodParam.Type, methodParam.Identifier, null);
+                                var lambdaParamList = SyntaxFactory.SeparatedList<ParameterSyntax>(lambdaParams);
+                                paramList = SyntaxFactory.ParameterList(lambdaParamList);
+                            }
+
+                            var lambda = SyntaxFactory.ParenthesizedLambdaExpression(paramList, methodBody as CSharpSyntaxNode);
+                            newArgument = SyntaxFactory.Argument(lambda);
+
+                            // Replace location with final method body.
+                            root = root.ReplaceNode(argument, newArgument.WithAdditionalAnnotations(Formatter.Annotation));
+                        }
                     }
 
                     // Replace document root.
@@ -242,6 +263,41 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings.Uncategorized
 
             // Return new solution.
             return await Task.FromResult(solution);
+        }
+
+        /// <summary>
+        /// Replace invocation with method body.
+        /// </summary>
+        /// <param name="root">The root of the document.</param>
+        /// <param name="invocationNode">The invocation node to replace.</param>
+        /// <param name="methodBody">The body of the inlined method.</param>
+        /// <param name="methodParams">The parameters of the inlined method.</param>
+        /// <returns>
+        /// The new root with the invocation node replaced by the inline method body.
+        /// </returns>
+        SyntaxNode ReplaceInvocationExpression(
+            SyntaxNode root,
+            InvocationExpressionSyntax invocationNode,
+            SyntaxNode methodBody,
+            SeparatedSyntaxList<ParameterSyntax> methodParams)
+        {
+            var replacementNode = methodBody;
+
+            var args = invocationNode.ArgumentList.Arguments;
+            for (var paramIdx = 0; paramIdx < methodParams.Count(); paramIdx++)
+            {
+                var param = methodParams[paramIdx];
+                var arg = (paramIdx < args.Count) ? args[paramIdx].Expression : param.Default.Value;
+
+                var ids = replacementNode.DescendantNodesAndSelf()
+                    .Where(n => n.IsKind(SyntaxKind.IdentifierName))
+                    .Where(n => (n as IdentifierNameSyntax).Identifier.ValueText == param.Identifier.ValueText);
+
+                replacementNode = replacementNode.ReplaceNodes(ids, (n1, n2) => arg).WithAdditionalAnnotations(Formatter.Annotation);
+            }
+
+            // Replace location with final method body.
+            return root.ReplaceNode(invocationNode, replacementNode.WithAdditionalAnnotations(Formatter.Annotation));
         }
 
     }
