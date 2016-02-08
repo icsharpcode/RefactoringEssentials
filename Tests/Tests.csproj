@@ -331,7 +331,7 @@
     <Compile Include="CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticConstructorParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticEventSubscriptionTests.cs" />
-    <Compile Include="CSharp\Diagnostics\RoslynReflectionUsageTests.cs" />
+    <Compile Include="CSharp\Diagnostics\RoslynUsageTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticFieldInGenericTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticMethodInvocationToExtensionMethodInvocationTests.cs" />
     <Compile Include="CSharp\Diagnostics\StringCompareIsCultureSpecificTests.cs" />
