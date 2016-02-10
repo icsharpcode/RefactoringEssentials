@@ -520,9 +520,9 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.RightShiftAssignmentExpression:
                     break;
                 case CS.SyntaxKind.UnaryPlusExpression:
-                    break;
+                    return SyntaxKind.UnaryPlusExpression;
                 case CS.SyntaxKind.UnaryMinusExpression:
-                    break;
+                    return SyntaxKind.UnaryMinusExpression;
                 case CS.SyntaxKind.BitwiseNotExpression:
                     break;
                 case CS.SyntaxKind.LogicalNotExpression:

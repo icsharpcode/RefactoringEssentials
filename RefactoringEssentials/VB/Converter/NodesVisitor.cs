@@ -595,11 +595,11 @@ End Function";
                     return SyntaxFactory.AssignmentStatement(
                         kind,
                         (ExpressionSyntax)node.Operand.Accept(this),
-                        SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(kind)),
+                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                         Literal(1)
                     );
                 }
-                else
+                if (kind == SyntaxKind.AddAssignmentStatement || kind == SyntaxKind.SubtractAssignmentStatement)
                 {
                     string operatorName;
                     if (kind == SyntaxKind.AddAssignmentStatement)
@@ -617,6 +617,7 @@ End Function";
                         )
                     );
                 }
+                return SyntaxFactory.UnaryExpression(kind, SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)), (ExpressionSyntax)node.Operand.Accept(this));
             }
 
             public override VisualBasicSyntaxNode VisitPostfixUnaryExpression(CSS.PostfixUnaryExpressionSyntax node)
@@ -627,7 +628,7 @@ End Function";
                     return SyntaxFactory.AssignmentStatement(
                         ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local),
                         (ExpressionSyntax)node.Operand.Accept(this),
-                        SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(kind)),
+                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                         Literal(1)
                     );
                 }
@@ -662,7 +663,7 @@ End Function";
                                             )
                                         )
                                     ),
-                                    SyntaxFactory.SimpleArgument(SyntaxFactory.BinaryExpression(op, (ExpressionSyntax)node.Operand.Accept(this), SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(op)), Literal(1)))
+                                    SyntaxFactory.SimpleArgument(SyntaxFactory.BinaryExpression(op, (ExpressionSyntax)node.Operand.Accept(this), SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(op)), Literal(1)))
                                 }
                             )
                         )
@@ -689,7 +690,7 @@ End Function";
                     return SyntaxFactory.AssignmentStatement(
                         kind,
                         (ExpressionSyntax)node.Left.Accept(this),
-                        SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(kind)),
+                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                         (ExpressionSyntax)node.Right.Accept(this)
                     );
                 }
@@ -712,6 +713,11 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitInvocationExpression(CSS.InvocationExpressionSyntax node)
             {
+                if (node.Expression.ToString() == "nameof")
+                {
+                    var argument = node.ArgumentList.Arguments.Single().Expression;
+                    return SyntaxFactory.NameOfExpression((ExpressionSyntax)argument.Accept(this));
+                }
                 return SyntaxFactory.InvocationExpression(
                     (ExpressionSyntax)node.Expression.Accept(this),
                     (ArgumentListSyntax)node.ArgumentList.Accept(this)
@@ -732,7 +738,7 @@ End Function";
                 return SyntaxFactory.ConditionalAccessExpression(
                     (ExpressionSyntax)node.Expression.Accept(this),
                     SyntaxFactory.Token(SyntaxKind.QuestionToken),
-                    (ExpressionSyntax)node.WhenNotNull.Accept(this)
+                    SyntaxFactory.SimpleMemberAccessExpression((SimpleNameSyntax)node.WhenNotNull.Accept(this))
                 );
             }
 
@@ -775,11 +781,43 @@ End Function";
                          (ExpressionSyntax)node.Right.Accept(this)
                     );
                 }
+                if (node.OperatorToken.IsKind(CS.SyntaxKind.EqualsEqualsToken))
+                {
+                    ExpressionSyntax otherArgument = null;
+                    if (node.Left.IsKind(CS.SyntaxKind.NullLiteralExpression))
+                    {
+                        otherArgument = (ExpressionSyntax)node.Right.Accept(this);
+                    }
+                    if (node.Right.IsKind(CS.SyntaxKind.NullLiteralExpression))
+                    {
+                        otherArgument = (ExpressionSyntax)node.Left.Accept(this);
+                    }
+                    if (otherArgument != null)
+                    {
+                        return SyntaxFactory.IsExpression(otherArgument, Literal(null));
+                    }
+                }
+                if (node.OperatorToken.IsKind(CS.SyntaxKind.ExclamationEqualsToken))
+                {
+                    ExpressionSyntax otherArgument = null;
+                    if (node.Left.IsKind(CS.SyntaxKind.NullLiteralExpression))
+                    {
+                        otherArgument = (ExpressionSyntax)node.Right.Accept(this);
+                    }
+                    if (node.Right.IsKind(CS.SyntaxKind.NullLiteralExpression))
+                    {
+                        otherArgument = (ExpressionSyntax)node.Left.Accept(this);
+                    }
+                    if (otherArgument != null)
+                    {
+                        return SyntaxFactory.IsNotExpression(otherArgument, Literal(null));
+                    }
+                }
                 var kind = ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local);
                 return SyntaxFactory.BinaryExpression(
                     kind,
                     (ExpressionSyntax)node.Left.Accept(this),
-                    SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(kind)),
+                    SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                     (ExpressionSyntax)node.Right.Accept(this)
                 );
             }
