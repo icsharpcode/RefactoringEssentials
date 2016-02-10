@@ -441,9 +441,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void ForEachStatementWithExplicitType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -462,21 +459,14 @@ class TestClass
 }", @"Class TestClass
     Sub TestMethod(ByVal values As Integer())
         For Each val As Integer In values
-            If val = 2 Then
-                Continue For
-            End If
-            If val = 3 Then
-                Exit For
-            End If
+            If val = 2 Then Continue For
+            If val = 3 Then Exit For
         Next
     End Sub
 End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void ForEachStatementWithVar()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -495,12 +485,8 @@ class TestClass
 }", @"Class TestClass
     Sub TestMethod(ByVal values As Integer())
         For Each val In values
-            If val = 2 Then
-                Continue For
-            End If
-            If val = 3 Then
-                Exit For
-            End If
+            If val = 2 Then Continue For
+            If val = 3 Then Exit For
         Next
     End Sub
 End Class");

@@ -153,6 +153,31 @@ namespace RefactoringEssentials.VB.Converter
                 return SyntaxFactory.SingletonList<StatementSyntax>(block);
             }
 
+            public override SyntaxList<StatementSyntax> VisitForEachStatement(CSS.ForEachStatementSyntax node)
+            {
+                VisualBasicSyntaxNode variable;
+                if (node.Type.IsVar)
+                {
+                    variable = SyntaxFactory.IdentifierName(ConvertIdentifier(node.Identifier));
+                }
+                else
+                {
+                    variable = SyntaxFactory.VariableDeclarator(
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(node.Identifier))),
+                        SyntaxFactory.SimpleAsClause((TypeSyntax)node.Type.Accept(nodesVisitor)),
+                        null
+                    );
+                }
+                var expression = (ExpressionSyntax)node.Expression.Accept(nodesVisitor);
+                var stmt = ConvertBlock(node.Statement);
+                var block = SyntaxFactory.ForEachBlock(
+                    SyntaxFactory.ForEachStatement(variable, expression),
+                    stmt,
+                    SyntaxFactory.NextStatement()
+                );
+                return SyntaxFactory.SingletonList<StatementSyntax>(block);
+            }
+
             public override SyntaxList<StatementSyntax> VisitUsingStatement(CSS.UsingStatementSyntax node)
             {
                 var stmt = SyntaxFactory.UsingStatement(
@@ -213,7 +238,7 @@ namespace RefactoringEssentials.VB.Converter
                         keywordKind = SyntaxKind.WhileKeyword;
                         break;
                     }
-                    if (stmt is CSS.ForStatementSyntax)
+                    if (stmt is CSS.ForStatementSyntax || stmt is CSS.ForEachStatementSyntax)
                     {
                         statementKind = SyntaxKind.ContinueForStatement;
                         keywordKind = SyntaxKind.ForKeyword;
@@ -241,7 +266,7 @@ namespace RefactoringEssentials.VB.Converter
                         keywordKind = SyntaxKind.WhileKeyword;
                         break;
                     }
-                    if (stmt is CSS.ForStatementSyntax)
+                    if (stmt is CSS.ForStatementSyntax || stmt is CSS.ForEachStatementSyntax)
                     {
                         statementKind = SyntaxKind.ExitForStatement;
                         keywordKind = SyntaxKind.ForKeyword;

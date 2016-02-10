@@ -158,7 +158,7 @@ End Function";
                 if (node.Alias != null)
                 {
                     var name = node.Alias.Name;
-                    var id = SyntaxFactory.Identifier(name.Identifier.ValueText, SyntaxFacts.IsKeywordKind(name.Identifier.Kind()), name.Identifier.GetIdentifierText(), TypeCharacter.None);
+                    var id = ConvertIdentifier(name.Identifier);
                     alias = SyntaxFactory.ImportAliasClause(id);
                 }
                 ImportsClauseSyntax clause = SyntaxFactory.SimpleImportsClause(alias, (NameSyntax)node.Name.Accept(this));
@@ -170,7 +170,7 @@ End Function";
             public override VisualBasicSyntaxNode VisitClassDeclaration(CSS.ClassDeclarationSyntax node)
             {
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this)).ToList();
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
 
                 List<InheritsStatementSyntax> inherits = new List<InheritsStatementSyntax>();
                 List<ImplementsStatementSyntax> implements = new List<ImplementsStatementSyntax>();
@@ -207,7 +207,6 @@ End Function";
             public override VisualBasicSyntaxNode VisitStructDeclaration(CSS.StructDeclarationSyntax node)
             {
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this)).ToList();
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
 
                 List<InheritsStatementSyntax> inherits = new List<InheritsStatementSyntax>();
                 List<ImplementsStatementSyntax> implements = new List<ImplementsStatementSyntax>();
@@ -218,7 +217,8 @@ End Function";
                     SyntaxFactory.StructureStatement(
                         SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
                         ConvertModifiers(node.Modifiers),
-                        id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
+                        ConvertIdentifier(node.Identifier),
+                        (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
                     ),
                     SyntaxFactory.List(inherits),
                     SyntaxFactory.List(implements),
@@ -229,7 +229,6 @@ End Function";
             public override VisualBasicSyntaxNode VisitInterfaceDeclaration(CSS.InterfaceDeclarationSyntax node)
             {
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this)).ToArray();
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
 
                 List<InheritsStatementSyntax> inherits = new List<InheritsStatementSyntax>();
                 List<ImplementsStatementSyntax> implements = new List<ImplementsStatementSyntax>();
@@ -239,7 +238,8 @@ End Function";
                     SyntaxFactory.InterfaceStatement(
                         SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
                         ConvertModifiers(node.Modifiers),
-                        id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
+                        ConvertIdentifier(node.Identifier),
+                        (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
                     ),
                     SyntaxFactory.List(inherits),
                     SyntaxFactory.List(implements),
@@ -251,12 +251,12 @@ End Function";
             {
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this));
                 var baseType = (TypeSyntax)node.BaseList?.Types.Single().Accept(this);
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
                 return SyntaxFactory.EnumBlock(
                     SyntaxFactory.EnumStatement(
                         SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
                         ConvertModifiers(node.Modifiers),
-                        id, baseType == null ? null : SyntaxFactory.SimpleAsClause(baseType)
+                        ConvertIdentifier(node.Identifier),
+                        baseType == null ? null : SyntaxFactory.SimpleAsClause(baseType)
                     ),
                     SyntaxFactory.List(members)
                 );
@@ -265,17 +265,16 @@ End Function";
             public override VisualBasicSyntaxNode VisitEnumMemberDeclaration(CSS.EnumMemberDeclarationSyntax node)
             {
                 var initializer = (ExpressionSyntax)node.EqualsValue?.Value.Accept(this);
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
                 return SyntaxFactory.EnumMemberDeclaration(
                     SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
-                    id,
+                    ConvertIdentifier(node.Identifier),
                     initializer == null ? null : SyntaxFactory.EqualsValue(initializer)
                 );
             }
 
             public override VisualBasicSyntaxNode VisitDelegateDeclaration(CSS.DelegateDeclarationSyntax node)
             {
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
                 var methodInfo = semanticModel.GetDeclaredSymbol(node) as INamedTypeSymbol;
                 if (methodInfo.DelegateInvokeMethod.GetReturnType()?.SpecialType == SpecialType.System_Void)
                 {
@@ -348,7 +347,7 @@ End Function";
                 {
                     block = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))));
                 }
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
                 var methodInfo = semanticModel.GetDeclaredSymbol(node);
                 var attributes = SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)));
                 var parameterList = (ParameterListSyntax)node.ParameterList?.Accept(this);
@@ -393,7 +392,7 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitPropertyDeclaration(CSS.PropertyDeclarationSyntax node)
             {
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
                 SyntaxList<AttributeListSyntax> attributes, returnAttributes;
                 ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
                 var stmt = SyntaxFactory.PropertyStatement(
@@ -428,13 +427,12 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitEventDeclaration(CSS.EventDeclarationSyntax node)
             {
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
                 SyntaxList<AttributeListSyntax> attributes, returnAttributes;
                 ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
                 var stmt = SyntaxFactory.EventStatement(
                     attributes,
                     ConvertModifiers(node.Modifiers, TokenContext.Member),
-                    id, null,
+                    ConvertIdentifier(node.Identifier), null,
                     SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.Type.Accept(this)), null
                 );
                 if (node.AccessorList.Accessors.All(a => a.Body == null))
@@ -532,7 +530,7 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitParameter(CSS.ParameterSyntax node)
             {
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
                 EqualsValueSyntax @default = null;
                 if (node.Default != null)
                 {
