@@ -4,7 +4,7 @@ using RefactoringEssentials.CSharp;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class RoslynReflectionUsageTests : CSharpDiagnosticTestBase
+    public class RoslynUsageTests : CSharpDiagnosticTestBase
     {
         const string attributeFakes = @"
 using System;
@@ -59,7 +59,7 @@ namespace Microsoft.CodeAnalysis.CodeRefactorings
         [Test]
         public void ForbiddenMethodInAnalyzer()
         {
-            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
     [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
@@ -82,7 +82,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
         [Test]
         public void ForbiddenClassInAnalyzer()
         {
-            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
 [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
 static class SomeUtilityClass
 {
@@ -105,7 +105,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
         [Test]
         public void ForbiddenMethodInCodeFix()
         {
-            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
     [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers)]
@@ -128,7 +128,7 @@ public class TestCodeFix : CodeFixProvider
         [Test]
         public void ForbiddenMethodInRefactoring()
         {
-            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
     [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers)]
@@ -149,9 +149,53 @@ public class TestRefactoring : CodeRefactoringProvider
         }
 
         [Test]
+        public void ForbiddenCallToCodeFixMethodInAnalyzer()
+        {
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
+[ExportCodeRefactoringProvider]
+public class TestRefactoring : CodeRefactoringProvider
+{
+    public static void SomeUtilityMethod()
+    {
+    }
+}
+
+[DiagnosticAnalyzer]
+public class TestAnalyzer : DiagnosticAnalyzer
+{
+    public TestAnalyzer()
+    {
+        TestRefactoring.$SomeUtilityMethod$();
+    }
+}");
+        }
+
+        [Test]
+        public void AllowedCallToAnalyzerMethodInCodeFix()
+        {
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
+[ExportCodeRefactoringProvider]
+public class TestRefactoring : CodeRefactoringProvider
+{
+    public TestRefactoring()
+    {
+        TestAnalyzer.SomeUtilityMethod();
+    }
+}
+
+[DiagnosticAnalyzer]
+public class TestAnalyzer : DiagnosticAnalyzer
+{
+    public static void SomeUtilityMethod()
+    {
+    }
+}");
+        }
+
+        [Test]
         public void AllowedMethodInAnalyzer1()
         {
-            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
     [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers)]
@@ -174,7 +218,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
         [Test]
         public void AllowedMethodInAnalyzer2()
         {
-            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
     [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers | RoslynReflectionAllowedContext.CodeFixes)]
@@ -195,9 +239,31 @@ public class TestAnalyzer : DiagnosticAnalyzer
         }
 
         [Test]
+        public void AllowedMethodInAnalyzer3()
+        {
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
+static class SomeUtilityClass
+{
+    public static void ForbiddenMethod(this int i)
+    {
+    }
+}
+
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class TestAnalyzer : DiagnosticAnalyzer
+{
+    public TestAnalyzer()
+    {
+        int i = 0;
+        i.ForbiddenMethod();
+    }
+}");
+        }
+
+        [Test]
         public void MethodNotInAnalyzer()
         {
-            Analyze<RoslynReflectionUsageAnalyzer>(attributeFakes + @"
+            Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
 static class SomeUtilityClass
 {
     [RoslynReflectionUsage(RoslynReflectionAllowedContext.Analyzers)]

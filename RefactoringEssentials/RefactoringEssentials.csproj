@@ -55,7 +55,7 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs" />
     <Compile Include="CSharp\ConvertUnitTestToVB.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\RoslynReflectionUsageAnalyzer.cs" />
+    <Compile Include="CSharp\Diagnostics\Custom\RoslynUsageAnalyzer.cs" />
     <Compile Include="CSharp\SyntaxExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\AddAnotherAccessorCodeRefactoringProvider.cs" />
@@ -721,9 +721,6 @@
     <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
     <Folder Include="Samples\VB\" />
-    <Folder Include="Util\Flow\" />
-    <Folder Include="Xml\" />
-    <Folder Include="Util\Analysis\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />
