@@ -36,8 +36,6 @@
 * ExpressionIsNeverOfProvidedTypeAnalyzer
 * ForCanBeConvertedToForeachAnalyzer
 * ForControlVariableIsNeverModifiedAnalyzer
-* FormatStringProblemAnalyzer
-* FunctionNeverReturnsAnalyzer
 * InconsistentNamingAnalyzer
 * LocalVariableHidesMemberAnalyzer
 * LockThisAnalyzer

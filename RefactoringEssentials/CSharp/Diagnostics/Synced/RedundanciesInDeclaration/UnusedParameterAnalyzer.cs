@@ -201,7 +201,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             public override void VisitAnonymousMethodExpression(AnonymousMethodExpressionSyntax node)
             {
                 base.VisitAnonymousMethodExpression(node);
-                Analyze(node.ParameterList.Parameters, new[] { node.Block });
+                if (node.ParameterList != null)
+                    Analyze(node.ParameterList.Parameters, new[] { node.Block });
             }
 
             public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)

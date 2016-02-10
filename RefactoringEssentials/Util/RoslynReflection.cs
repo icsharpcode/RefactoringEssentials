@@ -326,6 +326,21 @@ namespace RefactoringEssentials
             }
         }
 
+        // SyntaxNodeExtensions
+        public static SyntaxNodeExtensionsWrapper SyntaxNodeExtensions => syntaxNodeExtensionsWrapper.Value;
+        static readonly Lazy<SyntaxNodeExtensionsWrapper> syntaxNodeExtensionsWrapper =
+            new Lazy<SyntaxNodeExtensionsWrapper>(() => new SyntaxNodeExtensionsWrapper());
+        public class SyntaxNodeExtensionsWrapper
+        {
+            public readonly MethodInfo ContainsInterleavedDirectiveMethod;
+
+            public SyntaxNodeExtensionsWrapper()
+            {
+                var typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
+                ContainsInterleavedDirectiveMethod = typeInfo.GetMethod("ContainsInterleavedDirective", new[] { typeof(SyntaxNode), typeof(CancellationToken) });
+            }
+        }
+
         // SpeculationAnalyzer
         public static AbstractSpeculationAnalyzer_8Wrapper AbstractSpeculationAnalyzer_8 => abstractSpeculationAnalyzer_8Wrapper.Value;
         static readonly Lazy<AbstractSpeculationAnalyzer_8Wrapper> abstractSpeculationAnalyzer_8Wrapper =

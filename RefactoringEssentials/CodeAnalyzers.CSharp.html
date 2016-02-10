@@ -15,7 +15,7 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>102 code analyzers for C#</p>
+    <p>104 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
@@ -83,6 +83,7 @@
       <li>Removes 'private' modifiers that are not required (RedundantPrivateAnalyzer)</li>
       <li>Redundant 'string.ToCharArray()' call (RedundantStringToCharArrayCallAnalyzer)</li>
       <li>Redundant conditional expression (RedundantTernaryExpressionAnalyzer)</li>
+      <li>RedundantToStringCallAnalyzer</li>
       <li>Remove redundant statement (RemoveRedundantOrStatementAnalyzer)</li>
       <li>Replace with call to FirstOrDefault&lt;T&gt;() (ReplaceWithFirstOrDefaultAnalyzer)</li>
       <li>Replace with call to LastOrDefault&lt;T&gt;() (ReplaceWithLastOrDefaultAnalyzer)</li>
@@ -108,7 +109,7 @@
       <li>Redundant Where() call with predicate followed by Single() (ReplaceWithSingleCallToSingleAnalyzer)</li>
       <li>Redundant Where() call with predicate followed by SingleOrDefault() (ReplaceWithSingleCallToSingleOrDefaultAnalyzer)</li>
       <li>Uses shorter string.IsNullOrEmpty call instead of a longer condition (ReplaceWithStringIsNullOrEmptyAnalyzer)</li>
-      <li>Using internal Roslyn features through reflection in wrong context. (RoslynReflectionUsageAnalyzer)</li>
+      <li>Unallowed usage of Roslyn features in this context. (RoslynUsageAnalyzer)</li>
       <li>'sealed' modifier is redundant in sealed classes (SealedMemberInSealedClassAnalyzer)</li>
       <li>Conditional expression can be simplified (SimplifyConditionalTernaryExpressionAnalyzer)</li>
       <li>Warns when a culture-aware 'string.CompareTo' call is used by default (StringCompareToIsCultureSpecificAnalyzer)</li>
@@ -119,6 +120,7 @@
       <li>Use 'var' keyword when possible (SuggestUseVarKeywordEvidentAnalyzer)</li>
       <li>[ThreadStatic] doesn't work with instance fields (ThreadStaticAtInstanceFieldAnalyzer)</li>
       <li>Warns about property or indexer setters and event adders or removers that do not use the value parameter (ValueParameterNotUsedAnalyzer)</li>
+      <li>Validate Xml docs (XmlDocAnalyzer)</li>
     </ul>
   </body>
 </html>
