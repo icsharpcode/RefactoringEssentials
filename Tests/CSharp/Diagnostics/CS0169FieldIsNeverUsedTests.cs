@@ -1,6 +1,15 @@
 using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
 
+class Test
+{
+    readonly object fooBar = new object();
+
+    public Test()
+    {
+    }
+}
+
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
@@ -12,11 +21,11 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<CS0169FieldIsNeverUsedAnalyzer>(@"class Test
 {
-	object fooBar = new object ();
-	public static void Main (string[] args)
-	{
-		Console.WriteLine (fooBar);
-	}
+    object fooBar = new object ();
+    public static void Main (string[] args)
+    {
+        Console.WriteLine (fooBar);
+    }
 }");
         }
 

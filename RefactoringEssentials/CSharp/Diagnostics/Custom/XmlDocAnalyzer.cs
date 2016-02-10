@@ -6,8 +6,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.FindSymbols;
-using System.Threading;
 using Microsoft.CodeAnalysis.Text;
 using System.Text;
 using RefactoringEssentials.Xml;
@@ -31,26 +29,24 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterCompilationStartAction(nodeContext => Analyze(nodeContext));
-        }
-
-        void Analyze(CompilationStartAnalysisContext compilationContext)
-        {
-            var compilation = compilationContext.Compilation;
-            compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext context)
+            context.RegisterCompilationStartAction(compilationContext =>
             {
-                try
+                var compilation = compilationContext.Compilation;
+                compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext ctx)
                 {
-                    if (!compilation.SyntaxTrees.Contains(context.Tree))
-                        return;
-                    var semanticModel = compilation.GetSemanticModel(context.Tree);
-                    var root = await context.Tree.GetRootAsync(context.CancellationToken).ConfigureAwait(false);
-                    var model = compilationContext.Compilation.GetSemanticModel(context.Tree);
-                    if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
-                        return;
-                    new GatherVisitor(context, semanticModel).Visit(root);
-                }
-                catch (OperationCanceledException) {}
+                    try
+                    {
+                        if (!compilation.SyntaxTrees.Contains(ctx.Tree))
+                            return;
+                        var semanticModel = compilation.GetSemanticModel(ctx.Tree);
+                        var root = await ctx.Tree.GetRootAsync(ctx.CancellationToken).ConfigureAwait(false);
+                        var model = compilationContext.Compilation.GetSemanticModel(ctx.Tree);
+                        if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
+                            return;
+                        new GatherVisitor(ctx, semanticModel).Visit(root);
+                    }
+                    catch (OperationCanceledException) { }
+                });
             });
         }
 
@@ -59,7 +55,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             readonly List<DocumentationCommentTriviaSyntax> storedXmlComment = new List<DocumentationCommentTriviaSyntax>();
             readonly SyntaxTreeAnalysisContext context;
             readonly StringBuilder xml = new StringBuilder();
-            SemanticModel semanticModel;
+            readonly SemanticModel semanticModel;
 
             public GatherVisitor(SyntaxTreeAnalysisContext context, SemanticModel semanticModel)
             {
@@ -124,7 +120,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             class CRefVisistor : CSharpSyntaxWalker
             {
-                GatherVisitor parent;
+                readonly GatherVisitor parent;
 
                 public CRefVisistor(GatherVisitor parent)
                 {
@@ -163,7 +159,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 
                 xml.Clear();
                 xml.Append(firstline);
-                List<int> OffsetTable = new List<int>();
+                var OffsetTable = new List<int>();
                 foreach (var cmt in storedXmlComment)
                 {
                     OffsetTable.Add(xml.Length - firstline.Length);

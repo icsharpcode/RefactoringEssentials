@@ -606,6 +606,8 @@
     <Compile Include="Xml\AXmlAttribute.cs" />
     <Compile Include="Xml\LazyInit.cs" />
     <Compile Include="Xml\TreeTraversal.cs" />
+    <Compile Include="Util\Analysis\ControlFlow.cs" />
+    <Compile Include="Util\Analysis\ReachabilityAnalysis.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -721,6 +723,7 @@
     <Folder Include="Samples\VB\" />
     <Folder Include="Util\Flow\" />
     <Folder Include="Xml\" />
+    <Folder Include="Util\Analysis\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />
