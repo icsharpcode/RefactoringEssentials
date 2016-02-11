@@ -219,9 +219,9 @@ namespace RefactoringEssentials.Util.Analysis
                     continue;
                 }
                 var gotoStatement = edge.From.NextStatement;
-                Debug.Assert(gotoStatement is GotoStatementSyntax || gotoStatement is BreakStatementSyntax || gotoStatement is ContinueStatementSyntax);
-                var targetStatement = edge.To.PreviousStatement ?? edge.To.NextStatement;
-                if (gotoStatement.Parent == targetStatement.Parent)
+                // Debug.Assert(gotoStatement is GotoStatementSyntax || gotoStatement is BreakStatementSyntax || gotoStatement is ContinueStatementSyntax);
+				var targetStatement = edge.To.PreviousStatement ?? edge.To.NextStatement;
+				if (gotoStatement == null || targetStatement == null || gotoStatement.Parent == targetStatement.Parent)
                     continue;
                 var targetParentTryCatch = new HashSet<TryStatementSyntax>(targetStatement.Ancestors().OfType<TryStatementSyntax>());
                 for (SyntaxNode node = gotoStatement.Parent; node != null; node = node.Parent) {
@@ -374,10 +374,10 @@ namespace RefactoringEssentials.Util.Analysis
                         if (source != null)
                             Connect(source, childNode);
                     }
-                    Debug.Assert(childNode.NextStatement == stmt);
+                    // Debug.Assert(childNode.NextStatement == stmt);
                     curNode = childNode ?? source;
                     Visit(stmt);
-                    Debug.Assert(childNode.PreviousStatement == stmt);
+                    // Debug.Assert(childNode.PreviousStatement == stmt);
                 }
             }
 
