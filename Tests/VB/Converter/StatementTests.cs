@@ -509,5 +509,50 @@ class TestClass
     End Sub
 End Class");
         }
+
+        [Test]
+        public void AddRemoveHandler()
+        {
+            TestConversionCSharpToVisualBasic(@"using System;
+
+class TestClass
+{
+    public event EventHandler MyEvent;
+
+    void TestMethod(EventHandler e)
+    {
+        this.MyEvent += e;
+        this.MyEvent += MyHandler;
+    }
+
+    void TestMethod2(EventHandler e)
+    {
+        this.MyEvent -= e;
+        this.MyEvent -= MyHandler;
+    }
+
+    void MyHandler(object sender, EventArgs e)
+    {
+
+    }
+}", @"Imports System
+
+Class TestClass
+    Public Event MyEvent As EventHandler
+
+    Sub TestMethod(ByVal e As EventHandler)
+        AddHandler Me.MyEvent, e
+        AddHandler Me.MyEvent, AddressOf MyHandler
+    End Sub
+
+    Sub TestMethod2(ByVal e As EventHandler)
+        RemoveHandler Me.MyEvent, e
+        RemoveHandler Me.MyEvent, AddressOf MyHandler
+    End Sub
+
+    Sub MyHandler(ByVal sender As Object, ByVal e As EventArgs)
+    End Sub
+End Class");
+        }
     }
 }

@@ -1071,22 +1071,32 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitIdentifierName(CSS.IdentifierNameSyntax node)
             {
-                return SyntaxFactory.IdentifierName(ConvertIdentifier(node.Identifier));
+                return WrapTypedNameIfNecessary(SyntaxFactory.IdentifierName(ConvertIdentifier(node.Identifier)), node);
             }
 
             public override VisualBasicSyntaxNode VisitGenericName(CSS.GenericNameSyntax node)
             {
-                return SyntaxFactory.GenericName(ConvertIdentifier(node.Identifier), (TypeArgumentListSyntax)node.TypeArgumentList.Accept(this));
+                return WrapTypedNameIfNecessary(SyntaxFactory.GenericName(ConvertIdentifier(node.Identifier), (TypeArgumentListSyntax)node.TypeArgumentList.Accept(this)), node);
             }
 
             public override VisualBasicSyntaxNode VisitQualifiedName(CSS.QualifiedNameSyntax node)
             {
-                return SyntaxFactory.QualifiedName((NameSyntax)node.Left.Accept(this), (SimpleNameSyntax)node.Right.Accept(this));
+                return WrapTypedNameIfNecessary(SyntaxFactory.QualifiedName((NameSyntax)node.Left.Accept(this), (SimpleNameSyntax)node.Right.Accept(this)), node);
             }
 
             public override VisualBasicSyntaxNode VisitTypeArgumentList(CSS.TypeArgumentListSyntax node)
             {
                 return SyntaxFactory.TypeArgumentList(SyntaxFactory.SeparatedList(node.Arguments.Select(a => (TypeSyntax)a.Accept(this))));
+            }
+
+            VisualBasicSyntaxNode WrapTypedNameIfNecessary(NameSyntax name, CSS.NameSyntax originalName)
+            {
+                if (originalName.Parent is CSS.NameSyntax) return name;
+
+                var symbol = semanticModel.GetSymbolInfo(originalName).Symbol;
+                if (symbol.IsKind(SymbolKind.Method))
+                    return SyntaxFactory.AddressOfExpression(name);
+                return name;
             }
 
             #endregion
