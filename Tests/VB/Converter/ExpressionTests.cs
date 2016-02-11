@@ -89,6 +89,56 @@ End Class");
         }
 
         [Test]
+        public void ObjectInitializerExpression()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class StudentName
+{
+    public string LastName, FirstName;
+}
+
+class TestClass
+{
+    void TestMethod(string str)
+    {
+        StudentName student2 = new StudentName
+        {
+            FirstName = ""Craig"",
+            LastName = ""Playstead"",
+        };
+    }
+}", @"Class StudentName
+    Public LastName, FirstName As String
+End Class
+
+Class TestClass
+    Sub TestMethod(ByVal str As String)
+        Dim student2 As StudentName = New StudentName With {.FirstName = ""Craig"", .LastName = ""Playstead""}
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void ObjectInitializerExpression2()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod(string str)
+    {
+        var student2 = new {
+            FirstName = ""Craig"",
+            LastName = ""Playstead"",
+        };
+    }
+}", @"Class TestClass
+    Sub TestMethod(ByVal str As String)
+        Dim student2 = New With {Key .FirstName = ""Craig"", Key .LastName = ""Playstead""}
+    End Sub
+End Class");
+        }
+
+        [Test]
         public void ThisMemberAccessExpression()
         {
             TestConversionCSharpToVisualBasic(@"

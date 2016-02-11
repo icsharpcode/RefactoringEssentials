@@ -692,21 +692,25 @@ End Function";
                         (ExpressionSyntax)node.Right.Accept(this)
                     );
                 }
-                else
+                if (node.Parent is CSS.InitializerExpressionSyntax)
                 {
-                    MarkPatchInlineAssignHelper(node);
-                    return SyntaxFactory.InvocationExpression(
-                        SyntaxFactory.IdentifierName("__InlineAssignHelper"),
-                        SyntaxFactory.ArgumentList(
-                            SyntaxFactory.SeparatedList(
-                                new ArgumentSyntax[] {
-                                    SyntaxFactory.SimpleArgument((ExpressionSyntax)node.Left.Accept(this)),
-                                    SyntaxFactory.SimpleArgument((ExpressionSyntax)node.Right.Accept(this))
-                                }
-                            )
-                        )
+                    return SyntaxFactory.NamedFieldInitializer(
+                        (IdentifierNameSyntax)node.Left.Accept(this),
+                        (ExpressionSyntax)node.Right.Accept(this)
                     );
                 }
+                MarkPatchInlineAssignHelper(node);
+                return SyntaxFactory.InvocationExpression(
+                    SyntaxFactory.IdentifierName("__InlineAssignHelper"),
+                    SyntaxFactory.ArgumentList(
+                        SyntaxFactory.SeparatedList(
+                            new ArgumentSyntax[] {
+                                SyntaxFactory.SimpleArgument((ExpressionSyntax)node.Left.Accept(this)),
+                                SyntaxFactory.SimpleArgument((ExpressionSyntax)node.Right.Accept(this))
+                            }
+                        )
+                    )
+                );
             }
 
             public override VisualBasicSyntaxNode VisitInvocationExpression(CSS.InvocationExpressionSyntax node)
@@ -872,8 +876,28 @@ End Function";
                 return SyntaxFactory.ObjectCreationExpression(
                     SyntaxFactory.List<AttributeListSyntax>(),
                     (TypeSyntax)node.Type.Accept(this),
-                    (ArgumentListSyntax)node.ArgumentList.Accept(this),
+                    (ArgumentListSyntax)node.ArgumentList?.Accept(this),
                     (ObjectCreationInitializerSyntax)node.Initializer?.Accept(this)
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitAnonymousObjectCreationExpression(CSS.AnonymousObjectCreationExpressionSyntax node)
+            {
+                return SyntaxFactory.AnonymousObjectCreationExpression(
+                    SyntaxFactory.ObjectMemberInitializer(SyntaxFactory.SeparatedList(
+                        node.Initializers.Select(i => (FieldInitializerSyntax)i.Accept(this))
+                    ))
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitAnonymousObjectMemberDeclarator(CSS.AnonymousObjectMemberDeclaratorSyntax node)
+            {
+                return SyntaxFactory.NamedFieldInitializer(
+                    SyntaxFactory.Token(SyntaxKind.KeyKeyword),
+                    SyntaxFactory.Token(SyntaxKind.DotToken),
+                    (IdentifierNameSyntax)node.NameEquals.Name.Accept(this),
+                    SyntaxFactory.Token(SyntaxKind.EqualsToken),
+                    (ExpressionSyntax)node.Expression.Accept(this)
                 );
             }
 
@@ -911,7 +935,9 @@ End Function";
             public override VisualBasicSyntaxNode VisitInitializerExpression(CSS.InitializerExpressionSyntax node)
             {
                 if (node.IsKind(CS.SyntaxKind.ObjectInitializerExpression))
-                    return SyntaxFactory.ObjectMemberInitializer();
+                    return SyntaxFactory.ObjectMemberInitializer(
+                        SyntaxFactory.SeparatedList(node.Expressions.Select(e => (FieldInitializerSyntax)e.Accept(this)))
+                    );
                 if (node.IsKind(CS.SyntaxKind.ArrayInitializerExpression))
                     return SyntaxFactory.CollectionInitializer(
                         SyntaxFactory.SeparatedList(node.Expressions.Select(e => (ExpressionSyntax)e.Accept(this)))
