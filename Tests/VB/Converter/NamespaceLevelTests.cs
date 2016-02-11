@@ -57,8 +57,8 @@ End Namespace");
     {
     }
 }", @"Namespace Test.[class]
-    Friend Shared Class TestClass
-    End Class
+    Friend Module TestClass
+    End Module
 End Namespace");
         }
 

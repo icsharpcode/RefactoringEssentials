@@ -16,8 +16,6 @@ namespace RefactoringEssentials.VB.Converter
     public partial class CSharpConverter
     {
         /* TODO
-         * - Expressions
-         *   - inline assignment / increment / decrement
          * - Handles clause
          * - Implements clause on members
          * 
@@ -51,6 +49,11 @@ namespace RefactoringEssentials.VB.Converter
             {
                 return new ConversionResult(ex);
             }
+        }
+
+        static SyntaxTokenList ConvertModifiers(IEnumerable<SyntaxToken> modifiers, TokenContext context = TokenContext.Global)
+        {
+            return SyntaxFactory.TokenList(modifiers.Select(m => SyntaxFactory.Token(ConvertToken(CS.CSharpExtensions.Kind(m), context))));
         }
 
         static SyntaxTokenList ConvertModifiers(SyntaxTokenList modifiers, TokenContext context = TokenContext.Global)
@@ -98,8 +101,12 @@ namespace RefactoringEssentials.VB.Converter
 
         static ModifiedIdentifierSyntax ExtractIdentifier(CSS.VariableDeclaratorSyntax v)
         {
-            var id = SyntaxFactory.Identifier(v.Identifier.ValueText, SyntaxFacts.IsKeywordKind(v.Identifier.Kind()), v.Identifier.GetIdentifierText(), TypeCharacter.None);
-            return SyntaxFactory.ModifiedIdentifier(id);
+            return SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(v.Identifier));
+        }
+
+        static SyntaxToken ConvertIdentifier(SyntaxToken t)
+        {
+            return SyntaxFactory.Identifier(t.ValueText, SyntaxFacts.IsKeywordKind(t.Kind()), t.GetIdentifierText(), TypeCharacter.None);
         }
 
         static SyntaxKind ConvertToken(CS.SyntaxKind t, TokenContext context = TokenContext.Global)
@@ -515,9 +522,9 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.RightShiftAssignmentExpression:
                     break;
                 case CS.SyntaxKind.UnaryPlusExpression:
-                    break;
+                    return SyntaxKind.UnaryPlusExpression;
                 case CS.SyntaxKind.UnaryMinusExpression:
-                    break;
+                    return SyntaxKind.UnaryMinusExpression;
                 case CS.SyntaxKind.BitwiseNotExpression:
                     break;
                 case CS.SyntaxKind.LogicalNotExpression:

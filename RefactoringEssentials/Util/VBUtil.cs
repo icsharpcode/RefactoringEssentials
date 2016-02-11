@@ -46,7 +46,7 @@ namespace RefactoringEssentials
                     return SyntaxFactory.BinaryExpression(
                         kind, 
                         InvertCondition(bOp.Left), 
-                        SyntaxFactory.Token(GetBinaryExpressionOperatorTokenKind(kind)), 
+                        SyntaxFactory.Token(GetExpressionOperatorTokenKind(kind)), 
                         InvertCondition(bOp.Right));
                 }
 
@@ -61,7 +61,7 @@ namespace RefactoringEssentials
                     return SyntaxFactory.BinaryExpression(
                         kind, 
                         bOp.Left, 
-                        SyntaxFactory.Token(GetBinaryExpressionOperatorTokenKind(kind)), 
+                        SyntaxFactory.Token(GetExpressionOperatorTokenKind(kind)), 
                         bOp.Right);
                 }
 
@@ -99,7 +99,7 @@ namespace RefactoringEssentials
                 AddParensForUnaryExpressionIfRequired(condition));
         }
 
-        public static SyntaxKind GetBinaryExpressionOperatorTokenKind(SyntaxKind op)
+        public static SyntaxKind GetExpressionOperatorTokenKind(SyntaxKind op)
         {
             switch (op)
             {
@@ -134,6 +134,11 @@ namespace RefactoringEssentials
                     return SyntaxKind.PlusEqualsToken;
                 case SyntaxKind.SubtractAssignmentStatement:
                     return SyntaxKind.MinusEqualsToken;
+                // unary
+                case SyntaxKind.UnaryPlusExpression:
+                    return SyntaxKind.PlusToken;
+                case SyntaxKind.UnaryMinusExpression:
+                    return SyntaxKind.MinusToken;
             }
             throw new ArgumentOutOfRangeException(nameof(op));
         }

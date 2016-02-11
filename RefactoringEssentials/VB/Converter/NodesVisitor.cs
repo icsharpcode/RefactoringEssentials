@@ -18,6 +18,7 @@ namespace RefactoringEssentials.VB.Converter
         {
             SemanticModel semanticModel;
             readonly List<CSS.BaseTypeDeclarationSyntax> inlineAssignHelperMarkers = new List<CSS.BaseTypeDeclarationSyntax>();
+            readonly List<ImportsStatementSyntax> additionalImports = new List<ImportsStatementSyntax>();
 
             const string InlineAssignHelperCode = @"<Obsolete(""Please refactor code that uses this function, it is a simple work-around to simulate inline assignment in VB!"")>
 Private Shared Function __InlineAssignHelper(Of T)(ByRef target As T, value As T) As T
@@ -55,15 +56,36 @@ End Function";
             {
                 var imports = node.Usings.Select(u => (ImportsStatementSyntax)u.Accept(this))
                     .Concat(node.Externs.Select(e => (ImportsStatementSyntax)e.Accept(this)));
-                var attributes = node.AttributeLists.Select(a => SyntaxFactory.AttributesStatement(SyntaxFactory.SingletonList((AttributeListSyntax)a.Accept(this))));
-                var members = node.Members.Select(m => (StatementSyntax)m.Accept(this));
+                var attributes = SyntaxFactory.List(node.AttributeLists.Select(a => SyntaxFactory.AttributesStatement(SyntaxFactory.SingletonList((AttributeListSyntax)a.Accept(this)))));
+                var members = SyntaxFactory.List(node.Members.Select(m => (StatementSyntax)m.Accept(this)));
 
                 return SyntaxFactory.CompilationUnit(
                     SyntaxFactory.List<OptionStatementSyntax>(),
-                    SyntaxFactory.List(imports),
-                    SyntaxFactory.List(attributes),
-                    SyntaxFactory.List(members)
+                    SyntaxFactory.List(PatchAdditionalImports(imports).OfType<ImportsStatementSyntax>()),
+                    attributes,
+                    members
                 );
+            }
+
+            private IEnumerable<StatementSyntax> PatchAdditionalImports(IEnumerable<StatementSyntax> statements)
+            {
+                bool foundImport = false;
+                foreach (var statement in statements)
+                {
+                    if (statement is ImportsStatementSyntax)
+                        foundImport = true;
+                    else if (foundImport)
+                    {
+                        foreach (var import in additionalImports)
+                            yield return import;
+                        additionalImports.Clear();
+                    }
+                    yield return statement;
+                }
+
+                foreach (var import in additionalImports)
+                    yield return import;
+                additionalImports.Clear();
             }
 
             #region Attributes
@@ -126,7 +148,7 @@ End Function";
 
                 return SyntaxFactory.NamespaceBlock(
                     SyntaxFactory.NamespaceStatement((NameSyntax)node.Name.Accept(this)),
-                    SyntaxFactory.List(members)
+                    SyntaxFactory.List(PatchAdditionalImports(members))
                 );
             }
 
@@ -136,7 +158,7 @@ End Function";
                 if (node.Alias != null)
                 {
                     var name = node.Alias.Name;
-                    var id = SyntaxFactory.Identifier(name.Identifier.ValueText, SyntaxFacts.IsKeywordKind(name.Identifier.Kind()), name.Identifier.GetIdentifierText(), TypeCharacter.None);
+                    var id = ConvertIdentifier(name.Identifier);
                     alias = SyntaxFactory.ImportAliasClause(id);
                 }
                 ImportsClauseSyntax clause = SyntaxFactory.SimpleImportsClause(alias, (NameSyntax)node.Name.Accept(this));
@@ -148,29 +170,43 @@ End Function";
             public override VisualBasicSyntaxNode VisitClassDeclaration(CSS.ClassDeclarationSyntax node)
             {
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this)).ToList();
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
 
                 List<InheritsStatementSyntax> inherits = new List<InheritsStatementSyntax>();
                 List<ImplementsStatementSyntax> implements = new List<ImplementsStatementSyntax>();
                 ConvertBaseList(node, inherits, implements);
                 members.AddRange(PatchInlineHelpers(node));
-
-                return SyntaxFactory.ClassBlock(
-                    SyntaxFactory.ClassStatement(
-                        SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
-                        ConvertModifiers(node.Modifiers),
-                        id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
-                    ),
-                    SyntaxFactory.List(inherits),
-                    SyntaxFactory.List(implements),
-                    SyntaxFactory.List(members)
-                );
+                if (node.Modifiers.Any(CS.SyntaxKind.StaticKeyword))
+                {
+                    return SyntaxFactory.ModuleBlock(
+                        SyntaxFactory.ModuleStatement(
+                            SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
+                            ConvertModifiers(node.Modifiers.Where(m => !m.IsKind(CS.SyntaxKind.StaticKeyword))),
+                            id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
+                        ),
+                        SyntaxFactory.List(inherits),
+                        SyntaxFactory.List(implements),
+                        SyntaxFactory.List(members)
+                    );
+                }
+                else
+                {
+                    return SyntaxFactory.ClassBlock(
+                        SyntaxFactory.ClassStatement(
+                            SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
+                            ConvertModifiers(node.Modifiers),
+                            id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
+                        ),
+                        SyntaxFactory.List(inherits),
+                        SyntaxFactory.List(implements),
+                        SyntaxFactory.List(members)
+                    );
+                }
             }
 
             public override VisualBasicSyntaxNode VisitStructDeclaration(CSS.StructDeclarationSyntax node)
             {
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this)).ToList();
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
 
                 List<InheritsStatementSyntax> inherits = new List<InheritsStatementSyntax>();
                 List<ImplementsStatementSyntax> implements = new List<ImplementsStatementSyntax>();
@@ -181,7 +217,8 @@ End Function";
                     SyntaxFactory.StructureStatement(
                         SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
                         ConvertModifiers(node.Modifiers),
-                        id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
+                        ConvertIdentifier(node.Identifier),
+                        (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
                     ),
                     SyntaxFactory.List(inherits),
                     SyntaxFactory.List(implements),
@@ -192,7 +229,6 @@ End Function";
             public override VisualBasicSyntaxNode VisitInterfaceDeclaration(CSS.InterfaceDeclarationSyntax node)
             {
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this)).ToArray();
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
 
                 List<InheritsStatementSyntax> inherits = new List<InheritsStatementSyntax>();
                 List<ImplementsStatementSyntax> implements = new List<ImplementsStatementSyntax>();
@@ -202,7 +238,8 @@ End Function";
                     SyntaxFactory.InterfaceStatement(
                         SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
                         ConvertModifiers(node.Modifiers),
-                        id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
+                        ConvertIdentifier(node.Identifier),
+                        (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
                     ),
                     SyntaxFactory.List(inherits),
                     SyntaxFactory.List(implements),
@@ -214,12 +251,12 @@ End Function";
             {
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this));
                 var baseType = (TypeSyntax)node.BaseList?.Types.Single().Accept(this);
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
                 return SyntaxFactory.EnumBlock(
                     SyntaxFactory.EnumStatement(
                         SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
                         ConvertModifiers(node.Modifiers),
-                        id, baseType == null ? null : SyntaxFactory.SimpleAsClause(baseType)
+                        ConvertIdentifier(node.Identifier),
+                        baseType == null ? null : SyntaxFactory.SimpleAsClause(baseType)
                     ),
                     SyntaxFactory.List(members)
                 );
@@ -228,17 +265,16 @@ End Function";
             public override VisualBasicSyntaxNode VisitEnumMemberDeclaration(CSS.EnumMemberDeclarationSyntax node)
             {
                 var initializer = (ExpressionSyntax)node.EqualsValue?.Value.Accept(this);
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
                 return SyntaxFactory.EnumMemberDeclaration(
                     SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
-                    id,
+                    ConvertIdentifier(node.Identifier),
                     initializer == null ? null : SyntaxFactory.EqualsValue(initializer)
                 );
             }
 
             public override VisualBasicSyntaxNode VisitDelegateDeclaration(CSS.DelegateDeclarationSyntax node)
             {
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
                 var methodInfo = semanticModel.GetDeclaredSymbol(node) as INamedTypeSymbol;
                 if (methodInfo.DelegateInvokeMethod.GetReturnType()?.SpecialType == SpecialType.System_Void)
                 {
@@ -278,6 +314,32 @@ End Function";
                 );
             }
 
+            public override VisualBasicSyntaxNode VisitConstructorDeclaration(CSS.ConstructorDeclarationSyntax node)
+            {
+                return SyntaxFactory.ConstructorBlock(
+                    SyntaxFactory.SubNewStatement(
+                        SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
+                        ConvertModifiers(node.Modifiers, TokenContext.Member),
+                        (ParameterListSyntax)node.ParameterList?.Accept(this)
+                    ),
+                    SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))))
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitDestructorDeclaration(CSS.DestructorDeclarationSyntax node)
+            {
+                return SyntaxFactory.SubBlock(
+                    SyntaxFactory.SubStatement(
+                        SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
+                        SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword), SyntaxFactory.Token(SyntaxKind.OverridesKeyword)),
+                        SyntaxFactory.Identifier("Finalize"), null,
+                        (ParameterListSyntax)node.ParameterList?.Accept(this),
+                        null, null, null
+                    ),
+                    SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))))
+                );
+            }
+
             public override VisualBasicSyntaxNode VisitMethodDeclaration(CSS.MethodDeclarationSyntax node)
             {
                 SyntaxList<StatementSyntax>? block = null;
@@ -285,15 +347,28 @@ End Function";
                 {
                     block = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))));
                 }
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
                 var methodInfo = semanticModel.GetDeclaredSymbol(node);
+                var attributes = SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)));
+                var parameterList = (ParameterListSyntax)node.ParameterList?.Accept(this);
+                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
+                if (node.ParameterList.Parameters.Count > 0 && node.ParameterList.Parameters[0].Modifiers.Any(CS.SyntaxKind.ThisKeyword))
+                {
+                    attributes = attributes.Insert(0, SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(SyntaxFactory.Attribute(null, SyntaxFactory.ParseTypeName("Extension"), SyntaxFactory.ArgumentList()))));
+                    if (!((CS.CSharpSyntaxTree)node.SyntaxTree).HasUsingDirective("System.Runtime.CompilerServices"))
+                        additionalImports.Add(SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList<ImportsClauseSyntax>(SyntaxFactory.SimpleImportsClause(SyntaxFactory.ParseName("System.Runtime.CompilerServices")))));
+                }
+                if (methodInfo?.ContainingType?.IsStatic == true)
+                {
+                    modifiers = SyntaxFactory.TokenList(modifiers.Where(t => !t.IsKind(SyntaxKind.SharedKeyword)));
+                }
                 if (methodInfo?.GetReturnType()?.SpecialType == SpecialType.System_Void)
                 {
                     var stmt = SyntaxFactory.SubStatement(
-                        SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
-                        ConvertModifiers(node.Modifiers, TokenContext.Member),
+                        attributes,
+                        modifiers,
                         id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this),
-                        (ParameterListSyntax)node.ParameterList?.Accept(this),
+                        parameterList,
                         null, null, null
                     );
                     if (block == null)
@@ -303,10 +378,10 @@ End Function";
                 else
                 {
                     var stmt = SyntaxFactory.FunctionStatement(
-                        SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
-                        ConvertModifiers(node.Modifiers, TokenContext.Member),
+                        attributes,
+                        modifiers,
                         id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this),
-                        (ParameterListSyntax)node.ParameterList?.Accept(this),
+                        parameterList,
                         SyntaxFactory.SimpleAsClause((TypeSyntax)node.ReturnType.Accept(this)), null, null
                     );
                     if (block == null)
@@ -317,7 +392,7 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitPropertyDeclaration(CSS.PropertyDeclarationSyntax node)
             {
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
                 SyntaxList<AttributeListSyntax> attributes, returnAttributes;
                 ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
                 var stmt = SyntaxFactory.PropertyStatement(
@@ -332,14 +407,47 @@ End Function";
                 return SyntaxFactory.PropertyBlock(stmt, SyntaxFactory.List(accessors));
             }
 
+            public override VisualBasicSyntaxNode VisitIndexerDeclaration(CSS.IndexerDeclarationSyntax node)
+            {
+                var id = SyntaxFactory.Identifier("Item");
+                SyntaxList<AttributeListSyntax> attributes, returnAttributes;
+                ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
+                var parameterList = (ParameterListSyntax)node.ParameterList?.Accept(this);
+                var stmt = SyntaxFactory.PropertyStatement(
+                    attributes,
+                    ConvertModifiers(node.Modifiers, TokenContext.Member).Insert(0, SyntaxFactory.Token(SyntaxKind.DefaultKeyword)),
+                    id, parameterList,
+                    SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.Type.Accept(this)), null, null
+                );
+                if (node.AccessorList.Accessors.All(a => a.Body == null))
+                    return stmt;
+                var accessors = node.AccessorList?.Accessors.Select(a => (AccessorBlockSyntax)a.Accept(this)).ToArray();
+                return SyntaxFactory.PropertyBlock(stmt, SyntaxFactory.List(accessors));
+            }
+
             public override VisualBasicSyntaxNode VisitEventDeclaration(CSS.EventDeclarationSyntax node)
             {
-                return base.VisitEventDeclaration(node);
+                SyntaxList<AttributeListSyntax> attributes, returnAttributes;
+                ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
+                var stmt = SyntaxFactory.EventStatement(
+                    attributes,
+                    ConvertModifiers(node.Modifiers, TokenContext.Member),
+                    ConvertIdentifier(node.Identifier), null,
+                    SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.Type.Accept(this)), null
+                );
+                if (node.AccessorList.Accessors.All(a => a.Body == null))
+                    return stmt;
+                var accessors = node.AccessorList?.Accessors.Select(a => (AccessorBlockSyntax)a.Accept(this)).ToArray();
+                return SyntaxFactory.EventBlock(stmt, SyntaxFactory.List(accessors));
             }
 
             public override VisualBasicSyntaxNode VisitEventFieldDeclaration(CSS.EventFieldDeclarationSyntax node)
             {
-                return base.VisitEventFieldDeclaration(node);
+                var decl = node.Declaration.Variables.Single();
+                var id = SyntaxFactory.Identifier(decl.Identifier.ValueText, SyntaxFacts.IsKeywordKind(decl.Identifier.Kind()), decl.Identifier.GetIdentifierText(), TypeCharacter.None);
+                SyntaxList<AttributeListSyntax> attributes, returnAttributes;
+                ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
+                return SyntaxFactory.EventStatement(attributes, ConvertModifiers(node.Modifiers, TokenContext.Member), id, null, SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.Declaration.Type.Accept(this)), null);
             }
 
             private void ConvertAndSplitAttributes(SyntaxList<CSS.AttributeListSyntax> attributeLists, out SyntaxList<AttributeListSyntax> attributes, out SyntaxList<AttributeListSyntax> returnAttributes)
@@ -382,19 +490,25 @@ End Function";
                         break;
                     case CS.SyntaxKind.SetAccessorDeclaration:
                         blockKind = SyntaxKind.SetAccessorBlock;
-                        valueParam = SyntaxFactory.Parameter(SyntaxFactory.ModifiedIdentifier("value")).WithAsClause(SyntaxFactory.SimpleAsClause((TypeSyntax)parent.Type.Accept(this)));
+                        valueParam = SyntaxFactory.Parameter(SyntaxFactory.ModifiedIdentifier("value"))
+                            .WithAsClause(SyntaxFactory.SimpleAsClause((TypeSyntax)parent.Type.Accept(this)))
+                            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ByValKeyword)));
                         stmt = SyntaxFactory.SetAccessorStatement(attributes, modifiers, SyntaxFactory.ParameterList(SyntaxFactory.SingletonSeparatedList(valueParam)));
                         endStmt = SyntaxFactory.EndSetStatement();
                         break;
                     case CS.SyntaxKind.AddAccessorDeclaration:
                         blockKind = SyntaxKind.AddHandlerAccessorBlock;
-                        valueParam = SyntaxFactory.Parameter(SyntaxFactory.ModifiedIdentifier("value")).WithAsClause(SyntaxFactory.SimpleAsClause((TypeSyntax)parent.Type.Accept(this)));
+                        valueParam = SyntaxFactory.Parameter(SyntaxFactory.ModifiedIdentifier("value"))
+                            .WithAsClause(SyntaxFactory.SimpleAsClause((TypeSyntax)parent.Type.Accept(this)))
+                            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ByValKeyword)));
                         stmt = SyntaxFactory.AddHandlerAccessorStatement(attributes, modifiers, SyntaxFactory.ParameterList(SyntaxFactory.SingletonSeparatedList(valueParam)));
                         endStmt = SyntaxFactory.EndAddHandlerStatement();
                         break;
                     case CS.SyntaxKind.RemoveAccessorDeclaration:
                         blockKind = SyntaxKind.RemoveHandlerAccessorBlock;
-                        valueParam = SyntaxFactory.Parameter(SyntaxFactory.ModifiedIdentifier("value")).WithAsClause(SyntaxFactory.SimpleAsClause((TypeSyntax)parent.Type.Accept(this)));
+                        valueParam = SyntaxFactory.Parameter(SyntaxFactory.ModifiedIdentifier("value"))
+                            .WithAsClause(SyntaxFactory.SimpleAsClause((TypeSyntax)parent.Type.Accept(this)))
+                            .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ByValKeyword)));
                         stmt = SyntaxFactory.RemoveHandlerAccessorStatement(attributes, modifiers, SyntaxFactory.ParameterList(SyntaxFactory.SingletonSeparatedList(valueParam)));
                         endStmt = SyntaxFactory.EndRemoveHandlerStatement();
                         break;
@@ -409,9 +523,14 @@ End Function";
                 return SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(node.Parameters.Select(p => (ParameterSyntax)p.Accept(this))));
             }
 
+            public override VisualBasicSyntaxNode VisitBracketedParameterList(CSS.BracketedParameterListSyntax node)
+            {
+                return SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(node.Parameters.Select(p => (ParameterSyntax)p.Accept(this))));
+            }
+
             public override VisualBasicSyntaxNode VisitParameter(CSS.ParameterSyntax node)
             {
-                var id = SyntaxFactory.Identifier(node.Identifier.ValueText, SyntaxFacts.IsKeywordKind(node.Identifier.Kind()), node.Identifier.GetIdentifierText(), TypeCharacter.None);
+                var id = ConvertIdentifier(node.Identifier);
                 EqualsValueSyntax @default = null;
                 if (node.Default != null)
                 {
@@ -419,12 +538,12 @@ End Function";
                 }
                 AttributeListSyntax[] newAttributes;
                 var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
-                if (modifiers.Count == 0)
+                if (modifiers.Count == 0 || node.Modifiers.Any(CS.SyntaxKind.ThisKeyword))
                 {
                     modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ByValKeyword));
                     newAttributes = new AttributeListSyntax[0];
                 }
-                else if (node.Modifiers.Any(m => m.IsKind(CS.SyntaxKind.OutKeyword)))
+                else if (node.Modifiers.Any(CS.SyntaxKind.OutKeyword))
                 {
                     newAttributes = new[] {
                         SyntaxFactory.AttributeList(
@@ -474,11 +593,11 @@ End Function";
                     return SyntaxFactory.AssignmentStatement(
                         kind,
                         (ExpressionSyntax)node.Operand.Accept(this),
-                        SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(kind)),
+                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                         Literal(1)
                     );
                 }
-                else
+                if (kind == SyntaxKind.AddAssignmentStatement || kind == SyntaxKind.SubtractAssignmentStatement)
                 {
                     string operatorName;
                     if (kind == SyntaxKind.AddAssignmentStatement)
@@ -496,6 +615,7 @@ End Function";
                         )
                     );
                 }
+                return SyntaxFactory.UnaryExpression(kind, SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)), (ExpressionSyntax)node.Operand.Accept(this));
             }
 
             public override VisualBasicSyntaxNode VisitPostfixUnaryExpression(CSS.PostfixUnaryExpressionSyntax node)
@@ -506,7 +626,7 @@ End Function";
                     return SyntaxFactory.AssignmentStatement(
                         ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local),
                         (ExpressionSyntax)node.Operand.Accept(this),
-                        SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(kind)),
+                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                         Literal(1)
                     );
                 }
@@ -541,7 +661,7 @@ End Function";
                                             )
                                         )
                                     ),
-                                    SyntaxFactory.SimpleArgument(SyntaxFactory.BinaryExpression(op, (ExpressionSyntax)node.Operand.Accept(this), SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(op)), Literal(1)))
+                                    SyntaxFactory.SimpleArgument(SyntaxFactory.BinaryExpression(op, (ExpressionSyntax)node.Operand.Accept(this), SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(op)), Literal(1)))
                                 }
                             )
                         )
@@ -554,10 +674,21 @@ End Function";
                 var kind = ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local);
                 if (node.Parent is CSS.ExpressionStatementSyntax)
                 {
+                    if (semanticModel.GetTypeInfo(node.Right).ConvertedType.IsDelegateType())
+                    {
+                        if (node.OperatorToken.IsKind(CS.SyntaxKind.PlusEqualsToken))
+                        {
+                            return SyntaxFactory.AddHandlerStatement((ExpressionSyntax)node.Left.Accept(this), (ExpressionSyntax)node.Right.Accept(this));
+                        }
+                        if (node.OperatorToken.IsKind(CS.SyntaxKind.MinusEqualsToken))
+                        {
+                            return SyntaxFactory.RemoveHandlerStatement((ExpressionSyntax)node.Left.Accept(this), (ExpressionSyntax)node.Right.Accept(this));
+                        }
+                    }
                     return SyntaxFactory.AssignmentStatement(
                         kind,
                         (ExpressionSyntax)node.Left.Accept(this),
-                        SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(kind)),
+                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                         (ExpressionSyntax)node.Right.Accept(this)
                     );
                 }
@@ -580,9 +711,32 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitInvocationExpression(CSS.InvocationExpressionSyntax node)
             {
+                if (node.Expression.ToString() == "nameof")
+                {
+                    var argument = node.ArgumentList.Arguments.Single().Expression;
+                    return SyntaxFactory.NameOfExpression((ExpressionSyntax)argument.Accept(this));
+                }
                 return SyntaxFactory.InvocationExpression(
                     (ExpressionSyntax)node.Expression.Accept(this),
                     (ArgumentListSyntax)node.ArgumentList.Accept(this)
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitConditionalExpression(CSS.ConditionalExpressionSyntax node)
+            {
+                return SyntaxFactory.TernaryConditionalExpression(
+                    (ExpressionSyntax)node.Condition.Accept(this),
+                    (ExpressionSyntax)node.WhenTrue.Accept(this),
+                    (ExpressionSyntax)node.WhenFalse.Accept(this)
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitConditionalAccessExpression(CSS.ConditionalAccessExpressionSyntax node)
+            {
+                return SyntaxFactory.ConditionalAccessExpression(
+                    (ExpressionSyntax)node.Expression.Accept(this),
+                    SyntaxFactory.Token(SyntaxKind.QuestionToken),
+                    SyntaxFactory.SimpleMemberAccessExpression((SimpleNameSyntax)node.WhenNotNull.Accept(this))
                 );
             }
 
@@ -594,6 +748,11 @@ End Function";
                     SyntaxFactory.Token(SyntaxKind.DotToken),
                     (SimpleNameSyntax)node.Name.Accept(this)
                 );
+            }
+
+            public override VisualBasicSyntaxNode VisitMemberBindingExpression(CSS.MemberBindingExpressionSyntax node)
+            {
+                return (SimpleNameSyntax)node.Name.Accept(this);
             }
 
             public override VisualBasicSyntaxNode VisitDefaultExpression(CSS.DefaultExpressionSyntax node)
@@ -613,13 +772,99 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitBinaryExpression(CSS.BinaryExpressionSyntax node)
             {
+                if (node.OperatorToken.IsKind(CS.SyntaxKind.QuestionQuestionToken))
+                {
+                    return SyntaxFactory.BinaryConditionalExpression(
+                         (ExpressionSyntax)node.Left.Accept(this),
+                         (ExpressionSyntax)node.Right.Accept(this)
+                    );
+                }
+                if (node.OperatorToken.IsKind(CS.SyntaxKind.AsKeyword))
+                {
+                    return SyntaxFactory.TryCastExpression((ExpressionSyntax)node.Left.Accept(this), (TypeSyntax)node.Right.Accept(this));
+                }
+                if (node.OperatorToken.IsKind(CS.SyntaxKind.EqualsEqualsToken))
+                {
+                    ExpressionSyntax otherArgument = null;
+                    if (node.Left.IsKind(CS.SyntaxKind.NullLiteralExpression))
+                    {
+                        otherArgument = (ExpressionSyntax)node.Right.Accept(this);
+                    }
+                    if (node.Right.IsKind(CS.SyntaxKind.NullLiteralExpression))
+                    {
+                        otherArgument = (ExpressionSyntax)node.Left.Accept(this);
+                    }
+                    if (otherArgument != null)
+                    {
+                        return SyntaxFactory.IsExpression(otherArgument, Literal(null));
+                    }
+                }
+                if (node.OperatorToken.IsKind(CS.SyntaxKind.ExclamationEqualsToken))
+                {
+                    ExpressionSyntax otherArgument = null;
+                    if (node.Left.IsKind(CS.SyntaxKind.NullLiteralExpression))
+                    {
+                        otherArgument = (ExpressionSyntax)node.Right.Accept(this);
+                    }
+                    if (node.Right.IsKind(CS.SyntaxKind.NullLiteralExpression))
+                    {
+                        otherArgument = (ExpressionSyntax)node.Left.Accept(this);
+                    }
+                    if (otherArgument != null)
+                    {
+                        return SyntaxFactory.IsNotExpression(otherArgument, Literal(null));
+                    }
+                }
                 var kind = ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local);
                 return SyntaxFactory.BinaryExpression(
                     kind,
                     (ExpressionSyntax)node.Left.Accept(this),
-                    SyntaxFactory.Token(VBUtil.GetBinaryExpressionOperatorTokenKind(kind)),
+                    SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                     (ExpressionSyntax)node.Right.Accept(this)
                 );
+            }
+
+            public override VisualBasicSyntaxNode VisitCastExpression(CSS.CastExpressionSyntax node)
+            {
+                var type = semanticModel.GetTypeInfo(node.Type).Type;
+                var expr = (ExpressionSyntax)node.Expression.Accept(this);
+                switch (type.SpecialType)
+                {
+                    case SpecialType.System_Object:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CObjKeyword), expr);
+                    case SpecialType.System_Boolean:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CBoolKeyword), expr);
+                    case SpecialType.System_Char:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CCharKeyword), expr);
+                    case SpecialType.System_SByte:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CSByteKeyword), expr);
+                    case SpecialType.System_Byte:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CByteKeyword), expr);
+                    case SpecialType.System_Int16:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CShortKeyword), expr);
+                    case SpecialType.System_UInt16:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CUShortKeyword), expr);
+                    case SpecialType.System_Int32:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CIntKeyword), expr);
+                    case SpecialType.System_UInt32:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CUIntKeyword), expr);
+                    case SpecialType.System_Int64:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CLngKeyword), expr);
+                    case SpecialType.System_UInt64:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CULngKeyword), expr);
+                    case SpecialType.System_Decimal:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CDecKeyword), expr);
+                    case SpecialType.System_Single:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CSngKeyword), expr);
+                    case SpecialType.System_Double:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CDblKeyword), expr);
+                    case SpecialType.System_String:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CStrKeyword), expr);
+                    case SpecialType.System_DateTime:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CDateKeyword), expr);
+                    default:
+                        return SyntaxFactory.CTypeExpression(expr, (TypeSyntax)node.Type.Accept(this));
+                }
             }
 
             public override VisualBasicSyntaxNode VisitObjectCreationExpression(CSS.ObjectCreationExpressionSyntax node)
@@ -818,7 +1063,8 @@ End Function";
 
             SyntaxToken ConvertIdentifier(SyntaxToken id)
             {
-                if (SyntaxFacts.GetKeywordKind(id.ValueText) != SyntaxKind.None)
+                var keywordKind = SyntaxFacts.GetKeywordKind(id.ValueText);
+                if (keywordKind != SyntaxKind.None && !SyntaxFacts.IsPredefinedType(keywordKind))
                     return SyntaxFactory.Identifier("[" + id.ValueText + "]");
                 return SyntaxFactory.Identifier(id.ValueText);
             }
