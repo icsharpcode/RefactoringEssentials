@@ -103,9 +103,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Extensions methods not implemented yet.")]
-#endif
         public void TestExtensionMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -117,16 +114,13 @@ End Class");
 }", @"Imports System.Runtime.CompilerServices
 
 Module TestClass
-    <Extension()> 
+    <Extension()>
     Public Sub TestMethod(ByVal str As String)
     End Sub
-End Class");
+End Module");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Extensions methods not implemented yet.")]
-#endif
         public void TestExtensionMethodWithExistingImport()
         {
             TestConversionCSharpToVisualBasic(
@@ -140,10 +134,10 @@ static class TestClass
 }", @"Imports System.Runtime.CompilerServices
 
 Module TestClass
-    <Extension()> 
+    <Extension()>
     Public Sub TestMethod(ByVal str As String)
     End Sub
-End Class");
+End Module");
         }
 
         [Test]
@@ -176,7 +170,7 @@ End Class");
         Get
             Return Me.m_test3
         End Get
-        Set(value As Integer)
+        Set(ByVal value As Integer)
             Me.m_test3 = value
         End Set
     End Property
@@ -184,9 +178,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void TestConstructor()
         {
             TestConversionCSharpToVisualBasic(
@@ -202,9 +193,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void TestDestructor()
         {
             TestConversionCSharpToVisualBasic(
@@ -220,9 +208,6 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Not implemented yet")]
-#endif
         public void TestEvent()
         {
             TestConversionCSharpToVisualBasic(
@@ -235,9 +220,40 @@ End Class");
         }
 
         [Test]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-        [Ignore("Indexer support not implemented yet.")]
-#endif
+        public void TestCustomEvent()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"using System;
+
+class TestClass
+{
+    EventHandler backingField;
+
+    public event EventHandler MyEvent {
+        add {
+            this.backingField += value;
+        }
+        remove {
+            this.backingField -= value;
+        }
+    }
+}", @"Imports System
+
+Class TestClass
+    Private backingField As EventHandler
+
+    Public Event MyEvent As EventHandler
+        AddHandler(ByVal value As EventHandler)
+            AddHandler Me.backingField, value
+        End AddHandler
+        RemoveHandler(ByVal value As EventHandler)
+            RemoveHandler Me.backingField, value
+        End RemoveHandler
+    End Event
+End Class");
+        }
+
+        [Test]
         public void TestIndexer()
         {
             TestConversionCSharpToVisualBasic(
@@ -267,7 +283,7 @@ End Class");
         Get
             Return Me.m_test3
         End Get
-        Set(value As Integer)
+        Set(ByVal value As Integer)
             Me.m_test3 = value
         End Set
     End Property

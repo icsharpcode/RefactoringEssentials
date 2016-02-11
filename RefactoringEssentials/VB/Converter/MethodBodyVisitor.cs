@@ -185,6 +185,16 @@ namespace RefactoringEssentials.VB.Converter
                 return SyntaxFactory.SingletonList(stmt);
             }
 
+            public override SyntaxList<StatementSyntax> VisitThrowStatement(CSS.ThrowStatementSyntax node)
+            {
+                StatementSyntax stmt;
+                if (node.Expression == null)
+                    stmt = SyntaxFactory.ThrowStatement();
+                else
+                    stmt = SyntaxFactory.ThrowStatement((ExpressionSyntax)node.Expression.Accept(nodesVisitor));
+                return SyntaxFactory.SingletonList(stmt);
+            }
+
             public override SyntaxList<StatementSyntax> VisitContinueStatement(CSS.ContinueStatementSyntax node)
             {
                 var statementKind = SyntaxKind.None;

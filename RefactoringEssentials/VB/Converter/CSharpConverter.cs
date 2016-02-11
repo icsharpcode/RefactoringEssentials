@@ -53,6 +53,11 @@ namespace RefactoringEssentials.VB.Converter
             }
         }
 
+        static SyntaxTokenList ConvertModifiers(IEnumerable<SyntaxToken> modifiers, TokenContext context = TokenContext.Global)
+        {
+            return SyntaxFactory.TokenList(modifiers.Select(m => SyntaxFactory.Token(ConvertToken(CS.CSharpExtensions.Kind(m), context))));
+        }
+
         static SyntaxTokenList ConvertModifiers(SyntaxTokenList modifiers, TokenContext context = TokenContext.Global)
         {
             return SyntaxFactory.TokenList(modifiers.Select(m => SyntaxFactory.Token(ConvertToken(CS.CSharpExtensions.Kind(m), context))));

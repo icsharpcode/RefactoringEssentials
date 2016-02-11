@@ -505,5 +505,23 @@ class TestClass
     End Sub
 End Class");
         }
+
+        [Test]
+        public void ThrowStatement()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod(object nullObject)
+    {
+        if (nullObject == null)
+            throw new ArgumentNullException(nameof(nullObject));
+    }
+}", @"Class TestClass
+    Sub TestMethod(ByVal nullObject As Object)
+        If nullObject Is Nothing Then Throw New ArgumentNullException(NameOf(nullObject))
+    End Sub
+End Class");
+        }
     }
 }
