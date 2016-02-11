@@ -779,6 +779,10 @@ End Function";
                          (ExpressionSyntax)node.Right.Accept(this)
                     );
                 }
+                if (node.OperatorToken.IsKind(CS.SyntaxKind.AsKeyword))
+                {
+                    return SyntaxFactory.TryCastExpression((ExpressionSyntax)node.Left.Accept(this), (TypeSyntax)node.Right.Accept(this));
+                }
                 if (node.OperatorToken.IsKind(CS.SyntaxKind.EqualsEqualsToken))
                 {
                     ExpressionSyntax otherArgument = null;
@@ -818,6 +822,49 @@ End Function";
                     SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                     (ExpressionSyntax)node.Right.Accept(this)
                 );
+            }
+
+            public override VisualBasicSyntaxNode VisitCastExpression(CSS.CastExpressionSyntax node)
+            {
+                var type = semanticModel.GetTypeInfo(node.Type).Type;
+                var expr = (ExpressionSyntax)node.Expression.Accept(this);
+                switch (type.SpecialType)
+                {
+                    case SpecialType.System_Object:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CObjKeyword), expr);
+                    case SpecialType.System_Boolean:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CBoolKeyword), expr);
+                    case SpecialType.System_Char:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CCharKeyword), expr);
+                    case SpecialType.System_SByte:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CSByteKeyword), expr);
+                    case SpecialType.System_Byte:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CByteKeyword), expr);
+                    case SpecialType.System_Int16:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CShortKeyword), expr);
+                    case SpecialType.System_UInt16:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CUShortKeyword), expr);
+                    case SpecialType.System_Int32:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CIntKeyword), expr);
+                    case SpecialType.System_UInt32:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CUIntKeyword), expr);
+                    case SpecialType.System_Int64:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CLngKeyword), expr);
+                    case SpecialType.System_UInt64:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CULngKeyword), expr);
+                    case SpecialType.System_Decimal:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CDecKeyword), expr);
+                    case SpecialType.System_Single:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CSngKeyword), expr);
+                    case SpecialType.System_Double:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CDblKeyword), expr);
+                    case SpecialType.System_String:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CStrKeyword), expr);
+                    case SpecialType.System_DateTime:
+                        return SyntaxFactory.PredefinedCastExpression(SyntaxFactory.Token(SyntaxKind.CDateKeyword), expr);
+                    default:
+                        return SyntaxFactory.CTypeExpression(expr, (TypeSyntax)node.Type.Accept(this));
+                }
             }
 
             public override VisualBasicSyntaxNode VisitObjectCreationExpression(CSS.ObjectCreationExpressionSyntax node)
