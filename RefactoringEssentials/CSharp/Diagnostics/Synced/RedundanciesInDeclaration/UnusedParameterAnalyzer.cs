@@ -161,9 +161,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
                 if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.VirtualKeyword) || m.IsKind(SyntaxKind.NewKeyword) || m.IsKind(SyntaxKind.PartialKeyword)))
                     return;
-                if (node.Body == null)
+                if ((node.Body == null) && (node.ExpressionBody == null))
                     return;
-                
+
                 var member = model.GetDeclaredSymbol(node);
                 if (member.IsOverride)
                     return;
@@ -186,7 +186,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     }
                 }
 
-                Analyze(node.ParameterList.Parameters, new[] { node.Body });
+                Analyze(node.ParameterList.Parameters, new SyntaxNode[] { node.Body, node.ExpressionBody });
             }
 
             public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
@@ -205,23 +205,28 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     Analyze(node.ParameterList.Parameters, new[] { node.Block });
             }
 
-            public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
-            {
-                base.VisitIndexerDeclaration(node);
-                if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.VirtualKeyword) || m.IsKind(SyntaxKind.NewKeyword) || m.IsKind(SyntaxKind.PartialKeyword)))
-                    return;
-                if (node.GetBodies().IsEmpty())
-                    return;
-                var member = model.GetDeclaredSymbol(node);
-                if (member.IsOverride)
-                    return;
+            /*
+                @Rpinski: Disabled indexer support, since it's not possible to compare
+                an indexer parameter symbol with the one resolved from its reference in indexer's getter.
+                => Analyzer not able to detect parameter usage correctly.
+             */
+            //public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
+            //{
+            //    base.VisitIndexerDeclaration(node);
+            //    if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.VirtualKeyword) || m.IsKind(SyntaxKind.NewKeyword) || m.IsKind(SyntaxKind.PartialKeyword)))
+            //        return;
+            //    if (node.GetBodies().IsEmpty())
+            //        return;
+            //    var member = model.GetDeclaredSymbol(node);
+            //    if (member.IsOverride)
+            //        return;
                 
-                if (member.ExplicitInterfaceImplementations().Length > 0)
-                    return;
-                if (GetImplementingInterface(member, member.ContainingType) != null)
-                    return;
-                Analyze(node.ParameterList.Parameters, node.GetBodies());
-            }
+            //    if (member.ExplicitInterfaceImplementations().Length > 0)
+            //        return;
+            //    if (GetImplementingInterface(member, member.ContainingType) != null)
+            //        return;
+            //    Analyze(node.ParameterList.Parameters, node.GetBodies());
+            //}
 
             void Analyze(SeparatedSyntaxList<ParameterSyntax> parameterList, IEnumerable<SyntaxNode> nodesToAnalyze)
             {
