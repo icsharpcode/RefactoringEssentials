@@ -312,11 +312,7 @@ namespace RefactoringEssentials.Util.Analysis
         {
             if (!c1.HasValue || !c2.HasValue)
                 return false;
-            // TODO:
-            //            CSharpResolver r = new CSharpResolver(typeResolveContext);
-            //            ResolveResult c = r.ResolveBinaryOperator(BinaryOperatorType.Equality, c1, c2);
-            //            return c.IsCompileTimeConstant && (c.ConstantValue as bool?) == true;
-            return true;
+            return c1.Value.Equals(c2.Value);
         }
         #endregion
 
@@ -360,25 +356,27 @@ namespace RefactoringEssentials.Util.Analysis
             public override void VisitBlock(BlockSyntax node)
             {
                 // C# 4.0 spec: §8.2 Blocks
-                HandleStatementList(node.Statements, curNode);
+                curNode = HandleStatementList(node.Statements, curNode);
                 CreateConnectedEndNode(node);
             }
 
-
-            void HandleStatementList(IEnumerable<StatementSyntax> statements, ControlFlowNode source)
+            ControlFlowNode HandleStatementList(IEnumerable<StatementSyntax> statements, ControlFlowNode source)
             {
+                var oldCurNode = curNode;
                 ControlFlowNode childNode = null;
                 foreach (var stmt in statements) {
                     if (childNode == null) {
-                        childNode = builder.CreateStartNode(stmt);
+                        curNode = childNode = builder.CreateStartNode(stmt);
                         if (source != null)
                             Connect(source, childNode);
                     }
                     // Debug.Assert(childNode.NextStatement == stmt);
-                    curNode = childNode ?? source;
                     Visit(stmt);
+                    childNode = curNode;
                     // Debug.Assert(childNode.PreviousStatement == stmt);
                 }
+                curNode = oldCurNode;
+                return childNode ?? source;
             }
 
             public override void VisitEmptyStatement(EmptyStatementSyntax node)
@@ -406,36 +404,47 @@ namespace RefactoringEssentials.Util.Analysis
             {
                 bool? cond = builder.EvaluateCondition(node.Condition);
 
+                var startNode = curNode;
                 ControlFlowNode trueBegin = builder.CreateStartNode(node.Statement);
                 if (cond != false)
-                    Connect(curNode, trueBegin, ControlFlowEdgeType.ConditionTrue);
+                    Connect(startNode, trueBegin, ControlFlowEdgeType.ConditionTrue);
+
                 curNode = trueBegin;
                 Visit(node.Statement);
+                ControlFlowNode trueEnd = curNode;
+
+                ControlFlowNode falseEnd = null;
 
                 if (node.Else?.Statement != null)
                 {
-                    ControlFlowNode falseBegin = builder.CreateStartNode(node.Else.Statement);
+                    ControlFlowNode falseBegin = builder.CreateStartNode(node.Else?.Statement);
                     if (cond != true)
-                        Connect(curNode, falseBegin, ControlFlowEdgeType.ConditionFalse);
-                    curNode = falseBegin;
-                    Visit(node.Else.Statement);
-                    ControlFlowNode end = builder.CreateEndNode(node);
-                    Connect(curNode, end, ControlFlowEdgeType.ConditionFalse);
-                    curNode = end;
-                } else {
-                    ControlFlowNode end = builder.CreateEndNode(node);
-                    Connect(curNode, end);
-                    curNode = end;
+                        Connect(startNode, falseBegin, ControlFlowEdgeType.ConditionFalse);
+
+                    curNode = trueBegin;
+                    Visit(node.Else?.Statement);
+
+                    falseEnd = curNode;
                 }
+                // (if no else statement exists, both falseBegin and falseEnd will be null)
+
+                ControlFlowNode end = builder.CreateEndNode(node);
+                Connect(trueEnd, end);
+                if (falseEnd != null) {
+                    Connect(falseEnd, end);
+                } else if (cond != true) {
+                    Connect(startNode, end, ControlFlowEdgeType.ConditionFalse);
+                }
+                curNode = end;
             }
 
-            public override void VisitSwitchStatement(SwitchStatementSyntax switchStatement)
+            public override void VisitSwitchStatement(SwitchStatementSyntax node)
             {
                 // First, figure out which switch section will get called (if the expression is constant):
-                var constant = builder.EvaluateConstant(switchStatement.Expression);
+                var constant = builder.EvaluateConstant(node.Expression);
                 SwitchSectionSyntax defaultSection = null;
                 SwitchSectionSyntax sectionMatchedByConstant = null;
-                foreach (var section in switchStatement.Sections) {
+                foreach (var section in node.Sections) {
                     foreach (var label in section.Labels) {
                         
                         if (label.IsKind(SyntaxKind.DefaultSwitchLabel)) {
@@ -454,15 +463,17 @@ namespace RefactoringEssentials.Util.Analysis
                 int gotoCaseOrDefaultInOuterScope = gotoCaseOrDefault.Count;
                 List<ControlFlowNode> sectionStartNodes = new List<ControlFlowNode>();
 
-                ControlFlowNode end = builder.CreateEndNode(switchStatement, addToNodeList: false);
+                ControlFlowNode end = builder.CreateEndNode(node, addToNodeList: false);
                 breakTargets.Push(end);
                 var myEntryPoint = curNode;
-                foreach (var section in switchStatement.Sections) {
+                foreach (var section in node.Sections) {
                     int sectionStartNodeID = builder.nodes.Count;
-                    if (constant.HasValue || section == sectionMatchedByConstant) {
+                    if (!constant.HasValue || section == sectionMatchedByConstant) {
+                        curNode = myEntryPoint;
                         HandleStatementList(section.Statements, myEntryPoint);
                     } else {
                         // This section is unreachable: pass null to HandleStatementList.
+                        curNode = null;
                         HandleStatementList(section.Statements, null);
                     }
                     // Don't bother connecting the ends of the sections: the 'break' statement takes care of that.
@@ -486,7 +497,7 @@ namespace RefactoringEssentials.Util.Analysis
                         }
                         int targetSectionIndex = -1;
                         int currentSectionIndex = 0;
-                        foreach (var section in switchStatement.Sections) {
+                        foreach (var section in node.Sections) {
                             foreach (var label in section.Labels) {
                                 if (label is CaseSwitchLabelSyntax) {
                                     var scl = label as CaseSwitchLabelSyntax;
