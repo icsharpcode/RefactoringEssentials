@@ -379,6 +379,26 @@ class TestClass
         }
 
         [Test]
+        public void TestSwitchDefault_CaseReturns()
+        {
+            var input = @"
+class TestClass
+{
+    void TestSwitch(int i)
+    {
+        switch (i)
+        {
+            case 1:
+                return;
+            default:
+                break;
+        }
+    }
+}";
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
+        }
+
+        [Test]
         public void TestLinqFrom()
         {
             //https://github.com/icsharpcode/NRefactory/issues/254
