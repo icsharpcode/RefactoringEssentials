@@ -411,6 +411,45 @@ class Animal
         }
 
         [Test]
+        [Description("Inline a method and ensure it properly traverses document.")]
+        public void InlineMethodTraversesDocument()
+        {
+            // While replacing syntax, if not handled, it is possible to undo one change with another.
+            // This is a gotcha of working with syntax trees and immutable types.
+            // In this example, Foo and Foo2 should be updated with the inline method body while method Bar is removed.
+            // If not properly handled, it is possible that Foo is updated and subsequenty undone when Foo2 is updated.
+
+            Test<InlineMethodAction>(
+@"class TestClass
+{
+    public void Foo() {
+        var x = Bar(5, 1);
+    }
+
+    public int $Bar(int a, int b, int c = 0) {
+        //// Simple math.
+        return (a + b + c);
+    }
+
+    public void Foo2() {
+        var x = Bar(6, 2);
+    }
+
+}",
+@"class TestClass
+{
+    public void Foo() {
+        var x = (5 + 1 + 0);
+    }
+
+    public void Foo2() {
+        var x = (6 + 2 + 0);
+    }
+
+}");
+        }
+
+        [Test]
         [Description("Inline a method with references in another classes.")]
         public void InlineMethodWithReferenceInAnotherClass()
         {
@@ -473,17 +512,9 @@ class Animal
                         WorkspaceHelpers.CreateDocument(document2Id, document2Name,
 @"class ClassB
 {
-    public void Foo() {
-        var x = Bar(10, 2);
-    }
-
     public static int $Bar(int a, int b, int c = 0) {
         //// Simple math.
         return (a + b + c);
-    }
-
-    public void Foo2() {
-        var x = Bar(10, 2);
     }
 }")
                     })
@@ -509,13 +540,6 @@ class Animal
                             WorkspaceHelpers.CreateDocument(document2Id,document2Name ,
 @"class ClassB
 {
-    public void Foo() {
-        var x = (10 + 2 + 0);
-    }
-
-    public void Foo2() {
-        var x = (10 + 2 + 0);
-    }
 }")
                         })
             }));
