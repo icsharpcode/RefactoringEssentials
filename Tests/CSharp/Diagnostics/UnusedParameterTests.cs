@@ -226,5 +226,47 @@ class TestClass : ISerializable {
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
+
+        [Test]
+        [Ignore("Support for indexers disabled")]
+        public void TestUnusedParameterInExpressionBodiedIndexer()
+        {
+            var input = @"
+class TestClass {
+	public string this[int $i$] => "";
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
+
+        [Test]
+        [Ignore("Support for indexers disabled")]
+        public void TestUsedParameterInExpressionBodiedIndexer()
+        {
+            var input = @"
+class TestClass {
+	public string this[int i] => i.ToString();
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestUnusedParameterInExpressionBodiedMethod()
+        {
+            var input = @"
+class TestClass {
+	public string TestMethod(int $i$) => "";
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestUsedParameterInExpressionBodiedMethod()
+        {
+            var input = @"
+class TestClass {
+	public string TestMethod(int i) => i.ToString();
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
     }
 }

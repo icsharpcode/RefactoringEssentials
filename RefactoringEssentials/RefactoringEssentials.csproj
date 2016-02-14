@@ -55,7 +55,7 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs" />
     <Compile Include="CSharp\ConvertUnitTestToVB.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\RoslynReflectionUsageAnalyzer.cs" />
+    <Compile Include="CSharp\Diagnostics\Custom\RoslynUsageAnalyzer.cs" />
     <Compile Include="CSharp\CodeRefactorings\Uncategorized\InlineMethodAction.cs" />
     <Compile Include="CSharp\SyntaxExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -607,6 +607,15 @@
     <Compile Include="Xml\AXmlAttribute.cs" />
     <Compile Include="Xml\LazyInit.cs" />
     <Compile Include="Xml\TreeTraversal.cs" />
+    <Compile Include="Util\Analysis\ControlFlow.cs" />
+    <Compile Include="Util\Analysis\ReachabilityAnalysis.cs" />
+    <Compile Include="Util\FormatStringHelper.cs" />
+    <Compile Include="Util\CompositieFormatStringParser\TextSegment.cs" />
+    <Compile Include="Util\CompositieFormatStringParser\IFormatStringSegment.cs" />
+    <Compile Include="Util\CompositieFormatStringParser\IFormatStringError.cs" />
+    <Compile Include="Util\CompositieFormatStringParser\FormatStringSegmentBase.cs" />
+    <Compile Include="Util\CompositieFormatStringParser\FormatItem.cs" />
+    <Compile Include="Util\CompositieFormatStringParser\CompositeFormatStringParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -720,8 +729,7 @@
     <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
     <Folder Include="Samples\VB\" />
-    <Folder Include="Util\Flow\" />
-    <Folder Include="Xml\" />
+    <Folder Include="Util\CompositieFormatStringParser\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CodeRefactorings.html.template" />

@@ -63,24 +63,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     }
                 }
 
-                a = UnpackNullableValueAccess(model, a, token);
+                a = ConvertConditionalTernaryToNullCoalescingAnalyzer.UnpackNullableValueAccess(model, a, token);
 
                 ExpressionSyntax newNode = SyntaxFactory.BinaryExpression(SyntaxKind.CoalesceExpression, a, CSharpUtil.AddParensIfRequired(other));
 
                 var newRoot = root.ReplaceNode((SyntaxNode)node, newNode.WithLeadingTrivia(node.GetLeadingTrivia()).WithAdditionalAnnotations(Formatter.Annotation));
                 return Task.FromResult(document.WithSyntaxRoot(newRoot));
             }), diagnostic);
-        }
-
-		internal static ExpressionSyntax UnpackNullableValueAccess(SemanticModel semanticModel, ExpressionSyntax expression, CancellationToken cancellationToken)
-        {
-            var expr = expression.SkipParens();
-            if (!expr.IsKind(SyntaxKind.SimpleMemberAccessExpression))
-                return expression;
-            var info = semanticModel.GetTypeInfo(((MemberAccessExpressionSyntax)expr).Expression, cancellationToken);
-            if (!info.ConvertedType.IsNullableType())
-                return expression;
-            return ((MemberAccessExpressionSyntax)expr).Expression;
         }
     }
 }

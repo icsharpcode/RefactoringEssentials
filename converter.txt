@@ -22,9 +22,15 @@ C# to VB:
     * local variable declarations
     * Simple statements/assignments/calls
     * if
+    * while
+    * do-while
     * using
     * return
     * checked (removed + comment added as it is not supported in VB)
+  - most importantly:
+    * switch
+    * LINQ syntax
+    * try with filters
 4) Expressions:
   - everything except:
     * literals

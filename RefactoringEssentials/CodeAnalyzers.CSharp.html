@@ -109,7 +109,7 @@
       <li>Redundant Where() call with predicate followed by Single() (ReplaceWithSingleCallToSingleAnalyzer)</li>
       <li>Redundant Where() call with predicate followed by SingleOrDefault() (ReplaceWithSingleCallToSingleOrDefaultAnalyzer)</li>
       <li>Uses shorter string.IsNullOrEmpty call instead of a longer condition (ReplaceWithStringIsNullOrEmptyAnalyzer)</li>
-      <li>Using internal Roslyn features through reflection in wrong context. (RoslynReflectionUsageAnalyzer)</li>
+      <li>Unallowed usage of Roslyn features in this context. (RoslynUsageAnalyzer)</li>
       <li>'sealed' modifier is redundant in sealed classes (SealedMemberInSealedClassAnalyzer)</li>
       <li>Conditional expression can be simplified (SimplifyConditionalTernaryExpressionAnalyzer)</li>
       <li>Warns when a culture-aware 'string.CompareTo' call is used by default (StringCompareToIsCultureSpecificAnalyzer)</li>

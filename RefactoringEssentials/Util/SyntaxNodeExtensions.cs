@@ -1660,16 +1660,30 @@ namespace RefactoringEssentials
                 return result;
             }
 
-            var method = node as BaseMethodDeclarationSyntax;
-            if (method != null)
+            var baseMethod = node as BaseMethodDeclarationSyntax;
+            if (baseMethod != null)
             {
-                return SpecializedCollections.SingletonEnumerable<SyntaxNode>(method.Body).WhereNotNull();
+                if (baseMethod.Body != null)
+                    return SpecializedCollections.SingletonEnumerable<SyntaxNode>(baseMethod.Body);
+                var method = baseMethod as MethodDeclarationSyntax;
+                if ((method != null) && (method.ExpressionBody != null))
+                {
+                    return SpecializedCollections.SingletonEnumerable<SyntaxNode>(method.ExpressionBody);
+                }
             }
 
-            var property = node as BasePropertyDeclarationSyntax;
-            if (property != null)
+            var baseProperty = node as BasePropertyDeclarationSyntax;
+            if (baseProperty != null)
             {
-                return property.AccessorList.Accessors.Select(a => a.Body).WhereNotNull();
+                if (baseProperty.AccessorList != null)
+                {
+                    return baseProperty.AccessorList.Accessors.Select(a => a.Body).WhereNotNull();
+                }
+                var indexer = baseProperty as IndexerDeclarationSyntax;
+                if ((indexer != null) && (indexer.ExpressionBody != null))
+                {
+                    return SpecializedCollections.SingletonEnumerable<SyntaxNode>(indexer.ExpressionBody);
+                }
             }
 
             var @enum = node as EnumMemberDeclarationSyntax;

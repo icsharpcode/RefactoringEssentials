@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet.")]
     public class FunctionNeverReturnsTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -18,7 +17,7 @@ class TestClass
 		int i = 1;
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 0);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -32,7 +31,7 @@ class TestClass
 		return;
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 0);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -46,7 +45,7 @@ class TestClass
 		throw new System.NotImplementedException();	
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 0);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -55,12 +54,12 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void TestMethod ()
+	void $TestMethod$ ()
 	{
 		while (true) ;
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -84,12 +83,12 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void TestMethod ()
+	void $TestMethod$ ()
 	{
 		TestMethod ();
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -106,7 +105,7 @@ class TestClass
 	{
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 0);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -120,7 +119,7 @@ class Base
 		get { return parent.Result; }
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 0);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -140,7 +139,7 @@ class TestClass
 		}
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 0);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
 
@@ -152,12 +151,12 @@ class TestClass
 {
 	int TestProperty
 	{
-		get {
+		$get$ {
 			while (true) ;
 		}
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -167,13 +166,13 @@ class TestClass
 class TestClass
 {
 	int TestProperty
-	{
-		get {
-			return TestProperty;
-		}
-	}
+    {
+        $get$ {
+            return TestProperty;
+        }
+    }
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -184,12 +183,12 @@ class TestClass
 {
 	int TestProperty
 	{
-		set {
+		$set$ {
 			TestProperty = value;
 		}
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -213,7 +212,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int TestMethod()
+	int $TestMethod$()
 	{
 		return TestMethod();
 	}
@@ -222,7 +221,7 @@ class TestClass
 		return TestMethod();
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -233,11 +232,11 @@ class TestClass
 {
 	int TestProperty
 	{
-		get { return TestProperty++; }
-		set { TestProperty++; }
+		$get$ { return TestProperty++; }
+		$set$ { TestProperty++; }
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 2);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -248,10 +247,10 @@ class TestClass
 {
 	void TestMethod()
 	{
-		System.Action action = () => { while (true) ; };
+		System.Action action = () $=>$ { while (true) ; };
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -262,12 +261,13 @@ class TestClass
 {
 	void TestMethod()
 	{
-		System.Action action = delegate() { while (true) ; };
+		System.Action action = $delegate$() { while (true) ; };
 	}
 }";
 
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
+
         [Test]
         public void YieldBreak()
         {
@@ -279,7 +279,7 @@ class TestClass
 		yield break;
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 0);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -288,7 +288,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-	// ReSharper disable once FunctionNeverReturns
+#pragma warning disable " + CSharpDiagnosticIDs.FunctionNeverReturnsAnalyzerID + @"
 	void TestMethod ()
 	{
 		while (true) ;
@@ -348,7 +348,7 @@ class TestClass
 class TestClass
 {
 	int foo;
-	void TestMethod()
+	void $TestMethod$()
 	{
 		switch (foo) {
 			case 0: case 1: TestMethod();
@@ -356,7 +356,7 @@ class TestClass
 		}
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -367,7 +367,7 @@ class TestClass
 class TestClass
 {
 	int foo;
-	int TestMethod()
+	int $TestMethod$()
 	{
 		switch (TestMethod()) {
 			case 0: return 0;
@@ -375,7 +375,27 @@ class TestClass
 		return 1;
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestSwitchDefault_CaseReturns()
+        {
+            var input = @"
+class TestClass
+{
+    void TestSwitch(int i)
+    {
+        switch (i)
+        {
+            case 1:
+                return;
+            default:
+                break;
+        }
+    }
+}";
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]
@@ -387,12 +407,12 @@ using System.Linq;
 using System.Collections.Generic;
 class TestClass
 {
-	IEnumerable<int> TestMethod()
+	IEnumerable<int> $TestMethod$()
 	{
 		return from y in TestMethod() select y;
 	}
 }";
-            Test<FunctionNeverReturnsAnalyzer>(input, 1);
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
         [Test]

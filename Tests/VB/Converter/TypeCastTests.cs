@@ -8,9 +8,6 @@ using NUnit.Framework;
 namespace RefactoringEssentials.Tests.VB.Converter
 {
     [TestFixture]
-#if !UNIMPLEMENTED_CONVERTER_FEATURE_TESTS
-    [Ignore("Casting is mostly not implemented yet")]
-#endif
     public class TypeCastTests : ConverterTestBase
     {
         [Test]
@@ -24,7 +21,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
 }
 ", @"Sub Test()
     Dim o As Object = 5
-    Dim i As Integer = CType(o, Integer)
+    Dim i As Integer = CInt(o)
 End Sub
 ");
         }
@@ -40,7 +37,7 @@ End Sub
 }
 ", @"Sub Test()
     Dim o As Object = ""Test""
-    Dim s As String = CType(o, String)
+    Dim s As String = CStr(o)
 End Sub
 ");
         }
@@ -55,7 +52,7 @@ End Sub
     System.Collections.Generic.List<int> l = (System.Collections.Generic.List<int>) o;
 }
 ", @"Sub Test()
-    Dim o As Object = new System.Collections.Generic.List(Of Integer)
+    Dim o As Object = New System.Collections.Generic.List(Of Integer)()
     Dim l As System.Collections.Generic.List(Of Integer) = CType(o, System.Collections.Generic.List(Of Integer))
 End Sub
 ");
@@ -87,7 +84,7 @@ End Sub
     System.Collections.Generic.List<int> l = o as System.Collections.Generic.List<int>;
 }
 ", @"Sub Test()
-    Dim o As Object = new System.Collections.Generic.List(Of Integer)
+    Dim o As Object = New System.Collections.Generic.List(Of Integer)()
     Dim l As System.Collections.Generic.List(Of Integer) = TryCast(o, System.Collections.Generic.List(Of Integer))
 End Sub
 ");
@@ -116,7 +113,7 @@ End Sub
     object o = 5.0f;
 }
 ", @"Sub Test()
-    Dim o As Object = 5.0F
+    Dim o As Object = 5F
 End Sub
 ");
         }

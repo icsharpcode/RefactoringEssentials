@@ -11,12 +11,12 @@ using Microsoft.CodeAnalysis.CodeRefactorings;
 namespace RefactoringEssentials.CSharp
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class RoslynReflectionUsageAnalyzer : DiagnosticAnalyzer
+    public class RoslynUsageAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RoslynReflectionUsageAnalyzerID,
-            GettextCatalog.GetString("Using internal Roslyn features through reflection in wrong context."),
-            GettextCatalog.GetString("Using internal Roslyn features through reflection in wrong context."),
+            GettextCatalog.GetString("Unallowed usage of Roslyn features in this context."),
+            GettextCatalog.GetString("{0}"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
             DiagnosticSeverity.Error,
             isEnabledByDefault: true,
@@ -58,14 +58,9 @@ namespace RefactoringEssentials.CSharp
             var surroundingClassSymbol = semanticModel.GetDeclaredSymbol(surroundingClass);
             if (surroundingClassSymbol == null)
                 return false;
-            var surroundingClassAttributes = surroundingClassSymbol.GetAttributes();
-            if (surroundingClassAttributes.Any(a => a.AttributeClass.GetFullName() == typeof(DiagnosticAnalyzerAttribute).FullName))
-                surroundingContext = RoslynReflectionAllowedContext.Analyzers;
-            else if (surroundingClassAttributes.Any(a => a.AttributeClass.GetFullName() == typeof(ExportCodeFixProviderAttribute).FullName))
-                surroundingContext = RoslynReflectionAllowedContext.CodeFixes;
-            else if (surroundingClassAttributes.Any(a => a.AttributeClass.GetFullName() == typeof(ExportCodeRefactoringProviderAttribute).FullName))
-                surroundingContext = RoslynReflectionAllowedContext.CodeFixes;
-            else
+            surroundingContext = GetContextFromClass(surroundingClassSymbol);
+
+            if (surroundingContext == RoslynReflectionAllowedContext.None)
                 return false;
 
             var reflectionUsageAttributeData =
@@ -80,22 +75,71 @@ namespace RefactoringEssentials.CSharp
                 }
             }
 
-            if (reflectionUsageAttributeData == null)
-                return false;
+            string diagnosticMessage = "";
 
             RoslynReflectionAllowedContext allowedContext = RoslynReflectionAllowedContext.None;
-            var attributeParam = reflectionUsageAttributeData.ConstructorArguments.FirstOrDefault();
-            if (attributeParam.Value is int)
-                allowedContext = (RoslynReflectionAllowedContext)attributeParam.Value;
+            if (reflectionUsageAttributeData != null)
+            {
+                var attributeParam = reflectionUsageAttributeData.ConstructorArguments.FirstOrDefault();
+                if (attributeParam.Value is int)
+                    allowedContext = (RoslynReflectionAllowedContext)attributeParam.Value;
 
-            if (allowedContext.HasFlag(surroundingContext))
+                diagnosticMessage = "This call accesses Roslyn features through reflection, although not allowed in {0}.";
+            }
+            else
+            {
+                if (surroundingContext == RoslynReflectionAllowedContext.Analyzers)
+                {
+                    var symbolContainingType = symbol.ContainingType;
+                    if (symbolContainingType != null)
+                    {
+                        allowedContext = GetContextFromClass(symbolContainingType);
+                    }
+                }
+                else
+                {
+                    allowedContext = RoslynReflectionAllowedContext.Analyzers | RoslynReflectionAllowedContext.CodeFixes;
+                }
+
+                diagnosticMessage = "Accessing members from code fixes/refactorings is not allowed in {0}.";
+            }
+
+            if ((allowedContext == RoslynReflectionAllowedContext.None) || (allowedContext.HasFlag(surroundingContext)))
                 return false;
 
             diagnostic = Diagnostic.Create(
                 descriptor,
-                node.Name.GetLocation()
+                node.Name.GetLocation(),
+                string.Format(diagnosticMessage, GetContextName(surroundingContext))
             );
             return true;
+        }
+
+        static RoslynReflectionAllowedContext GetContextFromClass(INamedTypeSymbol symbol)
+        {
+            RoslynReflectionAllowedContext surroundingContext = RoslynReflectionAllowedContext.None;
+            var surroundingClassAttributes = symbol.GetAttributes();
+            if (surroundingClassAttributes.Any(a => a.AttributeClass.GetFullName() == typeof(DiagnosticAnalyzerAttribute).FullName))
+                surroundingContext = RoslynReflectionAllowedContext.Analyzers;
+            else if (surroundingClassAttributes.Any(a => a.AttributeClass.GetFullName() == typeof(ExportCodeFixProviderAttribute).FullName))
+                surroundingContext = RoslynReflectionAllowedContext.CodeFixes;
+            else if (surroundingClassAttributes.Any(a => a.AttributeClass.GetFullName() == typeof(ExportCodeRefactoringProviderAttribute).FullName))
+                surroundingContext = RoslynReflectionAllowedContext.CodeFixes;
+
+            return surroundingContext;
+        }
+
+        static string GetContextName(RoslynReflectionAllowedContext context)
+        {
+            switch (context)
+            {
+                case RoslynReflectionAllowedContext.Analyzers:
+                    return "analyzers";
+                case RoslynReflectionAllowedContext.CodeFixes:
+                    return "code fixes/refactorings";
+            }
+
+            return "";
         }
     }
 }
