@@ -312,7 +312,7 @@ namespace RefactoringEssentials.Util.Analysis
         {
             if (!c1.HasValue || !c2.HasValue)
                 return false;
-            return c1.Value.Equals(c2.Value);
+            return c1.Value != null && c2.Value != null && c1.Value.Equals(c2.Value);
         }
         #endregion
 
