@@ -67,7 +67,6 @@
 * RedundantLogicalConditionalExpressionOperandAnalyzer
 * RedundantObjectOrCollectionInitializerAnalyzer
 * RedundantOverriddenMemberAnalyzer
-* RedundantUnsafeContextAnalyzer
 * ReferenceEqualsWithValueTypeAnalyzer
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
