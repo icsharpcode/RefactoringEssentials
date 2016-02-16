@@ -42,7 +42,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         var model = compilationContext.Compilation.GetSemanticModel(ctx.Tree);
                         if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
                             return;
-                        new GatherVisitor(ctx, semanticModel).Visit(root);
+                        new GatherVisitor(ctx).Visit(root);
                     }
                     catch (OperationCanceledException) { }
                 });
@@ -52,12 +52,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         class GatherVisitor : CSharpSyntaxWalker
         {
             SyntaxTreeAnalysisContext ctx;
-            SemanticModel semanticModel;
 
-            public GatherVisitor(SyntaxTreeAnalysisContext ctx, SemanticModel semanticModel)
+            public GatherVisitor(SyntaxTreeAnalysisContext ctx)
             {
                 this.ctx = ctx;
-                this.semanticModel = semanticModel;
             }
 
             class UnsafeState
@@ -107,6 +105,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             }
 
 
+            void MarkUnsafe()
+            {
+                if (unsafeStateStack.Count == 0)
+                    return;
+                unsafeStateStack.Peek().UseUnsafeConstructs = true;
+            }
+
+
             public override void VisitClassDeclaration(ClassDeclarationSyntax node)
             {
                 bool isUnsafe = CheckModifiers(node.Modifiers);
@@ -124,38 +130,38 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
                 base.VisitFieldDeclaration(node);
-                unsafeStateStack.Peek().UseUnsafeConstructs = true;
+                MarkUnsafe();
             }
 
             public override void VisitPointerType(PointerTypeSyntax node)
             {
                 base.VisitPointerType(node);
-                unsafeStateStack.Peek().UseUnsafeConstructs = true;
+                MarkUnsafe();
             }
 
 
             public override void VisitFixedStatement(FixedStatementSyntax node)
             {
                 base.VisitFixedStatement(node);
-                unsafeStateStack.Peek().UseUnsafeConstructs = true;
+                MarkUnsafe();
             }
 
             public override void VisitSizeOfExpression(SizeOfExpressionSyntax node)
             {
                 base.VisitSizeOfExpression(node);
-                unsafeStateStack.Peek().UseUnsafeConstructs = true;
+                MarkUnsafe();
             }
 
             public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
             {
                 base.VisitPrefixUnaryExpression(node);
                 if (node.IsKind(SyntaxKind.AddressOfExpression) || node.IsKind(SyntaxKind.PointerIndirectionExpression))  // TODO: Check
-                    unsafeStateStack.Peek().UseUnsafeConstructs = true;
+                    MarkUnsafe();
             }
 
             public override void VisitUnsafeStatement(UnsafeStatementSyntax node)
             {
-                unsafeStateStack.Peek().UseUnsafeConstructs = true;
+                MarkUnsafe();
                 bool isRedundant = unsafeStateStack.Peek().InUnsafeContext;
                 unsafeStateStack.Push(new UnsafeState(true));
                 base.VisitUnsafeStatement(node);
