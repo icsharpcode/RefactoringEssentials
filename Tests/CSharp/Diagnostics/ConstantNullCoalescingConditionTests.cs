@@ -115,5 +115,21 @@ class TestClass
 	}
 }");
         }
+
+        // "RECS0098: Remove redundant right side" reports incorrectly when left side is an equation
+        [Test]
+        public void TestIssue172()
+        {
+            Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
+class TestClass
+{
+    void Foo()
+    {
+        decimal? a = null;
+        decimal? b = 2;
+        decimal? c = (a + 1) ?? b;
+    }
+}");
+        }
     }
 }
