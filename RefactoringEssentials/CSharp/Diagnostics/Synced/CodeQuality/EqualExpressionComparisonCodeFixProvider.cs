@@ -3,6 +3,8 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -32,10 +34,21 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, diagnostic.GetMessage(), document.WithSyntaxRoot(newRoot)), diagnostic);
+            if (node is BinaryExpressionSyntax)
+            {
+                var newRoot = root.ReplaceNode(node, SyntaxFactory.LiteralExpression(node.IsKind(SyntaxKind.EqualsExpression) ? SyntaxKind.TrueLiteralExpression : SyntaxKind.FalseLiteralExpression));
+                context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, diagnostic.GetMessage(), document.WithSyntaxRoot(newRoot)), diagnostic);
+            } 
+            else if (node is InvocationExpressionSyntax)
+            {
+                var newRoot = root.ReplaceNode(node, SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression));
+                context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, diagnostic.GetMessage(), document.WithSyntaxRoot(newRoot)), diagnostic);
+            } 
+            else if (node is PrefixUnaryExpressionSyntax) 
+            {
+                var newRoot = root.ReplaceNode(node, SyntaxFactory.LiteralExpression(SyntaxKind.FalseLiteralExpression));
+                context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, diagnostic.GetMessage(), document.WithSyntaxRoot(newRoot)), diagnostic);
+            }
         }
     }
 }

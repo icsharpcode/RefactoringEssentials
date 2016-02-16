@@ -32,7 +32,6 @@
 * CS1573ParameterHasNoMatchingParamTagAnalyzer
 * CS1717AssignmentMadeToSameVariableAnalyzer
 * CS1729TypeHasNoConstructorWithNArgumentsAnalyzer
-* EqualExpressionComparisonAnalyzer
 * ExpressionIsNeverOfProvidedTypeAnalyzer
 * ForCanBeConvertedToForeachAnalyzer
 * ForControlVariableIsNeverModifiedAnalyzer
