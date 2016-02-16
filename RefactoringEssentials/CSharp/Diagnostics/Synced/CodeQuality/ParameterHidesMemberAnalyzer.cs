@@ -6,7 +6,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     [NotPortedYet]
-    public class ParameterHidesMemberAnalyzer : VariableHidesMemberAnalyzer
+    public class ParameterHidesMemberAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.ParameterHidesMemberAnalyzerID,

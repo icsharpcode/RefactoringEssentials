@@ -35,7 +35,6 @@
 * ForCanBeConvertedToForeachAnalyzer
 * ForControlVariableIsNeverModifiedAnalyzer
 * InconsistentNamingAnalyzer
-* LocalVariableHidesMemberAnalyzer
 * LockThisAnalyzer
 * MemberHidesStaticFromOuterClassAnalyzer
 * MethodOverloadWithOptionalParameterAnalyzer
