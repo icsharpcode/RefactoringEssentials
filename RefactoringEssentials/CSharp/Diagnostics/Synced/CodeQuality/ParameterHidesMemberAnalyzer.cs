@@ -39,6 +39,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             var symbols = nodeContext.SemanticModel.LookupSymbols(node.SpanStart);
             var memberSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(member);
+            if (memberSymbol == null)
+                return;
             if (memberSymbol.IsAbstract || memberSymbol.DeclaredAccessibility == Accessibility.Public || memberSymbol.DeclaredAccessibility == Accessibility.Protected || memberSymbol.IsOverride)
                 return;
             if (memberSymbol is IMethodSymbol && ((IMethodSymbol)memberSymbol).MethodKind == MethodKind.Constructor || memberSymbol.ExplicitInterfaceImplementations().Length > 0)
