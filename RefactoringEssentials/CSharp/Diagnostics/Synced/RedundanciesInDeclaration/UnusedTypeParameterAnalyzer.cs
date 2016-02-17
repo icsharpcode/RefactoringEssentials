@@ -1,11 +1,15 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
+using Microsoft.CodeAnalysis.FindSymbols;
+using System.Collections.Generic;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class UnusedTypeParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -25,70 +29,71 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                AnalyzeParameterList,
+                new SyntaxKind[] { SyntaxKind.TypeParameterList }
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static void AnalyzeParameterList(SyntaxNodeAnalysisContext nodeContext)
         {
-            diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+                return;
+            var node = nodeContext.Node as TypeParameterListSyntax;
+
+            var member = node.Parent;
+            if (member == null)
+                return;
+
+            var memberSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(member);
+            if (memberSymbol.IsAbstract || memberSymbol.IsVirtual || memberSymbol.IsOverride)
+                return;
+            if (memberSymbol.ExplicitInterfaceImplementations().Length > 0)
+                return;
+            
+            var walker = new ReferenceFinder(nodeContext);
+            walker.Visit(member);
+
+            foreach (var param in node.Parameters)
+            {
+                var sym = nodeContext.SemanticModel.GetDeclaredSymbol(param);
+                if (sym == null)
+                    continue;
+                if (!walker.UsedTypeParameters.Contains(sym)) {
+                    var diagnostic = Diagnostic.Create(descriptor, param.Identifier.GetLocation(), sym.Name);
+                    nodeContext.ReportDiagnostic(diagnostic);
+                }
+
+            }
         }
 
-        //		protected static bool FindUsage(BaseSemanticModel context, SyntaxTree unit,
-        //		                                 ITypeParameter typeParameter, AstNode declaration)
-        //		{
-        //			var found = false;
-        //			var searchScopes = refFinder.GetSearchScopes(typeParameter);
-        //			refFinder.FindReferencesInFile(searchScopes, context.Resolver,
-        //				(node, resolveResult) => {
-        //					if (node != declaration)
-        //						found = true;
-        //				}, context.CancellationToken);
-        //			return found;
-        //		}
-        //
-        //		class GatherVisitor : GatherVisitorBase<UnusedTypeParameterAnalyzer>
-        //		{
-        //			//SyntaxTree unit;
+        class ReferenceFinder :  CSharpSyntaxWalker
+        {
+            SyntaxNodeAnalysisContext nodeContext;
+            public HashSet<ISymbol> UsedTypeParameters = new HashSet<ISymbol>();
 
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
+            public ReferenceFinder(SyntaxNodeAnalysisContext nodeContext)
+            {
+                this.nodeContext = nodeContext;
+            }
 
-        ////			public override void VisitTypeParameterDeclaration(TypeParameterDeclaration decl)
-        ////			{
-        ////				base.VisitTypeParameterDeclaration(decl);
-        ////
-        ////				var resolveResult = ctx.Resolve(decl) as TypeResolveResult;
-        ////				if (resolveResult == null)
-        ////					return;
-        ////				var typeParameter = resolveResult.Type as ITypeParameter;
-        ////				if (typeParameter == null)
-        ////					return;
-        ////				var methodDecl = decl.Parent as MethodDeclaration;
-        ////				if (methodDecl == null)
-        ////					return;
-        ////
-        ////				if (FindUsage(ctx, unit, typeParameter, decl))
-        ////					return;
-        ////
-        //			//				AddDiagnosticAnalyzer(new CodeIssue(decl.NameToken, ctx.TranslateString("Type parameter is never used")) { IssueMarker = IssueMarker.GrayOut });
-        ////			}
-        //		}
+            public override void VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                base.VisitIdentifierName(node);
+                var symbol = nodeContext.SemanticModel.GetSymbolInfo(node).Symbol;
+                if (symbol.IsKind(SymbolKind.TypeParameter))
+                    UsedTypeParameters.Add(symbol);
+            }
+
+            public override void VisitTypeParameterList(TypeParameterListSyntax node)
+            {
+                // skip
+            }
+
+            public override void VisitTypeConstraint(TypeConstraintSyntax node)
+            {
+                // skip
+            }
+        }
     }
-
 }

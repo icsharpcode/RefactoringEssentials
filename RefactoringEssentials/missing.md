@@ -71,7 +71,6 @@
 * UnassignedReadonlyFieldAnalyzer
 * UnusedAnonymousMethodSignatureAnalyzer
 * UnusedParameterAnalyzer
-* UnusedTypeParameterAnalyzer
 * UseArrayCreationExpressionAnalyzer
 * UseIsOperatorAnalyzer
 * UseMethodAnyAnalyzer
