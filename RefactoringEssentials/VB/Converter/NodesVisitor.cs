@@ -531,6 +531,7 @@ End Function";
             public override VisualBasicSyntaxNode VisitParameter(CSS.ParameterSyntax node)
             {
                 var id = ConvertIdentifier(node.Identifier);
+                var returnType = (TypeSyntax)node.Type?.Accept(this);
                 EqualsValueSyntax @default = null;
                 if (node.Default != null)
                 {
@@ -538,7 +539,7 @@ End Function";
                 }
                 AttributeListSyntax[] newAttributes;
                 var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
-                if (modifiers.Count == 0 || node.Modifiers.Any(CS.SyntaxKind.ThisKeyword))
+                if ((modifiers.Count == 0 && returnType != null) || node.Modifiers.Any(CS.SyntaxKind.ThisKeyword))
                 {
                     modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ByValKeyword));
                     newAttributes = new AttributeListSyntax[0];
@@ -561,7 +562,7 @@ End Function";
                     SyntaxFactory.List(newAttributes.Concat(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)))),
                     modifiers,
                     SyntaxFactory.ModifiedIdentifier(id),
-                    SyntaxFactory.SimpleAsClause((TypeSyntax)node.Type.Accept(this)),
+                    returnType == null ? null : SyntaxFactory.SimpleAsClause(returnType),
                     @default
                 );
             }
@@ -943,6 +944,74 @@ End Function";
                         SyntaxFactory.SeparatedList(node.Expressions.Select(e => (ExpressionSyntax)e.Accept(this)))
                     );
                 throw new NotImplementedException();
+            }
+
+            public override VisualBasicSyntaxNode VisitAnonymousMethodExpression(CSS.AnonymousMethodExpressionSyntax node)
+            {
+                return ConvertLambdaExpression(node, node.Block.Statements, node.ParameterList.Parameters, SyntaxFactory.TokenList(node.AsyncKeyword));
+            }
+
+            public override VisualBasicSyntaxNode VisitSimpleLambdaExpression(CSS.SimpleLambdaExpressionSyntax node)
+            {
+                return ConvertLambdaExpression(node, node.Body, SyntaxFactory.SingletonSeparatedList(node.Parameter), SyntaxFactory.TokenList(node.AsyncKeyword));
+            }
+
+            public override VisualBasicSyntaxNode VisitParenthesizedLambdaExpression(CSS.ParenthesizedLambdaExpressionSyntax node)
+            {
+                return ConvertLambdaExpression(node, node.Body, node.ParameterList.Parameters, SyntaxFactory.TokenList(node.AsyncKeyword));
+            }
+
+            LambdaExpressionSyntax ConvertLambdaExpression(CSS.AnonymousFunctionExpressionSyntax node, object block, SeparatedSyntaxList<CSS.ParameterSyntax> parameters, SyntaxTokenList modifiers)
+            {
+                var symbol = semanticModel.GetSymbolInfo(node).Symbol as IMethodSymbol;
+                var parameterList = SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameters.Select(p => (ParameterSyntax)p.Accept(this))));
+                LambdaHeaderSyntax header;
+                if (symbol.ReturnsVoid)
+                    header = SyntaxFactory.SubLambdaHeader(SyntaxFactory.List<AttributeListSyntax>(), ConvertModifiers(modifiers, TokenContext.Local), parameterList, null);
+                else
+                    header = SyntaxFactory.FunctionLambdaHeader(SyntaxFactory.List<AttributeListSyntax>(), ConvertModifiers(modifiers, TokenContext.Local), parameterList, null);
+                if (block is CSS.BlockSyntax)
+                    block = ((CSS.BlockSyntax)block).Statements;
+                if (block is CS.CSharpSyntaxNode)
+                {
+                    var syntaxKind = symbol.ReturnsVoid ? SyntaxKind.SingleLineSubLambdaExpression : SyntaxKind.SingleLineFunctionLambdaExpression;
+                    return SyntaxFactory.SingleLineLambdaExpression(syntaxKind, header, ((CS.CSharpSyntaxNode)block).Accept(this));
+                }
+                if (!(block is SyntaxList<CSS.StatementSyntax>))
+                    throw new NotSupportedException();
+                var statements = SyntaxFactory.List(((SyntaxList<CSS.StatementSyntax>)block).SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))));
+
+                ExpressionSyntax expression;
+                if (statements.Count == 1 && UnpackExpressionFromStatement(statements[0], out expression))
+                {
+                    var syntaxKind = symbol.ReturnsVoid ? SyntaxKind.SingleLineSubLambdaExpression : SyntaxKind.SingleLineFunctionLambdaExpression;
+                    return SyntaxFactory.SingleLineLambdaExpression(syntaxKind, header, expression);
+                }
+
+                EndBlockStatementSyntax endBlock;
+                SyntaxKind expressionKind;
+                if (symbol.ReturnsVoid)
+                {
+                    endBlock = SyntaxFactory.EndBlockStatement(SyntaxKind.EndSubStatement, SyntaxFactory.Token(SyntaxKind.SubKeyword));
+                    expressionKind = SyntaxKind.MultiLineSubLambdaExpression;
+                }
+                else
+                {
+                    endBlock = SyntaxFactory.EndBlockStatement(SyntaxKind.EndFunctionStatement, SyntaxFactory.Token(SyntaxKind.FunctionKeyword));
+                    expressionKind = SyntaxKind.MultiLineFunctionLambdaExpression;
+                }
+                return SyntaxFactory.MultiLineLambdaExpression(expressionKind, header, statements, endBlock);
+            }
+
+            bool UnpackExpressionFromStatement(StatementSyntax statementSyntax, out ExpressionSyntax expression)
+            {
+                if (statementSyntax is ReturnStatementSyntax)
+                    expression = ((ReturnStatementSyntax)statementSyntax).Expression;
+                else if (statementSyntax is YieldStatementSyntax)
+                    expression = ((YieldStatementSyntax)statementSyntax).Expression;
+                else
+                    expression = null;
+                return expression != null;
             }
 
             public override VisualBasicSyntaxNode VisitArgumentList(CSS.ArgumentListSyntax node)

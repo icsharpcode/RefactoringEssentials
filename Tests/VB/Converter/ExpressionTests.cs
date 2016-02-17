@@ -186,5 +186,53 @@ Class TestClass
     End Sub
 End Class");
         }
+
+        [Test]
+        public void DelegateExpression()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass 
+{
+    void TestMethod()
+    {
+        var test = delegate(int a) { return a * 2 };
+
+        test(3);
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        Dim test = Function(ByVal a As Integer) a * 2
+        test(3)
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void LambdaBodyExpression()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass 
+{
+    void TestMethod()
+    {
+        var test = a => { return a * 2 };
+        var test2 = (a, b) => { if (b > 0) return a / b; return 0; }
+        var test3 = (a, b) => a % b;
+
+        test(3);
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        Dim test = Function(a) a * 2
+        Dim test2 = Function(a, b)
+                        If b > 0 Then Return a / b
+                        Return 0
+                    End Function
+
+        Dim test3 = Function(a, b) a Mod b
+        test(3)
+    End Sub
+End Class");
+        }
     }
 }

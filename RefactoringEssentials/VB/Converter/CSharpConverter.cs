@@ -448,19 +448,19 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.ImplicitElementAccess:
                     break;
                 case CS.SyntaxKind.AddExpression:
-                    break;
+                    return SyntaxKind.AddExpression;
                 case CS.SyntaxKind.SubtractExpression:
-                    break;
+                    return SyntaxKind.SubtractExpression;
                 case CS.SyntaxKind.MultiplyExpression:
-                    break;
+                    return SyntaxKind.MultiplyExpression;
                 case CS.SyntaxKind.DivideExpression:
-                    break;
+                    return SyntaxKind.DivideExpression;
                 case CS.SyntaxKind.ModuloExpression:
-                    break;
+                    return SyntaxKind.ModuloExpression;
                 case CS.SyntaxKind.LeftShiftExpression:
-                    break;
+                    return SyntaxKind.LeftShiftExpression;
                 case CS.SyntaxKind.RightShiftExpression:
-                    break;
+                    return SyntaxKind.RightShiftExpression;
                 case CS.SyntaxKind.LogicalOrExpression:
                     return SyntaxKind.OrElseExpression;
                 case CS.SyntaxKind.LogicalAndExpression:

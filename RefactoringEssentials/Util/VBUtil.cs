@@ -127,6 +127,12 @@ namespace RefactoringEssentials
                     return SyntaxKind.PlusToken;
                 case SyntaxKind.SubtractExpression:
                     return SyntaxKind.MinusToken;
+                case SyntaxKind.MultiplyExpression:
+                    return SyntaxKind.AsteriskToken;
+                case SyntaxKind.DivideExpression:
+                    return SyntaxKind.SlashToken;
+                case SyntaxKind.ModuloExpression:
+                    return SyntaxKind.ModKeyword;
 			    // assignments
 				case SyntaxKind.SimpleAssignmentStatement:
 					return SyntaxKind.EqualsToken;
