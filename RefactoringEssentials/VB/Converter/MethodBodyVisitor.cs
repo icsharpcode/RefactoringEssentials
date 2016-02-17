@@ -42,13 +42,18 @@ namespace RefactoringEssentials.VB.Converter
                 );
             }
 
-            public override SyntaxList<StatementSyntax> VisitExpressionStatement(CSS.ExpressionStatementSyntax node)
+            StatementSyntax ConvertSingleExpression(CSS.ExpressionSyntax node)
             {
-                var exprNode = node.Expression.Accept(nodesVisitor);
+                var exprNode = node.Accept(nodesVisitor);
                 if (!(exprNode is StatementSyntax))
                     exprNode = SyntaxFactory.ExpressionStatement((ExpressionSyntax)exprNode);
 
-                return SyntaxFactory.SingletonList((StatementSyntax)exprNode);
+                return (StatementSyntax)exprNode;
+            }
+
+            public override SyntaxList<StatementSyntax> VisitExpressionStatement(CSS.ExpressionStatementSyntax node)
+            {
+                return SyntaxFactory.SingletonList(ConvertSingleExpression(node.Expression));
             }
 
             public override SyntaxList<StatementSyntax> VisitIfStatement(CSS.IfStatementSyntax node)
@@ -153,6 +158,117 @@ namespace RefactoringEssentials.VB.Converter
                 return SyntaxFactory.SingletonList<StatementSyntax>(block);
             }
 
+            public override SyntaxList<StatementSyntax> VisitForStatement(CSS.ForStatementSyntax node)
+            {
+                StatementSyntax block;
+                if (!ConvertForToSimpleForNext(node, out block))
+                {
+                    var stmts = ConvertBlock(node.Statement)
+                        .AddRange(node.Incrementors.Select(ConvertSingleExpression));
+                    var condition = node.Condition == null ? Literal(true) : (ExpressionSyntax)node.Condition.Accept(nodesVisitor);
+                    block = SyntaxFactory.WhileBlock(
+                        SyntaxFactory.WhileStatement(condition),
+                        stmts
+                    );
+                    return SyntaxFactory.List(node.Initializers.Select(ConvertSingleExpression)).Add(block);
+                }
+                return SyntaxFactory.SingletonList(block);
+            }
+
+            bool ConvertForToSimpleForNext(CSS.ForStatementSyntax node, out StatementSyntax block)
+            {
+                //   ForStatement -> ForNextStatement when for-loop is simple
+
+                // only the following forms of the for-statement are allowed:
+                // for (TypeReference name = start; name < oneAfterEnd; name += step)
+                // for (name = start; name < oneAfterEnd; name += step)
+                // for (TypeReference name = start; name <= end; name += step)
+                // for (name = start; name <= end; name += step)
+                // for (TypeReference name = start; name > oneAfterEnd; name -= step)
+                // for (name = start; name > oneAfterEnd; name -= step)
+                // for (TypeReference name = start; name >= end; name -= step)
+                // for (name = start; name >= end; name -= step)
+
+                block = null;
+
+                // check if the form is valid and collect TypeReference, name, start, end and step
+                bool hasVariable = node.Declaration != null && node.Declaration.Variables.Count == 1;
+                if (!hasVariable && node.Initializers.Count != 1)
+                    return false;
+                if (node.Incrementors.Count != 1)
+                    return false;
+                var iterator = node.Incrementors.FirstOrDefault()?.Accept(nodesVisitor) as AssignmentStatementSyntax;
+                if (iterator == null || !iterator.IsKind(SyntaxKind.AddAssignmentStatement, SyntaxKind.SubtractAssignmentStatement))
+                    return false;
+                var iteratorIdentifier = iterator.Left as IdentifierNameSyntax;
+                if (iteratorIdentifier == null)
+                    return false;
+                var stepExpression = iterator.Right as LiteralExpressionSyntax;
+                if (stepExpression == null || !(stepExpression.Token.Value is int))
+                    return false;
+                int step = (int)stepExpression.Token.Value;
+                if (iterator.OperatorToken.IsKind(SyntaxKind.MinusToken))
+                    step = -step;
+
+                var condition = node.Condition as CSS.BinaryExpressionSyntax;
+                if (condition == null || !(condition.Left is CSS.IdentifierNameSyntax))
+                    return false;
+                if (((CSS.IdentifierNameSyntax)condition.Left).Identifier.IsEquivalentTo(iteratorIdentifier.Identifier))
+                    return false;
+
+                ExpressionSyntax end;
+                if (iterator.IsKind(SyntaxKind.SubtractAssignmentStatement))
+                {
+                    if (condition.IsKind(CS.SyntaxKind.GreaterThanOrEqualExpression))
+                        end = (ExpressionSyntax)condition.Right.Accept(nodesVisitor);
+                    else if (condition.IsKind(CS.SyntaxKind.GreaterThanExpression))
+                        end = SyntaxFactory.BinaryExpression(SyntaxKind.AddExpression, (ExpressionSyntax)condition.Right.Accept(nodesVisitor), SyntaxFactory.Token(SyntaxKind.PlusToken), Literal(1));
+                    else return false;
+                }
+                else
+                {
+                    if (condition.IsKind(CS.SyntaxKind.LessThanOrEqualExpression))
+                        end = (ExpressionSyntax)condition.Right.Accept(nodesVisitor);
+                    else if (condition.IsKind(CS.SyntaxKind.LessThanExpression))
+                        end = SyntaxFactory.BinaryExpression(SyntaxKind.SubtractExpression, (ExpressionSyntax)condition.Right.Accept(nodesVisitor), SyntaxFactory.Token(SyntaxKind.MinusToken), Literal(1));
+                    else return false;
+                }
+
+                VisualBasicSyntaxNode variable;
+                ExpressionSyntax start;
+                if (hasVariable)
+                {
+                    var v = node.Declaration.Variables[0];
+                    start = (ExpressionSyntax)v.Initializer?.Value.Accept(nodesVisitor);
+                    if (start == null)
+                        return false;
+                    variable = SyntaxFactory.VariableDeclarator(
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(v.Identifier))),
+                        node.Declaration.Type.IsVar ? null : SyntaxFactory.SimpleAsClause((TypeSyntax)node.Declaration.Type.Accept(nodesVisitor)),
+                        null
+                    );
+                }
+                else
+                {
+                    var initializer = node.Initializers.FirstOrDefault() as CSS.AssignmentExpressionSyntax;
+                    if (initializer == null || !initializer.IsKind(CS.SyntaxKind.SimpleAssignmentExpression))
+                        return false;
+                    if (!(initializer.Left is CSS.IdentifierNameSyntax))
+                        return false;
+                    if (((CSS.IdentifierNameSyntax)initializer.Left).Identifier.IsEquivalentTo(iteratorIdentifier.Identifier))
+                        return false;
+                    variable = initializer.Left.Accept(nodesVisitor);
+                    start = (ExpressionSyntax)initializer.Right.Accept(nodesVisitor);
+                }
+
+                block = SyntaxFactory.ForBlock(
+                    SyntaxFactory.ForStatement(variable, start, end, step == 1 ? null : SyntaxFactory.ForStepClause(Literal(step))),
+                    ConvertBlock(node.Statement),
+                    SyntaxFactory.NextStatement()
+                );
+                return true;
+            }
+
             public override SyntaxList<StatementSyntax> VisitForEachStatement(CSS.ForEachStatementSyntax node)
             {
                 VisualBasicSyntaxNode variable;
@@ -193,6 +309,20 @@ namespace RefactoringEssentials.VB.Converter
                     (ExpressionSyntax)node.Expression?.Accept(nodesVisitor)
                 );
                 return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.SyncLockBlock(stmt, ConvertBlock(node.Statement)));
+            }
+
+            public override SyntaxList<StatementSyntax> VisitLabeledStatement(CSS.LabeledStatementSyntax node)
+            {
+                return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.LabelStatement(ConvertIdentifier(node.Identifier)))
+                    .AddRange(node.Statement.Accept(this));
+            }
+
+            public override SyntaxList<StatementSyntax> VisitGotoStatement(CSS.GotoStatementSyntax node)
+            {
+                if (!(node.Expression is CSS.IdentifierNameSyntax))
+                    throw new NotImplementedException();
+                var stmt = SyntaxFactory.GoToStatement(SyntaxFactory.Label(SyntaxKind.IdentifierLabel, ConvertIdentifier(((CSS.IdentifierNameSyntax)node.Expression).Identifier)));
+                return SyntaxFactory.SingletonList<StatementSyntax>(stmt);
             }
 
             SyntaxList<StatementSyntax> ConvertBlock(CSS.StatementSyntax node)

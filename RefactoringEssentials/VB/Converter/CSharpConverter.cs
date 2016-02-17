@@ -109,6 +109,11 @@ namespace RefactoringEssentials.VB.Converter
             return SyntaxFactory.Identifier(t.ValueText, SyntaxFacts.IsKeywordKind(t.Kind()), t.GetIdentifierText(), TypeCharacter.None);
         }
 
+        static ExpressionSyntax Literal(object o)
+        {
+            return ComputeConstantValueCodeRefactoringProvider.GetLiteralExpression(o);
+        }
+
         static SyntaxKind ConvertToken(CS.SyntaxKind t, TokenContext context = TokenContext.Global)
         {
             switch (t)

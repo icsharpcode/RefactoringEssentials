@@ -518,6 +518,176 @@ End Class");
         }
 
         [Test]
+        public void ForWithUnknownConditionAndSingleStatement()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        for (i = 0; unknownCondition; i++)
+            b[i] = s[i];
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        i = 0
+
+        While unknownCondition
+            b(i) = s(i)
+            i += 1
+        End While
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void ForWithUnknownConditionAndBlock()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        for (i = 0; unknownCondition; i++) {
+            b[i] = s[i];
+        }
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        i = 0
+
+        While unknownCondition
+            b(i) = s(i)
+            i += 1
+        End While
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void ForWithSingleStatement()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        for (i = 0; i < end; i++) b[i] = s[i];
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        For i = 0 To [end] - 1
+            b(i) = s(i)
+        Next
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void ForWithBlock()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        for (i = 0; i < end; i++) {
+            b[i] = s[i];
+        }
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        For i = 0 To [end] - 1
+            b(i) = s(i)
+        Next
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void LabeledAndForStatement()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class GotoTest1
+{
+    static void Main()
+    {
+        int x = 200, y = 4;
+        int count = 0;
+        string[,] array = new string[x, y];
+
+        for (int i = 0; i < x; i++)
+
+            for (int j = 0; j < y; j++)
+                array[i, j] = (++count).ToString();
+
+        Console.Write(""Enter the number to search for: "");
+
+        string myNumber = Console.ReadLine();
+
+                for (int i = 0; i < x; i++)
+                {
+                    for (int j = 0; j < y; j++)
+                    {
+                        if (array[i, j].Equals(myNumber))
+                        {
+                            goto Found;
+                        }
+                    }
+                }
+
+            Console.WriteLine(""The number {0} was not found."", myNumber);
+            goto Finish;
+
+        Found:
+            Console.WriteLine(""The number {0} is found."", myNumber);
+
+        Finish:
+            Console.WriteLine(""End of search."");
+
+
+            Console.WriteLine(""Press any key to exit."");
+            Console.ReadKey();
+        }
+    }", @"Class GotoTest1
+    Shared Sub Main()
+        Dim x As Integer = 200, y As Integer = 4
+        Dim count As Integer = 0
+        Dim array As String(,) = New String(x - 1, y - 1) {}
+
+        For i As Integer = 0 To x - 1
+
+            For j As Integer = 0 To y - 1
+                array(i, j) = (System.Threading.Interlocked.Increment(count)).ToString()
+            Next
+        Next
+
+        Console.Write(""Enter the number to search for: "")
+        Dim myNumber As String = Console.ReadLine()
+
+        For i As Integer = 0 To x - 1
+
+            For j As Integer = 0 To y - 1
+
+                If array(i, j).Equals(myNumber) Then
+                    GoTo Found
+                End If
+            Next
+        Next
+
+        Console.WriteLine(""The number {0} was not found."", myNumber)
+        GoTo Finish
+Found:
+        Console.WriteLine(""The number {0} is found."", myNumber)
+Finish:
+        Console.WriteLine(""End of search."")
+        Console.WriteLine(""Press any key to exit."")
+        Console.ReadKey()
+    End Sub
+End Class");
+        }
+
+        [Test]
         public void ThrowStatement()
         {
             TestConversionCSharpToVisualBasic(@"

@@ -131,6 +131,17 @@ namespace RefactoringEssentials.Tests.VB.Converter
 				Console.WriteLine(expectedVisualBasicCode);
 				Console.WriteLine("got:");
 				Console.WriteLine(txt);
+                Console.WriteLine("diff:");
+                int l = Math.Max(expectedVisualBasicCode.Length, txt.Length);
+                StringBuilder diff = new StringBuilder(l);
+                for (int i = 0; i < l; i++)
+                {
+                    if (i >= expectedVisualBasicCode.Length || i >= txt.Length || expectedVisualBasicCode[i] != txt[i])
+                        diff.Append('x');
+                    else
+                        diff.Append(expectedVisualBasicCode[i]);
+                }
+                Console.WriteLine(diff.ToString());
 				Assert.Fail();
 			}
 		}

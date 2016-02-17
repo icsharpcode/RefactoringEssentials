@@ -571,11 +571,6 @@ End Function";
 
             #region Expressions
 
-            ExpressionSyntax Literal(object o)
-            {
-                return ComputeConstantValueCodeRefactoringProvider.GetLiteralExpression(o);
-            }
-
             public override VisualBasicSyntaxNode VisitLiteralExpression(CSS.LiteralExpressionSyntax node)
             {
                 return Literal(node.Token.Value);
@@ -622,7 +617,7 @@ End Function";
             public override VisualBasicSyntaxNode VisitPostfixUnaryExpression(CSS.PostfixUnaryExpressionSyntax node)
             {
                 var kind = ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local);
-                if (node.Parent is CSS.ExpressionStatementSyntax)
+                if (node.Parent is CSS.ExpressionStatementSyntax || node.Parent is CSS.ForStatementSyntax)
                 {
                     return SyntaxFactory.AssignmentStatement(
                         ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local),
@@ -693,6 +688,15 @@ End Function";
                         (ExpressionSyntax)node.Right.Accept(this)
                     );
                 }
+                if (node.Parent is CSS.ForStatementSyntax)
+                {
+                    return SyntaxFactory.AssignmentStatement(
+                        kind,
+                        (ExpressionSyntax)node.Left.Accept(this),
+                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
+                        (ExpressionSyntax)node.Right.Accept(this)
+                    );
+                }
                 if (node.Parent is CSS.InitializerExpressionSyntax)
                 {
                     return SyntaxFactory.NamedFieldInitializer(
@@ -752,6 +756,14 @@ End Function";
                     (ExpressionSyntax)node.Expression.Accept(this),
                     SyntaxFactory.Token(SyntaxKind.DotToken),
                     (SimpleNameSyntax)node.Name.Accept(this)
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitElementAccessExpression(CSS.ElementAccessExpressionSyntax node)
+            {
+                return SyntaxFactory.InvocationExpression(
+                    (ExpressionSyntax)node.Expression.Accept(this),
+                    (ArgumentListSyntax)node.ArgumentList.Accept(this)
                 );
             }
 
@@ -912,9 +924,9 @@ End Function";
                     SyntaxFactory.Token(SyntaxKind.NewKeyword),
                     SyntaxFactory.List<AttributeListSyntax>(),
                     (TypeSyntax)node.Type.ElementType.Accept(this),
-                    upperBoundArguments.Any() ? SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList<ArgumentSyntax>(upperBoundArguments)) : null,
+                    upperBoundArguments.Any() ? SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(upperBoundArguments)) : null,
                     upperBoundArguments.Any() ? SyntaxFactory.List(rankSpecifiers.Skip(1)) : SyntaxFactory.List(rankSpecifiers),
-                    (CollectionInitializerSyntax)node.Initializer?.Accept(this)
+                    (CollectionInitializerSyntax)node.Initializer?.Accept(this) ?? SyntaxFactory.CollectionInitializer()
                 );
             }
 
@@ -1017,6 +1029,11 @@ End Function";
             public override VisualBasicSyntaxNode VisitArgumentList(CSS.ArgumentListSyntax node)
             {
                 return SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(node.Arguments.Select(a => (ArgumentSyntax)a.Accept(this))));
+            }
+
+            public override VisualBasicSyntaxNode VisitBracketedArgumentList(CSS.BracketedArgumentListSyntax node)
+            {
+                return  SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(node.Arguments.Select(a => (ArgumentSyntax)a.Accept(this))));
             }
 
             public override VisualBasicSyntaxNode VisitArgument(CSS.ArgumentSyntax node)
@@ -1187,6 +1204,11 @@ End Function";
             VisualBasicSyntaxNode WrapTypedNameIfNecessary(NameSyntax name, CSS.NameSyntax originalName)
             {
                 if (originalName.Parent is CSS.NameSyntax) return name;
+                CSS.ExpressionSyntax parent = originalName;
+                while (parent.Parent is CSS.MemberAccessExpressionSyntax)
+                    parent = (CSS.ExpressionSyntax)parent.Parent;
+                if (parent != null && parent.Parent is CSS.InvocationExpressionSyntax)
+                    return name;
 
                 var symbol = semanticModel.GetSymbolInfo(originalName).Symbol;
                 if (symbol.IsKind(SymbolKind.Method))
