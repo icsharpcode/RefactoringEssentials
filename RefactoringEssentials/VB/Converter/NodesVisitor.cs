@@ -17,8 +17,11 @@ namespace RefactoringEssentials.VB.Converter
         class NodesVisitor : CS.CSharpSyntaxVisitor<VisualBasicSyntaxNode>
         {
             SemanticModel semanticModel;
+            Document targetDocument;
+            VisualBasicCompilationOptions options;
+
             readonly List<CSS.BaseTypeDeclarationSyntax> inlineAssignHelperMarkers = new List<CSS.BaseTypeDeclarationSyntax>();
-            readonly List<ImportsStatementSyntax> additionalImports = new List<ImportsStatementSyntax>();
+            readonly List<ImportsStatementSyntax> allImports = new List<ImportsStatementSyntax>();
 
             const string InlineAssignHelperCode = @"<Obsolete(""Please refactor code that uses this function, it is a simple work-around to simulate inline assignment in VB!"")>
 Private Shared Function __InlineAssignHelper(Of T)(ByRef target As T, value As T) As T
@@ -42,9 +45,11 @@ End Function";
                 }
             }
 
-            public NodesVisitor(SemanticModel semanticModel)
+            public NodesVisitor(SemanticModel semanticModel, Document targetDocument)
             {
                 this.semanticModel = semanticModel;
+                this.targetDocument = targetDocument;
+                this.options = (VisualBasicCompilationOptions)targetDocument?.Project.CompilationOptions;
             }
 
             public override VisualBasicSyntaxNode DefaultVisit(SyntaxNode node)
@@ -54,38 +59,40 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitCompilationUnit(CSS.CompilationUnitSyntax node)
             {
-                var imports = node.Usings.Select(u => (ImportsStatementSyntax)u.Accept(this))
-                    .Concat(node.Externs.Select(e => (ImportsStatementSyntax)e.Accept(this)));
+                foreach (var @using in node.Usings)
+                    @using.Accept(this);
+                foreach (var @extern in node.Externs)
+                    @extern.Accept(this);
                 var attributes = SyntaxFactory.List(node.AttributeLists.Select(a => SyntaxFactory.AttributesStatement(SyntaxFactory.SingletonList((AttributeListSyntax)a.Accept(this)))));
                 var members = SyntaxFactory.List(node.Members.Select(m => (StatementSyntax)m.Accept(this)));
 
                 return SyntaxFactory.CompilationUnit(
                     SyntaxFactory.List<OptionStatementSyntax>(),
-                    SyntaxFactory.List(PatchAdditionalImports(imports).OfType<ImportsStatementSyntax>()),
+                    SyntaxFactory.List(TidyImportsList(allImports)),
                     attributes,
                     members
                 );
             }
 
-            private IEnumerable<StatementSyntax> PatchAdditionalImports(IEnumerable<StatementSyntax> statements)
+            IEnumerable<ImportsStatementSyntax> TidyImportsList(IEnumerable<ImportsStatementSyntax> allImports)
             {
-                bool foundImport = false;
-                foreach (var statement in statements)
+                foreach (var import in allImports)
+                foreach (var clause in import.ImportsClauses)
                 {
-                    if (statement is ImportsStatementSyntax)
-                        foundImport = true;
-                    else if (foundImport)
-                    {
-                        foreach (var import in additionalImports)
-                            yield return import;
-                        additionalImports.Clear();
-                    }
-                    yield return statement;
+                    if (ImportIsNecessary(clause))
+                        yield return SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList(clause));
                 }
+            }
 
-                foreach (var import in additionalImports)
-                    yield return import;
-                additionalImports.Clear();
+            bool ImportIsNecessary(ImportsClauseSyntax import)
+            {
+                if (import is SimpleImportsClauseSyntax) {
+                    var i = (SimpleImportsClauseSyntax)import;
+                    if (i.Alias != null)
+                        return true;
+                    return options?.GlobalImports.Any(g => i.ToString().Equals(g.Clause.ToString(), StringComparison.OrdinalIgnoreCase)) == false;
+                }
+                return true;
             }
 
             #region Attributes
@@ -140,6 +147,10 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitNamespaceDeclaration(CSS.NamespaceDeclarationSyntax node)
             {
+                foreach (var @using in node.Usings)
+                    @using.Accept(this);
+                foreach (var @extern in node.Externs)
+                    @extern.Accept(this);
                 var members = node.Members.Select(m => (StatementSyntax)m.Accept(this));
 
                 IList<string> names;
@@ -148,7 +159,7 @@ End Function";
 
                 return SyntaxFactory.NamespaceBlock(
                     SyntaxFactory.NamespaceStatement((NameSyntax)node.Name.Accept(this)),
-                    SyntaxFactory.List(PatchAdditionalImports(members))
+                    SyntaxFactory.List(members)
                 );
             }
 
@@ -162,7 +173,9 @@ End Function";
                     alias = SyntaxFactory.ImportAliasClause(id);
                 }
                 ImportsClauseSyntax clause = SyntaxFactory.SimpleImportsClause(alias, (NameSyntax)node.Name.Accept(this));
-                return SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList(clause));
+                var import = SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList(clause));
+                allImports.Add(import);
+                return null;
             }
 
             #region Namespace Members
@@ -356,7 +369,7 @@ End Function";
                 {
                     attributes = attributes.Insert(0, SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(SyntaxFactory.Attribute(null, SyntaxFactory.ParseTypeName("Extension"), SyntaxFactory.ArgumentList()))));
                     if (!((CS.CSharpSyntaxTree)node.SyntaxTree).HasUsingDirective("System.Runtime.CompilerServices"))
-                        additionalImports.Add(SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList<ImportsClauseSyntax>(SyntaxFactory.SimpleImportsClause(SyntaxFactory.ParseName("System.Runtime.CompilerServices")))));
+                        allImports.Add(SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList<ImportsClauseSyntax>(SyntaxFactory.SimpleImportsClause(SyntaxFactory.ParseName("System.Runtime.CompilerServices")))));
                 }
                 if (methodInfo?.ContainingType?.IsStatic == true)
                 {
@@ -1136,8 +1149,7 @@ End Function";
                         var classOrInterface = type.BaseList?.Types.FirstOrDefault()?.Type;
                         if (classOrInterface == null) return;
                         var classOrInterfaceSymbol = semanticModel.GetSymbolInfo(classOrInterface).Symbol;
-                        if (classOrInterfaceSymbol == null) return;
-                        if (classOrInterfaceSymbol.IsInterfaceType())
+                        if (classOrInterfaceSymbol?.IsInterfaceType() == true)
                         {
                             arr = type.BaseList?.Types.Select(t => (TypeSyntax)t.Type.Accept(this)).ToArray();
                             if (arr.Length > 0)

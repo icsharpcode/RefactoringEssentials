@@ -28,9 +28,9 @@ namespace RefactoringEssentials.VB.Converter
             Local
         }
 
-        public static VisualBasicSyntaxNode Convert(CS.CSharpSyntaxNode input, SemanticModel semanticModel)
+        public static VisualBasicSyntaxNode Convert(CS.CSharpSyntaxNode input, SemanticModel semanticModel, Document targetDocument)
         {
-            return input.Accept(new NodesVisitor(semanticModel));
+            return input.Accept(new NodesVisitor(semanticModel, targetDocument));
         }
 
         public static ConversionResult ConvertText(string text, MetadataReference[] references)
@@ -43,7 +43,7 @@ namespace RefactoringEssentials.VB.Converter
             var compilation = CS.CSharpCompilation.Create("Conversion", new[] { tree }, references);
             try
             {
-                return new ConversionResult(Convert((CS.CSharpSyntaxNode)tree.GetRoot(), compilation.GetSemanticModel(tree, true)).NormalizeWhitespace().ToFullString());
+                return new ConversionResult(Convert((CS.CSharpSyntaxNode)tree.GetRoot(), compilation.GetSemanticModel(tree, true), null).NormalizeWhitespace().ToFullString());
             }
             catch (Exception ex)
             {

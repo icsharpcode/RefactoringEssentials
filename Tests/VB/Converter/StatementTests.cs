@@ -730,9 +730,7 @@ class TestClass
     {
 
     }
-}", @"Imports System
-
-Class TestClass
+}", @"Class TestClass
     Public Event MyEvent As EventHandler
 
     Sub TestMethod(ByVal e As EventHandler)

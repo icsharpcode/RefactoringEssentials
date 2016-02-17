@@ -73,7 +73,7 @@ namespace RefactoringEssentials
 			};
 			var compilation = CSharpCompilation.Create("Conversion", new[] { tree }, references);
 
-			return CSharpConverter.Convert((CSharpSyntaxNode)tree.GetRoot(), compilation.GetSemanticModel(tree, true)).NormalizeWhitespace().ToFullString();
+			return CSharpConverter.Convert((CSharpSyntaxNode)tree.GetRoot(), compilation.GetSemanticModel(tree, true), null).NormalizeWhitespace().ToFullString();
 		}
 
         bool IsVBCode(string code)

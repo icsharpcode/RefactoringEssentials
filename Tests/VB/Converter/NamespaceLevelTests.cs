@@ -28,9 +28,9 @@ End Namespace");
         public void TestImports()
         {
             TestConversionCSharpToVisualBasic(
-                @"using System;
+                @"using SomeNamespace;
 using VB = Microsoft.VisualBasic;",
-                @"Imports System
+                @"Imports SomeNamespace
 Imports VB = Microsoft.VisualBasic");
         }
 
@@ -177,6 +177,54 @@ End Structure");
             TestConversionCSharpToVisualBasic(
                 @"public delegate void Test(ref int x);",
                 @"Public Delegate Sub Test(ByRef x As Integer)");
+        }
+
+        [Test]
+        public void MoveImportsStatement()
+        {
+            TestConversionCSharpToVisualBasic("namespace test { using SomeNamespace; }",
+                        @"Imports SomeNamespace
+
+Namespace test
+End Namespace");
+        }
+
+        [Test]
+        public void ClassImplementsInterface()
+        {
+            TestConversionCSharpToVisualBasic("using System; class test : IComparable { }",
+@"Class test
+    Implements IComparable
+End Class");
+        }
+
+        [Test]
+        public void ClassImplementsInterface2()
+        {
+            TestConversionCSharpToVisualBasic("class test : System.IComparable { }",
+@"Class test
+    Implements System.IComparable
+End Class");
+        }
+
+        [Test]
+        public void ClassInheritsClass()
+        {
+            TestConversionCSharpToVisualBasic("using System.IO; class test : InvalidDataException { }",
+@"Imports System.IO
+
+Class test
+    Inherits InvalidDataException
+End Class");
+        }
+
+        [Test]
+        public void ClassInheritsClass2()
+        {
+            TestConversionCSharpToVisualBasic("class test : System.IO.InvalidDataException { }",
+@"Class test
+    Inherits System.IO.InvalidDataException
+End Class");
         }
     }
 }
