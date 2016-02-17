@@ -53,5 +53,163 @@ End Class");
     End Sub
 End Class");
         }
+
+        [Test]
+        public void RaiseEvent()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    event EventHandler MyEvent;
+
+    void TestMethod()
+    {
+        if (MyEvent != null) MyEvent(this, EventArgs.Empty);
+    }
+}", @"Class TestClass
+    Event MyEvent As EventHandler
+
+    Sub TestMethod()
+        RaiseEvent MyEvent(Me, EventArgs.Empty)
+    End Sub
+End Class");
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if ((MyEvent != null)) MyEvent(this, EventArgs.Empty);
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        RaiseEvent MyEvent(Me, EventArgs.Empty)
+    End Sub
+End Class");
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if (null != MyEvent) { MyEvent(this, EventArgs.Empty); }
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        RaiseEvent MyEvent(Me, EventArgs.Empty)
+    End Sub
+End Class");
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if (this.MyEvent != null) MyEvent(this, EventArgs.Empty);
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        RaiseEvent MyEvent(Me, EventArgs.Empty)
+    End Sub
+End Class");
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if (MyEvent != null) this.MyEvent(this, EventArgs.Empty);
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        RaiseEvent MyEvent(Me, EventArgs.Empty)
+    End Sub
+End Class");
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if ((this.MyEvent != null)) { this.MyEvent(this, EventArgs.Empty); }
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        RaiseEvent MyEvent(Me, EventArgs.Empty)
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void IfStatementSimilarToRaiseEvent()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if (FullImage != null) DrawImage();
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        If FullImage IsNot Nothing Then DrawImage()
+    End Sub
+End Class");
+            // regression test:
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if (FullImage != null) e.DrawImage();
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        If FullImage IsNot Nothing Then e.DrawImage()
+    End Sub
+End Class");
+            // with braces:
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if (FullImage != null) { DrawImage(); }
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        If FullImage IsNot Nothing Then
+            DrawImage()
+        End If
+    End Sub
+End Class");
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if (FullImage != null) { e.DrawImage(); }
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        If FullImage IsNot Nothing Then
+            e.DrawImage()
+        End If
+    End Sub
+End Class");
+            // another bug related to the IfStatement code:
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    void TestMethod()
+    {
+        if (Tiles != null) foreach (Tile t in Tiles) this.TileTray.Controls.Remove(t);
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        If Tiles IsNot Nothing Then
+
+            For Each t As Tile In Tiles
+                Me.TileTray.Controls.Remove(t)
+            Next
+        End If
+    End Sub
+End Class");
+        }
     }
 }

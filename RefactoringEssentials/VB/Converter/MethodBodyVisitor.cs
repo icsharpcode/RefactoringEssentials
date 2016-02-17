@@ -58,7 +58,14 @@ namespace RefactoringEssentials.VB.Converter
 
             public override SyntaxList<StatementSyntax> VisitIfStatement(CSS.IfStatementSyntax node)
             {
+                IdentifierNameSyntax name;
+                List<ArgumentSyntax> arguments = new List<ArgumentSyntax>();
                 StatementSyntax stmt;
+                if (node.Else == null && TryConvertRaiseEvent(node, out name, arguments))
+                {
+                    stmt = SyntaxFactory.RaiseEventStatement(name, SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(arguments)));
+                    return SyntaxFactory.SingletonList(stmt);
+                }
                 var elseIfBlocks = new List<ElseIfBlockSyntax>();
                 ElseBlockSyntax elseBlock = null;
                 CollectElseBlocks(node, elseIfBlocks, ref elseBlock);
@@ -74,7 +81,7 @@ namespace RefactoringEssentials.VB.Converter
                 }
                 else
                 {
-                    if (elseIfBlocks.Any())
+                    if (elseIfBlocks.Any() || !IsSimpleStatement(node.Statement))
                     {
                         stmt = SyntaxFactory.MultiLineIfBlock(
                              SyntaxFactory.IfStatement((ExpressionSyntax)node.Condition.Accept(nodesVisitor)).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword)),
@@ -92,7 +99,65 @@ namespace RefactoringEssentials.VB.Converter
                         ).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword));
                     }
                 }
-                return SyntaxFactory.SingletonList<StatementSyntax>(stmt);
+                return SyntaxFactory.SingletonList(stmt);
+            }
+
+            bool IsSimpleStatement(CSS.StatementSyntax statement)
+            {
+                return statement is CSS.ExpressionStatementSyntax
+                    || statement is CSS.BreakStatementSyntax
+                    || statement is CSS.ContinueStatementSyntax
+                    || statement is CSS.ReturnStatementSyntax
+                    || statement is CSS.YieldStatementSyntax
+                    || statement is CSS.ThrowStatementSyntax;
+            }
+
+            bool TryConvertRaiseEvent(CSS.IfStatementSyntax node, out IdentifierNameSyntax name, List<ArgumentSyntax> arguments)
+            {
+                name = null;
+                var condition = node.Condition;
+                while (condition is CSS.ParenthesizedExpressionSyntax)
+                    condition = ((CSS.ParenthesizedExpressionSyntax)condition).Expression;
+                if (!(condition is CSS.BinaryExpressionSyntax))
+                    return false;
+                var be = (CSS.BinaryExpressionSyntax)condition;
+                if (!be.IsKind(CS.SyntaxKind.NotEqualsExpression) || (!be.Left.IsKind(CS.SyntaxKind.NullLiteralExpression) && !be.Right.IsKind(CS.SyntaxKind.NullLiteralExpression)))
+                    return false;
+                CSS.ExpressionStatementSyntax singleStatement;
+                if (node.Statement is CSS.BlockSyntax)
+                {
+                    var block = ((CSS.BlockSyntax)node.Statement);
+                    if (block.Statements.Count != 1)
+                        return false;
+                    singleStatement = block.Statements[0] as CSS.ExpressionStatementSyntax;
+                }
+                else
+                {
+                    singleStatement = node.Statement as CSS.ExpressionStatementSyntax;
+                }
+                if (singleStatement == null || !(singleStatement.Expression is CSS.InvocationExpressionSyntax))
+                    return false;
+                var possibleEventName = GetPossibleEventName(be.Left) ?? GetPossibleEventName(be.Right);
+                if (possibleEventName == null)
+                    return false;
+                var invocation = (CSS.InvocationExpressionSyntax)singleStatement.Expression;
+                var invocationName = GetPossibleEventName(invocation.Expression);
+                if (possibleEventName != invocationName)
+                    return false;
+                name = SyntaxFactory.IdentifierName(possibleEventName);
+                arguments.AddRange(invocation.ArgumentList.Arguments.Select(a => (ArgumentSyntax)a.Accept(nodesVisitor)));
+                return true;
+            }
+
+            string GetPossibleEventName(CSS.ExpressionSyntax expression)
+            {
+                var ident = expression as CSS.IdentifierNameSyntax;
+                if (ident != null)
+                    return ident.Identifier.Text;
+                var fre = expression as CSS.MemberAccessExpressionSyntax;
+                if (fre != null && fre.Expression.IsKind(CS.SyntaxKind.ThisExpression))
+                    return fre.Name.Identifier.Text;
+                return null;
             }
 
             void CollectElseBlocks(CSS.IfStatementSyntax node, List<ElseIfBlockSyntax> elseIfBlocks, ref ElseBlockSyntax elseBlock)
