@@ -187,6 +187,14 @@ namespace RefactoringEssentials.VB.Converter
                 return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.UsingBlock(stmt, ConvertBlock(node.Statement)));
             }
 
+            public override SyntaxList<StatementSyntax> VisitLockStatement(CSS.LockStatementSyntax node)
+            {
+                var stmt = SyntaxFactory.SyncLockStatement(
+                    (ExpressionSyntax)node.Expression?.Accept(nodesVisitor)
+                );
+                return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.SyncLockBlock(stmt, ConvertBlock(node.Statement)));
+            }
+
             SyntaxList<StatementSyntax> ConvertBlock(CSS.StatementSyntax node)
             {
                 if (node is CSS.BlockSyntax)
