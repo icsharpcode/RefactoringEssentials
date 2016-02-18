@@ -49,7 +49,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (node.IsKind(SyntaxKind.UnsafeStatement)) {
                 var decl = node as UnsafeStatementSyntax;
                 var newRoot = root.ReplaceNode(decl, decl.Block.Statements.Select(s => s.WithAdditionalAnnotations(Formatter.Annotation)));
-                context.RegisterCodeFix(CodeActionFactory.Create(token.Span, diagnostic.Severity, "Replace 'unsafe' statement with it's body", document.WithSyntaxRoot(newRoot)), diagnostic);
+                context.RegisterCodeFix(CodeActionFactory.Create(token.Span, diagnostic.Severity, "Replace 'unsafe' statement with its body", document.WithSyntaxRoot(newRoot)), diagnostic);
             }
         }
     }
