@@ -67,8 +67,27 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     // In this case, the hiding is obviously intentional and we shouldn't show a warning.
                     continue;
                 }
+                string memberType;
+                switch (hidingMember.Kind)
+                {
+                    case SymbolKind.Field:
+                        memberType = GettextCatalog.GetString("field");
+                        break;
+                    case SymbolKind.Method:
+                        memberType = GettextCatalog.GetString("method");
+                        break;
+                    case SymbolKind.Property:
+                        memberType = GettextCatalog.GetString("property");
+                        break;
+                    case SymbolKind.Event:
+                        memberType = GettextCatalog.GetString("event");
+                        break;
+                    default:
+                        memberType = GettextCatalog.GetString("member");
+						break;
+                }
 
-                diagnostic = Diagnostic.Create(descriptor, variable.Identifier.GetLocation());
+                diagnostic = Diagnostic.Create(descriptor, variable.Identifier.GetLocation(), variable.Identifier, memberType, hidingMember.Name);
                 return true;
             }
             return false;
