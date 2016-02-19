@@ -1,12 +1,14 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
-    public class ParameterHidesMemberAnalyzer : VariableHidesMemberAnalyzer
+    public class ParameterHidesMemberAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.ParameterHidesMemberAnalyzerID,
@@ -22,72 +24,55 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(AnalyzeParameterList, new SyntaxKind[] { SyntaxKind.ParameterList });
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static void AnalyzeParameterList(SyntaxNodeAnalysisContext nodeContext)
         {
-            diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+                return;
+            var node = nodeContext.Node as ParameterListSyntax;
+
+            var member = node.AncestorsAndSelf().FirstOrDefault(n => n is MemberDeclarationSyntax);
+            if (member == null)
+                return;
+
+            var symbols = nodeContext.SemanticModel.LookupSymbols(node.SpanStart);
+            var memberSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(member);
+            if (memberSymbol == null)
+                return;
+            if (memberSymbol.IsAbstract || memberSymbol.DeclaredAccessibility == Accessibility.Public || memberSymbol.DeclaredAccessibility == Accessibility.Protected || memberSymbol.IsOverride)
+                return;
+            if (memberSymbol is IMethodSymbol && ((IMethodSymbol)memberSymbol).MethodKind == MethodKind.Constructor || memberSymbol.ExplicitInterfaceImplementations().Length > 0)
+                return;
+            foreach (var param in node.Parameters)
+            {
+                var hidingMember = symbols.FirstOrDefault(v => v.Name == param.Identifier.ValueText && ((memberSymbol.IsStatic && v.IsStatic) || !memberSymbol.IsStatic) && !v.IsKind(SymbolKind.Local) && !v.IsKind(SymbolKind.Parameter));
+                if (hidingMember == null)
+                    continue;
+                string msg;
+                switch (hidingMember.Kind)
+                {
+                    case SymbolKind.Field:
+                        msg = GettextCatalog.GetString("Parameter '{0}' hides field '{1}'");
+                        break;
+                    case SymbolKind.Method:
+                        msg = GettextCatalog.GetString("Parameter '{0}' hides method '{1}'");
+                        break;
+                    case SymbolKind.Property:
+                        msg = GettextCatalog.GetString("Parameter '{0}' hides property '{1}'");
+                        break;
+                    case SymbolKind.Event:
+                        msg = GettextCatalog.GetString("Parameter '{0}' hides event '{1}'");
+                        break;
+                    default:
+                        msg = GettextCatalog.GetString("Parameter '{0}' hides member '{1}'");
+                        break;
+                }
+
+                var diagnostic = Diagnostic.Create(descriptor, param.Identifier.GetLocation(), string.Format(msg, param.Identifier.ValueText, hidingMember.Name));
+                nodeContext.ReportDiagnostic(diagnostic);
+            }
         }
-
-        //		class GatherVisitor : GatherVisitorBase<ParameterHidesMemberAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base(semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitParameterDeclaration(ParameterDeclaration parameterDeclaration)
-        ////			{
-        ////				base.VisitParameterDeclaration(parameterDeclaration);
-        ////
-        ////				var rr = ctx.Resolve(parameterDeclaration.Parent) as MemberResolveResult;
-        ////				if (rr == null || rr.IsError)
-        ////					return;
-        ////				var parent = rr.Member;
-        ////				if (parent.SymbolKind == SymbolKind.Constructor || parent.ImplementedInterfaceMembers.Any())
-        ////					return;
-        ////				if (parent.IsOverride || parent.IsAbstract || parent.IsPublic || parent.IsProtected)
-        ////					return;
-        ////					
-        ////				IMember member;
-        ////				if (HidesMember(ctx, parameterDeclaration, parameterDeclaration.Name, out member)) {
-        ////					string msg;
-        ////					switch (member.SymbolKind) {
-        ////						case SymbolKind.Field:
-        ////							msg = ctx.TranslateString("Parameter '{0}' hides field '{1}'");
-        ////							break;
-        ////						case SymbolKind.Method:
-        ////							msg = ctx.TranslateString("Parameter '{0}' hides method '{1}'");
-        ////							break;
-        ////						case SymbolKind.Property:
-        ////							msg = ctx.TranslateString("Parameter '{0}' hides property '{1}'");
-        ////							break;
-        ////						case SymbolKind.Event:
-        ////							msg = ctx.TranslateString("Parameter '{0}' hides event '{1}'");
-        ////							break;
-        ////						default:
-        ////							msg = ctx.TranslateString("Parameter '{0}' hides member '{1}'");
-        ////							break;
-        ////					}
-        ////					AddDiagnosticAnalyzer(new CodeIssue(parameterDeclaration.NameToken,
-        ////						string.Format(msg, parameterDeclaration.Name, member.FullName)));
-        ////				}
-        ////			}
-        //		}
     }
 }

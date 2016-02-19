@@ -15,7 +15,7 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>104 code analyzers for C#</p>
+    <p>111 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
@@ -48,10 +48,14 @@
       <li>Empty namespace declaration is redundant (EmptyNamespaceAnalyzer)</li>
       <li>Empty statement is redundant (EmptyStatementAnalyzer)</li>
       <li>The default underlying type of enums is int, so defining it explicitly is redundant. (EnumUnderlyingTypeIsIntAnalyzer)</li>
+      <li>Comparing equal expression for equality is usually useless (EqualExpressionComparisonAnalyzer)</li>
       <li>Event unsubscription via anonymous delegate is useless (EventUnsubscriptionViaAnonymousDelegateAnalyzer)</li>
       <li>Convert field to readonly (FieldCanBeMadeReadOnlyAnalyzer)</li>
+      <li>Finds issues with format strings (FormatStringProblemAnalyzer)</li>
       <li>'true' is redundant as for statement condition (ForStatementConditionIsTrueAnalyzer)</li>
+      <li>Function does not reach its end or a 'return' statement by any of possible execution paths (FunctionNeverReturnsAnalyzer)</li>
       <li>If an extension method is called as static method convert it to method syntax (InvokeAsExtensionMethodAnalyzer)</li>
+      <li>Local variable has the same name as a member and hides it (LocalVariableHidesMemberAnalyzer)</li>
       <li>Local variable is never used (LocalVariableNotUsedAnalyzer)</li>
       <li>Lowercase 'l' is often confused with '1' (LongLiteralEndingLowerLAnalyzer)</li>
       <li>Suggest the usage of the nameof operator (NameOfSuggestionAnalyzer)</li>
@@ -61,6 +65,7 @@
       <li>Possible unassigned object created by 'new' (ObjectCreationAsStatementAnalyzer)</li>
       <li>Operator Is can be used instead of comparing object GetType() and instances of System.Type object (OperatorIsCanBeUsedAnalyzer)</li>
       <li>C# doesn't support optional 'ref' or 'out' parameters (OptionalParameterRefOutAnalyzer)</li>
+      <li>Parameter has the same name as a member and hides it (ParameterHidesMemberAnalyzer)</li>
       <li>Parameter is assigned but its value is never used (ParameterOnlyAssignedAnalyzer)</li>
       <li>Class is declared partial but has only one part (PartialTypeWithSinglePartAnalyzer)</li>
       <li>Possible mistaken call to 'object.GetType()' (PossibleMistakenCallToGetTypeAnalyzer)</li>
@@ -84,6 +89,7 @@
       <li>Redundant 'string.ToCharArray()' call (RedundantStringToCharArrayCallAnalyzer)</li>
       <li>Redundant conditional expression (RedundantTernaryExpressionAnalyzer)</li>
       <li>RedundantToStringCallAnalyzer</li>
+      <li>Unsafe modifier in redundant in unsafe context or when no unsafe constructs are used (RedundantUnsafeContextAnalyzer)</li>
       <li>Remove redundant statement (RemoveRedundantOrStatementAnalyzer)</li>
       <li>Replace with call to FirstOrDefault&lt;T&gt;() (ReplaceWithFirstOrDefaultAnalyzer)</li>
       <li>Replace with call to LastOrDefault&lt;T&gt;() (ReplaceWithLastOrDefaultAnalyzer)</li>
@@ -119,6 +125,7 @@
       <li>Warns when a culture-aware 'StartsWith' call is used by default. (StringStartsWithIsCultureSpecificAnalyzer)</li>
       <li>Use 'var' keyword when possible (SuggestUseVarKeywordEvidentAnalyzer)</li>
       <li>[ThreadStatic] doesn't work with instance fields (ThreadStaticAtInstanceFieldAnalyzer)</li>
+      <li>Type parameter is never used (UnusedTypeParameterAnalyzer)</li>
       <li>Warns about property or indexer setters and event adders or removers that do not use the value parameter (ValueParameterNotUsedAnalyzer)</li>
       <li>Validate Xml docs (XmlDocAnalyzer)</li>
     </ul>

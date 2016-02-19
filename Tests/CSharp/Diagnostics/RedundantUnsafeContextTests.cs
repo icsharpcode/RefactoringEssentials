@@ -4,27 +4,24 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantUnsafeContextTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestUnsafeClass()
         {
-            Test<RedundantUnsafeContextAnalyzer>(@"
-unsafe class Foo
+            Analyze<RedundantUnsafeContextAnalyzer>(@"$unsafe$ class Foo
 {
-	public static void Main (string[] args)
-	{
-		System.Console.WriteLine (""Hello World!"");
-	}
+    public static void Main(string[] args)
+    {
+        System.Console.WriteLine(""Hello World!"");
+    }
 }
-", @"
-class Foo
+", @"class Foo
 {
-	public static void Main (string[] args)
-	{
-		System.Console.WriteLine (""Hello World!"");
-	}
+    public static void Main(string[] args)
+    {
+        System.Console.WriteLine(""Hello World!"");
+    }
 }
 ");
         }
@@ -32,25 +29,25 @@ class Foo
         [Test]
         public void TestUnsafeStatement()
         {
-            Test<RedundantUnsafeContextAnalyzer>(@"
+            Analyze<RedundantUnsafeContextAnalyzer>(@"
 class Foo
 {
-	public static void Main (string[] args)
-	{
-		unsafe {
-			System.Console.WriteLine (""Hello World1!"");
-			System.Console.WriteLine (""Hello World2!"");
-		}
-	}
+    public static void Main(string[] args)
+    {
+        $unsafe$ {
+            System.Console.WriteLine(""Hello World1!"");
+            System.Console.WriteLine(""Hello World2!"");
+        }
+    }
 }
 ", @"
 class Foo
 {
-	public static void Main (string[] args)
-	{
-		System.Console.WriteLine (""Hello World1!"");
-		System.Console.WriteLine (""Hello World2!"");
-	}
+    public static void Main(string[] args)
+    {
+        System.Console.WriteLine(""Hello World1!"");
+        System.Console.WriteLine(""Hello World2!"");
+    }
 }
 ");
         }
@@ -58,27 +55,30 @@ class Foo
         [Test]
         public void TestNestedUnsafeStatement()
         {
-            Test<RedundantUnsafeContextAnalyzer>(@"
+            Analyze<RedundantUnsafeContextAnalyzer>(@"
 unsafe class Program
 {
-	static void Main(string str)
-	{
-		unsafe {
-			fixed (char* charPtr = &str) {
-				*charPtr = 'A';
-			}
-		}
-	}
+    static void Main(string str)
+    {
+        $unsafe$
+        {
+            fixed (char* charPtr = &str)
+            {
+                *charPtr = 'A';
+            }
+        }
+    }
 }
 ", @"
 unsafe class Program
 {
-	static void Main(string str)
-	{
-		fixed (char* charPtr = &str) {
-			*charPtr = 'A';
-		}
-	}
+    static void Main(string str)
+    {
+        fixed (char* charPtr = &str)
+        {
+            *charPtr = 'A';
+        }
+    }
 }
 ");
         }
@@ -88,7 +88,7 @@ unsafe class Program
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
 unsafe struct Foo {
-	public fixed char fixedBuffer[128];
+    public fixed char fixedBuffer[128];
 }
 ");
         }
@@ -98,13 +98,13 @@ unsafe struct Foo {
         public void TestDisable()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantUnsafeContextAnalyzerID + @"
 unsafe class Foo
 {
-	public static void Main (string[] args)
-	{
-		// ReSharper disable once RedundantUnsafeContext
-		System.Console.WriteLine (""Hello World!"");
-	}
+    public static void Main(string[] args)
+    {
+        System.Console.WriteLine(""Hello World!"");
+    }
 }
 ");
         }
@@ -115,14 +115,14 @@ unsafe class Foo
             Analyze<RedundantUnsafeContextAnalyzer>(@"
 public static class TestClass
 {
-	struct TestStruct {
-	}
-	public static void Main(String[] args)
-	{
-		unsafe {
-			int a = sizeof(TestStruct);
-		}
-	}
+    struct TestStruct {
+    }
+    public static void Main(String[] args)
+    {
+        unsafe {
+            int a = sizeof(TestStruct);
+        }
+    }
 }");
         }
 
@@ -132,10 +132,10 @@ public static class TestClass
             Analyze<RedundantUnsafeContextAnalyzer>(@"
 class Foo
 {
-	unsafe struct TestStruct
-	{
-		public fixed byte TestVar[32];
-	}
+    unsafe struct TestStruct
+    {
+        public fixed byte TestVar[32];
+    }
 }
 ");
         }

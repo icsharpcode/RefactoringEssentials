@@ -3,6 +3,8 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -31,10 +33,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+            var node = root.FindToken(context.Span.Start).Parent as FinallyClauseSyntax;
+            if (node == null)
+                return;
+            var tryStatement = node.Parent as TryStatementSyntax;
+            if (tryStatement == null)
+                return;
+            SyntaxNode newRoot;
+
+            if (tryStatement.Catches.Count > 0)
+            {
+                newRoot = root.ReplaceNode(tryStatement, tryStatement.WithFinally(null).WithAdditionalAnnotations(Formatter.Annotation));
+            }
+            else {
+                newRoot = root.ReplaceNode(tryStatement, tryStatement.Block.Statements.Select(s => s.WithAdditionalAnnotations(Formatter.Annotation)));
+            }
+
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove 'finally'", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }

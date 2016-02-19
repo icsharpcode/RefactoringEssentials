@@ -230,7 +230,6 @@
     <Compile Include="CSharp\Diagnostics\EnumUnderlyingTypeIsIntTests.cs" />
     <Compile Include="CSharp\Diagnostics\EqualExpressionComparisonTests.cs" />
     <Compile Include="CSharp\Diagnostics\EventUnsubscriptionViaAnonymousDelegateTests.cs" />
-    <Compile Include="CSharp\Diagnostics\ExpressionIsNeverOfProvidedTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\FieldCanBeMadeReadOnlyTests.cs" />
     <Compile Include="CSharp\Diagnostics\ForCanBeConvertedToForeachTests.cs" />
     <Compile Include="CSharp\Diagnostics\ForControlVariableIsNeverModifiedTests.cs" />
@@ -245,7 +244,6 @@
     <Compile Include="CSharp\Diagnostics\MemberCanBeMadeStaticTests.cs" />
     <Compile Include="CSharp\Diagnostics\MemberHidesStaticFromOuterClassTests.cs" />
     <Compile Include="CSharp\Diagnostics\MethodOverloadWithOptionalParameterTests.cs" />
-    <Compile Include="CSharp\Diagnostics\MissingInterfaceMemberImplementationTests.cs" />
     <Compile Include="CSharp\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="CSharp\Diagnostics\NegativeRelationalExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />

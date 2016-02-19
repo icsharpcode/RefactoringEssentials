@@ -492,7 +492,8 @@ namespace Nullaby
             if (type != null)
             {
                 var possibleToBeNull = type.IsReferenceType
-                                           || type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T;
+                                           || type.OriginalDefinition.SpecialType == SpecialType.System_Nullable_T
+                                           || (symbol as IMethodSymbol)?.MethodKind == MethodKind.BuiltinOperator;
                 if (!possibleToBeNull)
                 {
                     return new SymbolInfo(NullState.NotNull);

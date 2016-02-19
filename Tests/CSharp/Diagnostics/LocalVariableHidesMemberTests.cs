@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class LocalVariableHidesMemberTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -16,10 +15,10 @@ class TestClass
 	int i;
 	void TestMethod ()
 	{
-		int i, j;
+		int $i$, j;
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 1);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         public void TestDisable()
@@ -44,10 +43,10 @@ class TestClass
 {
 	void TestMethod ()
 	{
-		int TestMethod;
+		int $TestMethod$;
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 1);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -60,10 +59,10 @@ class TestClass
 	void TestMethod ()
 	{
 		int[] array = new int [10];
-		foreach (var i in array) ;
+		foreach (var $i$ in array) ;
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 1);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -75,10 +74,10 @@ class TestClass
 	static int i;
 	static void TestMethod2 ()
 	{
-		int i;
+		int $i$;
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 1);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -91,14 +90,14 @@ class TestClass
 	int j;
 	void TestMethod ()
 	{
-		int i;
+		int $i$;
 	}
 	static void TestMethod2 ()
 	{
 		int j;
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 0);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -111,10 +110,10 @@ class TestClass
 
 	void Method ()
 	{
-		int i = 0;
+		int $i$ = 0;
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 1);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -130,7 +129,7 @@ class RootClass
 		// Issue 1
 		void Method ()
 		{
-			int i = 0;
+			int $i$ = 0;
 		}
 
 		class NestedNestedClass : NestedClass
@@ -138,12 +137,12 @@ class RootClass
 			// Issue 2
 			void OtherMethod ()
 			{
-				int i = 0;
+				int $i$ = 0;
 			}
 		}
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 2);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -158,10 +157,10 @@ class TestClass : BaseClass
 {
 	void Method ()
 	{
-		int i = 0;
+		int $i$ = 0;
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 1);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -179,7 +178,7 @@ class TestClass : BaseClass
 		int i = 0;
 	}
 }";
-            Test<LocalVariableHidesMemberAnalyzer>(input, 0);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -197,7 +196,7 @@ class TestClass
 }";
             // Given the initializer, member hiding is obviously intended in this case;
             // so we suppress the warning.
-            Test<LocalVariableHidesMemberAnalyzer>(input, 0);
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
     }
 }
