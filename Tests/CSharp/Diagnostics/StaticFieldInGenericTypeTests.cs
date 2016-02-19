@@ -3,19 +3,17 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class StaticFieldInGenericTypeTests : CSharpDiagnosticTestBase
     {
 
         [Test]
         public void GenericClass()
         {
-            TestIssue<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
 class Foo<T>
 {
-	static string Data;
+	static string $Data$;
 }");
         }
 
@@ -32,22 +30,22 @@ class Foo<T>
         [Test]
         public void GenericClassWithMultipleGenericFields()
         {
-            TestIssue<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
 class Foo<T1, T2>
 {
-	static System.Collections.Generic.IList<T1> Cache;
+	static System.Collections.Generic.IList<T1> $Cache$;
 }");
         }
 
         [Test]
         public void NestedGenericClassWithGenericField()
         {
-            TestIssue<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
 class Foo<T1>
 {
 	class Bar<T2>
 	{
-		static System.Collections.Generic.IList<T1> Cache;
+		static System.Collections.Generic.IList<T1> $Cache$;
 	}
 }");
         }
@@ -72,6 +70,7 @@ class Foo<T>
 }");
         }
 
+        [Ignore("Not yet supported")]
         [Test]
         public void TestMicrosoftSuppressMessage()
         {
@@ -86,6 +85,7 @@ class Foo<T>
 }");
         }
 
+        [Ignore("Not yet supported")]
         [Test]
         public void TestAssemblyMicrosoftSuppressMessage()
         {
@@ -108,7 +108,7 @@ class Foo<T>
 
 class Foo<T>
 {
-    // ReSharper disable once StaticFieldInGenericType
+#pragma warning disable " + CSharpDiagnosticIDs.StaticFieldInGenericTypeAnalyzerID + @"
 	static string Data;
 }";
             Analyze<StaticFieldInGenericTypeAnalyzer>(input);

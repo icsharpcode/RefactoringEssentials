@@ -63,7 +63,6 @@
 * ReferenceEqualsWithValueTypeAnalyzer
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
-* StaticFieldInGenericTypeAnalyzer
 * StringCompareIsCultureSpecificAnalyzer
 * UnassignedReadonlyFieldAnalyzer
 * UnusedAnonymousMethodSignatureAnalyzer

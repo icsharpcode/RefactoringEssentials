@@ -1,11 +1,15 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class StaticFieldInGenericTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -22,83 +26,115 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterCompilationStartAction(compilationContext =>
+            {
+                var compilation = compilationContext.Compilation;
+                compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext ctx)
+                {
+                    try
+                    {
+                        if (!compilation.SyntaxTrees.Contains(ctx.Tree))
+                            return;
+                        var semanticModel = compilation.GetSemanticModel(ctx.Tree);
+                        var root = await ctx.Tree.GetRootAsync(ctx.CancellationToken).ConfigureAwait(false);
+                        var model = compilationContext.Compilation.GetSemanticModel(ctx.Tree);
+                        if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
+                            return;
+                        new GatherVisitor(ctx, semanticModel).Visit(root);
+                    }
+                    catch (OperationCanceledException) { }
+                });
+            });
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        class GatherVisitor : CSharpSyntaxWalker
         {
-            diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            SyntaxTreeAnalysisContext ctx;
+            SemanticModel semanticModel;
+
+            IList<ITypeParameterSymbol> availableTypeParameters = new List<ITypeParameterSymbol>();
+
+            public GatherVisitor(SyntaxTreeAnalysisContext ctx, SemanticModel semanticModel)
+            {
+                this.ctx = ctx;
+                this.semanticModel = semanticModel;
+            }
+
+            public override void VisitBlock(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax node)
+            {
+                ctx.CancellationToken.ThrowIfCancellationRequested();
+            }
+
+            public override void VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node)
+            {
+                var type = semanticModel.GetDeclaredSymbol(node) as INamedTypeSymbol;
+                var oldTypeParameters = availableTypeParameters; 
+                if (type != null)
+                {
+                    availableTypeParameters = Concat(availableTypeParameters, type.TypeParameters);
+                }
+                base.VisitClassDeclaration(node);
+                availableTypeParameters = oldTypeParameters;
+            }
+
+            public override void VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node)
+            {
+                var type = semanticModel.GetDeclaredSymbol(node) as INamedTypeSymbol;
+                var oldTypeParameters = availableTypeParameters; 
+                if (type != null)
+                {
+                    availableTypeParameters = Concat(availableTypeParameters, type.TypeParameters);
+                }
+                base.VisitStructDeclaration(node);
+                availableTypeParameters = oldTypeParameters;
+            }
+            static IList<ITypeParameterSymbol> Concat(params IList<ITypeParameterSymbol>[] lists)
+            {
+                return lists.SelectMany(l => l).ToList();
+            }
+
+            public override void VisitEnumDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax node)
+            {
+            }
+
+            public override void VisitInterfaceDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax node)
+            {
+            }
+
+            public override void VisitDelegateDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax node)
+            {
+            }
+
+
+            bool UsesAllTypeParameters(FieldDeclarationSyntax fieldDeclaration)
+			{
+				if (availableTypeParameters.Count == 0)
+					return true;
+
+                var fieldType = semanticModel.GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
+				if (fieldType == null)
+					return false;
+
+				// Check that all current type parameters are used in the field type
+                var fieldTypeParameters = fieldType.GetAllTypeArguments();
+                foreach (var typeParameter in availableTypeParameters) {
+                    if (!fieldTypeParameters.Contains(typeParameter))
+						return false;
+				}
+				return true;
+			}
+            
+            public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+            {
+                base.VisitFieldDeclaration(node);
+                if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)) && !UsesAllTypeParameters(node))
+                {
+                    foreach (var v in node.Declaration.Variables)
+                    {
+                        ctx.ReportDiagnostic(Diagnostic.Create(descriptor, v.Identifier.GetLocation()));
+                    }
+                }
+            }
         }
-
-        //		class GatherVisitor : GatherVisitorBase<StaticFieldInGenericTypeAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			IList<ITypeParameter> availableTypeParameters = new List<ITypeParameter>();
-        ////
-        ////			public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
-        ////			{
-        ////				var typeResolveResult = ctx.Resolve(typeDeclaration);
-        ////				var typeDefinition = typeResolveResult.Type.GetDefinition();
-        ////				if (typeDefinition == null)
-        ////					return;
-        ////				var newTypeParameters = typeDefinition.TypeParameters;
-        ////
-        ////				var oldTypeParameters = availableTypeParameters; 
-        ////				availableTypeParameters = Concat(availableTypeParameters, newTypeParameters);
-        ////
-        ////				base.VisitTypeDeclaration(typeDeclaration);
-        ////
-        ////				availableTypeParameters = oldTypeParameters;
-        ////			}
-        ////
-        ////			static IList<ITypeParameter> Concat(params IList<ITypeParameter>[] lists)
-        ////			{
-        ////				return lists.SelectMany(l => l).ToList();
-        ////			}
-        ////
-        ////			bool UsesAllTypeParameters(FieldDeclaration fieldDeclaration)
-        ////			{
-        ////				if (availableTypeParameters.Count == 0)
-        ////					return true;
-        ////
-        ////				var fieldType = ctx.Resolve(fieldDeclaration.ReturnType).Type as ParameterizedType;
-        ////				if (fieldType == null)
-        ////					return false;
-        ////
-        ////				// Check that all current type parameters are used in the field type
-        ////				var fieldTypeParameters = fieldType.TypeArguments;
-        ////				foreach (var typeParameter in availableTypeParameters) {
-        ////					if (!fieldTypeParameters.Contains(typeParameter))
-        ////						return false;
-        ////				}
-        ////				return true;
-        ////			}
-        ////
-        ////			public override void VisitFieldDeclaration(FieldDeclaration fieldDeclaration)
-        ////			{
-        ////				base.VisitFieldDeclaration(fieldDeclaration);
-        ////				if (fieldDeclaration.Modifiers.HasFlag(Modifiers.Static) && !UsesAllTypeParameters(fieldDeclaration)) {
-        //			//					AddDiagnosticAnalyzer(new CodeIssue(fieldDeclaration, ctx.TranslateString("Static field in generic type")));
-        ////				}
-        ////			}
-        //		}
     }
 }
