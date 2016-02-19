@@ -1,11 +1,14 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using System;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class MemberHidesStaticFromOuterClassAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -22,115 +25,133 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterCompilationStartAction(compilationContext =>
+            {
+                var compilation = compilationContext.Compilation;
+                compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext ctx)
+                {
+                    try
+                    {
+                        if (!compilation.SyntaxTrees.Contains(ctx.Tree))
+                            return;
+                        var semanticModel = compilation.GetSemanticModel(ctx.Tree);
+                        var root = await ctx.Tree.GetRootAsync(ctx.CancellationToken).ConfigureAwait(false);
+                        var model = compilationContext.Compilation.GetSemanticModel(ctx.Tree);
+                        if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
+                            return;
+                        new GatherVisitor(ctx, semanticModel).Visit(root);
+                    }
+                    catch (OperationCanceledException) { }
+                });
+            });
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        class GatherVisitor : CSharpSyntaxWalker
         {
-            diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            readonly List<List<ISymbol>> staticMembers = new List<List<ISymbol>>();
+            SyntaxTreeAnalysisContext ctx;
+            SemanticModel semanticModel;
+
+            public GatherVisitor(SyntaxTreeAnalysisContext ctx, SemanticModel semanticModel)
+            {
+                this.ctx = ctx;
+                this.semanticModel = semanticModel;
+            }
+
+            public override void VisitBlock(Microsoft.CodeAnalysis.CSharp.Syntax.BlockSyntax node)
+            {
+                ctx.CancellationToken.ThrowIfCancellationRequested();
+            }
+
+            public override void VisitClassDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax node)
+            {
+                var type = semanticModel.GetDeclaredSymbol(node) as INamedTypeSymbol;
+                staticMembers.Add(new List<ISymbol>(type.GetMembers().Where(m => m.IsStatic)));
+                base.VisitClassDeclaration(node);
+                staticMembers.RemoveAt(staticMembers.Count - 1); 
+            }
+
+            public override void VisitStructDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.StructDeclarationSyntax node)
+            {
+                var type = semanticModel.GetDeclaredSymbol(node) as INamedTypeSymbol;
+                staticMembers.Add(new List<ISymbol>(type.GetMembers().Where(m => m.IsStatic)));
+                base.VisitStructDeclaration(node);
+                staticMembers.RemoveAt(staticMembers.Count - 1); 
+            }
+
+            public override void VisitEnumDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EnumDeclarationSyntax node)
+            {
+            }
+
+            public override void VisitInterfaceDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.InterfaceDeclarationSyntax node)
+            {
+            }
+
+            public override void VisitDelegateDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.DelegateDeclarationSyntax node)
+            {
+            }
+
+            void Check(string name, SyntaxToken nodeToMark, string memberType)
+			{
+				for (int i = 0; i < staticMembers.Count - 1; i++) {
+					var member = staticMembers[i].FirstOrDefault(m => m.Name == name);
+					if (member == null)
+						continue;
+					string outerMemberType;
+                    switch (member.Kind) {
+						case SymbolKind.Field:
+                            outerMemberType = GettextCatalog.GetString("field");
+							break;
+						case SymbolKind.Property:
+                            outerMemberType = GettextCatalog.GetString("property");
+							break;
+						case SymbolKind.Event:
+                            outerMemberType = GettextCatalog.GetString("event");
+							break;
+						case SymbolKind.Method:
+                            outerMemberType = GettextCatalog.GetString("method");
+							break;
+						default:
+                            outerMemberType = GettextCatalog.GetString("member");
+							break;
+					}
+                    ctx.ReportDiagnostic(Diagnostic.Create(
+                        descriptor, 
+                        nodeToMark.GetLocation(),
+                        memberType, member.Name, outerMemberType
+                    ));
+					return;
+				}
+			}
+
+            public override void VisitEventDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EventDeclarationSyntax node)
+            {
+                Check(node.Identifier.ValueText, node.Identifier, GettextCatalog.GetString("Event"));
+            }
+
+            public override void VisitEventFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.EventFieldDeclarationSyntax node)
+            {
+                foreach (var v in node.Declaration.Variables) {
+                    Check(v.Identifier.ValueText, v.Identifier, GettextCatalog.GetString("Event"));
+                }
+            }
+
+            public override void VisitFieldDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax node)
+            {
+                foreach (var v in node.Declaration.Variables) {
+                    Check(v.Identifier.ValueText, v.Identifier, GettextCatalog.GetString("Field"));
+                }
+            }
+
+            public override void VisitPropertyDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.PropertyDeclarationSyntax node)
+            {
+                Check(node.Identifier.ValueText, node.Identifier, GettextCatalog.GetString("Property"));
+            }
+
+            public override void VisitMethodDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax node)
+            {
+                Check(node.Identifier.ValueText, node.Identifier, GettextCatalog.GetString("Method"));
+            }
         }
-
-        //		class GatherVisitor : GatherVisitorBase<MemberHidesStaticFromOuterClassAnalyzer>
-        //		{
-        //			//readonly List<List<IMember>> staticMembers = new List<List<IMember>>();
-
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitBlockStatement(BlockStatement blockStatement)
-        ////			{
-        ////				// SKIP
-        ////			}
-        ////
-        ////			public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
-        ////			{
-        ////				var rr = ctx.Resolve(typeDeclaration);
-        ////
-        ////				staticMembers.Add(new List<IMember>(rr.Type.GetMembers(m => m.IsStatic)));
-        ////				base.VisitTypeDeclaration(typeDeclaration);
-        ////				staticMembers.RemoveAt(staticMembers.Count - 1); 
-        ////			}
-        ////
-        ////			void Check(string name, AstNode nodeToMark, string memberType)
-        ////			{
-        ////				for (int i = 0; i < staticMembers.Count - 1; i++) {
-        ////					var member = staticMembers[i].FirstOrDefault(m => m.Name == name);
-        ////					if (member == null)
-        ////						continue;
-        ////					string outerMemberType;
-        ////					switch (member.SymbolKind) {
-        ////						case SymbolKind.Field:
-        ////							outerMemberType = ctx.TranslateString("field");
-        ////							break;
-        ////						case SymbolKind.Property:
-        ////							outerMemberType = ctx.TranslateString("property");
-        ////							break;
-        ////						case SymbolKind.Event:
-        ////							outerMemberType = ctx.TranslateString("event");
-        ////							break;
-        ////						case SymbolKind.Method:
-        ////							outerMemberType = ctx.TranslateString("method");
-        ////							break;
-        ////						default:
-        ////							outerMemberType = ctx.TranslateString("member");
-        ////							break;
-        ////					}
-        ////					AddDiagnosticAnalyzer(new CodeIssue(nodeToMark,
-        //			//						string.Format(ctx.TranslateString("{0} '{1}' hides {2} from outer class"),
-        ////							memberType, member.Name, outerMemberType)));
-        ////					return;
-        ////				}
-        ////			}
-        ////
-        ////			public override void VisitEventDeclaration(EventDeclaration eventDeclaration)
-        ////			{
-        ////				foreach (var init in eventDeclaration.Variables) {
-        ////					Check(init.Name, init.NameToken, ctx.TranslateString("Event"));
-        ////				}
-        ////			}
-        ////
-        ////			public override void VisitCustomEventDeclaration(CustomEventDeclaration eventDeclaration)
-        ////			{
-        ////				Check(eventDeclaration.Name, eventDeclaration.NameToken, ctx.TranslateString("Event"));
-        ////			}
-        ////
-        ////			public override void VisitFieldDeclaration(FieldDeclaration fieldDeclaration)
-        ////			{
-        ////				foreach (var init in fieldDeclaration.Variables) {
-        ////					Check(init.Name, init.NameToken, ctx.TranslateString("Field"));
-        ////				}
-        ////			}
-        ////
-        ////			public override void VisitPropertyDeclaration(PropertyDeclaration propertyDeclaration)
-        ////			{
-        ////				Check(propertyDeclaration.Name, propertyDeclaration.NameToken, ctx.TranslateString("Property"));
-        ////			}
-        ////
-        ////			public override void VisitFixedFieldDeclaration(FixedFieldDeclaration fixedFieldDeclaration)
-        ////			{
-        ////				Check(fixedFieldDeclaration.Name, fixedFieldDeclaration.NameToken, ctx.TranslateString("Fixed field"));
-        ////			}
-        ////
-        ////			public override void VisitMethodDeclaration(MethodDeclaration methodDeclaration)
-        ////			{
-        ////				Check(methodDeclaration.Name, methodDeclaration.NameToken, ctx.TranslateString("Method"));
-        ////			}
-        //		}
     }
 }

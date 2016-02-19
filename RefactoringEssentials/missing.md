@@ -36,7 +36,6 @@
 * ForControlVariableIsNeverModifiedAnalyzer
 * InconsistentNamingAnalyzer
 * LockThisAnalyzer
-* MemberHidesStaticFromOuterClassAnalyzer
 * MethodOverloadWithOptionalParameterAnalyzer
 * NegativeRelationalExpressionAnalyzer
 * NonReadonlyReferencedInGetHashCodeAnalyzer
