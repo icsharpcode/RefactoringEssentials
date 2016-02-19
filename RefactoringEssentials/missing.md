@@ -38,7 +38,6 @@
 * LockThisAnalyzer
 * MemberHidesStaticFromOuterClassAnalyzer
 * MethodOverloadWithOptionalParameterAnalyzer
-* MissingInterfaceMemberImplementationAnalyzer
 * NegativeRelationalExpressionAnalyzer
 * NonReadonlyReferencedInGetHashCodeAnalyzer
 * OptionalParameterHierarchyMismatchAnalyzer
@@ -53,7 +52,6 @@
 * RedundantBoolCompareAnalyzer
 * RedundantCatchClauseAnalyzer
 * RedundantComparisonWithNullAnalyzer
-* RedundantDefaultFieldInitializerAnalyzer
 * RedundantEmptyFinallyBlockAnalyzer
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer

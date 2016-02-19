@@ -158,7 +158,6 @@
     <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\CS0169FieldIsNeverUsedAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\CS0618UsageOfObsoleteMemberAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\CS1729TypeHasNoConstructorWithNArgumentsAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\MissingInterfaceMemberImplementationAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\StaticConstructorParameterAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\AdditionalOfTypeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\BaseMethodParameterNameMismatchAnalyzer.cs" />

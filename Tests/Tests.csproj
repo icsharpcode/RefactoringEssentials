@@ -244,7 +244,6 @@
     <Compile Include="CSharp\Diagnostics\MemberCanBeMadeStaticTests.cs" />
     <Compile Include="CSharp\Diagnostics\MemberHidesStaticFromOuterClassTests.cs" />
     <Compile Include="CSharp\Diagnostics\MethodOverloadWithOptionalParameterTests.cs" />
-    <Compile Include="CSharp\Diagnostics\MissingInterfaceMemberImplementationTests.cs" />
     <Compile Include="CSharp\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="CSharp\Diagnostics\NegativeRelationalExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />
