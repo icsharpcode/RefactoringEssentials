@@ -13,8 +13,8 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"
 class TestClass
 {
-	int i = 0;
-	long l = 0L;
+	int $i$ = 0;
+	long $l$ = 0L;
 }";
             var output = @"
 class TestClass
@@ -22,7 +22,7 @@ class TestClass
 	int i;
 	long l;
 }";
-            Test<RedundantDefaultFieldInitializerAnalyzer>(input, 2, output);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
         [Test]
@@ -31,8 +31,8 @@ class TestClass
             var input = @"
 class TestClass
 {
-	double d = 0;
-	double d2 = 0.0;
+	double $d$ = 0;
+	double $d2$ = 0.0;
 }";
             var output = @"
 class TestClass
@@ -40,7 +40,7 @@ class TestClass
 	double d;
 	double d2;
 }";
-            Test<RedundantDefaultFieldInitializerAnalyzer>(input, 2, output);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
         [Test]
@@ -49,14 +49,14 @@ class TestClass
             var input = @"
 class TestClass
 {
-	bool x = false;
+	bool $x$ = false;
 }";
             var output = @"
 class TestClass
 {
 	bool x;
 }";
-            Test<RedundantDefaultFieldInitializerAnalyzer>(input, 1, output);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
         [Test]
@@ -65,14 +65,14 @@ class TestClass
             var input = @"
 class TestClass
 {
-	char ch = '\0';
+	char $ch$ = '\0';
 }";
             var output = @"
 class TestClass
 {
 	char ch;
 }";
-            Test<RedundantDefaultFieldInitializerAnalyzer>(input, 1, output);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
         [Test]
@@ -81,14 +81,14 @@ class TestClass
             var input = @"
 class TestClass
 {
-	string str = null;
+	string $str$ = null;
 }";
             var output = @"
 class TestClass
 {
 	string str;
 }";
-            Test<RedundantDefaultFieldInitializerAnalyzer>(input, 1, output);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
         [Test]
@@ -97,14 +97,14 @@ class TestClass
             var input = @"
 class TestClass
 {
-	dynamic x = null, y = null;
+	dynamic $x$ = null, $y$ = null;
 }";
             var output = @"
 class TestClass
 {
 	dynamic x, y;
 }";
-            Test<RedundantDefaultFieldInitializerAnalyzer>(input, 2, output);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
         [Test]
@@ -116,7 +116,7 @@ struct TestStruct
 }
 class TestClass
 {
-	TestStruct x = new TestStruct ();
+	TestStruct $x$ = default(TestStruct);
 }";
             var output = @"
 struct TestStruct
@@ -126,7 +126,7 @@ class TestClass
 {
 	TestStruct x;
 }";
-            Test<RedundantDefaultFieldInitializerAnalyzer>(input, 1, output);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
         [Test]
@@ -135,27 +135,27 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int? i = null;
+	int? $i$ = null;
 }";
             var output = @"
 class TestClass
 {
 	int? i;
 }";
-            Test<RedundantDefaultFieldInitializerAnalyzer>(input, 1, output);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
 
         [Test]
         public void TestRedundantConstantBug()
         {
-            Test<RedundantDefaultFieldInitializerAnalyzer>(@"class Test { const int foo = 0;  }", 0);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(@"class Test { const int foo = 0;  }");
         }
 
         [Test]
         public void TestRedundantReadOnlyBug()
         {
-            Test<RedundantDefaultFieldInitializerAnalyzer>(@"struct Test { static readonly Test foo = new Test ();  }", 0);
+                Analyze<RedundantDefaultFieldInitializerAnalyzer>(@"struct Test { static readonly Test foo = new Test ();  }");
         }
 
         [Test]
@@ -164,7 +164,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-    // ReSharper disable once RedundantDefaultFieldInitializer
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantDefaultFieldInitializerAnalyzerID + @"
 	int i = 0;
 }";
             Analyze<RedundantDefaultFieldInitializerAnalyzer>(input);
