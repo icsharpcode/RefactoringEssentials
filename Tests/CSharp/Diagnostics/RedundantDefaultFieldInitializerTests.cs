@@ -13,8 +13,8 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"
 class TestClass
 {
-	int $i$ = 0;
-	long $l$ = 0L;
+	int i $= 0$;
+	long l $= 0L$;
 }";
             var output = @"
 class TestClass
@@ -31,8 +31,8 @@ class TestClass
             var input = @"
 class TestClass
 {
-	double $d$ = 0;
-	double $d2$ = 0.0;
+	double d $= 0$;
+	double d2 $= 0.0$;
 }";
             var output = @"
 class TestClass
@@ -49,7 +49,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-	bool $x$ = false;
+	bool x $= false$;
 }";
             var output = @"
 class TestClass
@@ -65,7 +65,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-	char $ch$ = '\0';
+	char ch $= '\0'$;
 }";
             var output = @"
 class TestClass
@@ -81,7 +81,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-	string $str$ = null;
+	string str $= null$;
 }";
             var output = @"
 class TestClass
@@ -97,7 +97,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-	dynamic $x$ = null, $y$ = null;
+	dynamic x $= null$, y $= null$;
 }";
             var output = @"
 class TestClass
@@ -116,7 +116,7 @@ struct TestStruct
 }
 class TestClass
 {
-	TestStruct $x$ = default(TestStruct);
+	TestStruct x $= default(TestStruct)$;
 }";
             var output = @"
 struct TestStruct
@@ -135,7 +135,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int? $i$ = null;
+	int? i $= null$;
 }";
             var output = @"
 class TestClass

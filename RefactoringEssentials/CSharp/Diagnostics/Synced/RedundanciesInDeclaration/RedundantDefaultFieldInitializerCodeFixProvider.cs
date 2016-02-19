@@ -34,7 +34,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindToken(context.Span.Start).Parent as VariableDeclaratorSyntax;
+            var node = root.FindToken(context.Span.Start).Parent?.Parent as VariableDeclaratorSyntax;
             if (node == null)
                 return;
             var newRoot = root.ReplaceNode(node, node.WithInitializer(null).WithAdditionalAnnotations(Formatter.Annotation));

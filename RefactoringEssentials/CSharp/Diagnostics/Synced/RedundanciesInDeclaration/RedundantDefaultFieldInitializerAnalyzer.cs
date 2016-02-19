@@ -41,16 +41,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var type = nodeContext.SemanticModel.GetTypeInfo(node.Declaration.Type).Type;
             if (type == null)
                 return;
-            foreach (var v in node.Declaration.Variables) {
+            foreach (var v in node.Declaration.Variables)
+            {
                 var initializer = v.Initializer?.Value;
                 if (initializer == null)
                     continue;
 
-                if (initializer.IsKind(SyntaxKind.DefaultExpression)) {
+                if (initializer.IsKind(SyntaxKind.DefaultExpression))
+                {
                     //var defaultExpr = (DefaultExpressionSyntax)initializer;
                     //var defaultType = nodeContext.SemanticModel.GetTypeInfo(defaultExpr.Type).Type;
                     //if (defaultType == type) {
-                        nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor,  v.Identifier.GetLocation()));
+                    nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor, v.Initializer.GetLocation()));
                     //}
                     continue;
                 }
@@ -58,8 +60,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var constValue = nodeContext.SemanticModel.GetConstantValue(initializer);
                 if (!constValue.HasValue)
                     continue;
-                if (IsDefaultValue(type, constValue.Value)) {
-                    nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor,  v.Identifier.GetLocation()));
+                if (IsDefaultValue(type, constValue.Value))
+                {
+                    nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor, v.Initializer.GetLocation()));
                 }
             }
         }
