@@ -51,7 +51,6 @@
 * RedundantBoolCompareAnalyzer
 * RedundantCatchClauseAnalyzer
 * RedundantComparisonWithNullAnalyzer
-* RedundantEmptyFinallyBlockAnalyzer
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer
 * RedundantExtendsListEntryAnalyzer
