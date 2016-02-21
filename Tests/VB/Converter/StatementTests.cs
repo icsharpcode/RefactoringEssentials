@@ -747,5 +747,125 @@ class TestClass
     End Sub
 End Class");
         }
+
+        [Test]
+        public void SelectCase1()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod(int number)
+    {
+        switch (number) {
+            case 0:
+            case 1:
+            case 2:
+                Console.Write(""number is 0, 1, 2"");
+                break;
+            case 3:
+                Console.Write(""section 3"");
+                goto case 5;
+            case 4:
+                Console.Write(""section 4"");
+                goto default;
+            case 5:
+                Console.Write(""section 5"");
+                break;
+            default:
+                Console.Write(""default section"");
+                break;
+        }
+    }
+}", @"Class TestClass
+    Sub TestMethod(ByVal number As Integer)
+        Select Case number
+            Case 0, 1, 2
+                Console.Write(""number is 0, 1, 2"")
+            Case 3
+                Console.Write(""section 3"")
+                GoTo _Select0_Case5
+            Case 4
+                Console.Write(""section 4"")
+                GoTo _Select0_CaseDefault
+            Case 5
+_Select0_Case5:
+                Console.Write(""section 5"")
+            Case Else
+_Select0_CaseDefault:
+                Console.Write(""default section"")
+        End Select
+    End Sub
+End Class");
+        }
+
+        [Test]
+        public void TryCatch()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    static bool Log(string message)
+    {
+        Console.WriteLine(message);
+        return false;
+    }
+
+    void TestMethod(int number)
+    {
+        try {
+            Console.WriteLine(""try"");
+        } catch (Exception e) {
+            Console.WriteLine(""catch1"");
+        } catch {
+            Console.WriteLine(""catch all"");
+        } finally {
+            Console.WriteLine(""finally"");
+        }
+        try {
+            Console.WriteLine(""try"");
+        } catch (System.IO.IOException) {
+            Console.WriteLine(""catch1"");
+        } catch (Exception e) when (Log(e.Message)) {
+            Console.WriteLine(""catch2"");
+        }
+        try {
+            Console.WriteLine(""try"");
+        } finally {
+            Console.WriteLine(""finally"");
+        }
+    }
+}", @"Class TestClass
+    Shared Function Log(ByVal message As String) As Boolean
+        Console.WriteLine(message)
+        Return False
+    End Function
+
+    Sub TestMethod(ByVal number As Integer)
+        Try
+            Console.WriteLine(""try"")
+        Catch e As Exception
+            Console.WriteLine(""catch1"")
+        Catch
+            Console.WriteLine(""catch all"")
+        Finally
+            Console.WriteLine(""finally"")
+        End Try
+
+        Try
+            Console.WriteLine(""try"")
+        Catch __unusedIOException1__ As System.IO.IOException
+            Console.WriteLine(""catch1"")
+        Catch e As Exception When Log(e.Message)
+            Console.WriteLine(""catch2"")
+        End Try
+
+        Try
+            Console.WriteLine(""try"")
+        Finally
+            Console.WriteLine(""finally"")
+        End Try
+    End Sub
+End Class");
+        }
     }
 }

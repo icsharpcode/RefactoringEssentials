@@ -17,6 +17,14 @@ namespace RefactoringEssentials.VB.Converter
         {
             SemanticModel semanticModel;
             NodesVisitor nodesVisitor;
+            Stack<BlockInfo> blockInfo = new Stack<BlockInfo>(); // currently only works with switch blocks
+            int switchCount = 0;
+            
+            class BlockInfo
+            {
+                public readonly List<VisualBasicSyntaxNode> GotoCaseExpressions = new List<VisualBasicSyntaxNode>();
+                public readonly List<string> LabelsInBlock = new List<string>();
+            }
 
             public MethodBodyVisitor(SemanticModel semanticModel, NodesVisitor nodesVisitor)
             {
@@ -198,6 +206,66 @@ namespace RefactoringEssentials.VB.Converter
                 }
             }
 
+            public override SyntaxList<StatementSyntax> VisitSwitchStatement(CSS.SwitchStatementSyntax node)
+            {
+                StatementSyntax stmt;
+                blockInfo.Push(new BlockInfo());
+                try
+                {
+                    var blocks = node.Sections.Select(ConvertSwitchSection).ToArray();
+                    stmt = SyntaxFactory.SelectBlock(
+                        SyntaxFactory.SelectStatement((ExpressionSyntax)node.Expression.Accept(nodesVisitor)).WithCaseKeyword(SyntaxFactory.Token(SyntaxKind.CaseKeyword)),
+                        SyntaxFactory.List(AddLabels(blocks, blockInfo.Peek().GotoCaseExpressions))
+                    );
+                    switchCount++;
+                }
+                finally
+                {
+                    blockInfo.Pop();
+                }
+                return SyntaxFactory.SingletonList(stmt);
+            }
+
+            IEnumerable<CaseBlockSyntax> AddLabels(CaseBlockSyntax[] blocks, List<VisualBasicSyntaxNode> gotoLabels)
+            {
+                foreach (var _block in blocks)
+                {
+                    var block = _block;
+                    foreach (var caseClause in block.CaseStatement.Cases)
+                    {
+                        var expression = caseClause is ElseCaseClauseSyntax ? (VisualBasicSyntaxNode)caseClause : ((SimpleCaseClauseSyntax)caseClause).Value;
+                        if (gotoLabels.Any(label => label.IsEquivalentTo(expression)))
+                            block = block.WithStatements(block.Statements.Insert(0, SyntaxFactory.LabelStatement(MakeGotoSwitchLabel(expression))));
+                    }
+                    yield return block;
+                }
+            }
+
+            CaseBlockSyntax ConvertSwitchSection(CSS.SwitchSectionSyntax section)
+            {
+                if (section.Labels.OfType<CSS.DefaultSwitchLabelSyntax>().Any())
+                    return SyntaxFactory.CaseElseBlock(SyntaxFactory.CaseElseStatement(SyntaxFactory.ElseCaseClause()), ConvertSwitchSectionBlock(section));
+                return SyntaxFactory.CaseBlock(SyntaxFactory.CaseStatement(SyntaxFactory.SeparatedList(section.Labels.OfType<CSS.CaseSwitchLabelSyntax>().Select(ConvertSwitchLabel))), ConvertSwitchSectionBlock(section));
+            }
+
+            SyntaxList<StatementSyntax> ConvertSwitchSectionBlock(CSS.SwitchSectionSyntax section)
+            {
+                List<StatementSyntax> statements = new List<StatementSyntax>();
+                var lastStatement = section.Statements.LastOrDefault();
+                foreach (var s in section.Statements)
+                {
+                    if (s == lastStatement && s is CSS.BreakStatementSyntax)
+                        continue;
+                    statements.AddRange(s.Accept(this));
+                }
+                return SyntaxFactory.List(statements);
+            }
+
+            CaseClauseSyntax ConvertSwitchLabel(CSS.CaseSwitchLabelSyntax label)
+            {
+                return SyntaxFactory.SimpleCaseClause((ExpressionSyntax)label.Value.Accept(nodesVisitor));
+            }
+
             public override SyntaxList<StatementSyntax> VisitDoStatement(CSS.DoStatementSyntax node)
             {
                 var condition = (ExpressionSyntax)node.Condition.Accept(nodesVisitor);
@@ -359,6 +427,37 @@ namespace RefactoringEssentials.VB.Converter
                 return SyntaxFactory.SingletonList<StatementSyntax>(block);
             }
 
+            public override SyntaxList<StatementSyntax> VisitTryStatement(CSS.TryStatementSyntax node)
+            {
+                var block = SyntaxFactory.TryBlock(
+                    ConvertBlock(node.Block),
+                    SyntaxFactory.List(node.Catches.IndexedSelect(ConvertCatchClause)),
+                    node.Finally == null ? null : SyntaxFactory.FinallyBlock(ConvertBlock(node.Finally.Block))
+                );
+
+                return SyntaxFactory.SingletonList<StatementSyntax>(block);
+            }
+
+            CatchBlockSyntax ConvertCatchClause(int index, CSS.CatchClauseSyntax catchClause)
+            {
+                var statements = ConvertBlock(catchClause.Block);
+                if (catchClause.Declaration == null)
+                    return SyntaxFactory.CatchBlock(SyntaxFactory.CatchStatement(), statements);
+                var type = (TypeSyntax)catchClause.Declaration.Type.Accept(nodesVisitor);
+                string simpleTypeName;
+                if (type is QualifiedNameSyntax)
+                    simpleTypeName = ((QualifiedNameSyntax)type).Right.ToString();
+                else
+                    simpleTypeName = type.ToString();
+                return SyntaxFactory.CatchBlock(
+                    SyntaxFactory.CatchStatement(
+                        SyntaxFactory.IdentifierName(catchClause.Declaration.Identifier.IsKind(CS.SyntaxKind.None) ? SyntaxFactory.Identifier($"__unused{simpleTypeName}{index + 1}__") : ConvertIdentifier(catchClause.Declaration.Identifier)),
+                        SyntaxFactory.SimpleAsClause(type),
+                        catchClause.Filter == null ? null : SyntaxFactory.CatchFilterClause((ExpressionSyntax)catchClause.Filter.FilterExpression.Accept(nodesVisitor))
+                    ), statements
+                );
+            }
+
             public override SyntaxList<StatementSyntax> VisitUsingStatement(CSS.UsingStatementSyntax node)
             {
                 var stmt = SyntaxFactory.UsingStatement(
@@ -382,12 +481,32 @@ namespace RefactoringEssentials.VB.Converter
                     .AddRange(node.Statement.Accept(this));
             }
 
+            string MakeGotoSwitchLabel(VisualBasicSyntaxNode expression)
+            {
+                string expressionText;
+                if (expression is ElseCaseClauseSyntax)
+                    expressionText = "Default";
+                else
+                    expressionText = expression.ToString();
+                return $"_Select{switchCount}_Case{expressionText}";
+            }
+
             public override SyntaxList<StatementSyntax> VisitGotoStatement(CSS.GotoStatementSyntax node)
             {
-                if (!(node.Expression is CSS.IdentifierNameSyntax))
-                    throw new NotImplementedException();
-                var stmt = SyntaxFactory.GoToStatement(SyntaxFactory.Label(SyntaxKind.IdentifierLabel, ConvertIdentifier(((CSS.IdentifierNameSyntax)node.Expression).Identifier)));
-                return SyntaxFactory.SingletonList<StatementSyntax>(stmt);
+                LabelSyntax label;
+                if (node.IsKind(CS.SyntaxKind.GotoCaseStatement, CS.SyntaxKind.GotoDefaultStatement))
+                {
+                    if (blockInfo.Count == 0)
+                        throw new InvalidOperationException("goto case/goto default outside switch is illegal!");
+                    var labelExpression = node.Expression?.Accept(nodesVisitor) ?? SyntaxFactory.ElseCaseClause();
+                    blockInfo.Peek().GotoCaseExpressions.Add(labelExpression);
+                    label = SyntaxFactory.Label(SyntaxKind.IdentifierLabel, MakeGotoSwitchLabel(labelExpression));
+                }
+                else
+                {
+                    label = SyntaxFactory.Label(SyntaxKind.IdentifierLabel, ConvertIdentifier(((CSS.IdentifierNameSyntax)node.Expression).Identifier));
+                }
+                return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.GoToStatement(label));
             }
 
             SyntaxList<StatementSyntax> ConvertBlock(CSS.StatementSyntax node)
@@ -475,6 +594,12 @@ namespace RefactoringEssentials.VB.Converter
                         keywordKind = SyntaxKind.ForKeyword;
                         break;
                     }
+                    if (stmt is CSS.SwitchStatementSyntax)
+                    {
+                        statementKind = SyntaxKind.ExitSelectStatement;
+                        keywordKind = SyntaxKind.SelectKeyword;
+                        break;
+                    }
                 }
                 return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.ExitStatement(statementKind, SyntaxFactory.Token(keywordKind)));
             }
@@ -484,7 +609,7 @@ namespace RefactoringEssentials.VB.Converter
                 return WrapInComment(Visit(node.Block), "Visual Basic does not support checked statements!");
             }
 
-            private SyntaxList<StatementSyntax> WrapInComment(SyntaxList<StatementSyntax> nodes, string comment)
+            SyntaxList<StatementSyntax> WrapInComment(SyntaxList<StatementSyntax> nodes, string comment)
             {
                 if (nodes.Count > 0)
                 {

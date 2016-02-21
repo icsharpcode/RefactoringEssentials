@@ -32,5 +32,15 @@ namespace RefactoringEssentials.VB.Converter
         {
             return arg is CS.Syntax.NamespaceDeclarationSyntax || arg is CS.Syntax.CompilationUnitSyntax;
         }
+
+        public static IEnumerable<R> IndexedSelect<T, R>(this IEnumerable<T> source, Func<int, T, R> transform)
+        {
+            int i = 0;
+            foreach (var item in source)
+            {
+                yield return transform(i, item);
+                i++;
+            }
+        }
     }
 }
