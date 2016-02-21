@@ -11,6 +11,36 @@ namespace RefactoringEssentials.Tests.VB.Converter
     public class StatementTests : ConverterTestBase
     {
         [Test]
+        public void EmptyStatement()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        if (true) ;
+        while (true) ;
+        for (;;) ;
+        do ; while (true);
+    }
+}", @"Class TestClass
+    Sub TestMethod()
+        If True Then
+        End If
+
+        While True
+        End While
+
+        While True
+        End While
+
+        Do
+        Loop While True
+    End Sub
+End Class");
+        }
+
+        [Test]
         public void AssignmentStatement()
         {
             TestConversionCSharpToVisualBasic(@"

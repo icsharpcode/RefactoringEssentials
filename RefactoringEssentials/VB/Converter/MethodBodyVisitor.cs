@@ -79,10 +79,9 @@ namespace RefactoringEssentials.VB.Converter
                 CollectElseBlocks(node, elseIfBlocks, ref elseBlock);
                 if (node.Statement is CSS.BlockSyntax)
                 {
-                    var b = (CSS.BlockSyntax)node.Statement;
                     stmt = SyntaxFactory.MultiLineIfBlock(
                         SyntaxFactory.IfStatement((ExpressionSyntax)node.Condition.Accept(nodesVisitor)).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword)),
-                        SyntaxFactory.List(b.Statements.SelectMany(s => s.Accept(this))),
+                        ConvertBlock(node.Statement),
                         SyntaxFactory.List(elseIfBlocks),
                         elseBlock
                     );
@@ -93,7 +92,7 @@ namespace RefactoringEssentials.VB.Converter
                     {
                         stmt = SyntaxFactory.MultiLineIfBlock(
                              SyntaxFactory.IfStatement((ExpressionSyntax)node.Condition.Accept(nodesVisitor)).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword)),
-                             node.Statement.Accept(this),
+                             ConvertBlock(node.Statement),
                              SyntaxFactory.List(elseIfBlocks),
                              elseBlock
                          );
@@ -102,7 +101,7 @@ namespace RefactoringEssentials.VB.Converter
                     {
                         stmt = SyntaxFactory.SingleLineIfStatement(
                             (ExpressionSyntax)node.Condition.Accept(nodesVisitor),
-                            node.Statement.Accept(this),
+                            ConvertBlock(node.Statement),
                             elseBlock == null ? null : SyntaxFactory.SingleLineElseClause(elseBlock.Statements)
                         ).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword));
                     }
@@ -174,36 +173,16 @@ namespace RefactoringEssentials.VB.Converter
                 if (node.Else.Statement is CSS.IfStatementSyntax)
                 {
                     var elseIf = (CSS.IfStatementSyntax)node.Else.Statement;
-                    if (elseIf.Statement is CSS.BlockSyntax)
-                    {
-                        var block = (CSS.BlockSyntax)elseIf.Statement;
-                        elseIfBlocks.Add(
-                            SyntaxFactory.ElseIfBlock(
-                                SyntaxFactory.ElseIfStatement((ExpressionSyntax)elseIf.Condition.Accept(nodesVisitor)).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword)),
-                                SyntaxFactory.List(block.Statements.SelectMany(s => s.Accept(this)))
-                            )
-                        );
-                    }
-                    else
-                    {
-                        elseIfBlocks.Add(
-                            SyntaxFactory.ElseIfBlock(
-                                SyntaxFactory.ElseIfStatement((ExpressionSyntax)elseIf.Condition.Accept(nodesVisitor)).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword)),
-                                elseIf.Statement.Accept(this)
-                            )
-                        );
-                    }
+                    elseIfBlocks.Add(
+                        SyntaxFactory.ElseIfBlock(
+                            SyntaxFactory.ElseIfStatement((ExpressionSyntax)elseIf.Condition.Accept(nodesVisitor)).WithThenKeyword(SyntaxFactory.Token(SyntaxKind.ThenKeyword)),
+                            ConvertBlock(elseIf.Statement)
+                        )
+                    );
                     CollectElseBlocks(elseIf, elseIfBlocks, ref elseBlock);
                 }
-                else if (node.Else.Statement is CSS.BlockSyntax)
-                {
-                    var block = (CSS.BlockSyntax)node.Else.Statement;
-                    elseBlock = SyntaxFactory.ElseBlock(SyntaxFactory.List(block.Statements.SelectMany(s => s.Accept(this))));
-                }
                 else
-                {
-                    elseBlock = SyntaxFactory.ElseBlock(SyntaxFactory.List(node.Else.Statement.Accept(this)));
-                }
+                    elseBlock = SyntaxFactory.ElseBlock(ConvertBlock(node.Else.Statement));
             }
 
             public override SyntaxList<StatementSyntax> VisitSwitchStatement(CSS.SwitchStatementSyntax node)
@@ -256,7 +235,7 @@ namespace RefactoringEssentials.VB.Converter
                 {
                     if (s == lastStatement && s is CSS.BreakStatementSyntax)
                         continue;
-                    statements.AddRange(s.Accept(this));
+                    statements.AddRange(ConvertBlock(s));
                 }
                 return SyntaxFactory.List(statements);
             }
@@ -478,7 +457,7 @@ namespace RefactoringEssentials.VB.Converter
             public override SyntaxList<StatementSyntax> VisitLabeledStatement(CSS.LabeledStatementSyntax node)
             {
                 return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.LabelStatement(ConvertIdentifier(node.Identifier)))
-                    .AddRange(node.Statement.Accept(this));
+                    .AddRange(ConvertBlock(node.Statement));
             }
 
             string MakeGotoSwitchLabel(VisualBasicSyntaxNode expression)
@@ -514,12 +493,13 @@ namespace RefactoringEssentials.VB.Converter
                 if (node is CSS.BlockSyntax)
                 {
                     var b = (CSS.BlockSyntax)node;
-                    return SyntaxFactory.List(b.Statements.SelectMany(s => s.Accept(this)));
+                    return SyntaxFactory.List(b.Statements.Where(s => !(s is CSS.EmptyStatementSyntax)).SelectMany(s => s.Accept(this)));
                 }
-                else
+                if (node is CSS.EmptyStatementSyntax)
                 {
-                    return node.Accept(this);
+                    return SyntaxFactory.List<StatementSyntax>();
                 }
+                return node.Accept(this);
             }
 
             public override SyntaxList<StatementSyntax> VisitReturnStatement(CSS.ReturnStatementSyntax node)
