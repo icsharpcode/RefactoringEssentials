@@ -10,11 +10,6 @@ namespace RefactoringEssentials.VB.Converter
 {
     static class ConversionExtensions
     {
-        public static CS.SyntaxKind CSKind(this SyntaxToken token)
-        {
-            return CS.CSharpExtensions.Kind(token);
-        }
-
         public static bool HasUsingDirective(this CS.CSharpSyntaxTree tree, string fullName)
         {
             if (tree == null)

@@ -110,7 +110,7 @@ End Function";
             public override VisualBasicSyntaxNode VisitAttributeTargetSpecifier(CSS.AttributeTargetSpecifierSyntax node)
             {
                 SyntaxToken id;
-                switch (node.Identifier.CSKind())
+                switch (CS.CSharpExtensions.Kind(node.Identifier))
                 {
                     case CS.SyntaxKind.AssemblyKeyword:
                         id = SyntaxFactory.Token(SyntaxKind.AssemblyKeyword);

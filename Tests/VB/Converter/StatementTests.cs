@@ -338,6 +338,30 @@ End Class");
         }
 
         [Test]
+        public void DeclarationStatements()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class Test {
+    void TestMethod()
+    {
+the_beginning:
+        int value = 1;
+        const double myPIe = System.Math.PI;
+        var text = ""This is my text!"";
+        goto the_beginning;
+    }
+}", @"Class Test
+    Sub TestMethod()
+the_beginning:
+        Dim value As Integer = 1
+        Const myPIe As Double = System.Math.PI
+        Dim text = ""This is my text!""
+        GoTo the_beginning
+    End Sub
+End Class");
+        }
+
+        [Test]
         public void IfStatement()
         {
             TestConversionCSharpToVisualBasic(@"

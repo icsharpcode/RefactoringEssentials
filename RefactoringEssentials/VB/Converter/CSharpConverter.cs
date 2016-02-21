@@ -185,7 +185,7 @@ namespace RefactoringEssentials.VB.Converter
                         return SyntaxKind.NotOverridableKeyword;
                     break;
                 case CS.SyntaxKind.ConstKeyword:
-                    break;
+                    return SyntaxKind.ConstKeyword;
                 case CS.SyntaxKind.FixedKeyword:
                     break;
                 case CS.SyntaxKind.StackAllocKeyword:
