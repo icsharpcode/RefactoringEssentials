@@ -10,21 +10,18 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using RefactoringEssentials.VB.CodeRefactorings;
 using RefactoringEssentials.Converter;
 using Microsoft.CodeAnalysis.Text;
+using System.Diagnostics.Contracts;
 
 namespace RefactoringEssentials.VB.Converter
 {
     public partial class CSharpConverter
     {
-        /* TODO
-         * - Handles clause
-         * - Implements clause on members
-         * 
-         * 
-         */
         enum TokenContext
         {
             Global,
+            InterfaceOrModule,
             Member,
+            VariableOrConst,
             Local
         }
 
@@ -51,14 +48,64 @@ namespace RefactoringEssentials.VB.Converter
             }
         }
 
+        static IEnumerable<SyntaxToken> ConvertModifiersCore(IEnumerable<SyntaxToken> modifiers, TokenContext context)
+        {
+            if (context != TokenContext.Local && context != TokenContext.InterfaceOrModule)
+            {
+                bool visibility = false;
+                foreach (var token in modifiers)
+                {
+                    if (IsVisibility(token, context))
+                    {
+                        visibility = true;
+                        break;
+                    }
+                }
+                if (!visibility && context == TokenContext.Member)
+                    yield return CSharpDefaultVisibility(context); 
+            }
+            foreach (var token in modifiers.Where(m => !IgnoreInContext(m, context)))
+                yield return ConvertModifier(token, context);
+        }
+
+        static bool IgnoreInContext(SyntaxToken m, TokenContext context)
+        {
+            switch (context)
+            {
+                case TokenContext.InterfaceOrModule:
+                    return m.IsKind(CS.SyntaxKind.PublicKeyword, CS.SyntaxKind.StaticKeyword);
+            }
+            return false;
+        }
+
+        static bool IsVisibility(SyntaxToken token, TokenContext context)
+        {
+            return token.IsKind(CS.SyntaxKind.PublicKeyword, CS.SyntaxKind.InternalKeyword, CS.SyntaxKind.ProtectedKeyword, CS.SyntaxKind.PrivateKeyword)
+                || (context == TokenContext.VariableOrConst && token.IsKind(CS.SyntaxKind.ConstKeyword));
+        }
+
+        static SyntaxToken CSharpDefaultVisibility(TokenContext context)
+        {
+            switch (context)
+            {
+                case TokenContext.Global:
+                    return SyntaxFactory.Token(SyntaxKind.FriendKeyword);
+                case TokenContext.Local:
+                case TokenContext.VariableOrConst:
+                case TokenContext.Member:
+                    return SyntaxFactory.Token(SyntaxKind.PrivateKeyword);
+            }
+            throw new ArgumentOutOfRangeException(nameof(context));
+        }
+
         static SyntaxTokenList ConvertModifiers(IEnumerable<SyntaxToken> modifiers, TokenContext context = TokenContext.Global)
         {
-            return SyntaxFactory.TokenList(modifiers.Select(m => SyntaxFactory.Token(ConvertToken(CS.CSharpExtensions.Kind(m), context))));
+            return SyntaxFactory.TokenList(ConvertModifiersCore(modifiers, context));
         }
 
         static SyntaxTokenList ConvertModifiers(SyntaxTokenList modifiers, TokenContext context = TokenContext.Global)
         {
-            return SyntaxFactory.TokenList(modifiers.Select(m => SyntaxFactory.Token(ConvertToken(CS.CSharpExtensions.Kind(m), context))));
+            return SyntaxFactory.TokenList(ConvertModifiersCore(modifiers, context));
         }
 
         static SyntaxToken ConvertModifier(SyntaxToken m, TokenContext context = TokenContext.Global)
@@ -179,11 +226,7 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.ReadOnlyKeyword:
                     break;
                 case CS.SyntaxKind.SealedKeyword:
-                    if (context == TokenContext.Global)
-                        return SyntaxKind.NotInheritableKeyword;
-                    else if (context == TokenContext.Member)
-                        return SyntaxKind.NotOverridableKeyword;
-                    break;
+                    return context == TokenContext.Global ? SyntaxKind.NotInheritableKeyword : SyntaxKind.NotOverridableKeyword;
                 case CS.SyntaxKind.ConstKeyword:
                     return SyntaxKind.ConstKeyword;
                 case CS.SyntaxKind.FixedKeyword:

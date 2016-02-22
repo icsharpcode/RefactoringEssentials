@@ -55,9 +55,16 @@ End Namespace");
 {
     internal static class TestClass
     {
+        public static void Test() {}
+        static void Test2() {}
     }
 }", @"Namespace Test.[class]
     Friend Module TestClass
+        Sub Test()
+        End Sub
+
+        Private Sub Test2()
+        End Sub
     End Module
 End Namespace");
         }
@@ -128,22 +135,22 @@ End Enum");
             TestConversionCSharpToVisualBasic(
     @"abstract class ClassA : System.IDisposable
 {
-    abstract void Test();
+    protected abstract void Test();
 }", @"MustInherit Class ClassA
     Implements System.IDisposable
 
-    MustOverride Sub Test()
+    Protected MustOverride Sub Test()
 End Class");
 
             TestConversionCSharpToVisualBasic(
                 @"abstract class ClassA : System.EventArgs, System.IDisposable
 {
-    abstract void Test();
+    protected abstract void Test();
 }", @"MustInherit Class ClassA
     Inherits System.EventArgs
     Implements System.IDisposable
 
-    MustOverride Sub Test()
+    Protected MustOverride Sub Test()
 End Class");
         }
 
@@ -157,7 +164,7 @@ End Class");
 }", @"Structure MyType
     Implements System.IComparable(Of MyType)
 
-    Sub Test()
+    Private Sub Test()
     End Sub
 End Structure");
         }

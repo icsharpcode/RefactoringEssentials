@@ -194,7 +194,7 @@ End Function";
                     return SyntaxFactory.ModuleBlock(
                         SyntaxFactory.ModuleStatement(
                             SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
-                            ConvertModifiers(node.Modifiers.Where(m => !m.IsKind(CS.SyntaxKind.StaticKeyword))),
+                            ConvertModifiers(node.Modifiers, TokenContext.InterfaceOrModule),
                             id, (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
                         ),
                         SyntaxFactory.List(inherits),
@@ -250,7 +250,7 @@ End Function";
                 return SyntaxFactory.InterfaceBlock(
                     SyntaxFactory.InterfaceStatement(
                         SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this))),
-                        ConvertModifiers(node.Modifiers),
+                        ConvertModifiers(node.Modifiers, TokenContext.InterfaceOrModule),
                         ConvertIdentifier(node.Identifier),
                         (TypeParameterListSyntax)node.TypeParameterList?.Accept(this)
                     ),
@@ -317,7 +317,7 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitFieldDeclaration(CSS.FieldDeclarationSyntax node)
             {
-                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
+                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.VariableOrConst);
                 if (modifiers.Count == 0)
                     modifiers = modifiers.Add(SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
                 return SyntaxFactory.FieldDeclaration(
@@ -362,18 +362,19 @@ End Function";
                 }
                 var id = ConvertIdentifier(node.Identifier);
                 var methodInfo = semanticModel.GetDeclaredSymbol(node);
+                var containingType = methodInfo?.ContainingType;
                 var attributes = SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)));
                 var parameterList = (ParameterListSyntax)node.ParameterList?.Accept(this);
-                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
+                var modifiers = ConvertModifiers(node.Modifiers, containingType?.IsInterfaceType() == true ? TokenContext.Local : TokenContext.Member);
                 if (node.ParameterList.Parameters.Count > 0 && node.ParameterList.Parameters[0].Modifiers.Any(CS.SyntaxKind.ThisKeyword))
                 {
                     attributes = attributes.Insert(0, SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(SyntaxFactory.Attribute(null, SyntaxFactory.ParseTypeName("Extension"), SyntaxFactory.ArgumentList()))));
                     if (!((CS.CSharpSyntaxTree)node.SyntaxTree).HasUsingDirective("System.Runtime.CompilerServices"))
                         allImports.Add(SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList<ImportsClauseSyntax>(SyntaxFactory.SimpleImportsClause(SyntaxFactory.ParseName("System.Runtime.CompilerServices")))));
                 }
-                if (methodInfo?.ContainingType?.IsStatic == true)
+                if (containingType?.IsStatic == true)
                 {
-                    modifiers = SyntaxFactory.TokenList(modifiers.Where(t => !t.IsKind(SyntaxKind.SharedKeyword)));
+                    modifiers = SyntaxFactory.TokenList(modifiers.Where(t => !(t.IsKind(SyntaxKind.SharedKeyword, SyntaxKind.PublicKeyword))));
                 }
                 if (methodInfo?.GetReturnType()?.SpecialType == SpecialType.System_Void)
                 {
@@ -490,7 +491,7 @@ End Function";
                     body = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))));
                 }
                 var attributes = SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)));
-                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
+                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Local);
                 var parent = (CSS.BasePropertyDeclarationSyntax)node.Parent.Parent;
                 ParameterSyntax valueParam;
 
@@ -551,7 +552,7 @@ End Function";
                     @default = SyntaxFactory.EqualsValue((ExpressionSyntax)node.Default?.Value.Accept(this));
                 }
                 AttributeListSyntax[] newAttributes;
-                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
+                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Local);
                 if ((modifiers.Count == 0 && returnType != null) || node.Modifiers.Any(CS.SyntaxKind.ThisKeyword))
                 {
                     modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ByValKeyword));

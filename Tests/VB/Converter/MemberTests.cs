@@ -11,6 +11,20 @@ namespace RefactoringEssentials.Tests.VB.Converter
     public class MemberTests : ConverterTestBase
     {
         [Test]
+        public void TestField()
+        {
+            TestConversionCSharpToVisualBasic(
+                @"class TestClass
+{
+    const int answer = 42;
+    int value = 10;
+}", @"Class TestClass
+    Const answer As Integer = 42
+    Private value As Integer = 10
+End Class");
+        }
+
+        [Test]
         public void TestMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -115,7 +129,7 @@ End Class");
 
 Module TestClass
     <Extension()>
-    Public Sub TestMethod(ByVal str As String)
+    Sub TestMethod(ByVal str As String)
     End Sub
 End Module");
         }
@@ -135,7 +149,7 @@ static class TestClass
 
 Module TestClass
     <Extension()>
-    Public Sub TestMethod(ByVal str As String)
+    Sub TestMethod(ByVal str As String)
     End Sub
 End Module");
         }

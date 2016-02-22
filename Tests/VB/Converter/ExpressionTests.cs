@@ -21,7 +21,7 @@ class TestClass
         bool result = (str == """") ? true : false;
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal str As String)
+    Private Sub TestMethod(ByVal str As String)
         Dim result As Boolean = If((str = """"), True, False)
     End Sub
 End Class");
@@ -38,7 +38,7 @@ class TestClass
         Console.WriteLine(str ?? ""<null>"");
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal str As String)
+    Private Sub TestMethod(ByVal str As String)
         Console.WriteLine(If(str, ""<null>""))
     End Sub
 End Class");
@@ -58,7 +58,7 @@ class TestClass
         Console.ReadKey();
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal str As String)
+    Private Sub TestMethod(ByVal str As String)
         Dim length As Integer
         length = str.Length
         Console.WriteLine(""Test"")
@@ -80,7 +80,7 @@ class TestClass
         Console.ReadKey();
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal str As String)
+    Private Sub TestMethod(ByVal str As String)
         Dim length As Integer = If(str?.Length, -1)
         Console.WriteLine(length)
         Console.ReadKey()
@@ -112,7 +112,7 @@ class TestClass
 End Class
 
 Class TestClass
-    Sub TestMethod(ByVal str As String)
+    Private Sub TestMethod(ByVal str As String)
         Dim student2 As StudentName = New StudentName With {.FirstName = ""Craig"", .LastName = ""Playstead""}
     End Sub
 End Class");
@@ -132,7 +132,7 @@ class TestClass
         };
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal str As String)
+    Private Sub TestMethod(ByVal str As String)
         Dim student2 = New With {Key .FirstName = ""Craig"", Key .LastName = ""Playstead""}
     End Sub
 End Class");
@@ -153,7 +153,7 @@ class TestClass
 }", @"Class TestClass
     Private member As Integer
 
-    Sub TestMethod()
+    Private Sub TestMethod()
         Me.member = 0
     End Sub
 End Class");
@@ -181,7 +181,7 @@ End Class
 Class TestClass
     Inherits BaseTestClass
 
-    Sub TestMethod()
+    Private Sub TestMethod()
         MyBase.member = 0
     End Sub
 End Class");
@@ -200,7 +200,7 @@ class TestClass
         test(3);
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim test = Function(ByVal a As Integer) a * 2
         test(3)
     End Sub
@@ -222,7 +222,7 @@ class TestClass
         test(3);
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim test = Function(a) a * 2
         Dim test2 = Function(a, b)
                         If b > 0 Then Return a / b

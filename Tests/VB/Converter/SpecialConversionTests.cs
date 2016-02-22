@@ -22,7 +22,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
         b = a = 5;
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim a, b As Integer
         b = __InlineAssignHelper(a, 5)
     End Sub
@@ -47,7 +47,7 @@ End Class");
         b = a++;
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer, a As Integer = 5
         b = Math.Min(System.Threading.Interlocked.Increment(a), a - 1)
     End Sub
@@ -67,9 +67,9 @@ End Class");
         if (MyEvent != null) MyEvent(this, EventArgs.Empty);
     }
 }", @"Class TestClass
-    Event MyEvent As EventHandler
+    Private Event MyEvent As EventHandler
 
-    Sub TestMethod()
+    Private Sub TestMethod()
         RaiseEvent MyEvent(Me, EventArgs.Empty)
     End Sub
 End Class");
@@ -81,7 +81,7 @@ End Class");
         if ((MyEvent != null)) MyEvent(this, EventArgs.Empty);
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         RaiseEvent MyEvent(Me, EventArgs.Empty)
     End Sub
 End Class");
@@ -93,7 +93,7 @@ End Class");
         if (null != MyEvent) { MyEvent(this, EventArgs.Empty); }
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         RaiseEvent MyEvent(Me, EventArgs.Empty)
     End Sub
 End Class");
@@ -105,7 +105,7 @@ End Class");
         if (this.MyEvent != null) MyEvent(this, EventArgs.Empty);
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         RaiseEvent MyEvent(Me, EventArgs.Empty)
     End Sub
 End Class");
@@ -117,7 +117,7 @@ End Class");
         if (MyEvent != null) this.MyEvent(this, EventArgs.Empty);
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         RaiseEvent MyEvent(Me, EventArgs.Empty)
     End Sub
 End Class");
@@ -129,7 +129,7 @@ End Class");
         if ((this.MyEvent != null)) { this.MyEvent(this, EventArgs.Empty); }
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         RaiseEvent MyEvent(Me, EventArgs.Empty)
     End Sub
 End Class");
@@ -146,7 +146,7 @@ End Class");
         if (FullImage != null) DrawImage();
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         If FullImage IsNot Nothing Then DrawImage()
     End Sub
 End Class");
@@ -159,7 +159,7 @@ End Class");
         if (FullImage != null) e.DrawImage();
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         If FullImage IsNot Nothing Then e.DrawImage()
     End Sub
 End Class");
@@ -172,7 +172,7 @@ End Class");
         if (FullImage != null) { DrawImage(); }
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         If FullImage IsNot Nothing Then
             DrawImage()
         End If
@@ -186,7 +186,7 @@ End Class");
         if (FullImage != null) { e.DrawImage(); }
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         If FullImage IsNot Nothing Then
             e.DrawImage()
         End If
@@ -201,7 +201,7 @@ End Class");
         if (Tiles != null) foreach (Tile t in Tiles) this.TileTray.Controls.Remove(t);
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         If Tiles IsNot Nothing Then
 
             For Each t As Tile In Tiles
