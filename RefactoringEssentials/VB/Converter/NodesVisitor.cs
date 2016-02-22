@@ -356,9 +356,10 @@ End Function";
             public override VisualBasicSyntaxNode VisitMethodDeclaration(CSS.MethodDeclarationSyntax node)
             {
                 SyntaxList<StatementSyntax>? block = null;
+                var visitor = new MethodBodyVisitor(semanticModel, this);
                 if (node.Body != null)
                 {
-                    block = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))));
+                    block = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(visitor)));
                 }
                 var id = ConvertIdentifier(node.Identifier);
                 var methodInfo = semanticModel.GetDeclaredSymbol(node);
@@ -366,6 +367,8 @@ End Function";
                 var attributes = SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)));
                 var parameterList = (ParameterListSyntax)node.ParameterList?.Accept(this);
                 var modifiers = ConvertModifiers(node.Modifiers, containingType?.IsInterfaceType() == true ? TokenContext.Local : TokenContext.Member);
+                if (visitor.IsInterator)
+                    modifiers = modifiers.Add(SyntaxFactory.Token(SyntaxKind.IteratorKeyword));
                 if (node.ParameterList.Parameters.Count > 0 && node.ParameterList.Parameters[0].Modifiers.Any(CS.SyntaxKind.ThisKeyword))
                 {
                     attributes = attributes.Insert(0, SyntaxFactory.AttributeList(SyntaxFactory.SingletonSeparatedList(SyntaxFactory.Attribute(null, SyntaxFactory.ParseTypeName("Extension"), SyntaxFactory.ArgumentList()))));
@@ -409,15 +412,24 @@ End Function";
                 var id = ConvertIdentifier(node.Identifier);
                 SyntaxList<AttributeListSyntax> attributes, returnAttributes;
                 ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
+                bool isIterator = false;
+                List<AccessorBlockSyntax> accessors = new List<AccessorBlockSyntax>();
+                foreach (var a in node.AccessorList?.Accessors)
+                {
+                    bool _isIterator;
+                    accessors.Add(ConvertAccessor(a, out _isIterator));
+                    isIterator |= _isIterator;
+                }
+                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
+                if (isIterator) modifiers = modifiers.Add(SyntaxFactory.Token(SyntaxKind.IteratorKeyword));
                 var stmt = SyntaxFactory.PropertyStatement(
                     attributes,
-                    ConvertModifiers(node.Modifiers, TokenContext.Member),
+                    modifiers,
                     id, null,
                     SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.Type.Accept(this)), null, null
                 );
                 if (node.AccessorList.Accessors.All(a => a.Body == null))
                     return stmt;
-                var accessors = node.AccessorList?.Accessors.Select(a => (AccessorBlockSyntax)a.Accept(this)).ToArray();
                 return SyntaxFactory.PropertyBlock(stmt, SyntaxFactory.List(accessors));
             }
 
@@ -426,16 +438,25 @@ End Function";
                 var id = SyntaxFactory.Identifier("Item");
                 SyntaxList<AttributeListSyntax> attributes, returnAttributes;
                 ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
+                bool isIterator = false;
+                List<AccessorBlockSyntax> accessors = new List<AccessorBlockSyntax>();
+                foreach (var a in node.AccessorList?.Accessors)
+                {
+                    bool _isIterator;
+                    accessors.Add(ConvertAccessor(a, out _isIterator));
+                    isIterator |= _isIterator;
+                }
+                var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member).Insert(0, SyntaxFactory.Token(SyntaxKind.DefaultKeyword));
+                if (isIterator) modifiers = modifiers.Add(SyntaxFactory.Token(SyntaxKind.IteratorKeyword));
                 var parameterList = (ParameterListSyntax)node.ParameterList?.Accept(this);
                 var stmt = SyntaxFactory.PropertyStatement(
                     attributes,
-                    ConvertModifiers(node.Modifiers, TokenContext.Member).Insert(0, SyntaxFactory.Token(SyntaxKind.DefaultKeyword)),
+                    modifiers,
                     id, parameterList,
                     SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.Type.Accept(this)), null, null
                 );
                 if (node.AccessorList.Accessors.All(a => a.Body == null))
                     return stmt;
-                var accessors = node.AccessorList?.Accessors.Select(a => (AccessorBlockSyntax)a.Accept(this)).ToArray();
                 return SyntaxFactory.PropertyBlock(stmt, SyntaxFactory.List(accessors));
             }
 
@@ -451,7 +472,8 @@ End Function";
                 );
                 if (node.AccessorList.Accessors.All(a => a.Body == null))
                     return stmt;
-                var accessors = node.AccessorList?.Accessors.Select(a => (AccessorBlockSyntax)a.Accept(this)).ToArray();
+                bool unused;
+                var accessors = node.AccessorList?.Accessors.Select(a => ConvertAccessor(a, out unused)).ToArray();
                 return SyntaxFactory.EventBlock(stmt, SyntaxFactory.List(accessors));
             }
 
@@ -480,15 +502,18 @@ End Function";
                 attributes = SyntaxFactory.List(attr);
             }
 
-            public override VisualBasicSyntaxNode VisitAccessorDeclaration(CSS.AccessorDeclarationSyntax node)
+            AccessorBlockSyntax ConvertAccessor(CSS.AccessorDeclarationSyntax node, out bool isIterator)
             {
                 SyntaxKind blockKind;
                 AccessorStatementSyntax stmt;
                 EndBlockStatementSyntax endStmt;
                 SyntaxList<StatementSyntax> body = SyntaxFactory.List<StatementSyntax>();
+                isIterator = false;
                 if (node.Body != null)
                 {
-                    body = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))));
+                    var visitor = new MethodBodyVisitor(semanticModel, this);
+                    body = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(visitor)));
+                    isIterator = visitor.IsInterator;
                 }
                 var attributes = SyntaxFactory.List(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)));
                 var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Local);

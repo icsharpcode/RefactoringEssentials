@@ -921,5 +921,29 @@ class TestClass
     End Sub
 End Class");
         }
+
+        [Test]
+        public void Yield()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    IEnumerable<int> TestMethod(int number)
+    {
+        if (number < 0)
+            yield break;
+        for (int i = 0; i < number; i++)
+            yield return i;
+    }
+}", @"Class TestClass
+    Private Iterator Function TestMethod(ByVal number As Integer) As IEnumerable(Of Integer)
+        If number < 0 Then Return
+
+        For i As Integer = 0 To number - 1
+            Yield i
+        Next
+    End Function
+End Class");
+        }
     }
 }

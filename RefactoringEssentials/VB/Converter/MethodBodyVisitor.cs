@@ -19,11 +19,11 @@ namespace RefactoringEssentials.VB.Converter
             NodesVisitor nodesVisitor;
             Stack<BlockInfo> blockInfo = new Stack<BlockInfo>(); // currently only works with switch blocks
             int switchCount = 0;
+            public bool IsInterator { get; private set; }
             
             class BlockInfo
             {
                 public readonly List<VisualBasicSyntaxNode> GotoCaseExpressions = new List<VisualBasicSyntaxNode>();
-                public readonly List<string> LabelsInBlock = new List<string>();
             }
 
             public MethodBodyVisitor(SemanticModel semanticModel, NodesVisitor nodesVisitor)
@@ -509,6 +509,17 @@ namespace RefactoringEssentials.VB.Converter
                     stmt = SyntaxFactory.ReturnStatement();
                 else
                     stmt = SyntaxFactory.ReturnStatement((ExpressionSyntax)node.Expression.Accept(nodesVisitor));
+                return SyntaxFactory.SingletonList(stmt);
+            }
+
+            public override SyntaxList<StatementSyntax> VisitYieldStatement(CSS.YieldStatementSyntax node)
+            {
+                IsInterator = true;
+                StatementSyntax stmt;
+                if (node.Expression == null)
+                    stmt = SyntaxFactory.ReturnStatement();
+                else
+                    stmt = SyntaxFactory.YieldStatement((ExpressionSyntax)node.Expression.Accept(nodesVisitor));
                 return SyntaxFactory.SingletonList(stmt);
             }
 
