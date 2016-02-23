@@ -185,7 +185,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                             case "typeparam":
                             case "typeparamref":
                                 var name = el.Attributes.FirstOrDefault(attr => attr.Name == "name");
-                                if (name == null)
+                                if (name == null || name.ValueSegment.Length < 2)
                                     break;
                                 if (member != null && member.IsKind(SymbolKind.NamedType))
                                 {
@@ -199,7 +199,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                             case "param":
                             case "paramref":
                                 name = el.Attributes.FirstOrDefault(attr => attr.Name == "name");
-                                if (name == null)
+                                if (name == null || name.ValueSegment.Length < 2)
                                     break;
                                 var m = member as IMethodSymbol;
                                 if (m != null)

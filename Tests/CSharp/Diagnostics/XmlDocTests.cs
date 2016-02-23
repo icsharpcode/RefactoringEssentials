@@ -169,6 +169,21 @@ $$		event EventHandler<EventArgs> NextChanged;
 }
 ");
         }
+        /// <summary>
+        /// XmlDocAnalyzer causes unexpected exception which crashes Visual Studio #180
+        /// </summary>
+        [Test]
+        public void TestIssue180()
+        {
+            Analyze<XmlDocAnalyzer>(@"
+class Foo {
+    /// <param name=""$>$</param>
+    public void FooBar(int x, int y, int z)
+    {
+    }
+}
+");
+        }
     }
 
 
