@@ -4,23 +4,34 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    public class StaticFieldInGenericTypeTests : CSharpDiagnosticTestBase
+    public class StaticFieldOrAutoPropertyInGenericTypeTests : CSharpDiagnosticTestBase
     {
 
         [Test]
         public void GenericClass()
         {
-            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
 class Foo<T>
 {
 	static string $Data$;
 }");
         }
 
+
+        [Test]
+        public void AutoProperty()
+        {
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
+class Foo<T>
+{
+    static string $Data$ { get ; set; };
+}");
+        }
+
         [Test]
         public void GenericClassWithGenericField()
         {
-            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
 class Foo<T>
 {
 	static System.Collections.Generic.IList<T> Cache;
@@ -30,7 +41,7 @@ class Foo<T>
         [Test]
         public void GenericClassWithMultipleGenericFields()
         {
-            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
 class Foo<T1, T2>
 {
 	static System.Collections.Generic.IList<T1> $Cache$;
@@ -40,7 +51,7 @@ class Foo<T1, T2>
         [Test]
         public void NestedGenericClassWithGenericField()
         {
-            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
 class Foo<T1>
 {
 	class Bar<T2>
@@ -53,7 +64,7 @@ class Foo<T1>
         [Test]
         public void NonGenericClass()
         {
-            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
 class Foo
 {
 	static string Data;
@@ -63,7 +74,7 @@ class Foo
         [Test]
         public void NonStaticField()
         {
-            Analyze<StaticFieldInGenericTypeAnalyzer>(@"
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
 class Foo<T>
 {
 	string Data;
@@ -74,7 +85,7 @@ class Foo<T>
         [Test]
         public void TestMicrosoftSuppressMessage()
         {
-            TestIssue<StaticFieldInGenericTypeAnalyzer>(@"using System.Diagnostics.CodeAnalysis;
+            TestIssue<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"using System.Diagnostics.CodeAnalysis;
 
 class Foo<T>
 {
@@ -89,7 +100,7 @@ class Foo<T>
         [Test]
         public void TestAssemblyMicrosoftSuppressMessage()
         {
-            Analyze<StaticFieldInGenericTypeAnalyzer>(@"using System.Diagnostics.CodeAnalysis;
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"using System.Diagnostics.CodeAnalysis;
 
 [assembly:SuppressMessage(""Microsoft.Design"", ""CA1000:DoNotDeclareStaticMembersOnGenericTypes"")]
 
@@ -111,7 +122,7 @@ class Foo<T>
 #pragma warning disable " + CSharpDiagnosticIDs.StaticFieldInGenericTypeAnalyzerID + @"
 	static string Data;
 }";
-            Analyze<StaticFieldInGenericTypeAnalyzer>(input);
+            Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(input);
         }
 
     }

@@ -10,7 +10,7 @@ using System.Linq;
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    public class StaticFieldInGenericTypeAnalyzer : DiagnosticAnalyzer
+    public class StaticFieldOrAutoPropertyInGenericTypeAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.StaticFieldInGenericTypeAnalyzerID,
@@ -106,12 +106,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             }
 
 
-            bool UsesAllTypeParameters(FieldDeclarationSyntax fieldDeclaration)
+            bool UsesAllTypeParameters(TypeSyntax type)
 			{
 				if (availableTypeParameters.Count == 0)
 					return true;
 
-                var fieldType = semanticModel.GetTypeInfo(fieldDeclaration.Declaration.Type).Type;
+                var fieldType = semanticModel.GetTypeInfo(type).Type;
 				if (fieldType == null)
 					return false;
 
@@ -127,13 +127,25 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
             {
                 base.VisitFieldDeclaration(node);
-                if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)) && !UsesAllTypeParameters(node))
+                if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)) && !UsesAllTypeParameters(node.Declaration.Type))
                 {
                     foreach (var v in node.Declaration.Variables)
                     {
                         ctx.ReportDiagnostic(Diagnostic.Create(descriptor, v.Identifier.GetLocation()));
                     }
                 }
+            }
+
+            public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
+            {
+                base.VisitPropertyDeclaration(node);
+                if (node.AccessorList.Accessors.Count == 2 &&
+                    node.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)) && !UsesAllTypeParameters(node.Type) && 
+                    node.AccessorList.Accessors[0].Body == null && node.AccessorList.Accessors[1].Body == null) {
+                    ctx.ReportDiagnostic(Diagnostic.Create(descriptor, node.Identifier.GetLocation()));
+
+                }
+
             }
         }
     }
