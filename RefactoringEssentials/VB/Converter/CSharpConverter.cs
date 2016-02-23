@@ -334,9 +334,9 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.NameOfKeyword:
                     break;
                 case CS.SyntaxKind.AsyncKeyword:
-                    break;
+                    return SyntaxKind.AsyncKeyword;
                 case CS.SyntaxKind.AwaitKeyword:
-                    break;
+                    return SyntaxKind.AwaitKeyword;
                 case CS.SyntaxKind.WhenKeyword:
                     break;
                 case CS.SyntaxKind.ElifKeyword:

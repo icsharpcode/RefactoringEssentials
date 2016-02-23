@@ -45,6 +45,28 @@ End Function";
                 }
             }
 
+            IEnumerable<ImportsStatementSyntax> TidyImportsList(IEnumerable<ImportsStatementSyntax> allImports)
+            {
+                foreach (var import in allImports)
+                    foreach (var clause in import.ImportsClauses)
+                    {
+                        if (ImportIsNecessary(clause))
+                            yield return SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList(clause));
+                    }
+            }
+
+            bool ImportIsNecessary(ImportsClauseSyntax import)
+            {
+                if (import is SimpleImportsClauseSyntax)
+                {
+                    var i = (SimpleImportsClauseSyntax)import;
+                    if (i.Alias != null)
+                        return true;
+                    return options?.GlobalImports.Any(g => i.ToString().Equals(g.Clause.ToString(), StringComparison.OrdinalIgnoreCase)) == false;
+                }
+                return true;
+            }
+
             public NodesVisitor(SemanticModel semanticModel, Document targetDocument)
             {
                 this.semanticModel = semanticModel;
@@ -72,27 +94,6 @@ End Function";
                     attributes,
                     members
                 );
-            }
-
-            IEnumerable<ImportsStatementSyntax> TidyImportsList(IEnumerable<ImportsStatementSyntax> allImports)
-            {
-                foreach (var import in allImports)
-                foreach (var clause in import.ImportsClauses)
-                {
-                    if (ImportIsNecessary(clause))
-                        yield return SyntaxFactory.ImportsStatement(SyntaxFactory.SingletonSeparatedList(clause));
-                }
-            }
-
-            bool ImportIsNecessary(ImportsClauseSyntax import)
-            {
-                if (import is SimpleImportsClauseSyntax) {
-                    var i = (SimpleImportsClauseSyntax)import;
-                    if (i.Alias != null)
-                        return true;
-                    return options?.GlobalImports.Any(g => i.ToString().Equals(g.Clause.ToString(), StringComparison.OrdinalIgnoreCase)) == false;
-                }
-                return true;
             }
 
             #region Attributes
@@ -1052,6 +1053,11 @@ End Function";
                     expressionKind = SyntaxKind.MultiLineFunctionLambdaExpression;
                 }
                 return SyntaxFactory.MultiLineLambdaExpression(expressionKind, header, statements, endBlock);
+            }
+
+            public override VisualBasicSyntaxNode VisitAwaitExpression(CSS.AwaitExpressionSyntax node)
+            {
+                return SyntaxFactory.AwaitExpression((ExpressionSyntax)node.Expression.Accept(this));
             }
 
             bool UnpackExpressionFromStatement(StatementSyntax statementSyntax, out ExpressionSyntax expression)
