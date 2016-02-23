@@ -203,7 +203,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\PolymorphicFieldLikeEventInvocationAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\PossibleAssignmentToReadonlyFieldAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\PossibleMultipleEnumerationAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\StaticFieldInGenericTypeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\ThreadStaticAtInstanceFieldAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\ValueParameterNotUsedAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CompilerErrors\ProhibitedModifiersAnalyzer.cs" />
@@ -613,6 +612,7 @@
     <Compile Include="Util\CompositieFormatStringParser\FormatStringSegmentBase.cs" />
     <Compile Include="Util\CompositieFormatStringParser\FormatItem.cs" />
     <Compile Include="Util\CompositieFormatStringParser\CompositeFormatStringParser.cs" />
+    <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\StaticFieldOrAutoPropertyInGenericTypeAnalyzer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
