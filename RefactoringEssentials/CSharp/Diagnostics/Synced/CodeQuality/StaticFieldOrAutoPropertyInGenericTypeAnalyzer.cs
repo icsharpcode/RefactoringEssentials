@@ -108,6 +108,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             bool UsesAllTypeParameters(TypeSyntax type)
 			{
+                if (type == null)
+                    return false;
 				if (availableTypeParameters.Count == 0)
 					return true;
 
@@ -139,13 +141,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             public override void VisitPropertyDeclaration(PropertyDeclarationSyntax node)
             {
                 base.VisitPropertyDeclaration(node);
-                if (node.AccessorList.Accessors.Count == 2 &&
+                if (node.AccessorList?.Accessors.Count == 2 &&
                     node.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)) && !UsesAllTypeParameters(node.Type) && 
                     node.AccessorList.Accessors[0].Body == null && node.AccessorList.Accessors[1].Body == null) {
                     ctx.ReportDiagnostic(Diagnostic.Create(descriptor, node.Identifier.GetLocation()));
-
                 }
-
             }
         }
     }
