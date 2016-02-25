@@ -439,10 +439,18 @@ namespace RefactoringEssentials.VB.Converter
 
             public override SyntaxList<StatementSyntax> VisitUsingStatement(CSS.UsingStatementSyntax node)
             {
-                var stmt = SyntaxFactory.UsingStatement(
-                    (ExpressionSyntax)node.Expression?.Accept(nodesVisitor),
-                    RemodelVariableDeclaration(node.Declaration, nodesVisitor)
-                );
+                UsingStatementSyntax stmt;
+                if (node.Declaration == null)
+                {
+                    stmt = SyntaxFactory.UsingStatement(
+                        (ExpressionSyntax)node.Expression?.Accept(nodesVisitor),
+                        SyntaxFactory.SeparatedList<VariableDeclaratorSyntax>()
+                    );
+                }
+                else
+                {
+                    stmt = SyntaxFactory.UsingStatement(null, RemodelVariableDeclaration(node.Declaration, nodesVisitor));
+                }
                 return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.UsingBlock(stmt, ConvertBlock(node.Statement)));
             }
 
