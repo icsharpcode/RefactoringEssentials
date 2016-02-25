@@ -1366,12 +1366,12 @@ End Function";
                         break;
                     case CS.SyntaxKind.StructDeclaration:
                         arr = type.BaseList?.Types.Select(t => (TypeSyntax)t.Type.Accept(this)).ToArray();
-                        if (arr.Length > 0)
+                        if (arr?.Length > 0)
                             implements.Add(SyntaxFactory.ImplementsStatement(arr));
                         break;
                     case CS.SyntaxKind.InterfaceDeclaration:
                         arr = type.BaseList?.Types.Select(t => (TypeSyntax)t.Type.Accept(this)).ToArray();
-                        if (arr.Length > 0)
+                        if (arr?.Length > 0)
                             inherits.Add(SyntaxFactory.InheritsStatement(arr));
                         break;
                 }
