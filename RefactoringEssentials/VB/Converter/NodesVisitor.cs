@@ -565,6 +565,40 @@ End Function";
                 return SyntaxFactory.AccessorBlock(blockKind, stmt, body, endStmt);
             }
 
+            public override VisualBasicSyntaxNode VisitOperatorDeclaration(CSS.OperatorDeclarationSyntax node)
+            {
+                SyntaxList<AttributeListSyntax> attributes, returnAttributes;
+                ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
+                var visitor = new MethodBodyVisitor(semanticModel, this);
+                var body = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(visitor)));
+                var parameterList = (ParameterListSyntax)node.ParameterList?.Accept(this);
+                var stmt = SyntaxFactory.OperatorStatement(
+                    attributes,
+                    ConvertModifiers(node.Modifiers, TokenContext.Member),
+                    SyntaxFactory.Token(ConvertOperatorDeclarationToken(CS.CSharpExtensions.Kind(node.OperatorToken))),
+                    parameterList,
+                    SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.ReturnType.Accept(this))
+                );
+                return SyntaxFactory.OperatorBlock(stmt, body);
+            }
+
+            SyntaxKind ConvertOperatorDeclarationToken(CS.SyntaxKind syntaxKind)
+            {
+                switch (syntaxKind)
+                {
+                    case CS.SyntaxKind.EqualsEqualsToken:
+                        return SyntaxKind.EqualsToken;
+                    case CS.SyntaxKind.ExclamationEqualsToken:
+                        return SyntaxKind.LessThanGreaterThanToken;
+                }
+                throw new NotSupportedException();
+            }
+
+            public override VisualBasicSyntaxNode VisitConversionOperatorDeclaration(CSS.ConversionOperatorDeclarationSyntax node)
+            {
+                return base.VisitConversionOperatorDeclaration(node);
+            }
+
             public override VisualBasicSyntaxNode VisitParameterList(CSS.ParameterListSyntax node)
             {
                 return SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(node.Parameters.Select(p => (ParameterSyntax)p.Accept(this))));
