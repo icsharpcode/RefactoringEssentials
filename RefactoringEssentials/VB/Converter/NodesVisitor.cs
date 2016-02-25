@@ -29,6 +29,13 @@ target = value
 Return value
 End Function";
 
+            int placeholder = 1;
+
+            string GeneratePlaceholder(string v)
+            {
+                return $"__{v}{placeholder++}__";
+            }
+
             void MarkPatchInlineAssignHelper(CS.CSharpSyntaxNode node)
             {
                 var parentDefinition = node.AncestorsAndSelf().OfType<CSS.BaseTypeDeclarationSyntax>().FirstOrDefault();
@@ -616,6 +623,26 @@ End Function";
                 return Literal(node.Token.Value);
             }
 
+            public override VisualBasicSyntaxNode VisitInterpolatedStringExpression(CSS.InterpolatedStringExpressionSyntax node)
+            {
+                return SyntaxFactory.InterpolatedStringExpression(node.Contents.Select(c => (InterpolatedStringContentSyntax)c.Accept(this)).ToArray());
+            }
+
+            public override VisualBasicSyntaxNode VisitInterpolatedStringText(CSS.InterpolatedStringTextSyntax node)
+            {
+                return SyntaxFactory.InterpolatedStringText(SyntaxFactory.InterpolatedStringTextToken(node.TextToken.Text, node.TextToken.ValueText));
+            }
+
+            public override VisualBasicSyntaxNode VisitInterpolation(CSS.InterpolationSyntax node)
+            {
+                return SyntaxFactory.Interpolation((ExpressionSyntax)node.Expression.Accept(this));
+            }
+
+            public override VisualBasicSyntaxNode VisitInterpolationFormatClause(CSS.InterpolationFormatClauseSyntax node)
+            {
+                return base.VisitInterpolationFormatClause(node);
+            }
+
             public override VisualBasicSyntaxNode VisitParenthesizedExpression(CSS.ParenthesizedExpressionSyntax node)
             {
                 return SyntaxFactory.ParenthesizedExpression((ExpressionSyntax)node.Expression.Accept(this));
@@ -873,6 +900,10 @@ End Function";
                     }
                 }
                 var kind = ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local);
+                if (semanticModel.GetTypeInfo(node.Left).ConvertedType?.SpecialType == SpecialType.System_String || semanticModel.GetTypeInfo(node.Right).ConvertedType?.SpecialType == SpecialType.System_String)
+                {
+                    kind = SyntaxKind.ConcatenateExpression;
+                }
                 return SyntaxFactory.BinaryExpression(
                     kind,
                     (ExpressionSyntax)node.Left.Accept(this),
@@ -945,13 +976,20 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitAnonymousObjectMemberDeclarator(CSS.AnonymousObjectMemberDeclaratorSyntax node)
             {
-                return SyntaxFactory.NamedFieldInitializer(
-                    SyntaxFactory.Token(SyntaxKind.KeyKeyword),
-                    SyntaxFactory.Token(SyntaxKind.DotToken),
-                    (IdentifierNameSyntax)node.NameEquals.Name.Accept(this),
-                    SyntaxFactory.Token(SyntaxKind.EqualsToken),
-                    (ExpressionSyntax)node.Expression.Accept(this)
-                );
+                if (node.NameEquals == null)
+                {
+                    return SyntaxFactory.InferredFieldInitializer((ExpressionSyntax)node.Expression.Accept(this));
+                }
+                else
+                {
+                    return SyntaxFactory.NamedFieldInitializer(
+                        SyntaxFactory.Token(SyntaxKind.KeyKeyword),
+                        SyntaxFactory.Token(SyntaxKind.DotToken),
+                        (IdentifierNameSyntax)node.NameEquals.Name.Accept(this),
+                        SyntaxFactory.Token(SyntaxKind.EqualsToken),
+                        (ExpressionSyntax)node.Expression.Accept(this)
+                    );
+                }
             }
 
             public override VisualBasicSyntaxNode VisitArrayCreationExpression(CSS.ArrayCreationExpressionSyntax node)
@@ -1069,6 +1107,96 @@ End Function";
                 else
                     expression = null;
                 return expression != null;
+            }
+
+            public override VisualBasicSyntaxNode VisitQueryExpression(CSS.QueryExpressionSyntax node)
+            {
+                return SyntaxFactory.QueryExpression(
+                    SyntaxFactory.SingletonList((QueryClauseSyntax)node.FromClause.Accept(this))
+                    .AddRange(node.Body.Clauses.Select(c => (QueryClauseSyntax)c.Accept(this)))
+                    .AddRange(ConvertQueryBody(node.Body))
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitFromClause(CSS.FromClauseSyntax node)
+            {
+                return SyntaxFactory.FromClause(
+                    SyntaxFactory.CollectionRangeVariable(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(node.Identifier)),
+                    (ExpressionSyntax)node.Expression.Accept(this))
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitWhereClause(CSS.WhereClauseSyntax node)
+            {
+                return SyntaxFactory.WhereClause((ExpressionSyntax)node.Condition.Accept(this));
+            }
+
+            public override VisualBasicSyntaxNode VisitSelectClause(CSS.SelectClauseSyntax node)
+            {
+                return SyntaxFactory.SelectClause(
+                    SyntaxFactory.ExpressionRangeVariable((ExpressionSyntax)node.Expression.Accept(this))
+                );
+            }
+
+            IEnumerable<QueryClauseSyntax> ConvertQueryBody(CSS.QueryBodySyntax body)
+            {
+                if (body.SelectOrGroup is CSS.GroupClauseSyntax && body.Continuation == null)
+                    throw new NotSupportedException("group by clause without into not supported in VB");
+                if (body.SelectOrGroup is CSS.SelectClauseSyntax)
+                {
+                    yield return (QueryClauseSyntax)body.SelectOrGroup.Accept(this);
+                }
+                else
+                {
+                    var group = (CSS.GroupClauseSyntax)body.SelectOrGroup;
+                    yield return SyntaxFactory.GroupByClause(
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.ExpressionRangeVariable((ExpressionSyntax)group.GroupExpression.Accept(this))),
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.ExpressionRangeVariable(SyntaxFactory.VariableNameEquals(SyntaxFactory.ModifiedIdentifier(GeneratePlaceholder("groupByKey"))), (ExpressionSyntax)group.ByExpression.Accept(this))),
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.AggregationRangeVariable(SyntaxFactory.FunctionAggregation(ConvertIdentifier(body.Continuation.Identifier))))
+                    );
+                    if (body.Continuation.Body != null) {
+                        foreach (var clause in ConvertQueryBody(body.Continuation.Body))
+                            yield return clause;
+                    }
+                }
+            }
+
+            public override VisualBasicSyntaxNode VisitLetClause(CSS.LetClauseSyntax node)
+            {
+                return SyntaxFactory.LetClause(
+                    SyntaxFactory.SingletonSeparatedList(
+                        SyntaxFactory.ExpressionRangeVariable(
+                            SyntaxFactory.VariableNameEquals(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(node.Identifier))),
+                            (ExpressionSyntax)node.Expression.Accept(this)
+                        )
+                    )
+                );
+            }
+
+            public override VisualBasicSyntaxNode VisitJoinClause(CSS.JoinClauseSyntax node)
+            {
+                if (node.Into != null)
+                {
+                    return SyntaxFactory.GroupJoinClause(
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.CollectionRangeVariable(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(node.Identifier)), node.Type == null ? null : SyntaxFactory.SimpleAsClause((TypeSyntax)node.Type.Accept(this)), (ExpressionSyntax)node.InExpression.Accept(this))),
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.JoinCondition((ExpressionSyntax)node.LeftExpression.Accept(this), (ExpressionSyntax)node.RightExpression.Accept(this))),
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.AggregationRangeVariable(SyntaxFactory.VariableNameEquals(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(node.Into.Identifier))), SyntaxFactory.GroupAggregation()))
+                    );
+                }
+                else
+                {
+                    return SyntaxFactory.SimpleJoinClause(
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.CollectionRangeVariable(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(node.Identifier)), node.Type == null ? null : SyntaxFactory.SimpleAsClause((TypeSyntax)node.Type.Accept(this)), (ExpressionSyntax)node.InExpression.Accept(this))),
+                        SyntaxFactory.SingletonSeparatedList(SyntaxFactory.JoinCondition((ExpressionSyntax)node.LeftExpression.Accept(this), (ExpressionSyntax)node.RightExpression.Accept(this)))
+                    );
+                }
+            }
+
+            public override VisualBasicSyntaxNode VisitOrderByClause(CSS.OrderByClauseSyntax node)
+            {
+                return SyntaxFactory.OrderByClause(
+                    SyntaxFactory.SeparatedList(node.Orderings.Select(o => (OrderingSyntax)o.Accept(this)))
+                );
             }
 
             public override VisualBasicSyntaxNode VisitArgumentList(CSS.ArgumentListSyntax node)

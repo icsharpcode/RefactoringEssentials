@@ -125,6 +125,8 @@ namespace RefactoringEssentials
                     return SyntaxKind.AndAlsoKeyword;
                 case SyntaxKind.AddExpression:
                     return SyntaxKind.PlusToken;
+                case SyntaxKind.ConcatenateExpression:
+                    return SyntaxKind.AmpersandToken;
                 case SyntaxKind.SubtractExpression:
                     return SyntaxKind.MinusToken;
                 case SyntaxKind.MultiplyExpression:
