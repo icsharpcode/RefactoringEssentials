@@ -501,7 +501,7 @@ End Function";
 
                 foreach (var attrList in attributeLists)
                 {
-                    if (attrList.Target.Identifier.IsKind(CS.SyntaxKind.ReturnKeyword))
+                    if (attrList.Target?.Identifier.IsKind(CS.SyntaxKind.ReturnKeyword) == true)
                         retAttr.Add((AttributeListSyntax)attrList.Accept(this));
                     else
                         attr.Add((AttributeListSyntax)attrList.Accept(this));
