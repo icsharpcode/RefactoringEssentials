@@ -78,12 +78,14 @@ class TestClass
         int length = str?.Length ?? -1;
         Console.WriteLine(length);
         Console.ReadKey();
+        string redirectUri = context.OwinContext.Authentication?.AuthenticationResponseChallenge?.Properties?.RedirectUri;
     }
 }", @"Class TestClass
     Private Sub TestMethod(ByVal str As String)
         Dim length As Integer = If(str?.Length, -1)
         Console.WriteLine(length)
         Console.ReadKey()
+        Dim redirectUri As String = context.OwinContext.Authentication?.AuthenticationResponseChallenge?.Properties?.RedirectUri
     End Sub
 End Class");
         }

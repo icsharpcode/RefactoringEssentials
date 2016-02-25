@@ -812,7 +812,7 @@ End Function";
                 return SyntaxFactory.ConditionalAccessExpression(
                     (ExpressionSyntax)node.Expression.Accept(this),
                     SyntaxFactory.Token(SyntaxKind.QuestionToken),
-                    SyntaxFactory.SimpleMemberAccessExpression((SimpleNameSyntax)node.WhenNotNull.Accept(this))
+                    (ExpressionSyntax)node.WhenNotNull.Accept(this)
                 );
             }
 
@@ -836,7 +836,7 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitMemberBindingExpression(CSS.MemberBindingExpressionSyntax node)
             {
-                return (SimpleNameSyntax)node.Name.Accept(this);
+                return SyntaxFactory.SimpleMemberAccessExpression((SimpleNameSyntax)node.Name.Accept(this));
             }
 
             public override VisualBasicSyntaxNode VisitDefaultExpression(CSS.DefaultExpressionSyntax node)
@@ -900,7 +900,8 @@ End Function";
                     }
                 }
                 var kind = ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local);
-                if (semanticModel.GetTypeInfo(node.Left).ConvertedType?.SpecialType == SpecialType.System_String || semanticModel.GetTypeInfo(node.Right).ConvertedType?.SpecialType == SpecialType.System_String)
+                if (node.IsKind(CS.SyntaxKind.AddExpression) && (semanticModel.GetTypeInfo(node.Left).ConvertedType?.SpecialType == SpecialType.System_String 
+                    || semanticModel.GetTypeInfo(node.Right).ConvertedType?.SpecialType == SpecialType.System_String))
                 {
                     kind = SyntaxKind.ConcatenateExpression;
                 }
