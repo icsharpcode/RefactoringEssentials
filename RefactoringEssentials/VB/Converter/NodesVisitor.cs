@@ -1040,6 +1040,12 @@ End Function";
                     return SyntaxFactory.CollectionInitializer(
                         SyntaxFactory.SeparatedList(node.Expressions.Select(e => (ExpressionSyntax)e.Accept(this)))
                     );
+                if (node.IsKind(CS.SyntaxKind.CollectionInitializerExpression))
+                    return SyntaxFactory.ObjectCollectionInitializer(
+                        SyntaxFactory.CollectionInitializer(
+                            SyntaxFactory.SeparatedList(node.Expressions.Select(e => (ExpressionSyntax)e.Accept(this)))
+                        )
+                    );
                 throw new NotImplementedException();
             }
 
