@@ -856,16 +856,20 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitBinaryExpression(CSS.BinaryExpressionSyntax node)
             {
-                if (node.OperatorToken.IsKind(CS.SyntaxKind.QuestionQuestionToken))
+                if (node.IsKind(CS.SyntaxKind.CoalesceExpression))
                 {
                     return SyntaxFactory.BinaryConditionalExpression(
                          (ExpressionSyntax)node.Left.Accept(this),
                          (ExpressionSyntax)node.Right.Accept(this)
                     );
                 }
-                if (node.OperatorToken.IsKind(CS.SyntaxKind.AsKeyword))
+                if (node.IsKind(CS.SyntaxKind.AsExpression))
                 {
                     return SyntaxFactory.TryCastExpression((ExpressionSyntax)node.Left.Accept(this), (TypeSyntax)node.Right.Accept(this));
+                }
+                if (node.IsKind(CS.SyntaxKind.IsExpression))
+                {
+                    return SyntaxFactory.TypeOfIsExpression((ExpressionSyntax)node.Left.Accept(this), (TypeSyntax)node.Right.Accept(this));
                 }
                 if (node.OperatorToken.IsKind(CS.SyntaxKind.EqualsEqualsToken))
                 {
@@ -911,6 +915,11 @@ End Function";
                     SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
                     (ExpressionSyntax)node.Right.Accept(this)
                 );
+            }
+
+            public override VisualBasicSyntaxNode VisitTypeOfExpression(CSS.TypeOfExpressionSyntax node)
+            {
+                return SyntaxFactory.GetTypeExpression((TypeSyntax)node.Type.Accept(this));
             }
 
             public override VisualBasicSyntaxNode VisitCastExpression(CSS.CastExpressionSyntax node)
