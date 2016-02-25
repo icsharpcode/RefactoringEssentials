@@ -558,13 +558,13 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.DivideAssignmentExpression:
                     return SyntaxKind.DivideAssignmentStatement;
                 case CS.SyntaxKind.ModuloAssignmentExpression:
-                    break;
+                    return SyntaxKind.ModuloExpression;
                 case CS.SyntaxKind.AndAssignmentExpression:
-                    break;
+                    return SyntaxKind.AndExpression;
                 case CS.SyntaxKind.ExclusiveOrAssignmentExpression:
-                    break;
+                    return SyntaxKind.ExclusiveOrExpression;
                 case CS.SyntaxKind.OrAssignmentExpression:
-                    break;
+                    return SyntaxKind.OrExpression;
                 case CS.SyntaxKind.LeftShiftAssignmentExpression:
                     break;
                 case CS.SyntaxKind.RightShiftAssignmentExpression:

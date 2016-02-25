@@ -734,7 +734,6 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitAssignmentExpression(CSS.AssignmentExpressionSyntax node)
             {
-                var kind = ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local);
                 if (node.Parent is CSS.ExpressionStatementSyntax)
                 {
                     if (semanticModel.GetTypeInfo(node.Right).ConvertedType.IsDelegateType())
@@ -748,21 +747,11 @@ End Function";
                             return SyntaxFactory.RemoveHandlerStatement((ExpressionSyntax)node.Left.Accept(this), (ExpressionSyntax)node.Right.Accept(this));
                         }
                     }
-                    return SyntaxFactory.AssignmentStatement(
-                        kind,
-                        (ExpressionSyntax)node.Left.Accept(this),
-                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
-                        (ExpressionSyntax)node.Right.Accept(this)
-                    );
+                    return MakeAssignmentStatement(node);
                 }
                 if (node.Parent is CSS.ForStatementSyntax)
                 {
-                    return SyntaxFactory.AssignmentStatement(
-                        kind,
-                        (ExpressionSyntax)node.Left.Accept(this),
-                        SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
-                        (ExpressionSyntax)node.Right.Accept(this)
-                    );
+                    return MakeAssignmentStatement(node);
                 }
                 if (node.Parent is CSS.InitializerExpressionSyntax)
                 {
@@ -782,6 +771,29 @@ End Function";
                             }
                         )
                     )
+                );
+            }
+
+            AssignmentStatementSyntax MakeAssignmentStatement(CSS.AssignmentExpressionSyntax node)
+            {
+                var kind = ConvertToken(CS.CSharpExtensions.Kind(node), TokenContext.Local);
+                if (node.IsKind(CS.SyntaxKind.AndAssignmentExpression, CS.SyntaxKind.OrAssignmentExpression, CS.SyntaxKind.ExclusiveOrAssignmentExpression, CS.SyntaxKind.ModuloAssignmentExpression))
+                {
+                    return SyntaxFactory.SimpleAssignmentStatement(
+                        (ExpressionSyntax)node.Left.Accept(this),
+                        SyntaxFactory.BinaryExpression(
+                            kind,
+                            (ExpressionSyntax)node.Left.Accept(this),
+                            SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
+                            (ExpressionSyntax)node.Right.Accept(this)
+                        )
+                    );
+                }
+                return SyntaxFactory.AssignmentStatement(
+                    kind,
+                    (ExpressionSyntax)node.Left.Accept(this),
+                    SyntaxFactory.Token(VBUtil.GetExpressionOperatorTokenKind(kind)),
+                    (ExpressionSyntax)node.Right.Accept(this)
                 );
             }
 
