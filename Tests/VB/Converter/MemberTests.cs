@@ -18,9 +18,11 @@ namespace RefactoringEssentials.Tests.VB.Converter
 {
     const int answer = 42;
     int value = 10;
+    readonly int v = 15;
 }", @"Class TestClass
     Const answer As Integer = 42
     Private value As Integer = 10
+    ReadOnly v As Integer = 15
 End Class");
         }
 

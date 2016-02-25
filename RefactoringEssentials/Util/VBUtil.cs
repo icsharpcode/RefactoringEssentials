@@ -147,6 +147,8 @@ namespace RefactoringEssentials
                     return SyntaxKind.PlusToken;
                 case SyntaxKind.UnaryMinusExpression:
                     return SyntaxKind.MinusToken;
+                case SyntaxKind.NotExpression:
+                    return SyntaxKind.NotKeyword;
             }
             throw new ArgumentOutOfRangeException(nameof(op));
         }

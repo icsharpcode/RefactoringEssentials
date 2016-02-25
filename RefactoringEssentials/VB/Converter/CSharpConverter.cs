@@ -224,7 +224,7 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.StaticKeyword:
                     return SyntaxKind.SharedKeyword;
                 case CS.SyntaxKind.ReadOnlyKeyword:
-                    break;
+                    return SyntaxKind.ReadOnlyKeyword;
                 case CS.SyntaxKind.SealedKeyword:
                     return context == TokenContext.Global ? SyntaxKind.NotInheritableKeyword : SyntaxKind.NotOverridableKeyword;
                 case CS.SyntaxKind.ConstKeyword:
@@ -238,7 +238,7 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.NewKeyword:
                     break;
                 case CS.SyntaxKind.OverrideKeyword:
-                    break;
+                    return SyntaxKind.OverridesKeyword;
                 case CS.SyntaxKind.AbstractKeyword:
                     return context == TokenContext.Global ? SyntaxKind.MustInheritKeyword : SyntaxKind.MustOverrideKeyword;
                 case CS.SyntaxKind.VirtualKeyword:
@@ -276,7 +276,7 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.YieldKeyword:
                     break;
                 case CS.SyntaxKind.PartialKeyword:
-                    break;
+                    return SyntaxKind.PartialKeyword;
                 case CS.SyntaxKind.AliasKeyword:
                     break;
                 case CS.SyntaxKind.GlobalKeyword:
@@ -328,9 +328,9 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.EqualsKeyword:
                     break;
                 case CS.SyntaxKind.AscendingKeyword:
-                    break;
+                    return SyntaxKind.AscendingKeyword;
                 case CS.SyntaxKind.DescendingKeyword:
-                    break;
+                    return SyntaxKind.DescendingKeyword;
                 case CS.SyntaxKind.NameOfKeyword:
                     break;
                 case CS.SyntaxKind.AsyncKeyword:
@@ -576,7 +576,7 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.BitwiseNotExpression:
                     break;
                 case CS.SyntaxKind.LogicalNotExpression:
-                    break;
+                    return SyntaxKind.NotExpression;
                 case CS.SyntaxKind.PreIncrementExpression:
                     return SyntaxKind.AddAssignmentStatement;
                 case CS.SyntaxKind.PreDecrementExpression:

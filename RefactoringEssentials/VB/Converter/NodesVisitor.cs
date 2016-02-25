@@ -69,7 +69,7 @@ End Function";
                     var i = (SimpleImportsClauseSyntax)import;
                     if (i.Alias != null)
                         return true;
-                    return options?.GlobalImports.Any(g => i.ToString().Equals(g.Clause.ToString(), StringComparison.OrdinalIgnoreCase)) == false;
+                    return options?.GlobalImports.Any(g => i.ToString().Equals(g.Clause.ToString(), StringComparison.OrdinalIgnoreCase)) != true;
                 }
                 return true;
             }
@@ -112,7 +112,7 @@ End Function";
             public override VisualBasicSyntaxNode VisitAttribute(CSS.AttributeSyntax node)
             {
                 var list = (CSS.AttributeListSyntax)node.Parent;
-                return SyntaxFactory.Attribute((AttributeTargetSyntax)list.Target.Accept(this), (TypeSyntax)node.Name.Accept(this), (ArgumentListSyntax)node.ArgumentList?.Accept(this));
+                return SyntaxFactory.Attribute((AttributeTargetSyntax)list.Target?.Accept(this), (TypeSyntax)node.Name.Accept(this), (ArgumentListSyntax)node.ArgumentList?.Accept(this));
             }
 
             public override VisualBasicSyntaxNode VisitAttributeTargetSpecifier(CSS.AttributeTargetSpecifierSyntax node)
@@ -1199,6 +1199,18 @@ End Function";
                 );
             }
 
+            public override VisualBasicSyntaxNode VisitOrdering(CSS.OrderingSyntax node)
+            {
+                if (node.IsKind(CS.SyntaxKind.DescendingOrdering))
+                {
+                    return SyntaxFactory.Ordering(SyntaxKind.DescendingOrdering, (ExpressionSyntax)node.Expression.Accept(this));
+                }
+                else
+                {
+                    return SyntaxFactory.Ordering(SyntaxKind.AscendingOrdering, (ExpressionSyntax)node.Expression.Accept(this));
+                }
+            }
+
             public override VisualBasicSyntaxNode VisitArgumentList(CSS.ArgumentListSyntax node)
             {
                 return SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(node.Arguments.Select(a => (ArgumentSyntax)a.Accept(this))));
@@ -1285,18 +1297,12 @@ End Function";
             {
                 SyntaxList<CSS.TypeParameterConstraintClauseSyntax> clauses;
                 var parentBlock = node.Parent.Parent;
-                if (parentBlock is CSS.MethodDeclarationSyntax)
-                {
-                    clauses = ((CSS.MethodDeclarationSyntax)parentBlock).ConstraintClauses;
-                }
-                else if (parentBlock is CSS.ClassDeclarationSyntax)
-                {
-                    clauses = ((CSS.ClassDeclarationSyntax)parentBlock).ConstraintClauses;
-                }
-                else
-                {
-                    throw new NotImplementedException($"{parentBlock.GetType().FullName} not implemented!");
-                }
+                clauses = parentBlock.TypeSwitch(
+                    (CSS.MethodDeclarationSyntax m) => m.ConstraintClauses,
+                    (CSS.ClassDeclarationSyntax c) => c.ConstraintClauses,
+                    (CSS.DelegateDeclarationSyntax d) => d.ConstraintClauses,
+                    _ => { throw new NotImplementedException($"{_.GetType().FullName} not implemented!"); }
+                );
                 return clauses.FirstOrDefault(c => c.Name.ToString() == node.ToString());
             }
 
@@ -1375,7 +1381,7 @@ End Function";
 
             VisualBasicSyntaxNode WrapTypedNameIfNecessary(NameSyntax name, CSS.NameSyntax originalName)
             {
-                if (originalName.Parent is CSS.NameSyntax) return name;
+                if (originalName.Parent is CSS.NameSyntax || originalName.Parent is CSS.AttributeSyntax) return name;
                 CSS.ExpressionSyntax parent = originalName;
                 while (parent.Parent is CSS.MemberAccessExpressionSyntax)
                     parent = (CSS.ExpressionSyntax)parent.Parent;
