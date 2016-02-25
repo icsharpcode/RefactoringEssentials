@@ -7,48 +7,9 @@ Known limitations and bugs:
 
 We probably cannot convert all preprocessor directives exactly without changing the semantics.
 
-Missing features Overview:
+Missing features and bugs:
 C# to VB:
-1) Namespace level: Done (needs many more tests!)
-2) Type level:
-  - Constructors/Destructors
-  - Automatic Events
-  - Custom Events
-  - Declare Sub|Function instead of DllImport
-  - Handles clause (on members)
-  - Implements clause (on members)
-3) Statements:
-  - everything except:
-    * local variable declarations
-    * Simple statements/assignments/calls
-    * if
-    * while
-    * do-while
-    * using
-    * return
-    * checked (removed + comment added as it is not supported in VB)
-  - most importantly:
-    * switch
-    * LINQ syntax
-    * try with filters
-4) Expressions:
-  - everything except:
-    * literals
-    * parentheses
-    * prefix/postfix increment/decrement
-    * inline assignment is "converted" by adding an __InlineAssignHelper
-    * simple invocations
-    * member access with . (?. and all others are not supported!)
-    * default expr, this, base
-    * binary expressions (are we sure we have all operators?)
-  - most importantly:
-    * object initializers
-    * collection initializers
-    * async/await
-    * yield return/break
-    * lambdas and anonymous methods
-
-Tests, Tests, Tests, Tests, ... Tests! ;-)
+- unsafe code cannot be converted
 
 VB to C#:
 - not implemented
