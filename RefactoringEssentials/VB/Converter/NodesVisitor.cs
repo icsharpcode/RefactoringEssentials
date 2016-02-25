@@ -422,11 +422,25 @@ End Function";
                 ConvertAndSplitAttributes(node.AttributeLists, out attributes, out returnAttributes);
                 bool isIterator = false;
                 List<AccessorBlockSyntax> accessors = new List<AccessorBlockSyntax>();
-                foreach (var a in node.AccessorList?.Accessors)
+                if (node.ExpressionBody != null)
                 {
-                    bool _isIterator;
-                    accessors.Add(ConvertAccessor(a, out _isIterator));
-                    isIterator |= _isIterator;
+                    accessors.Add(
+                        SyntaxFactory.AccessorBlock(
+                            SyntaxKind.GetAccessorBlock,
+                            SyntaxFactory.GetAccessorStatement(),
+                            SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.ReturnStatement((ExpressionSyntax)node.ExpressionBody.Expression.Accept(this))),
+                            SyntaxFactory.EndGetStatement()
+                        )
+                    );
+                }
+                else
+                {
+                    foreach (var a in node.AccessorList?.Accessors)
+                    {
+                        bool _isIterator;
+                        accessors.Add(ConvertAccessor(a, out _isIterator));
+                        isIterator |= _isIterator;
+                    }
                 }
                 var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
                 if (isIterator) modifiers = modifiers.Add(SyntaxFactory.Token(SyntaxKind.IteratorKeyword));
@@ -434,9 +448,11 @@ End Function";
                     attributes,
                     modifiers,
                     id, null,
-                    SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.Type.Accept(this)), null, null
+                    SyntaxFactory.SimpleAsClause(returnAttributes, (TypeSyntax)node.Type.Accept(this)),
+                    node.Initializer == null ? null : SyntaxFactory.EqualsValue((ExpressionSyntax)node.Initializer.Value.Accept(this)), null
                 );
-                if (node.AccessorList.Accessors.All(a => a.Body == null))
+
+                if (node.AccessorList?.Accessors.All(a => a.Body == null) == true)
                     return stmt;
                 return SyntaxFactory.PropertyBlock(stmt, SyntaxFactory.List(accessors));
             }
