@@ -1361,6 +1361,11 @@ End Function";
                 return SyntaxFactory.PredefinedType(SyntaxFactory.Token(ConvertToken(CS.CSharpExtensions.Kind(node.Keyword))));
             }
 
+            public override VisualBasicSyntaxNode VisitNullableType(CSS.NullableTypeSyntax node)
+            {
+                return SyntaxFactory.NullableType((TypeSyntax)node.ElementType.Accept(this));
+            }
+
             #endregion
 
             #region NameSyntax
