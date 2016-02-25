@@ -1008,6 +1008,13 @@ End Function";
                 );
             }
 
+            public override VisualBasicSyntaxNode VisitImplicitArrayCreationExpression(CSS.ImplicitArrayCreationExpressionSyntax node)
+            {
+                return SyntaxFactory.CollectionInitializer(
+                    SyntaxFactory.SeparatedList(node.Initializer.Expressions.Select(e => (ExpressionSyntax)e.Accept(this)))
+                );
+            }
+
             ExpressionSyntax ReduceArrayUpperBoundExpression(ExpressionSyntax expr)
             {
                 if (expr.IsKind(SyntaxKind.NumericLiteralExpression))
