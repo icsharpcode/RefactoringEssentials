@@ -65,7 +65,10 @@ namespace RefactoringEssentials.VB.Converter
                     yield return CSharpDefaultVisibility(context); 
             }
             foreach (var token in modifiers.Where(m => !IgnoreInContext(m, context)))
-                yield return ConvertModifier(token, context);
+            {
+                var m = ConvertModifier(token, context);
+                if (m.HasValue) yield return m.Value;
+            }
         }
 
         static bool IgnoreInContext(SyntaxToken m, TokenContext context)
@@ -108,9 +111,10 @@ namespace RefactoringEssentials.VB.Converter
             return SyntaxFactory.TokenList(ConvertModifiersCore(modifiers, context));
         }
 
-        static SyntaxToken ConvertModifier(SyntaxToken m, TokenContext context = TokenContext.Global)
+        static SyntaxToken? ConvertModifier(SyntaxToken m, TokenContext context = TokenContext.Global)
         {
-            return SyntaxFactory.Token(ConvertToken(CS.CSharpExtensions.Kind(m), context));
+            var token = ConvertToken(CS.CSharpExtensions.Kind(m), context);
+            return token == SyntaxKind.None ? null : new SyntaxToken?(SyntaxFactory.Token(token));
         }
 
         static SeparatedSyntaxList<VariableDeclaratorSyntax> RemodelVariableDeclaration(CSS.VariableDeclarationSyntax declaration, NodesVisitor nodesVisitor)
@@ -198,7 +202,7 @@ namespace RefactoringEssentials.VB.Converter
                     return SyntaxKind.CharKeyword;
                 case CS.SyntaxKind.VoidKeyword:
                     // not supported
-                    break;
+                    return SyntaxKind.None;
                 case CS.SyntaxKind.ObjectKeyword:
                     return SyntaxKind.ObjectKeyword;
                 // literals
@@ -241,14 +245,21 @@ namespace RefactoringEssentials.VB.Converter
                     return SyntaxKind.ByRefKeyword;
                 case CS.SyntaxKind.PartialKeyword:
                     return SyntaxKind.PartialKeyword;
+                case CS.SyntaxKind.AsyncKeyword:
+                    return SyntaxKind.AsyncKeyword;
+                case CS.SyntaxKind.ExternKeyword:
+                    // not supported
+                    return SyntaxKind.None;
+                case CS.SyntaxKind.NewKeyword:
+                    return SyntaxKind.ShadowsKeyword;
+                // others
                 case CS.SyntaxKind.AscendingKeyword:
                     return SyntaxKind.AscendingKeyword;
                 case CS.SyntaxKind.DescendingKeyword:
                     return SyntaxKind.DescendingKeyword;
-                case CS.SyntaxKind.AsyncKeyword:
-                    return SyntaxKind.AsyncKeyword;
                 case CS.SyntaxKind.AwaitKeyword:
                     return SyntaxKind.AwaitKeyword;
+                // expressions
                 case CS.SyntaxKind.AddExpression:
                     return SyntaxKind.AddExpression;
                 case CS.SyntaxKind.SubtractExpression:
@@ -327,8 +338,6 @@ namespace RefactoringEssentials.VB.Converter
                     return SyntaxKind.PlusToken;
                 case CS.SyntaxKind.MinusMinusToken:
                     return SyntaxKind.MinusToken;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             throw new NotSupportedException(t + " is not supported!");

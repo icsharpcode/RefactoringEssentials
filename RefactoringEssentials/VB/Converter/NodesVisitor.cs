@@ -369,6 +369,16 @@ End Function";
                 {
                     block = SyntaxFactory.List(node.Body.Statements.SelectMany(s => s.Accept(visitor)));
                 }
+                if (node.ExpressionBody != null)
+                {
+                    block = SyntaxFactory.SingletonList<StatementSyntax>(
+                        SyntaxFactory.ReturnStatement((ExpressionSyntax)node.ExpressionBody.Expression.Accept(this))
+                    );
+                }
+                if (node.Modifiers.Any(m => m.IsKind(CS.SyntaxKind.ExternKeyword)))
+                {
+                    block = SyntaxFactory.List<StatementSyntax>();
+                }
                 var id = ConvertIdentifier(node.Identifier);
                 var methodInfo = semanticModel.GetDeclaredSymbol(node);
                 var containingType = methodInfo?.ContainingType;
