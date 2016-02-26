@@ -24,7 +24,7 @@ class TestClass
         do ; while (true);
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         If True Then
         End If
 
@@ -52,7 +52,7 @@ class TestClass
         b = 0;
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer
         b = 0
     End Sub
@@ -70,7 +70,7 @@ class TestClass
         int b = 0;
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer = 0
     End Sub
 End Class");
@@ -87,7 +87,7 @@ class TestClass
         var b = 0;
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b = 0
     End Sub
 End Class");
@@ -105,7 +105,7 @@ class TestClass
         b = new string(""test"");
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As String
         b = New String(""test"")
     End Sub
@@ -123,7 +123,7 @@ class TestClass
         string b = new string(""test"");
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As String = New String(""test"")
     End Sub
 End Class");
@@ -140,7 +140,7 @@ class TestClass
         var b = new string(""test"");
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b = New String(""test"")
     End Sub
 End Class");
@@ -157,7 +157,7 @@ class TestClass
         int[] b;
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer()
     End Sub
 End Class");
@@ -174,7 +174,7 @@ class TestClass
         int[] b = { 1, 2, 3 };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer() = {1, 2, 3}
     End Sub
 End Class");
@@ -191,7 +191,7 @@ class TestClass
         var b = { 1, 2, 3 };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b = {1, 2, 3}
     End Sub
 End Class");
@@ -208,7 +208,7 @@ class TestClass
         int[] b = new int[] { 1, 2, 3 };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer() = New Integer() {1, 2, 3}
     End Sub
 End Class");
@@ -225,7 +225,7 @@ class TestClass
         int[] b = new int[3] { 1, 2, 3 };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer() = New Integer(2) {1, 2, 3}
     End Sub
 End Class");
@@ -242,7 +242,7 @@ class TestClass
         int[,] b;
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer(,)
     End Sub
 End Class");
@@ -259,7 +259,7 @@ class TestClass
         int[,] b = { { 1, 2 }, { 3, 4 } };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer(,) = {{1, 2}, {3, 4}}
     End Sub
 End Class");
@@ -276,7 +276,7 @@ class TestClass
         int[,] b = new int[,] { { 1, 2 }, { 3, 4 } };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer(,) = New Integer(,) {{1, 2}, {3, 4}}
     End Sub
 End Class");
@@ -293,7 +293,7 @@ class TestClass
         int[,] b = new int[2, 2] { { 1, 2 }, { 3, 4 } };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer(,) = New Integer(1, 1) {{1, 2}, {3, 4}}
     End Sub
 End Class");
@@ -310,7 +310,7 @@ class TestClass
         int[][] b;
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer()()
     End Sub
 End Class");
@@ -327,7 +327,7 @@ class TestClass
         int[][] b = { new int[] { 1, 2 }, new int[] { 3, 4 } };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer()() = {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
 End Class");
@@ -344,7 +344,7 @@ class TestClass
         int[][] b = new int[][] { new int[] { 1, 2 }, new int[] { 3, 4 } };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer()() = New Integer()() {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
 End Class");
@@ -361,7 +361,7 @@ class TestClass
         int[][] b = new int[2][] { new int[] { 1, 2 }, new int[] { 3, 4 } };
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer()() = New Integer(1)() {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
 End Class");
@@ -381,7 +381,7 @@ the_beginning:
         goto the_beginning;
     }
 }", @"Class Test
-    Sub TestMethod()
+    Private Sub TestMethod()
 the_beginning:
         Dim value As Integer = 1
         Const myPIe As Double = System.Math.PI
@@ -411,7 +411,7 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal a As Integer)
+    Private Sub TestMethod(ByVal a As Integer)
         Dim b As Integer
 
         If a = 0 Then
@@ -447,7 +447,7 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer
         b = 0
 
@@ -481,7 +481,7 @@ class TestClass
         while (b == 0);
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         Dim b As Integer
         b = 0
 
@@ -511,7 +511,7 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal values As Integer())
+    Private Sub TestMethod(ByVal values As Integer())
         For Each val As Integer In values
             If val = 2 Then Continue For
             If val = 3 Then Exit For
@@ -537,7 +537,7 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal values As Integer())
+    Private Sub TestMethod(ByVal values As Integer())
         For Each val In values
             If val = 2 Then Continue For
             If val = 3 Then Exit For
@@ -561,7 +561,7 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal nullObject As Object)
+    Private Sub TestMethod(ByVal nullObject As Object)
         If nullObject Is Nothing Then Throw New ArgumentNullException(NameOf(nullObject))
 
         SyncLock nullObject
@@ -583,7 +583,7 @@ class TestClass
             b[i] = s[i];
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         i = 0
 
         While unknownCondition
@@ -607,7 +607,7 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         i = 0
 
         While unknownCondition
@@ -629,7 +629,7 @@ class TestClass
         for (i = 0; i < end; i++) b[i] = s[i];
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         For i = 0 To [end] - 1
             b(i) = s(i)
         Next
@@ -650,7 +650,7 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Sub TestMethod()
+    Private Sub TestMethod()
         For i = 0 To [end] - 1
             b(i) = s(i)
         Next
@@ -704,7 +704,7 @@ class GotoTest1
             Console.ReadKey();
         }
     }", @"Class GotoTest1
-    Shared Sub Main()
+    Private Shared Sub Main()
         Dim x As Integer = 200, y As Integer = 4
         Dim count As Integer = 0
         Dim array As String(,) = New String(x - 1, y - 1) {}
@@ -753,7 +753,7 @@ class TestClass
             throw new ArgumentNullException(nameof(nullObject));
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal nullObject As Object)
+    Private Sub TestMethod(ByVal nullObject As Object)
         If nullObject Is Nothing Then Throw New ArgumentNullException(NameOf(nullObject))
     End Sub
 End Class");
@@ -787,17 +787,17 @@ class TestClass
 }", @"Class TestClass
     Public Event MyEvent As EventHandler
 
-    Sub TestMethod(ByVal e As EventHandler)
+    Private Sub TestMethod(ByVal e As EventHandler)
         AddHandler Me.MyEvent, e
         AddHandler Me.MyEvent, AddressOf MyHandler
     End Sub
 
-    Sub TestMethod2(ByVal e As EventHandler)
+    Private Sub TestMethod2(ByVal e As EventHandler)
         RemoveHandler Me.MyEvent, e
         RemoveHandler Me.MyEvent, AddressOf MyHandler
     End Sub
 
-    Sub MyHandler(ByVal sender As Object, ByVal e As EventArgs)
+    Private Sub MyHandler(ByVal sender As Object, ByVal e As EventArgs)
     End Sub
 End Class");
         }
@@ -831,7 +831,7 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Sub TestMethod(ByVal number As Integer)
+    Private Sub TestMethod(ByVal number As Integer)
         Select Case number
             Case 0, 1, 2
                 Console.Write(""number is 0, 1, 2"")
@@ -889,12 +889,12 @@ class TestClass
         }
     }
 }", @"Class TestClass
-    Shared Function Log(ByVal message As String) As Boolean
+    Private Shared Function Log(ByVal message As String) As Boolean
         Console.WriteLine(message)
         Return False
     End Function
 
-    Sub TestMethod(ByVal number As Integer)
+    Private Sub TestMethod(ByVal number As Integer)
         Try
             Console.WriteLine(""try"")
         Catch e As Exception
