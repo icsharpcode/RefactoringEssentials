@@ -665,6 +665,10 @@ End Function";
                 {
                     newAttributes = new AttributeListSyntax[0];
                 }
+                if (@default != null)
+                {
+                    modifiers = modifiers.Add(SyntaxFactory.Token(SyntaxKind.OptionalKeyword));
+                }
                 return SyntaxFactory.Parameter(
                     SyntaxFactory.List(newAttributes.Concat(node.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)))),
                     modifiers,

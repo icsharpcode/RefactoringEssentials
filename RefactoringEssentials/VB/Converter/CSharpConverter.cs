@@ -252,6 +252,8 @@ namespace RefactoringEssentials.VB.Converter
                     return SyntaxKind.None;
                 case CS.SyntaxKind.NewKeyword:
                     return SyntaxKind.ShadowsKeyword;
+                case CS.SyntaxKind.ParamsKeyword:
+                    return SyntaxKind.ParamArrayKeyword;
                 // others
                 case CS.SyntaxKind.AscendingKeyword:
                     return SyntaxKind.AscendingKeyword;
