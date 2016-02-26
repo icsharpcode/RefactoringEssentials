@@ -131,5 +131,18 @@ class TestClass
     }
 }");
         }
+
+        [Test]
+        public void TestNullableCreationOnLeftSide()
+        {
+            Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
+class TestClass
+{
+	void Foo()
+	{
+		int i = new int?() ?? 1;
+	}
+}");
+        }
     }
 }
