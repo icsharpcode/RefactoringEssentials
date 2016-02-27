@@ -605,7 +605,7 @@ namespace RefactoringEssentials.VB.Converter
 
             public override SyntaxList<StatementSyntax> VisitCheckedStatement(CSS.CheckedStatementSyntax node)
             {
-                return WrapInComment(Visit(node.Block), "Visual Basic does not support checked statements!");
+                return WrapInComment(ConvertBlock(node.Block), "Visual Basic does not support checked statements!");
             }
 
             SyntaxList<StatementSyntax> WrapInComment(SyntaxList<StatementSyntax> nodes, string comment)

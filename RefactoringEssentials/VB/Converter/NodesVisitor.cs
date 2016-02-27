@@ -819,10 +819,22 @@ End Function";
                 }
                 if (node.Parent is CSS.InitializerExpressionSyntax)
                 {
-                    return SyntaxFactory.NamedFieldInitializer(
-                        (IdentifierNameSyntax)node.Left.Accept(this),
-                        (ExpressionSyntax)node.Right.Accept(this)
-                    );
+                    if (node.Left is CSS.ImplicitElementAccessSyntax)
+                    {
+                        return SyntaxFactory.CollectionInitializer(
+                            SyntaxFactory.SeparatedList(new[] {
+                                (ExpressionSyntax)node.Left.Accept(this),
+                                (ExpressionSyntax)node.Right.Accept(this)
+                            })
+                        );
+                    }
+                    else
+                    {
+                        return SyntaxFactory.NamedFieldInitializer(
+                            (IdentifierNameSyntax)node.Left.Accept(this),
+                            (ExpressionSyntax)node.Right.Accept(this)
+                        );
+                    }
                 }
                 MarkPatchInlineAssignHelper(node);
                 return SyntaxFactory.InvocationExpression(
@@ -900,6 +912,13 @@ End Function";
                     SyntaxFactory.Token(SyntaxKind.DotToken),
                     (SimpleNameSyntax)node.Name.Accept(this)
                 );
+            }
+
+            public override VisualBasicSyntaxNode VisitImplicitElementAccess(CSS.ImplicitElementAccessSyntax node)
+            {
+                if (node.ArgumentList.Arguments.Count > 1)
+                    throw new NotSupportedException("ImplicitElementAccess can only have one argument!");
+                return node.ArgumentList.Arguments[0].Expression.Accept(this);
             }
 
             public override VisualBasicSyntaxNode VisitElementAccessExpression(CSS.ElementAccessExpressionSyntax node)
@@ -1119,9 +1138,21 @@ End Function";
             public override VisualBasicSyntaxNode VisitInitializerExpression(CSS.InitializerExpressionSyntax node)
             {
                 if (node.IsKind(CS.SyntaxKind.ObjectInitializerExpression))
-                    return SyntaxFactory.ObjectMemberInitializer(
-                        SyntaxFactory.SeparatedList(node.Expressions.Select(e => (FieldInitializerSyntax)e.Accept(this)))
+                {
+                    var expressions = node.Expressions.Select(e => e.Accept(this));
+                    if (expressions.OfType<FieldInitializerSyntax>().Any())
+                    {
+                        return SyntaxFactory.ObjectMemberInitializer(
+                           SyntaxFactory.SeparatedList(expressions.OfType<FieldInitializerSyntax>())
+                       );
+                    }
+
+                    return SyntaxFactory.ObjectCollectionInitializer(
+                        SyntaxFactory.CollectionInitializer(
+                            SyntaxFactory.SeparatedList(expressions.OfType<ExpressionSyntax>())
+                        )
                     );
+                }
                 if (node.IsKind(CS.SyntaxKind.ArrayInitializerExpression))
                     return SyntaxFactory.CollectionInitializer(
                         SyntaxFactory.SeparatedList(node.Expressions.Select(e => (ExpressionSyntax)e.Accept(this)))
@@ -1132,7 +1163,7 @@ End Function";
                             SyntaxFactory.SeparatedList(node.Expressions.Select(e => (ExpressionSyntax)e.Accept(this)))
                         )
                     );
-                throw new NotImplementedException();
+                return SyntaxFactory.CollectionInitializer(SyntaxFactory.SeparatedList(node.Expressions.Select(e => (ExpressionSyntax)e.Accept(this))));
             }
 
             public override VisualBasicSyntaxNode VisitAnonymousMethodExpression(CSS.AnonymousMethodExpressionSyntax node)
@@ -1451,6 +1482,11 @@ End Function";
                 return SyntaxFactory.NullableType((TypeSyntax)node.ElementType.Accept(this));
             }
 
+            public override VisualBasicSyntaxNode VisitOmittedTypeArgument(CSS.OmittedTypeArgumentSyntax node)
+            {
+                return SyntaxFactory.ParseTypeName("");
+            }
+
             #endregion
 
             #region NameSyntax
@@ -1487,7 +1523,7 @@ End Function";
             {
                 if (originalName.Parent is CSS.NameSyntax || originalName.Parent is CSS.AttributeSyntax) return name;
                 CSS.ExpressionSyntax parent = originalName;
-                while (parent.Parent is CSS.MemberAccessExpressionSyntax)
+                while (parent.Parent is CSS.MemberAccessExpressionSyntax || parent.Parent is CSS.MemberBindingExpressionSyntax)
                     parent = (CSS.ExpressionSyntax)parent.Parent;
                 if (parent != null && parent.Parent is CSS.InvocationExpressionSyntax)
                     return name;

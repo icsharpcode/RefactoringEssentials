@@ -325,7 +325,7 @@ namespace RefactoringEssentials.VB.Converter
                 case CS.SyntaxKind.UnaryMinusExpression:
                     return SyntaxKind.UnaryMinusExpression;
                 case CS.SyntaxKind.BitwiseNotExpression:
-                    break;
+                    return SyntaxKind.NotExpression;
                 case CS.SyntaxKind.LogicalNotExpression:
                     return SyntaxKind.NotExpression;
                 case CS.SyntaxKind.PreIncrementExpression:
