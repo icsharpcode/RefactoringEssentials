@@ -1,8 +1,40 @@
 ﻿@{
     ViewData["Title"] = "About";
 }
-<h2>About</h2>
 
-<p>A service provided by <a href="http://vsrefactoringessentials.com/">Refactoring Essentials for Visual Studio</a></p>
+<div class="row">
+    <div class="col-md-8">
+        <h2>About</h2>
 
-<a href="http://vsrefactoringessentials.com/"><img src="~/images/refactoringessentials-logo.png" /></a>
+        <p>
+            A service provided by <a href="http://vsrefactoringessentials.com/">Refactoring Essentials for Visual Studio</a>.
+            It is included in the Visual Studio extension (currently only in <a href="http://vsixgallery.com/extension/NR6Pack.Refactorings.Vsix..cd27e59b-5c56-4238-8931-c9bb745a7a7f/">test builds</a>), where it runs locally without calling out to this REST API.
+        </p>
+        <p>
+            The code you submit is not stored in any form. Therefore, if an error occurs in conversion, we would like to ask
+            you to <a href="https://github.com/icsharpcode/RefactoringEssentials/issues">report it</a> using the label "code converter".
+            Please do include the code snippet (if possible) so we can find (and thus fix) the problem as soon as possible.
+        </p>
+        <p>
+            This service is brought to you by the same people that created <a href="http://codeconverter.sharpdevelop.net/">http://codeconverter.sharpdevelop.net/</a>.
+            In comparison, this service today supports only C# to VB.NET, however in their respective latest versions - whereas the <a href="https://github.com/icsharpcode/NRefactory/">NRefactory</a>-based
+            older service is C# 5.0 only (and won't be updated any more).
+        </p>
+        <p>
+            Current <a href="https://github.com/icsharpcode/RefactoringEssentials/blob/master/converter.txt">limitations</a> are documented, the most important being comments and preprocessor directives.
+        </p>
+        <p>
+            The code for this Web site can be found in the <a href="https://github.com/icsharpcode/RefactoringEssentials">Refactoring Essentials</a>
+            repository. The client library for the REST API plus some smaller clients are accessible via the <a href="https://github.com/christophwille/roslyncodeconverterclients">clients repository</a>,
+            which has a downloadable release of the <a href="https://github.com/christophwille/roslyncodeconverterclients/releases">Windows desktop client</a>.
+        </p>
+        <p>
+            As always, help is appreciated - eg converters for other language combinations. Please open an issue when intending to do so.
+        </p>
+
+
+        <p>&nbsp;</p>
+        <a href="http://vsrefactoringessentials.com/"><img src="~/images/refactoringessentials-logo.png"/></a>
+
+    </div>
+</div>
