@@ -33,7 +33,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var parent = root.FindToken(context.Span.Start).Parent?.Parent;
+            var parent = root.FindToken(context.Span.Start).Parent;
             var node = parent as MemberAccessExpressionSyntax;
             if (node == null)
                 return;

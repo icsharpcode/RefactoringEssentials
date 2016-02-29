@@ -6,21 +6,14 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantToStringCallAnalyzer : DiagnosticAnalyzer
     {
-        static Tuple<int, int> onlyFirst = Tuple.Create(0, 0);
-
-        static IDictionary<Tuple<string, int>, Tuple<int, int>> membersCallingToString = new Dictionary<Tuple<string, int>, Tuple<int, int>> {
-            { Tuple.Create("System.IO.TextWriter.Write", 1), onlyFirst },
-            { Tuple.Create("System.IO.TextWriter.WriteLine", 1), onlyFirst },
-            { Tuple.Create("System.Console.Write", 1), onlyFirst },
-            { Tuple.Create("System.Console.WriteLine", 1), onlyFirst }
-        };
-
         static readonly DiagnosticDescriptor descriptor1 = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RedundantToStringCallAnalyzerID,
             GettextCatalog.GetString("Finds calls to ToString() which would be generated automatically by the compiler"),
@@ -80,16 +73,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var member = nodeContext.SemanticModel.GetSymbolInfo(invocationExpression).Symbol;
             if (member == null)
                 return;
-            var invocationResolveResult = nodeContext.SemanticModel.GetTypeInfo(invocationExpression).Type;
-
             // "".ToString()
-            CheckTargetedObject(nodeContext, invocationExpression, invocationResolveResult, member);
+            CheckTargetedObject(nodeContext, invocationExpression, member);
 
             // Check list of members that call ToString() automatically
             CheckAutomaticToStringCallers(nodeContext, invocationExpression, member);
 
             // Check formatting calls
-           // CheckFormattingCall(invocationExpression, invocationResolveResult));
+            CheckFormattingCall(nodeContext, invocationExpression, member);
         }
 
 
@@ -180,21 +171,23 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 // Simon Lindgren 2012-09-14: Previously there was a check here to see if the node had already been processed
                 // This has been moved out to the callers, to check it earlier for a 30-40% run time reduction
                 processedNodes.Add(invocationExpression);
-                nodeContext.ReportDiagnostic(Diagnostic.Create(isValueType ? descriptor2 : descriptor1, memberExpression.Name.GetLocation()));
+                nodeContext.ReportDiagnostic(Diagnostic.Create(isValueType ? descriptor2 : descriptor1, GetLocation (invocationExpression)));
             }
 
         }
 
         #region Invocation expression
 
-        static void CheckTargetedObject(SyntaxNodeAnalysisContext nodeContext, InvocationExpressionSyntax invocationExpression, ITypeSymbol type, ISymbol member)
+        static void CheckTargetedObject(SyntaxNodeAnalysisContext nodeContext, InvocationExpressionSyntax invocationExpression, ISymbol member)
         {
             var memberExpression = invocationExpression.Expression as MemberAccessExpressionSyntax;
             if (memberExpression != null)
             {
+                var type = nodeContext.SemanticModel.GetTypeInfo(memberExpression.Expression).Type;
+
                 if (type.SpecialType == SpecialType.System_String && member.Name == "ToString")
                 {
-                    nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor1, memberExpression.Name.GetLocation()));
+                    nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor1, GetLocation (invocationExpression)));
                 }
             }
         }
@@ -209,15 +202,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     return;
                 }
             }
-            var key = new Tuple<string, int>(member.GetDocumentationCommentId(), invocationExpression.ArgumentList.Arguments.Count);
-            Tuple<int, int> checkInfo;
-            if (membersCallingToString.TryGetValue(key, out checkInfo))
+
+            var method = member as IMethodSymbol;
+            if (method == null)
+                return;
+
+            var arguments = invocationExpression.ArgumentList.Arguments;
+            for (int i = 0; i < arguments.Count; ++i)
             {
-                var arguments = invocationExpression.ArgumentList.Arguments;
-                for (int i = checkInfo.Item1; i < Math.Min(arguments.Count, checkInfo.Item2 + 1); ++i)
-                {
+                if (method.Parameters[i].Type.SpecialType == SpecialType.System_String)
                     CheckExpressionInAutoCallContext(nodeContext, arguments[i].Expression);
-                }
             }
         }
 
@@ -248,37 +242,41 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return;
             }
             var type = nodeContext.SemanticModel.GetTypeInfo(memberExpression.Expression).Type;
-            if (type?.IsValueType == true)
-                nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor1, memberExpression.Name.GetLocation()));
+                        nodeContext.ReportDiagnostic(Diagnostic.Create(type?.IsValueType == true ? descriptor2 : descriptor1, GetLocation(invocationExpression)));
         }
 
-        //static void CheckFormattingCall(InvocationExpressionSyntax invocationExpression, CSharpInvocationResolveResult invocationResolveResult)
-        //{
-        //    Expression formatArgument;
-        //    IList<Expression> formatArguments;
-        //    // Only check parameters that are of type object: String means it is neccessary, others
-        //    // means that there is another problem (ie no matching overload of the method).
-        //    Func<IParameter, Expression, bool> predicate = (parameter, argument) =>
-        //    {
-        //        var type = parameter.Type;
-        //        if (type is TypeWithElementType && parameter.IsParams)
-        //        {
-        //            type = ((TypeWithElementType)type).ElementType;
-        //        }
-        //        var typeDefinition = type.GetDefinition();
-        //        if (typeDefinition == null)
-        //            return false;
-        //        return typeDefinition.IsKnownType(KnownTypeCode.Object);
-        //    };
-        //    if (FormatStringHelper.TryGetFormattingParameters(invocationResolveResult, invocationExpression,
-        //                                                      out formatArgument, out formatArguments, predicate))
-        //    {
-        //        foreach (var argument in formatArguments)
-        //        {
-        //            CheckExpressionInAutoCallContext(argument);
-        //        }
-        //    }
-        //}
+        static Location GetLocation(InvocationExpressionSyntax invocationExpression)
+        {
+            var memberExpression = invocationExpression.Expression as MemberAccessExpressionSyntax;
+
+            return Location.Create(invocationExpression.SyntaxTree, TextSpan.FromBounds(memberExpression.Expression.Span.End, invocationExpression.Span.End));
+        }
+
+        static void CheckFormattingCall(SyntaxNodeAnalysisContext nodeContext, InvocationExpressionSyntax invocationExpression, ISymbol member)
+        {
+            ExpressionSyntax formatArgument;
+            IList<ExpressionSyntax> formatArguments;
+            // Only check parameters that are of type object: String means it is neccessary, others
+            // means that there is another problem (ie no matching overload of the method).
+            Func<IParameterSymbol, ExpressionSyntax, bool> predicate = (parameter, argument) =>
+            {
+                var type = parameter.Type;
+/*                if (type is TypeWithElementType && parameter.IsParams)
+                {
+                    type = ((TypeWithElementType)type).ElementType;
+                }*/
+                return type.SpecialType == SpecialType.System_Object;
+            };
+
+            if (FormatStringHelper.TryGetFormattingParameters(nodeContext.SemanticModel, invocationExpression,
+                                                              out formatArgument, out formatArguments, predicate))
+            {
+                foreach (var argument in formatArguments)
+                {
+                    CheckExpressionInAutoCallContext(nodeContext, argument);
+                }
+            }
+        }
         #endregion
     }
 }
