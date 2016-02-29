@@ -684,7 +684,20 @@ End Function";
 
             public override VisualBasicSyntaxNode VisitLiteralExpression(CSS.LiteralExpressionSyntax node)
             {
-                return Literal(node.Token.Value);
+                // now this looks somehow hacky... is there a better way?
+                if (node.IsKind(CS.SyntaxKind.StringLiteralExpression) && node.Token.Text.StartsWith("@", StringComparison.Ordinal))
+                {
+                    return SyntaxFactory.StringLiteralExpression(
+                        SyntaxFactory.StringLiteralToken(
+                            node.Token.Text.Substring(1),
+                            (string)node.Token.Value
+                        )
+                    );
+                }
+                else
+                {
+                    return Literal(node.Token.Value);
+                }
             }
 
             public override VisualBasicSyntaxNode VisitInterpolatedStringExpression(CSS.InterpolatedStringExpressionSyntax node)

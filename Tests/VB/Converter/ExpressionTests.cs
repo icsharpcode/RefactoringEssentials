@@ -11,6 +11,25 @@ namespace RefactoringEssentials.Tests.VB.Converter
     public class ExpressionTests : ConverterTestBase
     {
         [Test]
+        public void MultilineString()
+        {
+            TestConversionCSharpToVisualBasic(@"
+class TestClass
+{
+    void TestMethod()
+    {
+        var x = @""Hello,
+World!"";
+    }
+}", @"Class TestClass
+    Private Sub TestMethod()
+        Dim x = ""Hello,
+World!""
+    End Sub
+End Class");
+        }
+
+        [Test]
         public void ConditionalExpression()
         {
             TestConversionCSharpToVisualBasic(@"
