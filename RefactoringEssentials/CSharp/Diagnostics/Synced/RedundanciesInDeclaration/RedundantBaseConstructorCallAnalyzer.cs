@@ -54,7 +54,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (baseInitializer.ArgumentList == null ||
                 baseInitializer.ArgumentList != null && baseInitializer.ArgumentList.Arguments.Count<1)
             {
-                diagnostic = Diagnostic.Create(descriptor, constructorDeclaration.GetLocation());
+                diagnostic = Diagnostic.Create(descriptor, baseInitializer.GetLocation());
                 return true;
             }
             return false;

@@ -32,12 +32,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span) as ConstructorDeclarationSyntax;
+            var node = root.FindNode(context.Span) as ConstructorInitializerSyntax;
             // if (!node.IsKind(SyntaxKind.BaseList))
             //	continue;
             if (node == null)
                 return;
-            var newRoot = root.RemoveNode(node.Initializer, SyntaxRemoveOptions.KeepNoTrivia);
+            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant 'base()'", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
