@@ -10,11 +10,6 @@ namespace RefactoringEssentials.VB.Converter
 {
     static class ConversionExtensions
     {
-        public static CS.SyntaxKind CSKind(this SyntaxToken token)
-        {
-            return CS.CSharpExtensions.Kind(token);
-        }
-
         public static bool HasUsingDirective(this CS.CSharpSyntaxTree tree, string fullName)
         {
             if (tree == null)
@@ -31,6 +26,16 @@ namespace RefactoringEssentials.VB.Converter
         private static bool MatchesNamespaceOrRoot(SyntaxNode arg)
         {
             return arg is CS.Syntax.NamespaceDeclarationSyntax || arg is CS.Syntax.CompilationUnitSyntax;
+        }
+
+        public static IEnumerable<R> IndexedSelect<T, R>(this IEnumerable<T> source, Func<int, T, R> transform)
+        {
+            int i = 0;
+            foreach (var item in source)
+            {
+                yield return transform(i, item);
+                i++;
+            }
         }
     }
 }

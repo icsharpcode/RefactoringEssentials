@@ -15,7 +15,7 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>111 code analyzers for C#</p>
+    <p>115 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
@@ -58,6 +58,7 @@
       <li>Local variable has the same name as a member and hides it (LocalVariableHidesMemberAnalyzer)</li>
       <li>Local variable is never used (LocalVariableNotUsedAnalyzer)</li>
       <li>Lowercase 'l' is often confused with '1' (LongLiteralEndingLowerLAnalyzer)</li>
+      <li>Member hides static member from outer class (MemberHidesStaticFromOuterClassAnalyzer)</li>
       <li>Suggest the usage of the nameof operator (NameOfSuggestionAnalyzer)</li>
       <li>Non public methods are not found by NUnit (NonPublicMethodWithTestAttributeAnalyzer)</li>
       <li>Shows NotImplementedException throws in the quick task bar (NotImplementedExceptionAnalyzer)</li>
@@ -78,8 +79,10 @@
       <li>Redundant case label (RedundantCaseLabelAnalyzer)</li>
       <li>Check for inequality before assignment is redundant if (x != value) x = value; (RedundantCheckBeforeAssignmentAnalyzer)</li>
       <li>Redundant comma in array initializer (RedundantCommaInArrayInitializerAnalyzer)</li>
+      <li>Initializing field with default value is redundant (RedundantDefaultFieldInitializerAnalyzer)</li>
       <li>Explicit delegate creation expression is redundant (RedundantDelegateCreationAnalyzer)</li>
       <li>Redundant empty 'default' switch branch (RedundantEmptyDefaultSwitchBranchAnalyzer)</li>
+      <li>Redundant empty finally block (RedundantEmptyFinallyBlockAnalyzer)</li>
       <li>Redundant explicit size in array creation (RedundantExplicitArraySizeAnalyzer)</li>
       <li>Value types are implicitly convertible to nullables (RedundantExplicitNullableCreationAnalyzer)</li>
       <li>Redundant 'else' keyword (RedundantIfElseBlockAnalyzer)</li>
@@ -118,6 +121,7 @@
       <li>Unallowed usage of Roslyn features in this context. (RoslynUsageAnalyzer)</li>
       <li>'sealed' modifier is redundant in sealed classes (SealedMemberInSealedClassAnalyzer)</li>
       <li>Conditional expression can be simplified (SimplifyConditionalTernaryExpressionAnalyzer)</li>
+      <li>Warns about static fields in generic types (StaticFieldOrAutoPropertyInGenericTypeAnalyzer)</li>
       <li>Warns when a culture-aware 'string.CompareTo' call is used by default (StringCompareToIsCultureSpecificAnalyzer)</li>
       <li>Warns when a culture-aware 'EndsWith' call is used by default. (StringEndsWithIsCultureSpecificAnalyzer)</li>
       <li>Warns when a culture-aware 'IndexOf' call is used by default. (StringIndexOfIsCultureSpecificAnalyzer)</li>

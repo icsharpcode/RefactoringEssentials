@@ -18,12 +18,13 @@
                     <input type="radio" ng-model="requestedConversion" value="cs2vbnet">
                     C# to VB.NET
                 </label>
-                <label>
+                @*<label>
                     <input type="radio" ng-model="requestedConversion" value="vb2csnet">
                     VB.NET to C#
-                </label>
+                </label>*@
                 &nbsp;
                 <button class="btn btn-default" ng-click="convert()">Convert Code</button>
+                <div class="spinner" ng-show="converterCallInflight"></div>
             </div>
             <div class="form-group">
                 <label>Converted code</label>
@@ -44,8 +45,11 @@
         $scope.requestedConversion = "cs2vbnet";
         $scope.errorMessageOnResponse = "";
         $scope.showErrors = false;
+        $scope.converterCallInflight = false;
 
         $scope.convert = function () {
+            $scope.converterCallInflight = true;
+            $scope.convertedCode = "";
             $scope.errorMessageOnResponse = "";
             $scope.showErrors = false;
 
@@ -53,17 +57,17 @@
 
             $http.post('/api/converter/', data)
                 .then(function successCallback(response) {
-                    // this callback will be called asynchronously
-                    // when the response is available
-
+                    $scope.converterCallInflight = false;
                     $scope.convertedCode = response.data.convertedCode;
+
                     if (!response.data.conversionOk) {
                         $scope.showErrors = true;
                         $scope.errorMessageOnResponse = response.data.errorMessage;
                     }
                 }, function errorCallback(response) {
-                    // called asynchronously if an error occurs
-                    // or server returns response with an error status.
+                    $scope.converterCallInflight = false;
+                    $scope.showErrors = true;
+                    $scope.errorMessageOnResponse = "Call to the server backend failed";
                 });
         };
     });

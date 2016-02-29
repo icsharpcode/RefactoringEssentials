@@ -10,6 +10,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using RefactoringEssentials;
 
 namespace Nullaby
 {
@@ -353,9 +354,14 @@ namespace Nullaby
                     return NullState.Null;
 
                     case SyntaxKind.StringLiteralExpression:
-                    case SyntaxKind.ObjectCreationExpression:
                     case SyntaxKind.ArrayCreationExpression:
-                    return NullState.NotNull;
+                        return NullState.NotNull;
+
+                    case SyntaxKind.ObjectCreationExpression:
+                        var creationExprType = model.GetTypeInfo(expression).Type;
+                        if ((creationExprType != null) && creationExprType.IsNullable())
+                            return NullState.CouldBeNull;
+                        return NullState.NotNull;
 
                     case SyntaxKind.ConditionalAccessExpression:
                         var ca = (ConditionalAccessExpressionSyntax)expression;

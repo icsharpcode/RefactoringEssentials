@@ -47,7 +47,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
 					"",
 					"",
 					"Script",
-					null,
+					new[] { "System", "System.Collections.Generic", "System.Linq" },
 					OptimizationLevel.Debug,
 					false,
 					true
@@ -83,7 +83,10 @@ namespace RefactoringEssentials.Tests.VB.Converter
 				);
 			}
 			workspace.Options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, false);
-			workspace.Open(ProjectInfo.Create(
+            var compilationOptions = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                .WithRootNamespace("TestProject")
+                .WithGlobalImports(GlobalImport.Parse("System", "System.Collections.Generic", "System.Linq", "Microsoft.VisualBasic"));
+            workspace.Open(ProjectInfo.Create(
 				projectId,
 				VersionStamp.Create(),
 				"TestProject",
@@ -91,13 +94,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
 				LanguageNames.VisualBasic,
 				null,
 				null,
-				new VisualBasicCompilationOptions(
-					OutputKind.DynamicallyLinkedLibrary,
-					"",
-					"",
-					"Script",
-					GlobalImport.Parse("System", "Microsoft.VisualBasic")
-				),
+                compilationOptions,
 				parseOptions,
 				new[] {
 					DocumentInfo.Create(
@@ -120,7 +117,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
 			Document inputDocument, outputDocument;
 			CSharpWorkspaceSetup(csharpCode, out csharpWorkspace, out inputDocument, csharpOptions);
 			VBWorkspaceSetup(out vbWorkspace, out outputDocument, vbOptions);
-            var outputNode = Convert((CSharpSyntaxNode)inputDocument.GetSyntaxRootAsync().Result, inputDocument.GetSemanticModelAsync().Result);
+            var outputNode = Convert((CSharpSyntaxNode)inputDocument.GetSyntaxRootAsync().Result, inputDocument.GetSemanticModelAsync().Result, outputDocument);
 			
 			var txt = outputDocument.WithSyntaxRoot(Formatter.Format(outputNode, vbWorkspace)).GetTextAsync().Result.ToString();
 			txt = Utils.HomogenizeEol(txt).TrimEnd();
@@ -131,13 +128,24 @@ namespace RefactoringEssentials.Tests.VB.Converter
 				Console.WriteLine(expectedVisualBasicCode);
 				Console.WriteLine("got:");
 				Console.WriteLine(txt);
+                Console.WriteLine("diff:");
+                int l = Math.Max(expectedVisualBasicCode.Length, txt.Length);
+                StringBuilder diff = new StringBuilder(l);
+                for (int i = 0; i < l; i++)
+                {
+                    if (i >= expectedVisualBasicCode.Length || i >= txt.Length || expectedVisualBasicCode[i] != txt[i])
+                        diff.Append('x');
+                    else
+                        diff.Append(expectedVisualBasicCode[i]);
+                }
+                Console.WriteLine(diff.ToString());
 				Assert.Fail();
 			}
 		}
 
-        VisualBasicSyntaxNode Convert(CSharpSyntaxNode input, SemanticModel semanticModel)
+        VisualBasicSyntaxNode Convert(CSharpSyntaxNode input, SemanticModel semanticModel, Document targetDocument)
 		{
-			return CSharpConverter.Convert(input, semanticModel);
+			return CSharpConverter.Convert(input, semanticModel, targetDocument);
 		}
 	}
 }

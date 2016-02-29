@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Description;
 using CodeConverterWebApp.Models;
 using RefactoringEssentials.Converter;
 
@@ -12,6 +13,7 @@ namespace CodeConverterWebApp.Controllers
     public class ConverterController : ApiController
     {
         [HttpPost]
+        [ResponseType(typeof(ConvertResponse))]
         public IHttpActionResult Post([FromBody]ConvertRequest todo)
         {
             var languages = todo.requestedConversion.Split('2');

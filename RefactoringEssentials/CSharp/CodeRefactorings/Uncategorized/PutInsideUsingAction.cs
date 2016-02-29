@@ -21,9 +21,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var variableDeclaration = node.GetAncestor<VariableDeclarationSyntax>();
             var localDeclaration = node.GetAncestor<LocalDeclarationStatementSyntax>();
 
-            if (node.Initializer == null)
+            if (node.Initializer == null || node.Parent.Parent != null && node.Parent.Parent.IsKind(SyntaxKind.UsingStatement))
                 yield break;
-
+            
             var symbol = semanticModel.GetDeclaredSymbol(node) as ILocalSymbol;
             if (symbol == null)
                 yield break;
