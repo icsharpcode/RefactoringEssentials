@@ -3,6 +3,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
+
     [TestFixture]
     public class DoNotCallOverridableMethodsInConstructorTests : CSharpDiagnosticTestBase
     {
@@ -241,13 +242,39 @@ public class Test {
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		this.AutoProperty = 1;
-	}
+    Foo()
+    {
+        this.AutoProperty = 1;
+    }
 
-	public virtual int AutoProperty { get; private set; }
+    public virtual int AutoProperty { get; private set; }
 }");
         }
+
+        /// <summary>
+        /// Bug 39180 - "Virtual member call in constructor" when no call is made
+        /// </summary>
+        [Test]
+        public void TestBug39180()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@" class Test {
+    public interface ITest { }
+    public Test (ITest test) { 
+
+    }
+}");
+        }
+
+        [Test]
+        public void TestBug39180_Case2()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@" class Test {
+    public interface ITest { }
+    public Test () { 
+        ITest test;
+    }
+}");
+        }
+       
     }
 }
