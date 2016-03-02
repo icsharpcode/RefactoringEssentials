@@ -12,6 +12,9 @@
 			<Group guid="guidREConverterCommandPackageCmdSet" id="REConverterCtxMenuGroup" priority="0x0600">
 				<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_CODEWIN"/>
 			</Group>
+			<Group guid="guidREConverterCommandPackageCmdSet" id="REConverterProjectItemCtxMenuGroup" priority="0x0600">
+				<Parent guid="guidSHLMainMenu" id="IDM_VS_CTXT_ITEMNODE"/>
+			</Group>
 		</Groups>
 
 		<Buttons>
@@ -19,7 +22,6 @@
 				<Parent guid="guidREConverterCommandPackageCmdSet" id="REConverterMenuGroup" />
 				<CommandFlag>DefaultInvisible</CommandFlag>
 				<CommandFlag>DynamicVisibility</CommandFlag>
-				<CommandFlag>DontCache</CommandFlag>
 				<Strings>
 					<ButtonText>Convert to VB and copy to clipboard</ButtonText>
 				</Strings>
@@ -28,7 +30,14 @@
 				<Parent guid="guidREConverterCommandPackageCmdSet" id="REConverterCtxMenuGroup" />
 				<CommandFlag>DefaultInvisible</CommandFlag>
 				<CommandFlag>DynamicVisibility</CommandFlag>
-				<CommandFlag>DontCache</CommandFlag>
+				<Strings>
+					<ButtonText>Convert to VB and copy to clipboard</ButtonText>
+				</Strings>
+			</Button>
+			<Button guid="guidREConverterCommandPackageCmdSet" id="ConvertCSToVBProjectItemCtxCommandId" priority="0x0100" type="Button">
+				<Parent guid="guidREConverterCommandPackageCmdSet" id="REConverterProjectItemCtxMenuGroup" />
+				<CommandFlag>DefaultInvisible</CommandFlag>
+				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
 					<ButtonText>Convert to VB and copy to clipboard</ButtonText>
 				</Strings>
@@ -44,8 +53,10 @@
 		<GuidSymbol name="guidREConverterCommandPackageCmdSet" value="{a3378a21-e939-40c9-9e4b-eb0cec7b7854}">
 			<IDSymbol name="REConverterMenuGroup" value="0x1020" />
 			<IDSymbol name="REConverterCtxMenuGroup" value="0x1021" />
+			<IDSymbol name="REConverterProjectItemCtxMenuGroup" value="0x1022" />
 			<IDSymbol name="ConvertCSToVBCommandId" value="0x0100" />
 			<IDSymbol name="ConvertCSToVBCtxCommandId" value="0x0101" />
+			<IDSymbol name="ConvertCSToVBProjectItemCtxCommandId" value="0x0102" />
 		</GuidSymbol>
 	</Symbols>
 </CommandTable>
