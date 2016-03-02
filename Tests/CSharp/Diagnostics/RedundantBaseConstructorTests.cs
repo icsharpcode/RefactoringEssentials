@@ -3,7 +3,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-
     [TestFixture]
     public class RedundantBaseConstructorTests : CSharpDiagnosticTestBase
     {
@@ -19,7 +18,7 @@ class BaseClass
 }
 class TestClass : BaseClass
 {
-    $public TestClass(int data) : base() { }$
+    public TestClass(int data) $: base()$ { }
 }
 ";
             var output = @"
