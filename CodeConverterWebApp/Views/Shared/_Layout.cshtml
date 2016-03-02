@@ -5,7 +5,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Code Converter by Refactoring Essentials</title>
+    <title>@Page.Title - Roslyn Code Converter by Refactoring Essentials</title>
+    @RenderSection("head", required: false)
+
+    <meta name="keywords" content="@Page.Keywords" />
+    <meta name="description" content="@Page.Description" />
+    <meta name="robots" content="index,follow">
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon"/>
+
     <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
     <link rel="stylesheet" href="~/Content/site.css" />
 </head>
