@@ -33,7 +33,6 @@
 * CS1717AssignmentMadeToSameVariableAnalyzer
 * CS1729TypeHasNoConstructorWithNArgumentsAnalyzer
 * ForCanBeConvertedToForeachAnalyzer
-* ForControlVariableIsNeverModifiedAnalyzer
 * InconsistentNamingAnalyzer
 * LockThisAnalyzer
 * NegativeRelationalExpressionAnalyzer
