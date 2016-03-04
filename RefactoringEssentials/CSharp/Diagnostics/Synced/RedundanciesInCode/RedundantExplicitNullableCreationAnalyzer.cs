@@ -52,6 +52,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var parentVarDeclaration = objectCreation?.Parent?.Parent?.Parent as VariableDeclarationSyntax;
             if (parentVarDeclaration != null && parentVarDeclaration.Type.IsVar)
                 return false;
+            
+            // No Nullable, but "var"
+            var conditionalExpression = objectCreation.WalkUpParentheses().Parent as ConditionalExpressionSyntax;
+            if (conditionalExpression != null && conditionalExpression.WhenFalse.SkipParens() == objectCreation)
+                return false;
 
             var objectCreationSymbol = nodeContext.SemanticModel.GetTypeInfo(objectCreation);
             if (objectCreationSymbol.Type != null && objectCreationSymbol.Type.IsNullableType())

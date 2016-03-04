@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class MethodOverloadWithOptionalParameterTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -119,7 +118,7 @@ class TestClass
 {
 	void TestMethod (int a, int b)
 	{ }
-	void TestMethod (int a, $int b = 1$, int c = 1)
+	void TestMethod (int a, int b = 1, $int c = 1$)
 	{ }
 }";
             Analyze<MethodOverloadWithOptionalParameterAnalyzer>(input);

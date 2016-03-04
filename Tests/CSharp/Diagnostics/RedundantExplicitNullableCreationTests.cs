@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using System;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
@@ -89,6 +90,27 @@ class FooBar
     void Test()
     {
         var i = new int?(5);
+    }
+}
+");
+        }
+
+        /// <summary>
+        /// RECS0138 fix produces bad code when one of expressions is an explicit nullable type creation #185
+        /// </summary>
+        [Test]
+        public void TestIssue185()
+        {
+            Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
+enum FooBar { Foo, Bar }
+
+class Test
+{
+    FooBar GetFooBar(object o) { return (FooBar)o; }
+
+    FooBar? Foo(object o)
+    {
+        return o == null ? null : new FooBar?(GetFooBar(o));
     }
 }
 ");
