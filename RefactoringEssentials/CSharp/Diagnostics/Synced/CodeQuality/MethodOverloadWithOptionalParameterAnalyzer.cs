@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class MethodOverloadWithOptionalParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -47,8 +46,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         overloads.Add(member);
                 }
                 else {
-                    if (member.IsKind(SymbolKind.Method) && member.Name == symbol.Name)
-                        overloads.Add(member);
+                    if (member.IsKind(SymbolKind.Method) && member.Name == symbol.Name) {
+                        var tp1 = symbol.GetTypeParameters();
+                        var tp2 = member.GetTypeParameters();
+                        if (tp1.Length != tp2.Length)
+                            continue;
+                        bool shouldAdd = true;
+                        for (int i = 0; i < tp1.Length; i++)
+                        {
+                            if (!tp1[i].Equals(tp2[i])) {
+                                shouldAdd = false;
+                                break;
+                            }
+                        }
+                        if (shouldAdd)
+                            overloads.Add(member);
+                    }
                 }
             }
 
