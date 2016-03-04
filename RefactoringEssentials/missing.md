@@ -40,7 +40,6 @@
 * NonReadonlyReferencedInGetHashCodeAnalyzer
 * OptionalParameterHierarchyMismatchAnalyzer
 * ParameterCanBeDeclaredWithBaseTypeAnalyzer
-* PartialMethodParameterNameMismatchAnalyzer
 * PolymorphicFieldLikeEventInvocationAnalyzer
 * PossibleAssignmentToReadonlyFieldAnalyzer
 * PossibleMultipleEnumerationAnalyzer

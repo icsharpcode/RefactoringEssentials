@@ -4,14 +4,13 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class PartialMethodParameterNameMismatchTests : CSharpDiagnosticTestBase
     {
 
         [Test]
         public void SimpleCaseFix()
         {
-            Test<PartialMethodParameterNameMismatchAnalyzer>(@"
+            Analyze<PartialMethodParameterNameMismatchAnalyzer>(@"
 partial class Test
 {
 	partial void FooBar(int bar);
@@ -19,7 +18,7 @@ partial class Test
 
 partial class Test
 {
-	partial void FooBar(int foo)
+	partial void FooBar(int $foo$)
 	{
 	}
 }
@@ -38,11 +37,30 @@ partial class Test
 ");
         }
 
+
+        [Test]
+        public void NoMismatch()
+        {
+            Analyze<PartialMethodParameterNameMismatchAnalyzer>(@"
+partial class Test
+{
+    partial void FooBar(int bar, string baz, object foo);
+}
+
+partial class Test
+{
+    partial void FooBar(int bar, string baz, object foo)
+    {
+    }
+}
+");
+        }
+
         [Test]
         public void TestDisable()
         {
             Analyze<PartialMethodParameterNameMismatchAnalyzer>(@"
-// ReSharper disable PartialMethodParameterNameMismatch
+#pragma warning disable " + CSharpDiagnosticIDs.PartialMethodParameterNameMismatchAnalyzerID + @"
 partial class Test
 {
     partial void FooBar(int bar);
