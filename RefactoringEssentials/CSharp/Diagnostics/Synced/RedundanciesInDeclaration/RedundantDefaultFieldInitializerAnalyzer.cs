@@ -1,11 +1,14 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
+using System;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantDefaultFieldInitializerAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -23,106 +26,85 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(AnalyzeField,  new SyntaxKind[] { SyntaxKind.FieldDeclaration });
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static void AnalyzeField(SyntaxNodeAnalysisContext nodeContext)
         {
-            diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+                return;
+            var node = nodeContext.Node as FieldDeclarationSyntax;
+            if (node?.Declaration?.Variables == null)
+                return;
+            if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.ConstKeyword)))
+                return;
+            var type = nodeContext.SemanticModel.GetTypeInfo(node.Declaration.Type).Type;
+            if (type == null)
+                return;
+            foreach (var v in node.Declaration.Variables)
+            {
+                var initializer = v.Initializer?.Value;
+                if (initializer == null)
+                    continue;
+
+                if (initializer.IsKind(SyntaxKind.DefaultExpression))
+                {
+                    //var defaultExpr = (DefaultExpressionSyntax)initializer;
+                    //var defaultType = nodeContext.SemanticModel.GetTypeInfo(defaultExpr.Type).Type;
+                    //if (defaultType == type) {
+                    nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor, v.Initializer.GetLocation()));
+                    //}
+                    continue;
+                }
+
+                var constValue = nodeContext.SemanticModel.GetConstantValue(initializer);
+                if (!constValue.HasValue)
+                    continue;
+                if (IsDefaultValue(type, constValue.Value))
+                {
+                    nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor, v.Initializer.GetLocation()));
+                }
+            }
+        }
+
+        static bool IsDefaultValue(ITypeSymbol type, object value)
+        {
+            if (type.IsReferenceType || type.IsNullableType())
+                return null == value;
+            try
+            {
+                switch (type.SpecialType)
+                {
+                    case SpecialType.System_Boolean:
+                        return !(bool)value;
+                    case SpecialType.System_Char:
+                        return '\0' == (char)value;
+                    case SpecialType.System_SByte:
+                    case SpecialType.System_Byte:
+
+                    case SpecialType.System_Int16:
+                    case SpecialType.System_UInt16:
+                    case SpecialType.System_Int32:
+                    case SpecialType.System_UInt32:
+                    case SpecialType.System_Int64:
+                    case SpecialType.System_UInt64:
+                        return 0 == Convert.ToInt32(value);
+                    case SpecialType.System_Single:
+                        return 0f == Convert.ToSingle(value);
+                    case SpecialType.System_Double:
+
+                        return 0d == Convert.ToDouble(value);
+                    case SpecialType.System_Decimal:
+                        return 0m == Convert.ToDecimal(value);
+                    case SpecialType.System_Nullable_T:
+                        return null == value;
+                }
+            }
+            catch (Exception)
+            {
+                // ignore (no default value)
+            }
             return false;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantDefaultFieldInitializerAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitFieldDeclaration(FieldDeclaration fieldDeclaration)
-        ////			{
-        ////				base.VisitFieldDeclaration(fieldDeclaration);
-        ////				if (fieldDeclaration.HasModifier(Modifiers.Const) || fieldDeclaration.HasModifier(Modifiers.Readonly))
-        ////					return;
-        ////				var defaultValueExpr = GetDefaultValueExpression(fieldDeclaration.ReturnType);
-        ////				if (defaultValueExpr == null)
-        ////					return;
-        ////
-        ////				foreach (var variable1 in fieldDeclaration.Variables) {
-        ////					var variable = variable1;
-        ////					if (!defaultValueExpr.Match(variable.Initializer).Success)
-        ////						continue;
-        ////
-        ////					AddDiagnosticAnalyzer(new CodeIssue(variable.Initializer, ctx.TranslateString(""),
-        ////					         new CodeAction(ctx.TranslateString(""),
-        ////					                         script => script.Replace(variable, new VariableInitializer(variable.Name)),
-        ////							variable.Initializer)) { IssueMarker = IssueMarker.GrayOut });
-        ////				}
-        ////			}
-        ////
-        ////			Expression GetDefaultValueExpression(AstType astType)
-        ////			{
-        ////				var type = ctx.ResolveType(astType);
-        ////
-        ////				if ((type.IsReferenceType ?? false) || type.Kind == TypeKind.Dynamic)
-        ////					return new NullReferenceExpression();
-        ////
-        ////				var typeDefinition = type.GetDefinition();
-        ////				if (typeDefinition != null) {
-        ////					switch (typeDefinition.KnownTypeCode) {
-        ////						case KnownTypeCode.Boolean:
-        ////							return new PrimitiveExpression(false);
-        ////
-        ////						case KnownTypeCode.Char:
-        ////							return new PrimitiveExpression('\0');
-        ////
-        ////						case KnownTypeCode.SByte:
-        ////						case KnownTypeCode.Byte:
-        ////						case KnownTypeCode.Int16:
-        ////						case KnownTypeCode.UInt16:
-        ////						case KnownTypeCode.Int32:
-        ////							return new PrimitiveExpression(0);
-        ////
-        ////						case KnownTypeCode.Int64:
-        ////							return new Choice { new PrimitiveExpression(0), new PrimitiveExpression(0L) };
-        ////						case KnownTypeCode.UInt32:
-        ////							return new Choice { new PrimitiveExpression(0), new PrimitiveExpression(0U) };
-        ////						case KnownTypeCode.UInt64:
-        ////							return new Choice {
-        ////								new PrimitiveExpression(0), new PrimitiveExpression(0U), new PrimitiveExpression(0UL)
-        ////							};
-        ////						case KnownTypeCode.Single:
-        ////							return new Choice { new PrimitiveExpression(0), new PrimitiveExpression(0F) };
-        ////						case KnownTypeCode.Double:
-        ////							return new Choice {
-        ////								new PrimitiveExpression(0), new PrimitiveExpression(0F), new PrimitiveExpression(0D)
-        ////							};
-        ////						case KnownTypeCode.Decimal:
-        ////							return new Choice { new PrimitiveExpression(0), new PrimitiveExpression(0M) };
-        ////
-        ////						case KnownTypeCode.NullableOfT:
-        ////							return new NullReferenceExpression();
-        ////					}
-        ////					if (type.Kind == TypeKind.Struct)
-        ////						return new ObjectCreateExpression(astType.Clone());
-        ////				}
-        ////				return new DefaultValueExpression(astType.Clone());
-        ////			}
-        //		}
     }
-
-
 }

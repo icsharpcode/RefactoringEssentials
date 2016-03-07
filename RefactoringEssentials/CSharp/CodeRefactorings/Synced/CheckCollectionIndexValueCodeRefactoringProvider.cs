@@ -43,12 +43,14 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
             if (!IsCollection(type as INamedTypeSymbol) && !type.AllInterfaces.Any(IsCollection))
                 return;
-
+            var argument = elementAccess.ArgumentList?.Arguments.FirstOrDefault();
+            if (argument == null)
+                return;
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
                     span,
                     DiagnosticSeverity.Info,
-                    string.Format(GettextCatalog.GetString("Check 'if ({0}.Count > {1})'"), elementAccess.Expression, elementAccess.ArgumentList.Arguments.First()),
+                    string.Format(GettextCatalog.GetString("Check 'if ({0}.Count > {1})'"), elementAccess.Expression, argument),
                     t2 =>
                     {
                         var parentStatement = elementAccess.Parent.AncestorsAndSelf().OfType<StatementSyntax>().FirstOrDefault();
@@ -57,7 +59,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                             SyntaxFactory.BinaryExpression(
                                 SyntaxKind.GreaterThanExpression,
                                 SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, elementAccess.Expression, SyntaxFactory.IdentifierName("Count")),
-                                elementAccess.ArgumentList.Arguments.First().Expression
+                                argument.Expression
                             ),
                             parentStatement
                         );

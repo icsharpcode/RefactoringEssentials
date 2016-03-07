@@ -1,11 +1,12 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class EqualExpressionComparisonAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -22,107 +23,95 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnosticFromBinaryExpression(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                new SyntaxKind[] {
+                    SyntaxKind.EqualsExpression,
+                    SyntaxKind.NotEqualsExpression,
+                    SyntaxKind.GreaterThanExpression,
+                    SyntaxKind.GreaterThanOrEqualExpression,
+                    SyntaxKind.LessThanExpression,
+                    SyntaxKind.LessThanOrEqualExpression
+                }  
+            );
+
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                if (TryGetDiagnosticFromEqualsInvocation(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                new SyntaxKind[] { SyntaxKind.InvocationExpression}  
+            );
+
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static bool TryGetDiagnosticFromBinaryExpression(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+            var node = nodeContext.Node as BinaryExpressionSyntax;
+
+            if (CSharpUtil.AreConditionsEqual(node.Left, node.Right))
+            {
+                diagnostic = Diagnostic.Create(descriptor, node.GetLocation(), node.IsKind(SyntaxKind.EqualsExpression) ? "true" : "false");
+                return true;
+            }
+
             return false;
         }
 
-        //		class GatherVisitor : GatherVisitorBase<EqualExpressionComparisonAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
+        static bool TryGetDiagnosticFromEqualsInvocation(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        {
+            diagnostic = default(Diagnostic);
+            if (nodeContext.IsFromGeneratedCode())
+                return false;
+            var node = nodeContext.Node as InvocationExpressionSyntax;
 
-        ////			void AddDiagnosticAnalyzer(AstNode nodeToReplace, AstNode highlightNode, bool replaceWithTrue)
-        ////			{
-        ////				AddDiagnosticAnalyzer(new CodeIssue(
-        ////					highlightNode, 
-        ////					ctx.TranslateString(""), 
-        ////					replaceWithTrue ? ctx.TranslateString() : ctx.TranslateString(), 
-        ////					script =>  {
-        ////						script.Replace(nodeToReplace, new PrimitiveExpression(replaceWithTrue));
-        ////					}
-        ////				));
-        ////			}
-        ////
-        ////
-        ////			readonly BinaryOperatorExpression pattern = 
-        ////				new BinaryOperatorExpression(
-        ////					PatternHelper.OptionalParentheses(new AnyNode("expression")), 
-        ////					BinaryOperatorType.Any, 
-        ////					PatternHelper.OptionalParentheses(new Backreference("expression"))
-        ////				);
-        ////
-        ////			public override void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
-        ////			{
-        ////				base.VisitBinaryOperatorExpression(binaryOperatorExpression);
-        ////
-        ////				if (binaryOperatorExpression.Operator != BinaryOperatorType.Equality &&
-        ////				    binaryOperatorExpression.Operator != BinaryOperatorType.InEquality &&
-        ////				    binaryOperatorExpression.Operator != BinaryOperatorType.GreaterThan &&
-        ////				    binaryOperatorExpression.Operator != BinaryOperatorType.GreaterThanOrEqual &&
-        ////				    binaryOperatorExpression.Operator != BinaryOperatorType.LessThan &&
-        ////				    binaryOperatorExpression.Operator != BinaryOperatorType.LessThanOrEqual) {
-        ////					return;
-        ////				}
-        ////
-        ////				var match = pattern.Match(binaryOperatorExpression);
-        ////				if (match.Success) {
-        ////					AddDiagnosticAnalyzer(binaryOperatorExpression, binaryOperatorExpression.OperatorToken, binaryOperatorExpression.Operator == BinaryOperatorType.Equality);
-        ////					return;
-        ////				}
-        ////			}
-        ////
-        ////			public override void VisitInvocationExpression(InvocationExpression invocationExpression)
-        ////			{
-        ////				base.VisitInvocationExpression(invocationExpression);
-        ////				var rr = ctx.Resolve(invocationExpression) as InvocationResolveResult;
-        ////				if (rr == null || rr.Member.Name != "Equals" || !rr.Member.ReturnType.IsKnownType(KnownTypeCode.Boolean))
-        ////					return;
-        ////
-        ////				if (rr.Member.IsStatic) {
-        ////					if (rr.Member.Parameters.Count != 2)
-        ////						return;
-        ////					if (CSharpUtil.AreConditionsEqual(invocationExpression.Arguments.FirstOrDefault(), invocationExpression.Arguments.Last())) {
-        ////						if ((invocationExpression.Parent is UnaryOperatorExpression) && ((UnaryOperatorExpression)invocationExpression.Parent).Operator == UnaryOperatorType.Not) {
-        ////							AddDiagnosticAnalyzer(invocationExpression.Parent, invocationExpression.Parent, false);
-        ////						} else {
-        ////							AddDiagnosticAnalyzer(invocationExpression, invocationExpression, true);
-        ////						}
-        ////					}
-        ////				} else {
-        ////					if (rr.Member.Parameters.Count != 1)
-        ////						return;
-        ////					var target = invocationExpression.Target as MemberReferenceExpression;
-        ////					if (target == null)
-        ////						return;
-        ////					if (CSharpUtil.AreConditionsEqual(invocationExpression.Arguments.FirstOrDefault(), target.Target)) {
-        ////						if ((invocationExpression.Parent is UnaryOperatorExpression) && ((UnaryOperatorExpression)invocationExpression.Parent).Operator == UnaryOperatorType.Not) {
-        ////							AddDiagnosticAnalyzer(invocationExpression.Parent, invocationExpression.Parent, false);
-        ////						} else {
-        ////							AddDiagnosticAnalyzer(invocationExpression, invocationExpression, true);
-        ////						}
-        ////					}
-        ////				}
-        ////			}
-        //		}
+            var info = nodeContext.SemanticModel.GetSymbolInfo(node);
+
+            if (info.Symbol == null || !info.Symbol.IsKind(SymbolKind.Method) || info.Symbol.Name != "Equals" || info.Symbol.GetReturnType().SpecialType != SpecialType.System_Boolean)
+                return false;
+
+            var method = info.Symbol as IMethodSymbol;
+            if (method.IsStatic) {
+                if (method.Parameters.Length != 2 || node.ArgumentList.Arguments.Count != 2)
+                    return false;
+                if (CSharpUtil.AreConditionsEqual(node.ArgumentList.Arguments[0].Expression, node.ArgumentList.Arguments[1].Expression)) {
+                    if (node.Parent.IsKind(SyntaxKind.LogicalNotExpression)) {
+                        diagnostic = Diagnostic.Create(descriptor, node.Parent.GetLocation(), "false");
+                    } else {
+                        diagnostic = Diagnostic.Create(descriptor, node.GetLocation(), "true");
+                    }
+                    return true;
+                }
+            } else {
+                if (method.Parameters.Length != 1 || node.ArgumentList.Arguments.Count != 1)
+                    return false;
+                var target = node.Expression as MemberAccessExpressionSyntax;
+                if (target == null)
+                    return false;
+                if (CSharpUtil.AreConditionsEqual(node.ArgumentList.Arguments[0].Expression, target.Expression)) {
+                    if (node.Parent.IsKind(SyntaxKind.LogicalNotExpression)) {
+                        diagnostic = Diagnostic.Create(descriptor, node.Parent.GetLocation(), "false");
+                    } else {
+                        diagnostic = Diagnostic.Create(descriptor, node.GetLocation(), "true");
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }

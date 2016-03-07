@@ -4,34 +4,35 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantEmptyFinallyBlockTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestRedundantTry()
         {
-            Test<RedundantEmptyFinallyBlockAnalyzer>(@"
+            Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
 using System;
 class Test
 {
-	static void Main (string[] args)
-	{
-		try {
-			Console.WriteLine (""1"");
-			Console.WriteLine (""2"");
-		} finally {
-		}
-	}
+    static void Main (string[] args)
+    {
+        try
+        {
+            Console.WriteLine(""1"");
+            Console.WriteLine(""2"");
+        } $finally$
+        {
+        }
+    }
 }
 ", @"
 using System;
 class Test
 {
-	static void Main (string[] args)
-	{
-		Console.WriteLine (""1"");
-		Console.WriteLine (""2"");
-	}
+    static void Main (string[] args)
+    {
+        Console.WriteLine(""1"");
+        Console.WriteLine(""2"");
+    }
 }
 ");
         }
@@ -39,32 +40,39 @@ class Test
         [Test]
         public void TestSimpleCase()
         {
-            Test<RedundantEmptyFinallyBlockAnalyzer>(@"
+            Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
 using System;
 class Test
 {
-	static void Main (string[] args)
-	{
-		try {
-			Console.WriteLine (""1"");
-			Console.WriteLine (""2"");
-		} catch (Exception) {
-		} finally {
-		}
-	}
+    static void Main (string[] args)
+    {
+        try
+        {
+            Console.WriteLine(""1"");
+            Console.WriteLine(""2"");
+        }
+        catch (Exception)
+        {
+        } $finally$
+        {
+        }
+    }
 }
 ", @"
 using System;
 class Test
 {
-	static void Main (string[] args)
-	{
-		try {
-			Console.WriteLine (""1"");
-			Console.WriteLine (""2"");
-		} catch (Exception) {
-		}  
-	}
+    static void Main (string[] args)
+    {
+        try
+        {
+            Console.WriteLine(""1"");
+            Console.WriteLine(""2"");
+        }
+        catch (Exception)
+        {
+        }
+    }
 }
 ");
         }
@@ -76,14 +84,14 @@ class Test
 using System;
 class Test
 {
-	static void Main(string[] args)
-	{
-		try {
-			Console.WriteLine(""1"");
-		} finally {
-			Console.WriteLine(""2"");
-		}
-	}
+    static void Main(string[] args)
+    {
+        try {
+            Console.WriteLine(""1"");
+        } finally {
+            Console.WriteLine(""2"");
+        }
+    }
 }
 ");
         }
@@ -95,16 +103,16 @@ class Test
 using System;
 class Test
 {
-	static void Main(string[] args)
-	{
-		try {
-			Console.WriteLine(""1"");
-			Console.WriteLine(""2"");
-		}
-		// ReSharper disable once RedundantEmptyFinallyBlock
- 		finally {
-		}
-	}
+    static void Main(string[] args)
+    {
+        try {
+            Console.WriteLine(""1"");
+            Console.WriteLine(""2"");
+        }
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantEmptyFinallyBlockAnalyzerID + @"
+         finally {
+        }
+    }
 }
 ");
         }

@@ -1,11 +1,14 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using System;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class ForControlVariableIsNeverModifiedAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -22,110 +25,62 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                AnalyzeForStatement, 
+                new SyntaxKind[] { SyntaxKind.ForStatement }
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        void AnalyzeForStatement(SyntaxNodeAnalysisContext nodeContext)
         {
-            diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+                return;
+            var node = nodeContext.Node as ForStatementSyntax;
+            if (node?.Declaration?.Variables == null)
+                return;
+            foreach (var variable in node.Declaration.Variables) {
+                var local = nodeContext.SemanticModel.GetDeclaredSymbol(variable);
+                if (local == null)
+                    return;
+                if (!node.Condition.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().Any(n => n.Identifier.ValueText == local.Name))
+                    continue;
+                bool wasModified = false;
+                foreach (var identifier in node.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>()) {
+                    if (identifier.Identifier.ValueText != local.Name)
+                        continue;
+
+                    if (!IsModified(identifier))
+                        continue;
+
+                    if (nodeContext.SemanticModel.GetSymbolInfo(identifier).Symbol == local) {
+                        wasModified = true;
+                        break;
+                    }
+                }
+
+                if (!wasModified) {
+                    nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor, variable.Identifier.GetLocation()));
+                }
+            }
+        }
+
+        bool IsModified(IdentifierNameSyntax identifier)
+        {
+            if (identifier.Parent.IsKind(SyntaxKind.PreDecrementExpression) ||
+                identifier.Parent.IsKind(SyntaxKind.PostDecrementExpression) ||
+                identifier.Parent.IsKind(SyntaxKind.PreIncrementExpression) || 
+                identifier.Parent.IsKind(SyntaxKind.PostIncrementExpression))
+                return true;
+
+            var assignment = identifier.Parent as AssignmentExpressionSyntax;
+            if (assignment != null && assignment.Left == identifier)
+                return true;
+
+            var arg = identifier.Parent as ArgumentSyntax;
+            if (arg != null && (arg.RefOrOutKeyword.IsKind(SyntaxKind.RefKeyword)  || arg.RefOrOutKeyword.IsKind(SyntaxKind.OutKeyword)))
+                return true;
+            
             return false;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<ForControlVariableIsNeverModifiedAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			static VariableInitializer GetControlVariable(VariableDeclarationStatement variableDecl, 
-        ////														  BinaryOperatorExpression condition)
-        ////			{
-        ////				var controlVariables = variableDecl.Variables.Where (
-        ////					v =>
-        ////					{
-        ////						var identifier = new IdentifierExpression (v.Name);
-        ////						return condition.Left.Match (identifier).Success ||
-        ////							condition.Right.Match (identifier).Success;
-        ////					}).ToList ();
-        ////				return controlVariables.Count == 1 ? controlVariables [0] : null;
-        ////			}
-        ////
-        ////			static VariableInitializer GetControlVariable(VariableDeclarationStatement variableDecl,
-        ////														  UnaryOperatorExpression condition)
-        ////			{
-        ////				var controlVariables = variableDecl.Variables.Where (
-        ////					v =>
-        ////					{
-        ////						var identifier = new IdentifierExpression (v.Name);
-        ////						return condition.Expression.Match (identifier).Success;
-        ////					}).ToList ();
-        ////				return controlVariables.Count == 1 ? controlVariables [0] : null;
-        ////			}
-        ////
-        ////			public override void VisitForStatement (ForStatement forStatement)
-        ////			{
-        ////				base.VisitForStatement (forStatement);
-        ////
-        ////				if (forStatement.Initializers.Count != 1)
-        ////					return;
-        ////				var variableDecl = forStatement.Initializers.First () as VariableDeclarationStatement;
-        ////				if (variableDecl == null)
-        ////					return;
-        ////
-        ////				VariableInitializer controlVariable = null;
-        ////				if (forStatement.Condition is BinaryOperatorExpression) {
-        ////					controlVariable = GetControlVariable (variableDecl, (BinaryOperatorExpression)forStatement.Condition);
-        ////				} else if (forStatement.Condition is UnaryOperatorExpression) {
-        ////					controlVariable = GetControlVariable (variableDecl, (UnaryOperatorExpression)forStatement.Condition);
-        ////				} else if (forStatement.Condition is IdentifierExpression) {
-        ////					controlVariable = variableDecl.Variables.FirstOrDefault (
-        ////						v => v.Name == ((IdentifierExpression)forStatement.Condition).Identifier);
-        ////				}
-        ////
-        ////				if (controlVariable == null)
-        ////					return;
-        ////
-        ////				var localResolveResult = ctx.Resolve (controlVariable) as LocalResolveResult;
-        ////				if (localResolveResult == null)
-        ////					return;
-        ////
-        ////				var results = ctx.FindReferences (forStatement, localResolveResult.Variable);
-        ////				var modified = false;
-        ////				foreach (var result in results) {
-        ////					if (modified)
-        ////						break;
-        ////					var node = result.Node;
-        ////					var unary = node.Parent as UnaryOperatorExpression;
-        ////					if (unary != null && unary.Expression == node) {
-        ////						modified = unary.Operator == UnaryOperatorType.Decrement ||
-        ////							unary.Operator == UnaryOperatorType.PostDecrement ||
-        ////							unary.Operator == UnaryOperatorType.Increment ||
-        ////							unary.Operator == UnaryOperatorType.PostIncrement;
-        ////						continue;
-        ////					}
-        ////
-        ////					var assignment = node.Parent as AssignmentExpression;
-        ////					modified = assignment != null && assignment.Left == node;
-        ////				}
-        ////
-        ////				if (!modified)
-        ////					AddDiagnosticAnalyzer (new CodeIssue(controlVariable.NameToken,
-        ////						ctx.TranslateString ("")));
-        ////			}
-        //		}
     }
 }

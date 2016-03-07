@@ -1,6 +1,13 @@
+using System;
+using System.Linq;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis.FindSymbols;
+using System.Threading;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -11,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.UnusedParameterAnalyzerID,
             GettextCatalog.GetString("Parameter is never used"),
-            GettextCatalog.GetString("Parameter is never used"),
+            GettextCatalog.GetString("Parameter '{0}' is never used"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
@@ -22,147 +29,257 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterCompilationStartAction(nodeContext => Analyze(nodeContext));
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        void Analyze(CompilationStartAnalysisContext compilationContext)
         {
-            diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
-        }
+            var compilation = compilationContext.Compilation;
+            compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext context)
+            {
+                try
+                {
+                    if (!compilation.SyntaxTrees.Contains(context.Tree))
+                        return;
+                    var semanticModel = compilation.GetSemanticModel(context.Tree);
+                    var root = await context.Tree.GetRootAsync(context.CancellationToken).ConfigureAwait(false);
+                    var model = compilationContext.Compilation.GetSemanticModel(context.Tree);
+                    if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
+                        return;
+                    var usageVisitor = new GetDelgateUsagesVisitor(semanticModel, context.CancellationToken);
+                    usageVisitor.Visit(root);
 
-        //		#region ICodeIssueProvider implementation
-        //
-        //		protected override IGatherVisitor CreateVisitor(BaseSemanticModel context)
-        //		{
-        //			var delegateVisitor = new GetDelgateUsagesVisitor(context);
-        //			context.RootNode.AcceptVisitor(delegateVisitor);
-        //
-        //			return new GatherVisitor(context, delegateVisitor);
-        //		}
-        //
-        //		#endregion
+                    var analyzer = new NodeAnalyzer(context, model, usageVisitor);
+                    analyzer.Visit(root);
+                }
+                catch (OperationCanceledException) {}
+            });
+        }
 
         // Collect all methods that are used as delegate
-        //		class GetDelgateUsagesVisitor : DepthFirstAstVisitor
-        //		{
-        //			BaseSemanticModel ctx;
-        //			public readonly List<IMethod> UsedMethods = new List<IMethod>();
-        //
-        //			public GetDelgateUsagesVisitor(BaseSemanticModel ctx)
-        //			{
-        //				this.ctx = ctx;
-        //			}
-        //
-        //			public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)
-        //			{
-        //				if (!IsTargetOfInvocation(identifierExpression)) {
-        //					var mgr = ctx.Resolve(identifierExpression) as MethodGroupResolveResult;
-        //					if (mgr != null)
-        //						UsedMethods.AddRange(mgr.Methods);
-        //				}
-        //				base.VisitIdentifierExpression(identifierExpression);
-        //			}
-        //
-        //			public override void VisitMemberReferenceExpression(MemberReferenceExpression memberReferenceExpression)
-        //			{
-        //				if (!IsTargetOfInvocation(memberReferenceExpression)) {
-        //					var mgr = ctx.Resolve(memberReferenceExpression) as MethodGroupResolveResult;
-        //					if (mgr != null)
-        //						UsedMethods.AddRange(mgr.Methods);
-        //				}
-        //				base.VisitMemberReferenceExpression(memberReferenceExpression);
-        //			}
-        //
-        //			static bool IsTargetOfInvocation(AstNode node)
-        //			{
-        //				return node.Role == Roles.TargetExpression && node.Parent is InvocationExpression;
-        //			}
-        //		}
+        class GetDelgateUsagesVisitor : CSharpSyntaxWalker
+        {
+            SemanticModel ctx;
+            public readonly List<ISymbol> UsedMethods = new List<ISymbol>();
+            readonly CancellationToken token;
 
-        //		class GatherVisitor : GatherVisitorBase<UnusedParameterAnalyzer>
-        //		{
-        //			//			GetDelgateUsagesVisitor usedDelegates;
-        //			//bool currentTypeIsPartial;
+            public GetDelgateUsagesVisitor(SemanticModel ctx, CancellationToken token)
+        	{
+                this.token = token;
+                this.ctx = ctx;
+        	}
 
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
+            public override void VisitBlock(BlockSyntax node)
+            {
+                token.ThrowIfCancellationRequested();
+                base.VisitBlock(node);
+            }
 
-        ////			public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
-        ////			{
-        ////				bool outerTypeIsPartial = currentTypeIsPartial;
-        ////				currentTypeIsPartial = typeDeclaration.HasModifier(Modifiers.Partial);
-        ////				base.VisitTypeDeclaration(typeDeclaration);
-        ////				currentTypeIsPartial = outerTypeIsPartial;
-        ////			}
-        ////
-        ////			public override void VisitMethodDeclaration(MethodDeclaration methodDeclaration)
-        ////			{
-        ////				// Only some methods are candidates for the warning
-        ////
-        ////				if (methodDeclaration.Body.IsNull)
-        ////					return;
-        ////				if (methodDeclaration.Modifiers.HasFlag(Modifiers.Virtual) ||
-        ////				    methodDeclaration.Modifiers.HasFlag(Modifiers.New) ||
-        ////				    methodDeclaration.Modifiers.HasFlag(Modifiers.Partial))
-        ////					return;
-        ////				var methodResolveResult = ctx.Resolve(methodDeclaration) as MemberResolveResult;
-        ////				if (methodResolveResult == null)
-        ////					return;
-        ////				var member = methodResolveResult.Member;
-        ////				if (member.IsOverride)
-        ////					return;
-        ////				if (member.ImplementedInterfaceMembers.Any())
-        ////					return;
-        ////				if (usedDelegates.UsedMethods.Any(m => m.MemberDefinition == member))
-        ////					return;
-        ////				if (currentTypeIsPartial && methodDeclaration.Parameters.Count == 2) {
-        ////					if (methodDeclaration.Parameters.First().Name == "sender") {
-        ////						// Looks like an event handler; the registration might be in the designer part
-        ////						return;
-        ////					}
-        ////				}
-        ////				foreach (var parameter in methodDeclaration.Parameters)
-        ////					parameter.AcceptVisitor(this);
-        ////			}
-        ////
-        ////			public override void VisitParameterDeclaration(ParameterDeclaration parameterDeclaration)
-        ////			{
-        ////				base.VisitParameterDeclaration(parameterDeclaration);
-        ////
-        ////				if (!(parameterDeclaration.Parent is MethodDeclaration || parameterDeclaration.Parent is ConstructorDeclaration))
-        ////					return;
-        ////
-        ////				var resolveResult = ctx.Resolve(parameterDeclaration) as LocalResolveResult;
-        ////				if (resolveResult == null)
-        ////					return;
-        ////				if (resolveResult.Type.Name == "StreamingContext" && resolveResult.Type.Namespace == "System.Runtime.Serialization") {
-        ////					// commonly unused parameter in constructors associated with ISerializable
-        ////					return;
-        ////				}
-        ////
-        ////				if (ctx.FindReferences(parameterDeclaration.Parent, resolveResult.Variable).Any(r => r.Node != parameterDeclaration))
-        ////					return;
-        ////
-        ////				AddDiagnosticAnalyzer(new CodeIssue (
-        ////					parameterDeclaration.NameToken, 
-        //			//					string.Format(ctx.TranslateString("Parameter '{0}' is never used"), parameterDeclaration.Name)) { IssueMarker = IssueMarker.GrayOut });
-        ////			}
-        //		}
+            public override void VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                base.VisitIdentifierName(node);
+                if (!IsTargetOfInvocation(node)) {
+                    var mgr = ctx.GetSymbolInfo(node);
+                    if (mgr.Symbol?.IsKind(SymbolKind.Method) == true)
+                        UsedMethods.Add(mgr.Symbol);
+                }
+            }
+           
+            public override void VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
+            {
+                base.VisitMemberAccessExpression(node);
+                if (!IsTargetOfInvocation(node)) {
+                    var mgr = ctx.GetSymbolInfo(node);
+                    if (mgr.Symbol?.IsKind(SymbolKind.Method) == true)
+                        UsedMethods.Add(mgr.Symbol);
+                }
+            }
+
+            static bool IsTargetOfInvocation(SyntaxNode node)
+        	{
+                return node.Parent is InvocationExpressionSyntax;
+        	}
+        }
+
+        class NodeAnalyzer : CSharpSyntaxWalker
+        {
+            readonly SyntaxTreeAnalysisContext ctx;
+            readonly SemanticModel model;
+            readonly GetDelgateUsagesVisitor visitor;
+
+            bool currentTypeIsPartial;
+
+            public NodeAnalyzer(SyntaxTreeAnalysisContext ctx, SemanticModel model, GetDelgateUsagesVisitor visitor)
+            {
+                this.ctx = ctx;
+                this.model = model;
+                this.visitor = visitor;
+            }
+
+            public override void Visit(SyntaxNode node)
+            {
+                base.Visit(node);
+            }
+
+            public override void VisitBlock(BlockSyntax node)
+            {
+                ctx.CancellationToken.ThrowIfCancellationRequested();
+                base.VisitBlock(node);
+            }
+
+            public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+            {
+                bool outerTypeIsPartial = currentTypeIsPartial;
+                currentTypeIsPartial = node.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword));
+                base.VisitClassDeclaration(node);
+                currentTypeIsPartial = outerTypeIsPartial;
+            }
+
+            static INamedTypeSymbol GetImplementingInterface(ISymbol enclosingSymbol, INamedTypeSymbol containingType)
+            {
+                INamedTypeSymbol result = null;
+                foreach (var iface in containingType.AllInterfaces)
+                {
+                    foreach (var member in iface.GetMembers())
+                    {
+                        var implementation = containingType.FindImplementationForInterfaceMember(member);
+                        if (implementation == enclosingSymbol)
+                        {
+                            if (result != null)
+                                return null;
+                            result = iface;
+                        }
+                    }
+                }
+                return result;
+            }
+
+
+            public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
+            {
+                base.VisitMethodDeclaration(node);
+
+                if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.VirtualKeyword) || m.IsKind(SyntaxKind.NewKeyword) || m.IsKind(SyntaxKind.PartialKeyword)))
+                    return;
+                if ((node.Body == null) && (node.ExpressionBody == null))
+                    return;
+
+                var member = model.GetDeclaredSymbol(node);
+                if (member.IsOverride)
+                    return;
+                if (member.ExplicitInterfaceImplementations().Length > 0)
+                    return;
+                if (GetImplementingInterface(member, member.ContainingType) != null)
+                    return;
+
+                foreach (var attr in member.GetAttributes()) {
+                    if (attr.AttributeClass.Name == "ExportAttribute")
+                        return;
+                }
+
+                if (visitor.UsedMethods.Contains(member))
+                    return;
+                if (currentTypeIsPartial && member.Parameters.Length == 2) {
+                    if (member.Parameters[0].Name == "sender") {
+                        // Looks like an event handler; the registration might be in the designer part
+                        return;
+                    }
+                }
+
+                Analyze(node.ParameterList.Parameters, new SyntaxNode[] { node.Body, node.ExpressionBody });
+            }
+
+            public override void VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
+            {
+                base.VisitConstructorDeclaration(node);
+                if (node.ParameterList.Parameters.Count == 0)
+                    return;
+                
+                Analyze(node.ParameterList.Parameters, new SyntaxNode[] { node.Body, node.Initializer });
+            }
+
+            public override void VisitAnonymousMethodExpression(AnonymousMethodExpressionSyntax node)
+            {
+                base.VisitAnonymousMethodExpression(node);
+                if (node.ParameterList != null)
+                    Analyze(node.ParameterList.Parameters, new[] { node.Block });
+            }
+
+            /*
+                @Rpinski: Disabled indexer support, since it's not possible to compare
+                an indexer parameter symbol with the one resolved from its reference in indexer's getter.
+                => Analyzer not able to detect parameter usage correctly.
+             */
+            //public override void VisitIndexerDeclaration(IndexerDeclarationSyntax node)
+            //{
+            //    base.VisitIndexerDeclaration(node);
+            //    if (node.Modifiers.Any(m => m.IsKind(SyntaxKind.VirtualKeyword) || m.IsKind(SyntaxKind.NewKeyword) || m.IsKind(SyntaxKind.PartialKeyword)))
+            //        return;
+            //    if (node.GetBodies().IsEmpty())
+            //        return;
+            //    var member = model.GetDeclaredSymbol(node);
+            //    if (member.IsOverride)
+            //        return;
+                
+            //    if (member.ExplicitInterfaceImplementations().Length > 0)
+            //        return;
+            //    if (GetImplementingInterface(member, member.ContainingType) != null)
+            //        return;
+            //    Analyze(node.ParameterList.Parameters, node.GetBodies());
+            //}
+
+            void Analyze(SeparatedSyntaxList<ParameterSyntax> parameterList, IEnumerable<SyntaxNode> nodesToAnalyze)
+            {
+                var parameters = new List<ISymbol>();
+                var parameterNodes = new List<ParameterSyntax>();
+                foreach (var param in parameterList)
+                {
+                    var resolveResult = model.GetDeclaredSymbol(param);
+                    if (resolveResult == null)
+                        continue;
+                    if (param.Parent.Parent.IsKind(SyntaxKind.ConstructorDeclaration))
+                    {
+                        if (resolveResult.Type.Name == "StreamingContext" && resolveResult.Type.ContainingNamespace.ToDisplayString() == "System.Runtime.Serialization")
+                        {
+                            // commonly unused parameter in constructors associated with ISerializable
+                            return;
+                        }
+                    }
+                    parameters.Add(resolveResult);
+                    parameterNodes.Add(param);
+                }
+                foreach (var node in nodesToAnalyze)
+                {
+                    if (node == null)
+                        continue;
+                    foreach (var child in node.DescendantNodes())
+                    {
+                        var identifierNameSyntax = child as IdentifierNameSyntax;
+                        if (identifierNameSyntax != null)
+                        {
+                            var id = identifierNameSyntax.Identifier.ValueText;
+                            var idx = parameters.FindIndex(p => p.Name == id);
+
+                            if (idx >= 0)
+                            {
+                                var sym = model.GetSymbolInfo(identifierNameSyntax).Symbol;
+                                if (parameters[idx] == sym)
+                                {
+                                    parameters.RemoveAt(idx);
+                                    parameterNodes.RemoveAt(idx);
+                                    if (parameters.Count == 0)
+                                        goto quit;
+                                }
+                            }
+                        }
+                    }
+                }
+                quit:
+                foreach (var param in parameterNodes)
+                {
+                    ctx.ReportDiagnostic(Diagnostic.Create(descriptor, param.Identifier.GetLocation(), param.Identifier.ValueText));
+                }
+            }
+        }
     }
 }

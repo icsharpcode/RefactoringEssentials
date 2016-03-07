@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class ParameterHidesMemberTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -14,11 +13,11 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 class TestClass
 {
 	int i;
-	void TestMethod (int i, int j)
+	void TestMethod (int $i$, int j)
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 1);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -28,7 +27,7 @@ class TestClass
 class TestClass
 {
 	int i;
-// ReSharper disable once ParameterHidesMember
+#pragma warning disable " + CSharpDiagnosticIDs.ParameterHidesMemberAnalyzerID + @"
 	void TestMethod (int i, int j)
 	{
 	}
@@ -44,11 +43,11 @@ class TestClass
 {
 	void TestMethod2 ()
 	{ }
-	void TestMethod (int TestMethod2)
+	void TestMethod (int $TestMethod2$)
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 1);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -62,7 +61,7 @@ class TestClass
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 0);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -72,11 +71,11 @@ class TestClass
 class TestClass
 {
 	static int i;
-	static void TestMethod2 (int i)
+	static void TestMethod2 (int $i$)
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 1);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -87,14 +86,14 @@ class TestClass
 {
 	static int i;
 	int j;
-	void TestMethod (int i)
+	void TestMethod (int $i$)
 	{
 	}
 	static void TestMethod2 (int j)
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 0);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -105,11 +104,11 @@ class TestClass
 {
 	int i;
 
-	void Method (int i)
+	void Method (int $i$)
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 1);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -123,16 +122,16 @@ class RootClass
 	class NestedClass : RootClass
 	{
 		// Issue 1
-		void Method (int i) {}
+		void Method (int $i$) {}
 
 		class NestedNestedClass : NestedClass
 		{
 			// Issue 2
-			void OtherMethod (int i) {}
+			void OtherMethod (int $i$) {}
 		}
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 2);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -145,11 +144,11 @@ class BaseClass
 }
 class TestClass : BaseClass
 {
-	void Method (int i)
+	void Method (int $i$)
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 1);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -166,7 +165,7 @@ class TestClass : BaseClass
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 0);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -179,7 +178,7 @@ class TestClass
 
 	public void SetI (int i) { this.i = i; }
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 0);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
 
@@ -193,7 +192,7 @@ abstract class TestClass
 
 	public abstract void Method (int i);
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 0);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -208,7 +207,7 @@ class TestClass
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 0);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
         [Test]
@@ -227,7 +226,7 @@ class TestClass : ITest
 	{
 	}
 }";
-            Test<ParameterHidesMemberAnalyzer>(input, 0);
+            Analyze<ParameterHidesMemberAnalyzer>(input);
         }
     }
 }

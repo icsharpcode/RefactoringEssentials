@@ -57,6 +57,35 @@ class Test
 ");
         }
 
+        [Test]
+        public void TestComparisonArgumentWithNull()
+        {
+            Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
+class Test
+{
+    void SomeMethod(bool condition)
+    {
+    }
+
+    void Foo(int i)
+    {
+        SomeMethod($i == null$);
+    }
+}
+", @"
+class Test
+{
+    void SomeMethod(bool condition)
+    {
+    }
+
+    void Foo(int i)
+    {
+        SomeMethod(false);
+    }
+}
+");
+        }
 
         [Test]
         public void TestComparison()

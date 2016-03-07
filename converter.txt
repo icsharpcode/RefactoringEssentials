@@ -1,0 +1,15 @@
+Converter:
+
+Known limitations and bugs:
+- Web UI does not report syntax errors
+- Comments are not converted
+- Preprocessor directives are not converted
+
+We probably cannot convert all preprocessor directives exactly without changing the semantics.
+
+Missing features and bugs:
+C# to VB:
+- unsafe code cannot be converted
+
+VB to C#:
+- not implemented

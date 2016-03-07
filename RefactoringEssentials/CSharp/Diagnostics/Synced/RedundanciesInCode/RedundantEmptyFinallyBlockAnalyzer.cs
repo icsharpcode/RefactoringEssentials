@@ -1,11 +1,12 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantEmptyFinallyBlockAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -23,15 +24,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+            	(nodeContext) => {
+            		Diagnostic diagnostic;
+            		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
+            			nodeContext.ReportDiagnostic(diagnostic);
+            		}
+            	}, 
+                new SyntaxKind[] { SyntaxKind.FinallyClause }
+            );
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
@@ -39,53 +40,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             diagnostic = default(Diagnostic);
             if (nodeContext.IsFromGeneratedCode())
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
+            var node = nodeContext.Node as FinallyClauseSyntax;
+            if (node.Block != null && node.Block.Statements.Count == 0)
+            {
+                diagnostic = Diagnostic.Create(descriptor, node.FinallyKeyword.GetLocation());
+                return true;
+            }
             return false;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantEmptyFinallyBlockAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			static bool IsEmpty (BlockStatement blockStatement)
-        ////			{
-        ////				return !blockStatement.Descendants.Any(s => s is Statement && !(s is EmptyStatement || s is BlockStatement));
-        ////			}
-        ////
-        ////			public override void VisitBlockStatement(BlockStatement blockStatement)
-        ////			{
-        ////				base.VisitBlockStatement(blockStatement);
-        ////				if (blockStatement.Role != TryCatchStatement.FinallyBlockRole || !IsEmpty (blockStatement))
-        ////					return;
-        ////				var tryCatch = blockStatement.Parent as TryCatchStatement;
-        ////				if (tryCatch == null)
-        ////					return;
-        ////				AddDiagnosticAnalyzer(new CodeIssue(
-        ////					tryCatch.FinallyToken.StartLocation,
-        ////					blockStatement.EndLocation,
-        ////					ctx.TranslateString(""),
-        ////					ctx.TranslateString(""),
-        ////					s => {
-        ////						if (tryCatch.CatchClauses.Any()) {
-        ////							s.Remove(tryCatch.FinallyToken);
-        ////							s.Remove(blockStatement); 
-        ////							s.FormatText(tryCatch);
-        ////							return;
-        ////						}
-        ////						s.Remove(tryCatch.TryToken);
-        ////						s.Remove(tryCatch.TryBlock.LBraceToken);
-        ////						s.Remove(tryCatch.TryBlock.RBraceToken);
-        ////						s.Remove(tryCatch.FinallyToken);
-        ////						s.Remove(tryCatch.FinallyBlock); 
-        ////						s.FormatText(tryCatch.Parent);
-        ////					}
-        ////				) { IssueMarker = IssueMarker.GrayOut });
-        ////			}
-        //		}
     }
 }

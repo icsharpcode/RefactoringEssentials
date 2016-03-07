@@ -10,34 +10,19 @@ using System.Runtime.ExceptionServices;
 
 namespace RefactoringEssentials
 {
+    [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
 #if NR6
     public
 #endif
     class CSharpSyntaxContext
     {
-        readonly static Type typeInfoCSharpSyntaxContext;
-        readonly static Type typeInfoAbstractSyntaxContext;
-        readonly static MethodInfo createContextMethod;
-        readonly static PropertyInfo leftTokenProperty;
-        readonly static PropertyInfo targetTokenProperty;
-        readonly static FieldInfo isIsOrAsTypeContextField;
-        readonly static FieldInfo isInstanceContextField;
-        readonly static FieldInfo isNonAttributeExpressionContextField;
-        readonly static FieldInfo isPreProcessorKeywordContextField;
-        readonly static FieldInfo isPreProcessorExpressionContextField;
-        readonly static FieldInfo containingTypeDeclarationField;
-        readonly static FieldInfo isGlobalStatementContextField;
-        readonly static FieldInfo isParameterTypeContextField;
-        readonly static PropertyInfo syntaxTreeProperty;
-
-
         object instance;
 
         public SyntaxToken LeftToken
         {
             get
             {
-                return (SyntaxToken)leftTokenProperty.GetValue(instance);
+                return (SyntaxToken)RoslynReflection.AbstractSyntaxContext.LeftTokenProperty.GetValue(instance);
             }
         }
 
@@ -45,7 +30,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (SyntaxToken)targetTokenProperty.GetValue(instance);
+                return (SyntaxToken)RoslynReflection.AbstractSyntaxContext.TargetTokenProperty.GetValue(instance);
             }
         }
 
@@ -53,7 +38,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (bool)isIsOrAsTypeContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsIsOrAsTypeContextField.GetValue(instance);
             }
         }
 
@@ -61,7 +46,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (bool)isInstanceContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsInstanceContextField.GetValue(instance);
             }
         }
 
@@ -69,7 +54,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (bool)isNonAttributeExpressionContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsNonAttributeExpressionContextField.GetValue(instance);
             }
         }
 
@@ -77,7 +62,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (bool)isPreProcessorKeywordContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsPreProcessorKeywordContextField.GetValue(instance);
             }
         }
 
@@ -85,7 +70,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (bool)isPreProcessorExpressionContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsPreProcessorExpressionContextField.GetValue(instance);
             }
         }
 
@@ -93,7 +78,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (TypeDeclarationSyntax)containingTypeDeclarationField.GetValue(instance);
+                return (TypeDeclarationSyntax)RoslynReflection.CSharpSyntaxContext.ContainingTypeDeclarationField.GetValue(instance);
             }
         }
 
@@ -101,7 +86,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (bool)isGlobalStatementContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsGlobalStatementContextField.GetValue(instance);
             }
         }
 
@@ -109,7 +94,7 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (bool)isParameterTypeContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsParameterTypeContextField.GetValue(instance);
             }
         }
 
@@ -117,12 +102,9 @@ namespace RefactoringEssentials
         {
             get
             {
-                return (SyntaxTree)syntaxTreeProperty.GetValue(instance);
+                return (SyntaxTree)RoslynReflection.AbstractSyntaxContext.SyntaxTreeProperty.GetValue(instance);
             }
         }
-
-
-        readonly static MethodInfo isMemberDeclarationContextMethod;
 
         public bool IsMemberDeclarationContext(
             ISet<SyntaxKind> validModifiers = null,
@@ -132,7 +114,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return (bool)isMemberDeclarationContextMethod.Invoke(instance, new object[] {
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsMemberDeclarationContextMethod.Invoke(instance, new object[] {
                     validModifiers,
                     validTypeDeclarations,
                     canBePartial,
@@ -145,8 +127,6 @@ namespace RefactoringEssentials
                 return false;
             }
         }
-
-        readonly static MethodInfo isTypeDeclarationContextMethod;
 
         public bool IsTypeDeclarationContext(
             ISet<SyntaxKind> validModifiers = null,
@@ -156,7 +136,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return (bool)isTypeDeclarationContextMethod.Invoke(instance, new object[] {
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsTypeDeclarationContextMethod.Invoke(instance, new object[] {
                     validModifiers,
                     validTypeDeclarations,
                     canBePartial,
@@ -170,43 +150,35 @@ namespace RefactoringEssentials
             }
         }
 
-        readonly static PropertyInfo isPreProcessorDirectiveContextProperty;
-
         public bool IsPreProcessorDirectiveContext
         {
             get
             {
-                return (bool)isPreProcessorDirectiveContextProperty.GetValue(instance);
+                return (bool)RoslynReflection.AbstractSyntaxContext.IsPreProcessorDirectiveContextProperty.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isInNonUserCodeField;
 
         public bool IsInNonUserCode
         {
             get
             {
-                return (bool)isInNonUserCodeField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsInNonUserCodeField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isIsOrAsContextField;
 
         public bool IsIsOrAsContext
         {
             get
             {
-                return (bool)isIsOrAsContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsIsOrAsContextField.GetValue(instance);
             }
         }
-
-        readonly static MethodInfo isTypeAttributeContextMethod;
 
         public bool IsTypeAttributeContext(CancellationToken cancellationToken)
         {
             try
             {
-                return (bool)isTypeAttributeContextMethod.Invoke(instance, new object[] { cancellationToken });
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsTypeAttributeContextMethod.Invoke(instance, new object[] { cancellationToken });
             }
             catch (TargetInvocationException ex)
             {
@@ -215,154 +187,123 @@ namespace RefactoringEssentials
             }
         }
 
-        readonly static PropertyInfo isAnyExpressionContextProperty;
-
         public bool IsAnyExpressionContext
         {
             get
             {
-                return (bool)isAnyExpressionContextProperty.GetValue(instance);
+                return (bool)RoslynReflection.AbstractSyntaxContext.IsAnyExpressionContextProperty.GetValue(instance);
             }
         }
-
-        readonly static PropertyInfo isStatementContextProperty;
 
         public bool IsStatementContext
         {
             get
             {
-                return (bool)isStatementContextProperty.GetValue(instance);
+                return (bool)RoslynReflection.AbstractSyntaxContext.IsStatementContextProperty.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isDefiniteCastTypeContextField;
 
         public bool IsDefiniteCastTypeContext
         {
             get
             {
-                return (bool)isDefiniteCastTypeContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsDefiniteCastTypeContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isObjectCreationTypeContextField;
 
         public bool IsObjectCreationTypeContext
         {
             get
             {
-                return (bool)isObjectCreationTypeContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsObjectCreationTypeContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isGenericTypeArgumentContextField;
 
         public bool IsGenericTypeArgumentContext
         {
             get
             {
-                return (bool)isGenericTypeArgumentContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsGenericTypeArgumentContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isLocalVariableDeclarationContextField;
 
         public bool IsLocalVariableDeclarationContext
         {
             get
             {
-                return (bool)isLocalVariableDeclarationContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsLocalVariableDeclarationContextField.GetValue(instance);
             }
         }
-
-
-        readonly static FieldInfo isFixedVariableDeclarationContextField;
 
         public bool IsFixedVariableDeclarationContext
         {
             get
             {
-                return (bool)isFixedVariableDeclarationContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsFixedVariableDeclarationContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isPossibleLambdaOrAnonymousMethodParameterTypeContextField;
 
         public bool IsPossibleLambdaOrAnonymousMethodParameterTypeContext
         {
             get
             {
-                return (bool)isPossibleLambdaOrAnonymousMethodParameterTypeContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsPossibleLambdaOrAnonymousMethodParameterTypeContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isImplicitOrExplicitOperatorTypeContextField;
 
         public bool IsImplicitOrExplicitOperatorTypeContext
         {
             get
             {
-                return (bool)isImplicitOrExplicitOperatorTypeContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsImplicitOrExplicitOperatorTypeContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isPrimaryFunctionExpressionContextField;
 
         public bool IsPrimaryFunctionExpressionContext
         {
             get
             {
-                return (bool)isPrimaryFunctionExpressionContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsPrimaryFunctionExpressionContextField.GetValue(instance);
             }
         }
-
-
-        readonly static FieldInfo isCrefContextField;
 
         public bool IsCrefContext
         {
             get
             {
-                return (bool)isCrefContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsCrefContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isDelegateReturnTypeContextField;
 
         public bool IsDelegateReturnTypeContext
         {
             get
             {
-                return (bool)isDelegateReturnTypeContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsDelegateReturnTypeContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isEnumBaseListContextField;
 
         public bool IsEnumBaseListContext
         {
             get
             {
-                return (bool)isEnumBaseListContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsEnumBaseListContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isConstantExpressionContextField;
 
         public bool IsConstantExpressionContext
         {
             get
             {
-                return (bool)isConstantExpressionContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsConstantExpressionContextField.GetValue(instance);
             }
         }
 
-        readonly static MethodInfo isMemberAttributeContextMethod;
         public bool IsMemberAttributeContext(ISet<SyntaxKind> validTypeDeclarations, CancellationToken cancellationToken)
         {
             try
             {
-                return (bool)isMemberAttributeContextMethod.Invoke(instance, new object[] {
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsMemberAttributeContextMethod.Invoke(instance, new object[] {
                     validTypeDeclarations,
                     cancellationToken
                 });
@@ -375,99 +316,44 @@ namespace RefactoringEssentials
 
         }
 
-        readonly static FieldInfo precedingModifiersField;
-
         public ISet<SyntaxKind> PrecedingModifiers
         {
             get
             {
-                return (ISet<SyntaxKind>)precedingModifiersField.GetValue(instance);
+                return (ISet<SyntaxKind>)RoslynReflection.CSharpSyntaxContext.PrecedingModifiersField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo isTypeOfExpressionContextField;
 
         public bool IsTypeOfExpressionContext
         {
             get
             {
-                return (bool)isTypeOfExpressionContextField.GetValue(instance);
+                return (bool)RoslynReflection.CSharpSyntaxContext.IsTypeOfExpressionContextField.GetValue(instance);
             }
         }
-
-        readonly static FieldInfo containingTypeOrEnumDeclarationField;
 
         public BaseTypeDeclarationSyntax ContainingTypeOrEnumDeclaration
         {
             get
             {
-                return (BaseTypeDeclarationSyntax)containingTypeOrEnumDeclarationField.GetValue(instance);
+                return (BaseTypeDeclarationSyntax)RoslynReflection.CSharpSyntaxContext.ContainingTypeOrEnumDeclarationField.GetValue(instance);
             }
         }
-        static readonly PropertyInfo isAttributeNameContextProperty;
 
         public bool IsAttributeNameContext
         {
             get
             {
-                return (bool)isAttributeNameContextProperty.GetValue(instance);
+                return (bool)RoslynReflection.AbstractSyntaxContext.IsAttributeNameContextProperty.GetValue(instance);
             }
         }
 
-        static readonly PropertyInfo isInQueryProperty;
         public bool IsInQuery
         {
             get
             {
-                return (bool)isInQueryProperty.GetValue(instance);
+                return (bool)RoslynReflection.AbstractSyntaxContext.IsInQueryProperty.GetValue(instance);
             }
-        }
-
-
-        static CSharpSyntaxContext()
-        {
-            typeInfoAbstractSyntaxContext = Type.GetType("Microsoft.CodeAnalysis.Shared.Extensions.ContextQuery.AbstractSyntaxContext" + ReflectionNamespaces.WorkspacesAsmName, true);
-            typeInfoCSharpSyntaxContext = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.ContextQuery.CSharpSyntaxContext" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-
-            createContextMethod = typeInfoCSharpSyntaxContext.GetMethod("CreateContext", BindingFlags.Static | BindingFlags.Public);
-            leftTokenProperty = typeInfoAbstractSyntaxContext.GetProperty("LeftToken");
-            targetTokenProperty = typeInfoAbstractSyntaxContext.GetProperty("TargetToken");
-            isIsOrAsTypeContextField = typeInfoCSharpSyntaxContext.GetField("IsIsOrAsTypeContext");
-            isInstanceContextField = typeInfoCSharpSyntaxContext.GetField("IsInstanceContext");
-            isNonAttributeExpressionContextField = typeInfoCSharpSyntaxContext.GetField("IsNonAttributeExpressionContext");
-            isPreProcessorKeywordContextField = typeInfoCSharpSyntaxContext.GetField("IsPreProcessorKeywordContext");
-            isPreProcessorExpressionContextField = typeInfoCSharpSyntaxContext.GetField("IsPreProcessorExpressionContext");
-            containingTypeDeclarationField = typeInfoCSharpSyntaxContext.GetField("ContainingTypeDeclaration");
-            isGlobalStatementContextField = typeInfoCSharpSyntaxContext.GetField("IsGlobalStatementContext");
-            isParameterTypeContextField = typeInfoCSharpSyntaxContext.GetField("IsParameterTypeContext");
-            isMemberDeclarationContextMethod = typeInfoCSharpSyntaxContext.GetMethod("IsMemberDeclarationContext", BindingFlags.Instance | BindingFlags.Public);
-            isTypeDeclarationContextMethod = typeInfoCSharpSyntaxContext.GetMethod("IsTypeDeclarationContext", BindingFlags.Instance | BindingFlags.Public);
-            syntaxTreeProperty = typeInfoAbstractSyntaxContext.GetProperty("SyntaxTree");
-            isPreProcessorDirectiveContextProperty = typeInfoAbstractSyntaxContext.GetProperty("IsPreProcessorDirectiveContext");
-            isInNonUserCodeField = typeInfoCSharpSyntaxContext.GetField("IsInNonUserCode");
-            isIsOrAsContextField = typeInfoCSharpSyntaxContext.GetField("IsIsOrAsContext");
-            isTypeAttributeContextMethod = typeInfoCSharpSyntaxContext.GetMethod("IsTypeAttributeContext", BindingFlags.Instance | BindingFlags.Public);
-            isAnyExpressionContextProperty = typeInfoAbstractSyntaxContext.GetProperty("IsAnyExpressionContext");
-            isStatementContextProperty = typeInfoAbstractSyntaxContext.GetProperty("IsStatementContext");
-            isDefiniteCastTypeContextField = typeInfoCSharpSyntaxContext.GetField("IsDefiniteCastTypeContext");
-            isObjectCreationTypeContextField = typeInfoCSharpSyntaxContext.GetField("IsObjectCreationTypeContext");
-            isGenericTypeArgumentContextField = typeInfoCSharpSyntaxContext.GetField("IsGenericTypeArgumentContext");
-            isLocalVariableDeclarationContextField = typeInfoCSharpSyntaxContext.GetField("IsLocalVariableDeclarationContext");
-            isFixedVariableDeclarationContextField = typeInfoCSharpSyntaxContext.GetField("IsFixedVariableDeclarationContext");
-            isPossibleLambdaOrAnonymousMethodParameterTypeContextField = typeInfoCSharpSyntaxContext.GetField("IsPossibleLambdaOrAnonymousMethodParameterTypeContext");
-            isImplicitOrExplicitOperatorTypeContextField = typeInfoCSharpSyntaxContext.GetField("IsImplicitOrExplicitOperatorTypeContext");
-            isPrimaryFunctionExpressionContextField = typeInfoCSharpSyntaxContext.GetField("IsPrimaryFunctionExpressionContext");
-            isCrefContextField = typeInfoCSharpSyntaxContext.GetField("IsCrefContext");
-            isDelegateReturnTypeContextField = typeInfoCSharpSyntaxContext.GetField("IsDelegateReturnTypeContext");
-            isEnumBaseListContextField = typeInfoCSharpSyntaxContext.GetField("IsEnumBaseListContext");
-            isConstantExpressionContextField = typeInfoCSharpSyntaxContext.GetField("IsConstantExpressionContext");
-            isMemberAttributeContextMethod = typeInfoCSharpSyntaxContext.GetMethod("IsMemberAttributeContext", BindingFlags.Instance | BindingFlags.Public);
-            precedingModifiersField = typeInfoCSharpSyntaxContext.GetField("PrecedingModifiers");
-            isTypeOfExpressionContextField = typeInfoCSharpSyntaxContext.GetField("IsTypeOfExpressionContext");
-            containingTypeOrEnumDeclarationField = typeInfoCSharpSyntaxContext.GetField("ContainingTypeOrEnumDeclaration");
-
-            isAttributeNameContextProperty = typeInfoAbstractSyntaxContext.GetProperty("IsAttributeNameContext");
-            isInQueryProperty = typeInfoAbstractSyntaxContext.GetProperty("IsInQuery");
         }
 
         public SemanticModel SemanticModel
@@ -491,7 +377,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return new CSharpSyntaxContext(createContextMethod.Invoke(null, new object[] {
+                return new CSharpSyntaxContext(RoslynReflection.CSharpSyntaxContext.CreateContextMethod.Invoke(null, new object[] {
                     workspace,
                     semanticModel,
                     position,
@@ -511,7 +397,7 @@ namespace RefactoringEssentials
     }
 
 #if NR6
-	public
+    public
 #endif
     class CSharpTypeInferenceService
     {

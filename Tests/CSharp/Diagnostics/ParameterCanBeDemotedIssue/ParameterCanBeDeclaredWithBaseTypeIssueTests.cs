@@ -271,7 +271,7 @@ class E : D, IC
 	void IC.Foo() {}
 }";
 
-        [Ignore]
+        [Ignore("TODO")]
         [Test]
         public void FindsTopInterface()
         {
@@ -467,7 +467,7 @@ class TestClass
 }");
         }
 
-        [Ignore]
+        [Ignore("TODO")]
         [Test]
         public void AccountsForIndexers()
         {

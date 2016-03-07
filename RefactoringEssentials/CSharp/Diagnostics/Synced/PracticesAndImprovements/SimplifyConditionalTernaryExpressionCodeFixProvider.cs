@@ -25,14 +25,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             return WellKnownFixAllProviders.BatchFixer;
         }
 
-        internal static bool? GetBool(ExpressionSyntax trueExpression)
-        {
-            var pExpr = trueExpression as LiteralExpressionSyntax;
-            if (pExpr == null || !(pExpr.Token.Value is bool))
-                return null;
-            return (bool)pExpr.Token.Value;
-        }
-
         public async override Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var document = context.Document;
@@ -45,8 +37,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = root.FindNode(context.Span, getInnermostNodeForTie: true) as ConditionalExpressionSyntax;
             var newRoot = root;
 
-            bool? trueBranch = GetBool(node.WhenTrue.SkipParens());
-            bool? falseBranch = GetBool(node.WhenFalse.SkipParens());
+            bool? trueBranch = SimplifyConditionalTernaryExpressionAnalyzer.GetBool(node.WhenTrue.SkipParens());
+            bool? falseBranch = SimplifyConditionalTernaryExpressionAnalyzer.GetBool(node.WhenFalse.SkipParens());
 
             if (trueBranch == false && falseBranch == true)
             {

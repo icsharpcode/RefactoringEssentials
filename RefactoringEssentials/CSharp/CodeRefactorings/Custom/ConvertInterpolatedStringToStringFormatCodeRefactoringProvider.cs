@@ -56,7 +56,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 switch (kind)
                 {
                     case SyntaxKind.InterpolatedStringText:
-                        sb.Append(((InterpolatedStringTextSyntax)child).TextToken.Value);
+                        sb.Append(((InterpolatedStringTextSyntax)child).TextToken.ToString());
                         break;
                     case SyntaxKind.Interpolation:
                         var interpolation = child as InterpolationSyntax;

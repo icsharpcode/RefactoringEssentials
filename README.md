@@ -14,4 +14,4 @@ not tied to Windows / Visual Studio.
 Branch | Status
 --- | ---
 *master* (Development) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/master?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/master) 
-*release* (Latest Release) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/master?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/release)
+*release* (Latest Release) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/release?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/release)

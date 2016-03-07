@@ -21,7 +21,6 @@
 
 * AdditionalOfTypeAnalyzer
 * CheckNamespaceAnalyzer
-* ConstantNullCoalescingConditionAnalyzer
 * ConvertIfStatementToNullCoalescingExpressionAnalyzer
 * ConvertToAutoPropertyAnalyzer
 * ConvertToConstantAnalyzer
@@ -33,24 +32,13 @@
 * CS1573ParameterHasNoMatchingParamTagAnalyzer
 * CS1717AssignmentMadeToSameVariableAnalyzer
 * CS1729TypeHasNoConstructorWithNArgumentsAnalyzer
-* EqualExpressionComparisonAnalyzer
-* ExpressionIsNeverOfProvidedTypeAnalyzer
 * ForCanBeConvertedToForeachAnalyzer
-* ForControlVariableIsNeverModifiedAnalyzer
-* FormatStringProblemAnalyzer
-* FunctionNeverReturnsAnalyzer
 * InconsistentNamingAnalyzer
-* LocalVariableHidesMemberAnalyzer
 * LockThisAnalyzer
-* MemberHidesStaticFromOuterClassAnalyzer
-* MethodOverloadWithOptionalParameterAnalyzer
-* MissingInterfaceMemberImplementationAnalyzer
 * NegativeRelationalExpressionAnalyzer
 * NonReadonlyReferencedInGetHashCodeAnalyzer
 * OptionalParameterHierarchyMismatchAnalyzer
 * ParameterCanBeDeclaredWithBaseTypeAnalyzer
-* ParameterHidesMemberAnalyzer
-* PartialMethodParameterNameMismatchAnalyzer
 * PolymorphicFieldLikeEventInvocationAnalyzer
 * PossibleAssignmentToReadonlyFieldAnalyzer
 * PossibleMultipleEnumerationAnalyzer
@@ -60,8 +48,6 @@
 * RedundantBoolCompareAnalyzer
 * RedundantCatchClauseAnalyzer
 * RedundantComparisonWithNullAnalyzer
-* RedundantDefaultFieldInitializerAnalyzer
-* RedundantEmptyFinallyBlockAnalyzer
 * RedundantEnumerableCastCallAnalyzer
 * RedundantExplicitArrayCreationAnalyzer
 * RedundantExtendsListEntryAnalyzer
@@ -70,20 +56,15 @@
 * RedundantLogicalConditionalExpressionOperandAnalyzer
 * RedundantObjectOrCollectionInitializerAnalyzer
 * RedundantOverriddenMemberAnalyzer
-* RedundantToStringCallAnalyzer
-* RedundantUnsafeContextAnalyzer
 * ReferenceEqualsWithValueTypeAnalyzer
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
-* StaticFieldInGenericTypeAnalyzer
 * StringCompareIsCultureSpecificAnalyzer
 * UnassignedReadonlyFieldAnalyzer
 * UnusedAnonymousMethodSignatureAnalyzer
 * UnusedParameterAnalyzer
-* UnusedTypeParameterAnalyzer
 * UseArrayCreationExpressionAnalyzer
 * UseIsOperatorAnalyzer
 * UseMethodAnyAnalyzer
 * UseMethodIsInstanceOfTypeAnalyzer
-* XmlDocAnalyzer
 

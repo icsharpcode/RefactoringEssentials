@@ -1,11 +1,15 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using System;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantUnsafeContextAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -21,139 +25,156 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor);
 
+
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterCompilationStartAction(compilationContext =>
+            {
+                var compilation = compilationContext.Compilation;
+                compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext ctx)
+                {
+                    try
+                    {
+                        if (!compilation.SyntaxTrees.Contains(ctx.Tree))
+                            return;
+                        var semanticModel = compilation.GetSemanticModel(ctx.Tree);
+                        var root = await ctx.Tree.GetRootAsync(ctx.CancellationToken).ConfigureAwait(false);
+                        var model = compilationContext.Compilation.GetSemanticModel(ctx.Tree);
+                        if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
+                            return;
+                        new GatherVisitor(ctx).Visit(root);
+                    }
+                    catch (OperationCanceledException) { }
+                });
+            });
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        class GatherVisitor : CSharpSyntaxWalker
         {
-            diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            SyntaxTreeAnalysisContext ctx;
+
+            public GatherVisitor(SyntaxTreeAnalysisContext ctx)
+            {
+                this.ctx = ctx;
+            }
+
+            class UnsafeState
+            {
+                public bool InUnsafeContext;
+                public bool UseUnsafeConstructs;
+
+                public UnsafeState(bool inUnsafeContext)
+                {
+                    this.InUnsafeContext = inUnsafeContext;
+                    this.UseUnsafeConstructs = false;
+                }
+
+                public override string ToString()
+                {
+                    return string.Format("[UnsafeState: InUnsafeContext={0}, UseUnsafeConstructs={1}]", InUnsafeContext, UseUnsafeConstructs);
+                }
+            }
+
+            readonly Stack<UnsafeState> unsafeStateStack = new Stack<UnsafeState>();
+
+
+            void MarkUnsafe(SyntaxTokenList modifiers, bool isUnsafe)
+            {
+                var state = unsafeStateStack.Pop();
+                if (isUnsafe && !state.UseUnsafeConstructs)
+                {
+                    ctx.ReportDiagnostic(Diagnostic.Create(
+                        descriptor,
+                        modifiers.First(m => m.IsKind(SyntaxKind.UnsafeKeyword)).GetLocation()
+                    ));
+                }
+            }
+
+            bool CheckModifiers(SyntaxTokenList modifiers)
+            {
+                var isUnsafe = modifiers.Any(m => m.IsKind(SyntaxKind.UnsafeKeyword));
+                if (unsafeStateStack.Count > 0)
+                {
+                    var curState = unsafeStateStack.Peek();
+                    unsafeStateStack.Push(new UnsafeState(curState.InUnsafeContext));
+                }
+                else {
+                    unsafeStateStack.Push(new UnsafeState(isUnsafe));
+                }
+                return isUnsafe;
+            }
+
+
+            void MarkUnsafe()
+            {
+                if (unsafeStateStack.Count == 0)
+                    return;
+                unsafeStateStack.Peek().UseUnsafeConstructs = true;
+            }
+
+
+            public override void VisitClassDeclaration(ClassDeclarationSyntax node)
+            {
+                bool isUnsafe = CheckModifiers(node.Modifiers);
+                base.VisitClassDeclaration(node);
+                MarkUnsafe(node.Modifiers, isUnsafe);
+            }
+
+            public override void VisitStructDeclaration(StructDeclarationSyntax node)
+            {
+                bool isUnsafe = CheckModifiers(node.Modifiers);
+                base.VisitStructDeclaration(node);
+                MarkUnsafe(node.Modifiers, isUnsafe);
+            }
+
+            public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
+            {
+                base.VisitFieldDeclaration(node);
+                MarkUnsafe();
+            }
+
+            public override void VisitPointerType(PointerTypeSyntax node)
+            {
+                base.VisitPointerType(node);
+                MarkUnsafe();
+            }
+
+
+            public override void VisitFixedStatement(FixedStatementSyntax node)
+            {
+                base.VisitFixedStatement(node);
+                MarkUnsafe();
+            }
+
+            public override void VisitSizeOfExpression(SizeOfExpressionSyntax node)
+            {
+                base.VisitSizeOfExpression(node);
+                MarkUnsafe();
+            }
+
+            public override void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
+            {
+                base.VisitPrefixUnaryExpression(node);
+                if (node.IsKind(SyntaxKind.AddressOfExpression) || node.IsKind(SyntaxKind.PointerIndirectionExpression))  // TODO: Check
+                    MarkUnsafe();
+            }
+
+            public override void VisitUnsafeStatement(UnsafeStatementSyntax node)
+            {
+                MarkUnsafe();
+                bool isRedundant = unsafeStateStack.Peek().InUnsafeContext;
+                unsafeStateStack.Push(new UnsafeState(true));
+                base.VisitUnsafeStatement(node);
+                isRedundant |= !unsafeStateStack.Pop().UseUnsafeConstructs;
+
+                if (isRedundant)
+                {
+                    ctx.ReportDiagnostic(Diagnostic.Create(
+                        descriptor,
+                        node.UnsafeKeyword.GetLocation()
+                    ));
+                }
+            }
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantUnsafeContextAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			class UnsafeState 
-        ////			{
-        ////				public bool InUnsafeContext;
-        ////				public bool UseUnsafeConstructs;
-        ////
-        ////				public UnsafeState(bool inUnsafeContext)
-        ////				{
-        ////					this.InUnsafeContext = inUnsafeContext;
-        ////					this.UseUnsafeConstructs = false;
-        ////				}
-        ////
-        ////				public override string ToString()
-        ////				{
-        ////					return string.Format("[UnsafeState: InUnsafeContext={0}, UseUnsafeConstructs={1}]", InUnsafeContext, UseUnsafeConstructs);
-        ////				}
-        ////			}
-        ////
-        ////			readonly Stack<UnsafeState> unsafeStateStack = new Stack<UnsafeState> ();
-        ////
-        ////			public override void VisitTypeDeclaration(TypeDeclaration typeDeclaration)
-        ////			{
-        ////				bool unsafeIsRedundant = false;
-        ////				if (unsafeStateStack.Count > 0) {
-        ////					var curState = unsafeStateStack.Peek();
-        ////
-        ////					unsafeIsRedundant |= typeDeclaration.HasModifier(Modifiers.Unsafe);
-        ////
-        ////					unsafeStateStack.Push(new UnsafeState (curState.InUnsafeContext)); 
-        ////				} else {
-        ////					unsafeStateStack.Push(new UnsafeState (typeDeclaration.HasModifier(Modifiers.Unsafe))); 
-        ////				}
-        ////
-        ////				base.VisitTypeDeclaration(typeDeclaration);
-        ////
-        ////				var state = unsafeStateStack.Pop();
-        ////				unsafeIsRedundant = typeDeclaration.HasModifier(Modifiers.Unsafe) && !state.UseUnsafeConstructs;
-        ////				if (unsafeIsRedundant) {
-        ////					AddDiagnosticAnalyzer(new CodeIssue(
-        ////						typeDeclaration.ModifierTokens.First (t => t.Modifier == Modifiers.Unsafe),
-        ////						ctx.TranslateString(""), 
-        ////						ctx.TranslateString(""), 
-        ////						script => script.ChangeModifier(typeDeclaration, typeDeclaration.Modifiers & ~Modifiers.Unsafe)
-        ////					) { IssueMarker = IssueMarker.GrayOut });
-        ////				}
-        ////			}
-        ////
-        ////			public override void VisitFixedFieldDeclaration(FixedFieldDeclaration fixedFieldDeclaration)
-        ////			{
-        ////				base.VisitFixedFieldDeclaration(fixedFieldDeclaration);
-        ////				unsafeStateStack.Peek().UseUnsafeConstructs = true;
-        ////			}
-        ////
-        ////			public override void VisitComposedType(ComposedType composedType)
-        ////			{
-        ////				base.VisitComposedType(composedType);
-        ////				if (composedType.PointerRank > 0)
-        ////					unsafeStateStack.Peek().UseUnsafeConstructs = true;
-        ////			}
-        ////
-        ////			public override void VisitFixedStatement(FixedStatement fixedStatement)
-        ////			{
-        ////				base.VisitFixedStatement(fixedStatement);
-        ////
-        ////				unsafeStateStack.Peek().UseUnsafeConstructs = true;
-        ////			}
-        ////
-        ////			public override void VisitSizeOfExpression(SizeOfExpression sizeOfExpression)
-        ////			{
-        ////				base.VisitSizeOfExpression(sizeOfExpression);
-        ////				unsafeStateStack.Peek().UseUnsafeConstructs = true;
-        ////			}
-        ////
-        ////			public override void VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression)
-        ////			{
-        ////				base.VisitUnaryOperatorExpression(unaryOperatorExpression);
-        ////				if (unaryOperatorExpression.Operator == UnaryOperatorType.AddressOf ||
-        ////				    unaryOperatorExpression.Operator == UnaryOperatorType.Dereference)
-        ////					unsafeStateStack.Peek().UseUnsafeConstructs = true;
-        ////			}
-        ////		
-        ////			public override void VisitUnsafeStatement(UnsafeStatement unsafeStatement)
-        ////			{
-        ////				unsafeStateStack.Peek().UseUnsafeConstructs = true;
-        ////				bool isRedundant = unsafeStateStack.Peek().InUnsafeContext;
-        ////				unsafeStateStack.Push(new UnsafeState (true)); 
-        ////				base.VisitUnsafeStatement(unsafeStatement);
-        ////				isRedundant |= !unsafeStateStack.Pop().UseUnsafeConstructs;
-        ////
-        ////				if (isRedundant) {
-        ////					AddDiagnosticAnalyzer(new CodeIssue(
-        ////						unsafeStatement.UnsafeToken,
-        ////						ctx.TranslateString("'unsafe' statement is redundant."), 
-        ////						ctx.TranslateString("Replace 'unsafe' statement with it's body"), 
-        ////						s => {
-        ////							s.Remove(unsafeStatement.UnsafeToken);
-        ////							s.Remove(unsafeStatement.Body.LBraceToken);
-        ////							s.Remove(unsafeStatement.Body.RBraceToken);
-        ////							s.FormatText(unsafeStatement.Parent);
-        ////						}
-        ////					));
-        ////				}
-        ////			}
-        //		}
     }
 }

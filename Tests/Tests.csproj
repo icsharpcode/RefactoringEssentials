@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG;UNIMPLEMENTED_CONVERTER_FEATURE_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -44,6 +44,13 @@
     <OutputPath>bin\Mono_Release</OutputPath>
     <WarningLevel>4</WarningLevel>
     <AssemblyName>Tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -112,8 +119,8 @@
     <Reference Include="System.Composition.TypedParts">
       <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -137,6 +144,7 @@
     <Compile Include="CSharp\CodeFixes\ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests.cs" />
     <Compile Include="CSharp\CodeFixes\UnreachableCodeTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ContractRequiresNotNullTests.cs" />
+    <Compile Include="CSharp\CodeRefactorings\ContractEnsuresNotNullReturnTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\GenerateSwitchLabelsTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ImportStaticClassWithUsingTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InitializeAutoPropertyFromConstructorParameterTests.cs" />
@@ -173,7 +181,6 @@
     <Compile Include="CSharp\CodeRefactorings\ReplaceWithOperatorAssignmentTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReverseDirectionForForLoopTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\AddNullCheckTests.cs" />
-    <Compile Include="CSharp\CodeRefactorings\SortUsingsTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitIfWithAndConditionInTwoTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitIfWithOrConditionInTwoTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitLocalVariableDeclarationAndAssignmentTests.cs" />
@@ -230,7 +237,6 @@
     <Compile Include="CSharp\Diagnostics\EnumUnderlyingTypeIsIntTests.cs" />
     <Compile Include="CSharp\Diagnostics\EqualExpressionComparisonTests.cs" />
     <Compile Include="CSharp\Diagnostics\EventUnsubscriptionViaAnonymousDelegateTests.cs" />
-    <Compile Include="CSharp\Diagnostics\ExpressionIsNeverOfProvidedTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\FieldCanBeMadeReadOnlyTests.cs" />
     <Compile Include="CSharp\Diagnostics\ForCanBeConvertedToForeachTests.cs" />
     <Compile Include="CSharp\Diagnostics\ForControlVariableIsNeverModifiedTests.cs" />
@@ -245,7 +251,6 @@
     <Compile Include="CSharp\Diagnostics\MemberCanBeMadeStaticTests.cs" />
     <Compile Include="CSharp\Diagnostics\MemberHidesStaticFromOuterClassTests.cs" />
     <Compile Include="CSharp\Diagnostics\MethodOverloadWithOptionalParameterTests.cs" />
-    <Compile Include="CSharp\Diagnostics\MissingInterfaceMemberImplementationTests.cs" />
     <Compile Include="CSharp\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="CSharp\Diagnostics\NegativeRelationalExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />
@@ -331,7 +336,7 @@
     <Compile Include="CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticConstructorParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticEventSubscriptionTests.cs" />
-    <Compile Include="CSharp\Diagnostics\StaticFieldInGenericTypeTests.cs" />
+    <Compile Include="CSharp\Diagnostics\RoslynUsageTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticMethodInvocationToExtensionMethodInvocationTests.cs" />
     <Compile Include="CSharp\Diagnostics\StringCompareIsCultureSpecificTests.cs" />
     <Compile Include="CSharp\Diagnostics\StringCompareToIsCultureSpecificTests.cs" />
@@ -438,9 +443,17 @@
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\VBCodeRefactoringTestBase.cs" />
+    <Compile Include="Common\ConverterTestBase.cs" />
+    <Compile Include="VB\Converter\ExpressionTests.cs" />
+    <Compile Include="VB\Converter\MemberTests.cs" />
+    <Compile Include="VB\Converter\NamespaceLevelTests.cs" />
+    <Compile Include="VB\Converter\SpecialConversionTests.cs" />
+    <Compile Include="VB\Converter\StatementTests.cs" />
+    <Compile Include="VB\Converter\TypeCastTests.cs" />
     <Compile Include="VB\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />
     <Compile Include="VB\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />
+    <Compile Include="CSharp\Diagnostics\StaticFieldOrAutoPropertyInGenericTypeTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -468,8 +481,9 @@
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
   </ItemGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+  <ItemGroup />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets') And '$(Configuration)'!='Mono_Debug' And  '$(Configuration)'!='Mono_Release'" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(Configuration)'!='Mono_Debug' And  '$(Configuration)'!='Mono_Release'">
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>

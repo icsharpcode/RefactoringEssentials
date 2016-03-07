@@ -1,11 +1,14 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using System;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class MethodOverloadWithOptionalParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -22,99 +25,80 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                AnalyzeMember, 
+                new SyntaxKind[] { SyntaxKind.MethodDeclaration, SyntaxKind.IndexerDeclaration }
+            );
         }
 
-        static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        static void AnalyzeMember(SyntaxNodeAnalysisContext ctx)
         {
-            diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            var symbol = ctx.SemanticModel.GetDeclaredSymbol(ctx.Node);
+            if (symbol == null)
+                return;
+
+            var overloads = new List<ISymbol>();
+            foreach (var member in symbol.ContainingType.GetMembers())
+            {
+                if (ctx.Node.IsKind(SyntaxKind.IndexerDeclaration))
+                {
+                    if (member.IsKind(SymbolKind.Property) && ((IPropertySymbol)member).IsIndexer)
+                        overloads.Add(member);
+                }
+                else {
+                    if (member.IsKind(SymbolKind.Method) && member.Name == symbol.Name) {
+                        var tp1 = symbol.GetTypeParameters();
+                        var tp2 = member.GetTypeParameters();
+                        if (tp1.Length != tp2.Length)
+                            continue;
+                        bool shouldAdd = true;
+                        for (int i = 0; i < tp1.Length; i++)
+                        {
+                            if (!tp1[i].Equals(tp2[i])) {
+                                shouldAdd = false;
+                                break;
+                            }
+                        }
+                        if (shouldAdd)
+                            overloads.Add(member);
+                    }
+                }
+            }
+
+            CheckParameters(ctx, symbol, overloads, ctx.Node.IsKind(SyntaxKind.IndexerDeclaration) ? ((IndexerDeclarationSyntax)ctx.Node).ParameterList.Parameters : ((MethodDeclarationSyntax)ctx.Node).ParameterList.Parameters);
         }
 
-        //		class GatherVisitor : GatherVisitorBase<MethodOverloadWithOptionalParameterAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-        ////
-        ////			void CheckParameters(IParameterizedMember member,  List<IParameterizedMember> overloads, List<ParameterDeclaration> parameterDeclarations)
-        ////			{
-        ////				for (int i = 0; i < member.Parameters.Count; i++) {
-        ////					if (!member.Parameters[i].IsOptional)
-        ////						continue;
-        ////
-        ////					foreach (var overload in overloads) {
-        ////						if (overload.Parameters.Count != i)
-        ////							continue;
-        ////						bool equal = true;
-        ////						for (int j = 0; j < i; j++)  {
-        ////							if (overload.Parameters[j].Type != member.Parameters[j].Type) {
-        ////								equal = false;
-        ////								break;
-        ////							}
-        ////						}
-        ////						if (equal) {
-        ////							AddDiagnosticAnalyzer(new CodeIssue(
-        ////								parameterDeclarations[i],
-        ////								member.SymbolKind == SymbolKind.Method ?
-        //			//								ctx.TranslateString("Method with optional parameter is hidden by overload") :
-        //			//								ctx.TranslateString("Indexer with optional parameter is hidden by overload")));
-        ////						}
-        ////					}
-        ////				}
-        ////			}
-        ////
-        ////			public override void VisitMethodDeclaration(MethodDeclaration methodDeclaration)
-        ////			{
-        ////				var rr = ctx.Resolve(methodDeclaration) as MemberResolveResult;
-        ////				if (rr == null || rr.IsError)
-        ////					return;
-        ////				var method = rr.Member as IMethod;
-        ////				if (method == null)
-        ////					return;
-        ////				CheckParameters (method, 
-        ////					method.DeclaringType.GetMethods(m =>
-        ////						m.Name == method.Name && m.TypeParameters.Count == method.TypeParameters.Count).Cast<IParameterizedMember>().ToList(),
-        ////					methodDeclaration.Parameters.ToList()
-        ////				);
-        ////
-        ////			}
-        ////
-        ////			public override void VisitIndexerDeclaration(IndexerDeclaration indexerDeclaration)
-        ////			{
-        ////				var rr = ctx.Resolve(indexerDeclaration) as MemberResolveResult;
-        ////				if (rr == null || rr.IsError)
-        ////					return;
-        ////				var method = rr.Member as IProperty;
-        ////				if (method == null)
-        ////					return;
-        ////				CheckParameters (method, 
-        ////					method.DeclaringType.GetProperties(m =>
-        ////						m.IsIndexer &&
-        ////						m != method.UnresolvedMember).Cast<IParameterizedMember>().ToList(),
-        ////					indexerDeclaration.Parameters.ToList()
-        ////				);
-        ////			}
-        ////
-        ////
-        ////			public override void VisitBlockStatement(BlockStatement blockStatement)
-        ////			{
-        ////				// SKIP
-        ////			}
-        //		}
+        static void CheckParameters(SyntaxNodeAnalysisContext ctx, ISymbol member, List<ISymbol> overloads, SeparatedSyntaxList<ParameterSyntax> parameterListNodes)
+        {
+            var memberParameters = member.GetParameters();
+            for (int i = 0; i < memberParameters.Length; i++)
+            {
+                if (!memberParameters[i].IsOptional)
+                    continue;
+
+                foreach (var overload in overloads)
+                {
+                    if (overload.GetParameters().Length != i)
+                        continue;
+                    bool equal = true;
+                    for (int j = 0; j < i; j++)
+                    {
+                        if (overload.GetParameters()[j].Type != memberParameters[j].Type)
+                        {
+                            equal = false;
+                            break;
+                        }
+                    }
+                    if (equal)
+                    {
+                        ctx.ReportDiagnostic( Diagnostic.Create(
+                            descriptor,
+                            parameterListNodes[i].GetLocation(),
+                            member.IsKind(SymbolKind.Method) ? GettextCatalog.GetString("Method") : GettextCatalog.GetString("Indexer")
+                        ));
+                    }
+                }
+            }
+        }
     }
 }

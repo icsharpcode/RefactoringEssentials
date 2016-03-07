@@ -4,18 +4,17 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class MemberHidesStaticFromOuterClassTests : CSharpDiagnosticTestBase
     {
         [Test]
-        public void TestSimpleCase()
+        public void TestProperty()
         {
-            TestIssue<MemberHidesStaticFromOuterClassAnalyzer>(@"
+            Analyze<MemberHidesStaticFromOuterClassAnalyzer>(@"
 public class Foo
 {
 	public class Bar
 	{
-		public string Test { get; set; }
+		public string $Test$ { get; set; }
 	}
 
 	public static string Test { get; set; }
@@ -32,7 +31,7 @@ public class Foo
 {
 	public class Bar
 	{
-		// ReSharper disable once MemberHidesStaticFromOuterClass
+#pragma warning disable " + CSharpDiagnosticIDs.MemberHidesStaticFromOuterClassAnalyzerID + @"
 		public string Test { get; set; }
 	}
 

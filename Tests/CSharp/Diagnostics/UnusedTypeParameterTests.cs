@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class UnusedTypeParameterTests : CSharpDiagnosticTestBase
     {
 
@@ -13,11 +12,11 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             var input = @"
 class TestClass {
-	void TestMethod<T> ()
-	{
-	}
+    void TestMethod<$T$> ()
+    {
+    }
 }";
-            Test<UnusedTypeParameterAnalyzer>(input, 1);
+            Analyze<UnusedTypeParameterAnalyzer>(input);
         }
 
         [Test]
@@ -35,9 +34,59 @@ class TestClass {
 	{
 	}
 }";
-            Test<UnusedTypeParameterAnalyzer>(input, 0);
-            Test<UnusedTypeParameterAnalyzer>(input2, 0);
+            Analyze<UnusedTypeParameterAnalyzer>(input);
+            Analyze<UnusedTypeParameterAnalyzer>(input2);
         }
+
+
+        [Test]
+        public void TestInterface()
+        {
+            var input = @"
+interface ITest {
+    void TestMethod<T> (T i);
+}";
+            Analyze<UnusedTypeParameterAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestInterfaceImplementation()
+        {
+            var input = @"
+interface ITest {
+    void TestMethod<T> (T i);
+}
+class TestClass : ITest {
+    void TestMethod<$T$> ()
+    {
+    }
+}
+";
+            Analyze<UnusedTypeParameterAnalyzer>(input);
+        }
+
+
+        [Test]
+        public void TestAbstractClass()
+        {
+            var input = @"
+abstract class TestClass<T> {
+}";
+            Analyze<UnusedTypeParameterAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestAbstractMethod()
+        {
+            var input = @"
+abstract class TestClass {
+    public abstract void TestMethod<T> ()
+    {
+    }
+}";
+            Analyze<UnusedTypeParameterAnalyzer>(input);
+        }
+
 
     }
 }

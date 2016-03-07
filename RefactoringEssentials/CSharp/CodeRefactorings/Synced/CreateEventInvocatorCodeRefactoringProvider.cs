@@ -177,7 +177,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         static string GetEventMethodName(string eventName)
         {
-            return "On" + char.ToUpper(eventName[0]) + eventName.Substring(1);
+            return NameProposalService.GetNameProposal("On" + char.ToUpper(eventName[0]) + eventName.Substring(1), SyntaxKind.MethodDeclaration);
         }
     }
 }
