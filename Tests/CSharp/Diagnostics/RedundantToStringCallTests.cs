@@ -422,5 +422,22 @@ class Foo
     }
 }");
         }
+
+
+        [Test]
+        public void TestNoRedundantParameter()
+        {
+            Analyze<RedundantToStringCallAnalyzer>(@"
+class Foo
+{
+    void Bar (object i)
+    {
+        Foo(i.ToString());
+    }
+
+    void Foo (string s) {}
+}");
+        }
+
     }
 }
