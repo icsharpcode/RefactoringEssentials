@@ -739,10 +739,6 @@
       <HintPath>..\..\roslyn\Binaries\Release\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop">
-      <HintPath>..\..\roslyn\Binaries\Release\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.CodeAnalysis">
       <HintPath>..\..\roslyn\Binaries\Release\Microsoft.CodeAnalysis.dll</HintPath>
       <Private>False</Private>
