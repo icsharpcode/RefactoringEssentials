@@ -44,6 +44,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
 				null,
 				new CSharpCompilationOptions(
 					OutputKind.DynamicallyLinkedLibrary,
+                    false,
 					"",
 					"",
 					"Script",

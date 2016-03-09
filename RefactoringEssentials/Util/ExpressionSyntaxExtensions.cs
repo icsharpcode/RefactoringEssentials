@@ -29,14 +29,12 @@ namespace RefactoringEssentials
             this ExpressionSyntax expression,
             ITypeSymbol targetType,
             int position,
-            SemanticModel semanticModel,
-            out bool wasCastAdded)
+            SemanticModel semanticModel)
         {
             try
             {
-                var args = new object[] { expression, targetType, position, semanticModel, false };
+                var args = new object[] { expression, targetType, position, semanticModel };
                 var result = (ExpressionSyntax)RoslynReflection.ExpressionSyntaxExtensions.CastIfPossibleMethod.Invoke(null, args);
-                wasCastAdded = (bool)args[4];
                 return result;
             }
             catch (TargetInvocationException ex)

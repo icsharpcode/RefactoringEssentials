@@ -71,6 +71,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
                 null,
                 new CSharpCompilationOptions(
                     OutputKind.DynamicallyLinkedLibrary,
+                    false,
                     "",
                     "",
                     "Script",
