@@ -22,6 +22,20 @@ class TestClass
         }
 
         [Test]
+        public void TestAsyncEventHandlerMethod()
+        {
+            var input = @"
+class TestClass
+{
+    async void TestMethodAsync(object sender, EventArgs e)
+    {
+    }
+}";
+
+            Analyze<AvoidAsyncVoidAnalyzer>(input);
+        }
+
+        [Test]
         public void TestDisable()
         {
             var input = @"
