@@ -70,7 +70,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics.Custom
             diagnostic = default(Diagnostic);
 
             var symbol = (IMethodSymbol)symbolContext.Symbol;
-            if (symbol.IsAsync && symbol.ReturnsVoid && symbol.Parameters.Any(x=> x is System.EventArgs))
+            if (symbol.IsAsync && symbol.ReturnsVoid && !symbol.Parameters.Any(x=> x.Type.Name.Contains("EventArgs")))
             {
                 diagnostic = Diagnostic.Create(descriptor, symbol.Locations.FirstOrDefault());
                 return true;
