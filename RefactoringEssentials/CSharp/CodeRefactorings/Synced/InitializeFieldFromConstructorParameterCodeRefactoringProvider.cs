@@ -55,7 +55,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                                 SyntaxFactory.AssignmentExpression(
                                     SyntaxKind.SimpleAssignmentExpression,
                                     SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.ThisExpression(), SyntaxFactory.IdentifierName(newFieldName)),
-                                    SyntaxFactory.IdentifierName(newFieldName)
+                            SyntaxFactory.IdentifierName(parameter.Identifier)
                                 )
                             ).WithAdditionalAnnotations(Formatter.Annotation);
 

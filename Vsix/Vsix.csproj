@@ -89,6 +89,7 @@
       <LastGenOutput>source.extension.vsixmanifest</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="source.extension.vsixmanifest">
       <AutoGen>True</AutoGen>
