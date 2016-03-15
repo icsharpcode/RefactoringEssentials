@@ -18,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics.Custom
             GettextCatalog.GetString("Asynchronous methods should return a Task instead of void"),
             GettextCatalog.GetString("Asynchronous method '{0}' should not return void"),
             DiagnosticAnalyzerCategories.CodeQualityIssues,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.AvoidAsyncVoidAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
@@ -72,7 +72,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics.Custom
             var symbol = (IMethodSymbol)symbolContext.Symbol;
             if (symbol.IsAsync && symbol.ReturnsVoid && !symbol.Parameters.Any(x=> x.Type.Name.Contains("EventArgs")))
             {
-                diagnostic = Diagnostic.Create(descriptor, symbol.Locations.FirstOrDefault());
+                diagnostic = Diagnostic.Create(descriptor, symbol.Locations.FirstOrDefault(), symbol.Name);
                 return true;
             }
 

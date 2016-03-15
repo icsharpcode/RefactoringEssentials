@@ -15,10 +15,11 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>118 code analyzers for C#</p>
+    <p>119 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
+      <li>Asynchronous methods should return a Task instead of void (AvoidAsyncVoidAnalyzer)</li>
       <li>Base parameter has 'params' modifier, but missing in overrider (BaseMemberHasParamsAnalyzer)</li>
       <li>Call to base member with implicit default parameters (BaseMethodCallWithDefaultParameterAnalyzer)</li>
       <li>Parameter name differs in base declaration (BaseMethodParameterNameMismatchAnalyzer)</li>
