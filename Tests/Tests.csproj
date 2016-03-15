@@ -194,6 +194,7 @@
     <Compile Include="CSharp\Diagnostics\AccessToStaticMemberViaDerivedTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\AdditionalOfTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\ArrayCreationCanBeReplacedWithArrayInitializerTests.cs" />
+    <Compile Include="CSharp\Diagnostics\AvoidAsyncVoidTests.cs" />
     <Compile Include="CSharp\Diagnostics\BaseMemberHasParamsTests.cs" />
     <Compile Include="CSharp\Diagnostics\BaseMethodCallWithDefaultParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\BaseMethodParameterNameMismatchTests.cs" />
