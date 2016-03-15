@@ -173,6 +173,7 @@
     <Compile Include="CSharp\CodeRefactorings\ReplaceWithOperatorAssignmentTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReverseDirectionForForLoopTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\AddNullCheckTests.cs" />
+    <Compile Include="CSharp\CodeRefactorings\ConvertInstanceToStaticMethodCodeRefactoringTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitIfWithAndConditionInTwoTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitIfWithOrConditionInTwoTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitLocalVariableDeclarationAndAssignmentTests.cs" />

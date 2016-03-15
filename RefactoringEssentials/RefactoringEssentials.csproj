@@ -61,6 +61,7 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs" />
+    <Compile Include="CSharp\CodeRefactorings\Synced\ConvertInstanceToStaticMethodCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\ConvertUnitTestToVB.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\AvoidAsyncVoidAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\RoslynUsageAnalyzer.cs" />
