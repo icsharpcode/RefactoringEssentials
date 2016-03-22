@@ -221,7 +221,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         [Test]
         public void TestComplexAssignmentCase()
         {
-            Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
+            Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
 {
     int Bar(bool foo)
     {
