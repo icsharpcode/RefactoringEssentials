@@ -10,6 +10,7 @@ string generatedFullVersion = "";
 string generatedShortVersion = "";
 string generatedRevision = "";
 string releaseNotesLink = "";
+string copyright = "";
 
 void ReadVersions(string inputFileName)
 {
@@ -27,6 +28,13 @@ void ReadVersions(string inputFileName)
 						if (settingParts.Length > 1)
 						{
 							releaseNotesLink = settingParts[1];
+						}
+						break;
+
+					case "copyright":
+						if (settingParts.Length > 1)
+						{
+							copyright = settingParts[1];
 						}
 						break;
 
@@ -56,7 +64,7 @@ void ReadVersions(string inputFileName)
 		{
 		}
 
-		if (File.Exists(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), "__debug.versioning")))
+		if (File.Exists(Path.Combine(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), "bin"), "__debug.versioning")))
 		{
 			DateTime now = DateTime.Now;
 			generatedRevision = ((int) (((now - (new DateTime(now.Year, 1, 1))).TotalMinutes / 20) + ((now.Year - 2015) * 10000))).ToString();

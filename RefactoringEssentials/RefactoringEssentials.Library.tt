@@ -16,7 +16,7 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>Analyzers and Code Fixes as a library, intended for IDE builders</description>
 		<releaseNotes>Please see <#= releaseNotesLink #> for more information.</releaseNotes>
-		<copyright>Copyright (c) 2014-2015 AlphaSierraPapa</copyright>
+		<copyright><#= copyright #></copyright>
 		<tags>VS 2015 Roslyn Analyzer Refactoring</tags>
 		<dependencies>
 			<dependency id="Microsoft.CodeAnalysis.Analyzers" version="1.1.0" />
