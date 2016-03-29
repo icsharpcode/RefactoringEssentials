@@ -42,7 +42,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return;
 
             var symbol = nodeContext.SemanticModel.GetDeclaredSymbol(node) as IMethodSymbol;
-            if (symbol == null)
+            if ((symbol == null) || (symbol.PartialDefinitionPart == null))
                 return;
             for (int i = 0; i < symbol.PartialDefinitionPart.Parameters.Length && i < node.ParameterList.Parameters.Count; i++) {
                 if (symbol.PartialDefinitionPart.Parameters[i].Name != node.ParameterList.Parameters[i].Identifier.ValueText) {
