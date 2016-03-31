@@ -42,7 +42,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var local = nodeContext.SemanticModel.GetDeclaredSymbol(variable);
                 if (local == null)
                     return;
-                if (!node.Condition.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().Any(n => n.Identifier.ValueText == local.Name))
+                if ((node.Condition == null) || !node.Condition.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().Any(n => n.Identifier.ValueText == local.Name))
                     continue;
                 bool wasModified = false;
                 foreach (var identifier in node.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>()) {
