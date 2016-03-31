@@ -688,7 +688,6 @@
       <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
       <SubType>Designer</SubType>
     </Content>
-    <None Include="app.config" />
     <None Include="buildlibrarypackage.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
