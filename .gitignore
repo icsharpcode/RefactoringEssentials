@@ -21,3 +21,5 @@ _ReSharper*/*
 
 # Switch file for debug versioning of VSIX
 __debug.versioning
+/CodeConverterWebApp/Properties/PublishProfiles/roslyncodeconverter - Web Deploy.pubxml.user
+/CodeConverterWebApp/Properties/PublishProfiles/roslyncodeconverter - Web Deploy.pubxml
