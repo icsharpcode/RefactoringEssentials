@@ -88,7 +88,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         internal static string GetArgumentParameterName(SyntaxNode expression)
         {
             var pExpr = expression as LiteralExpressionSyntax;
-            if (pExpr != null)
+            if (pExpr != null && pExpr.Token.Value != null)
                 return pExpr.Token.Value.ToString();
             return null;
         }
@@ -149,7 +149,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var anonymousMethod = node as AnonymousMethodExpressionSyntax;
                 if (anonymousMethod != null)
                     names.AddRange(anonymousMethod.ParameterList.Parameters.Select(p => p.Identifier.ToString()));
-                
+
                 var indexer = node as IndexerDeclarationSyntax;
                 if (indexer != null)
                 {

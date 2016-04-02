@@ -71,7 +71,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             void AddXmlIssue(int offset, int length, string str)
             {
                 context.ReportDiagnostic(Diagnostic.Create(
-                    descriptor, 
+                    descriptor,
                     Location .Create(context.Tree, new TextSpan(offset, length)),
                     str
                 ));
@@ -90,9 +90,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     return;
 
                 context.ReportDiagnostic(Diagnostic.Create(
-                    descriptor, 
+                    descriptor,
                     Location .Create(context.Tree, storedXmlComment[0].FullSpan),
-                    storedXmlComment.Skip(1).Select(cmt => Location .Create(context.Tree, cmt.FullSpan)), 
+                    storedXmlComment.Skip(1).Select(cmt => Location .Create(context.Tree, cmt.FullSpan)),
                     GettextCatalog.GetString("Xml comment is not placed before a valid language element")
                 ));
                 storedXmlComment.Clear();
@@ -156,7 +156,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
                 if (storedXmlComment.Count == 0)
                     return;
-                
+
                 xml.Clear();
                 xml.Append(firstline);
                 var OffsetTable = new List<int>();
@@ -223,6 +223,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                                 if (evt != null)
                                 {
                                     if (name.Value == "value")
+                                        break;
+                                    AddXmlIssue(CalculateRealStartOffset(OffsetTable, name.ValueSegment.Start + 1), name.ValueSegment.Length - 2, string.Format(GettextCatalog.GetString("Parameter '{0}' not found"), name.Value));
+                                    break;
+                                }
+                                var named = member as INamedTypeSymbol;
+                                if(named != null)
+                                {
+                                    if (named.DelegateInvokeMethod == null)
+                                        break;CS
+                                    if (named.DelegateInvokeMethod.Parameters.Any(p => p.Name == name.Value))
                                         break;
                                     AddXmlIssue(CalculateRealStartOffset(OffsetTable, name.ValueSegment.Start + 1), name.ValueSegment.Length - 2, string.Format(GettextCatalog.GetString("Parameter '{0}' not found"), name.Value));
                                     break;
