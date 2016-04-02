@@ -15,10 +15,11 @@
 
     -->
     <h2>Supported Code Analyzers</h2>
-    <p>115 code analyzers for C#</p>
+    <p>119 code analyzers for C#</p>
     <ul>
       <li>Suggests using the class declaring a static function when calling it (AccessToStaticMemberViaDerivedTypeAnalyzer)</li>
       <li>When initializing explicitly typed local variable or array type, array creation expression can be replaced with array initializer. (ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer)</li>
+      <li>Asynchronous methods should return a Task instead of void (AvoidAsyncVoidAnalyzer)</li>
       <li>Base parameter has 'params' modifier, but missing in overrider (BaseMemberHasParamsAnalyzer)</li>
       <li>Call to base member with implicit default parameters (BaseMethodCallWithDefaultParameterAnalyzer)</li>
       <li>Parameter name differs in base declaration (BaseMethodParameterNameMismatchAnalyzer)</li>
@@ -51,6 +52,7 @@
       <li>Comparing equal expression for equality is usually useless (EqualExpressionComparisonAnalyzer)</li>
       <li>Event unsubscription via anonymous delegate is useless (EventUnsubscriptionViaAnonymousDelegateAnalyzer)</li>
       <li>Convert field to readonly (FieldCanBeMadeReadOnlyAnalyzer)</li>
+      <li>'for' loop control variable is never modified (ForControlVariableIsNeverModifiedAnalyzer)</li>
       <li>Finds issues with format strings (FormatStringProblemAnalyzer)</li>
       <li>'true' is redundant as for statement condition (ForStatementConditionIsTrueAnalyzer)</li>
       <li>Function does not reach its end or a 'return' statement by any of possible execution paths (FunctionNeverReturnsAnalyzer)</li>
@@ -59,6 +61,7 @@
       <li>Local variable is never used (LocalVariableNotUsedAnalyzer)</li>
       <li>Lowercase 'l' is often confused with '1' (LongLiteralEndingLowerLAnalyzer)</li>
       <li>Member hides static member from outer class (MemberHidesStaticFromOuterClassAnalyzer)</li>
+      <li>Method with optional parameter is hidden by overload (MethodOverloadWithOptionalParameterAnalyzer)</li>
       <li>Suggest the usage of the nameof operator (NameOfSuggestionAnalyzer)</li>
       <li>Non public methods are not found by NUnit (NonPublicMethodWithTestAttributeAnalyzer)</li>
       <li>Shows NotImplementedException throws in the quick task bar (NotImplementedExceptionAnalyzer)</li>
@@ -68,6 +71,7 @@
       <li>C# doesn't support optional 'ref' or 'out' parameters (OptionalParameterRefOutAnalyzer)</li>
       <li>Parameter has the same name as a member and hides it (ParameterHidesMemberAnalyzer)</li>
       <li>Parameter is assigned but its value is never used (ParameterOnlyAssignedAnalyzer)</li>
+      <li>Parameter name differs in partial method definition (PartialMethodParameterNameMismatchAnalyzer)</li>
       <li>Class is declared partial but has only one part (PartialTypeWithSinglePartAnalyzer)</li>
       <li>Possible mistaken call to 'object.GetType()' (PossibleMistakenCallToGetTypeAnalyzer)</li>
       <li>Constructor in abstract class should not be public (PublicConstructorInAbstractClassAnalyzer)</li>

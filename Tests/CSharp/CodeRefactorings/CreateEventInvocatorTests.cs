@@ -140,6 +140,26 @@ class TestClass
 }");
         }
 
+        [Test]
+        public void TestUnusualEventHandler()
+        {
+            Test<CreateEventInvocatorCodeRefactoringProvider>(@"using System;
+public delegate void UnusualEventHandler(EventArgs e);
+class TestClass
+{
+    public event UnusualEventHandler $Tested;
+}", @"using System;
+public delegate void UnusualEventHandler(EventArgs e);
+class TestClass
+{
+    protected virtual void OnTested(EventArgs e)
+    {
+        Tested?.Invoke(e);
+    }
+
+    public event UnusualEventHandler Tested;
+}");
+        }
     }
 }
 

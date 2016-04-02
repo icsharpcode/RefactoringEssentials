@@ -114,7 +114,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (expressionStatement == null)
                 return false;
             var assignmentExpression = expressionStatement.Expression as AssignmentExpressionSyntax;
-            if (assignmentExpression == null)
+            if ((assignmentExpression == null) || !assignmentExpression.IsKind(SyntaxKind.SimpleAssignmentExpression))
                 return false;
             assignmentTarget = assignmentExpression.Left as IdentifierNameSyntax;
             assignmentTrailingTriviaList = assignmentExpression.OperatorToken.TrailingTrivia;

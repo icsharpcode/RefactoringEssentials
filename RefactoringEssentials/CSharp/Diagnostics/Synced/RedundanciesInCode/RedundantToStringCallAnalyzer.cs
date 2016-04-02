@@ -191,8 +191,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 }
             }
         }
-
-        static void CheckAutomaticToStringCallers(SyntaxNodeAnalysisContext nodeContext, InvocationExpressionSyntax invocationExpression, ISymbol member)
+		static string [] membersCallingToString = { "M:System.IO.TextWriter.Write", "M:System.Console.Write" };
+        
+		static void CheckAutomaticToStringCallers(SyntaxNodeAnalysisContext nodeContext, InvocationExpressionSyntax invocationExpression, ISymbol member)
         {
             if (member.IsOverride)
             {
@@ -206,12 +207,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var method = member as IMethodSymbol;
             if (method == null)
                 return;
+			var id = method.GetDocumentationCommentId ();
+			if (!membersCallingToString.Any (m => id.StartsWith (m, StringComparison.Ordinal)))
+				return;
 
             var arguments = invocationExpression.ArgumentList.Arguments;
             for (int i = 0; i < arguments.Count; ++i)
             {
-                if (method.Parameters[i].Type.SpecialType == SpecialType.System_String)
-                    CheckExpressionInAutoCallContext(nodeContext, arguments[i].Expression);
+                CheckExpressionInAutoCallContext(nodeContext, arguments[i].Expression);
             }
         }
 

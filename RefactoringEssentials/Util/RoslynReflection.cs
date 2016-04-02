@@ -342,10 +342,10 @@ namespace RefactoringEssentials
         }
 
         // SpeculationAnalyzer
-        public static AbstractSpeculationAnalyzer_8Wrapper AbstractSpeculationAnalyzer_8 => abstractSpeculationAnalyzer_8Wrapper.Value;
-        static readonly Lazy<AbstractSpeculationAnalyzer_8Wrapper> abstractSpeculationAnalyzer_8Wrapper =
-            new Lazy<AbstractSpeculationAnalyzer_8Wrapper>(() => new AbstractSpeculationAnalyzer_8Wrapper());
-        public class AbstractSpeculationAnalyzer_8Wrapper
+        public static AbstractSpeculationAnalyzer_9Wrapper AbstractSpeculationAnalyzer_9 => abstractSpeculationAnalyzer_9Wrapper.Value;
+        static readonly Lazy<AbstractSpeculationAnalyzer_9Wrapper> abstractSpeculationAnalyzer_9Wrapper =
+            new Lazy<AbstractSpeculationAnalyzer_9Wrapper>(() => new AbstractSpeculationAnalyzer_9Wrapper());
+        public class AbstractSpeculationAnalyzer_9Wrapper
         {
             public readonly Type type;
 
@@ -353,7 +353,7 @@ namespace RefactoringEssentials
             public readonly MethodInfo ReplacementChangesSemanticsMethod;
             public readonly MethodInfo SymbolInfosAreCompatibleMethod;
 
-            public AbstractSpeculationAnalyzer_8Wrapper()
+            public AbstractSpeculationAnalyzer_9Wrapper()
             {
                 Type[] abstractSpeculationAnalyzerGenericParams = {
                     Type.GetType ("Microsoft.CodeAnalysis.SyntaxNode" + ReflectionNamespaces.CAAsmName, true),
@@ -363,9 +363,10 @@ namespace RefactoringEssentials
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ForEachStatementSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ThrowStatementSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.SemanticModel" + ReflectionNamespaces.CAAsmName, true)
+                    Type.GetType ("Microsoft.CodeAnalysis.SemanticModel" + ReflectionNamespaces.CAAsmName, true),
+                    Type.GetType ("Microsoft.CodeAnalysis.CSharp.Conversion" + ReflectionNamespaces.CACSharpAsmName, true)
                 };
-                type = Type.GetType("Microsoft.CodeAnalysis.Shared.Utilities.AbstractSpeculationAnalyzer`8" + ReflectionNamespaces.WorkspacesAsmName, true)
+                type = Type.GetType("Microsoft.CodeAnalysis.Shared.Utilities.AbstractSpeculationAnalyzer`9" + ReflectionNamespaces.WorkspacesAsmName, true)
                     .MakeGenericType(abstractSpeculationAnalyzerGenericParams);
 
                 SymbolsForOriginalAndReplacedNodesAreCompatibleMethod = type.GetMethod("SymbolsForOriginalAndReplacedNodesAreCompatible", BindingFlags.Public | BindingFlags.Instance);

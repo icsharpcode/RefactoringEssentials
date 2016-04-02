@@ -18,7 +18,7 @@
 		<releaseNotes>
 			Please see <#= releaseNotesLink #> for more information.
 		</releaseNotes>
-		<copyright>Copyright (c) 2014-2015 AlphaSierraPapa</copyright>
+		<copyright><#= copyright #></copyright>
 		<tags>VS 2015 Roslyn Analyzer Refactoring</tags>
 		<developmentDependency>true</developmentDependency>
 	</metadata>

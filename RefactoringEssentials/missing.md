@@ -33,15 +33,12 @@
 * CS1717AssignmentMadeToSameVariableAnalyzer
 * CS1729TypeHasNoConstructorWithNArgumentsAnalyzer
 * ForCanBeConvertedToForeachAnalyzer
-* ForControlVariableIsNeverModifiedAnalyzer
 * InconsistentNamingAnalyzer
 * LockThisAnalyzer
-* MethodOverloadWithOptionalParameterAnalyzer
 * NegativeRelationalExpressionAnalyzer
 * NonReadonlyReferencedInGetHashCodeAnalyzer
 * OptionalParameterHierarchyMismatchAnalyzer
 * ParameterCanBeDeclaredWithBaseTypeAnalyzer
-* PartialMethodParameterNameMismatchAnalyzer
 * PolymorphicFieldLikeEventInvocationAnalyzer
 * PossibleAssignmentToReadonlyFieldAnalyzer
 * PossibleMultipleEnumerationAnalyzer

@@ -13,6 +13,7 @@ namespace RefactoringEssentials
     {
         readonly string title;
         readonly Func<CancellationToken, Task<Document>> createChangedDocument;
+        readonly Func<CancellationToken, Task<Solution>> createChangedSolution;
 
         public override string Title
         {
@@ -28,9 +29,27 @@ namespace RefactoringEssentials
             this.createChangedDocument = createChangedDocument;
         }
 
+        public DocumentChangeAction(TextSpan textSpan, DiagnosticSeverity severity, string title, Func<CancellationToken, Task<Solution>> createChangedSolution) : base(textSpan, severity)
+        {
+            this.title = title;
+            this.createChangedSolution = createChangedSolution;
+        }
+
         protected override Task<Document> GetChangedDocumentAsync(CancellationToken cancellationToken)
         {
+            if (createChangedDocument == null)
+                return base.GetChangedDocumentAsync(cancellationToken);
+
             var task = createChangedDocument.Invoke(cancellationToken);
+            return task;
+        }
+
+        protected override Task<Solution> GetChangedSolutionAsync(CancellationToken cancellationToken)
+        {
+            if (createChangedSolution == null)
+                return base.GetChangedSolutionAsync(cancellationToken);
+
+            var task = createChangedSolution.Invoke(cancellationToken);
             return task;
         }
 
