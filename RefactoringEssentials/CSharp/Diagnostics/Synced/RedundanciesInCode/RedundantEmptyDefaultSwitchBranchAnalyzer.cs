@@ -48,7 +48,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var defaultCase = node.Sections.FirstOrDefault(s => s.Labels.Any(l => l.IsKind(SyntaxKind.DefaultSwitchLabel)));
             if (defaultCase == null || defaultCase.Statements.Any(s => !s.IsKind(SyntaxKind.BreakStatement)))
                 return false;
-            var switchLabelSyntax = defaultCase.Labels.Last() as DefaultSwitchLabelSyntax;
+            var switchLabelSyntax = defaultCase.Labels.OfType<DefaultSwitchLabelSyntax>().LastOrDefault();
+            if (switchLabelSyntax == null)
+                return false;
             diagnostic = Diagnostic.Create(descriptor, switchLabelSyntax.Keyword.GetLocation());
             return true;
         }

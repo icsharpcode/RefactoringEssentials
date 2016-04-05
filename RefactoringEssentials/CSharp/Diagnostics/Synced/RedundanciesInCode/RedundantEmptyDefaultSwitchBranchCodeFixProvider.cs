@@ -34,7 +34,19 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = root.FindNode(context.Span).Parent as SwitchSectionSyntax;
             if (node == null)
                 return;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+            SyntaxNode newRoot = null;
+            if (node.Labels.Count > 1)
+            {
+                // If there are multiple labels together with 'default' label, remove only 'default' label
+                var defaultLabel = node.Labels.OfType<DefaultSwitchLabelSyntax>().LastOrDefault();
+                if (defaultLabel == null)
+                    return;
+                newRoot = root.RemoveNode(defaultLabel, SyntaxRemoveOptions.KeepNoTrivia);
+            }
+            else
+            {
+                newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+            }
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant 'default' branch", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
