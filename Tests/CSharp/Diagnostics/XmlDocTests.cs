@@ -109,7 +109,7 @@ namespace Foo {
         }
 
         /// <summary>
-        /// Bug 17729 - Incorrect XML-docs warning about 'value' paramref 
+        /// Bug 17729 - Incorrect XML-docs warning about 'value' paramref
         /// </summary>
         [Test]
         public void TestBug17729()
@@ -138,7 +138,7 @@ namespace Foo
 	public interface IGroupingProvider
 	{
 		IGroupingProvider Next { get; set; }
-		
+
         /// <summary>
         /// Occurs when <see cref=""Next""/> changes.
         /// </summary>
@@ -184,8 +184,24 @@ class Foo {
 }
 ");
         }
+
+        [Test]
+        public void TestDelegateDeclaration()
+        {
+            Analyze<XmlDocAnalyzer>(@"
+class Foo {
+    /// <summary>
+    /// </summary>
+    /// <param name=""$message$"">The data.</param>
+    public delegate void FooEventHandler(byte[] data);
+
+    /// <summary>
+    /// </summary>
+    /// <param name=""data"">The data.</param>
+    public delegate void BarEventHandler(byte[] data);
+}
+");
+        }
     }
-
-
 }
 
