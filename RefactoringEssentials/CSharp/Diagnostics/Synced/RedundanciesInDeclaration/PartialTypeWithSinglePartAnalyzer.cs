@@ -25,6 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -42,8 +43,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             var classDeclaration = nodeContext.Node as ClassDeclarationSyntax;
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             if (classDeclaration == null)
                 return false;
             var modifier =

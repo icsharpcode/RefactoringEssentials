@@ -29,6 +29,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 AnalyzeParameterList,
                 new SyntaxKind[] { SyntaxKind.TypeParameterList }
@@ -37,8 +38,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         static void AnalyzeParameterList(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var node = nodeContext.Node as TypeParameterListSyntax;
 
             var member = node.Parent;
