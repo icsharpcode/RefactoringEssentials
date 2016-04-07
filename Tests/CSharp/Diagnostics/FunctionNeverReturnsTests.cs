@@ -558,7 +558,6 @@ class TestClass
     void OnSomeEvent(object o, EventArgs e)
     {
         ((TestClass) o).SomeEvent -= OnSomeEvent;
-        //OnSomeEvent(o, e);
     }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
