@@ -12,10 +12,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             var input = @"
 class TestClass
 {
-	void TestMethod () 
-	{
-		int i = 1;
-	}
+    void TestMethod () 
+    {
+        int i = 1;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -26,10 +26,10 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void TestMethod ()
-	{
-		return;
-	}
+    void TestMethod ()
+    {
+        return;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -40,10 +40,10 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void TestMethod ()
-	{
-		throw new System.NotImplementedException();	
-	}
+    void TestMethod ()
+    {
+        throw new System.NotImplementedException();	
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -54,10 +54,10 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void $TestMethod$ ()
-	{
-		while (true) ;
-	}
+    void $TestMethod$ ()
+    {
+        while (true) ;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -68,11 +68,11 @@ class TestClass
             var input = @"
 class TestClass
 {
-	string TestMethod (int x)
-	{
-		if (x <= 0) return ""Hi"";
-		return ""_"" + TestMethod(x - 1);
-	}
+    string TestMethod (int x)
+    {
+        if (x <= 0) return ""Hi"";
+        return ""_"" + TestMethod(x - 1);
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -83,10 +83,24 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void $TestMethod$ ()
-	{
-		TestMethod ();
-	}
+    void $TestMethod$ ()
+    {
+        TestMethod ();
+    }
+}";
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestRecursiveWithThis()
+        {
+            var input = @"
+class TestClass
+{
+    void $TestMethod$ ()
+    {
+        this.TestMethod();
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -97,13 +111,13 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void TestMethod ()
-	{
-		TestMethod (0);
-	}
-	void TestMethod (int i)
-	{
-	}
+    void TestMethod ()
+    {
+        TestMethod (0);
+    }
+    void TestMethod (int i)
+    {
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -114,10 +128,10 @@ class TestClass
             var input = @"
 class Base
 {
-	public Base parent;
-	public virtual string Result {
-		get { return parent.Result; }
-	}
+    public Base parent;
+    public virtual string Result {
+        get { return parent.Result; }
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -128,16 +142,16 @@ class Base
             var input = @"
 class TestClass
 {
-	int foo;
-	int Foo
-	{
-		get { return foo; }
-		set
-		{
-			if (Foo != value)
-				foo = value;
-		}
-	}
+    int foo;
+    int Foo
+    {
+        get { return foo; }
+        set
+        {
+            if (Foo != value)
+                foo = value;
+        }
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -149,12 +163,12 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int TestProperty
-	{
-		$get$ {
-			while (true) ;
-		}
-	}
+    int TestProperty
+    {
+        $get$ {
+            while (true) ;
+        }
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -165,7 +179,7 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int TestProperty
+    int TestProperty
     {
         $get$ {
             return TestProperty;
@@ -181,12 +195,12 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int TestProperty
-	{
-		$set$ {
-			TestProperty = value;
-		}
-	}
+    int TestProperty
+    {
+        $set$ {
+            TestProperty = value;
+        }
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -197,11 +211,11 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int TestProperty
-	{
-		get;
-		set;
-	}
+    int TestProperty
+    {
+        get;
+        set;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -212,14 +226,14 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int $TestMethod$()
-	{
-		return TestMethod();
-	}
-	int TestMethod(object o)
-	{
-		return TestMethod();
-	}
+    int $TestMethod$()
+    {
+        return TestMethod();
+    }
+    int TestMethod(object o)
+    {
+        return TestMethod();
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -230,11 +244,11 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int TestProperty
-	{
-		$get$ { return TestProperty++; }
-		$set$ { TestProperty++; }
-	}
+    int TestProperty
+    {
+        $get$ { return TestProperty++; }
+        $set$ { TestProperty++; }
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -245,10 +259,10 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void TestMethod()
-	{
-		System.Action action = () $=>$ { while (true) ; };
-	}
+    void TestMethod()
+    {
+        System.Action action = () $=>$ { while (true) ; };
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -259,10 +273,10 @@ class TestClass
             var input = @"
 class TestClass
 {
-	void TestMethod()
-	{
-		System.Action action = $delegate$() { while (true) ; };
-	}
+    void TestMethod()
+    {
+        System.Action action = $delegate$() { while (true) ; };
+    }
 }";
 
             Analyze<FunctionNeverReturnsAnalyzer>(input);
@@ -274,10 +288,10 @@ class TestClass
             var input = @"
 class TestClass
 {
-	System.Collections.Generic.IEnumerable<string> TestMethod ()
-	{
-		yield break;
-	}
+    System.Collections.Generic.IEnumerable<string> TestMethod ()
+    {
+        yield break;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -289,10 +303,10 @@ class TestClass
 class TestClass
 {
 #pragma warning disable " + CSharpDiagnosticIDs.FunctionNeverReturnsAnalyzerID + @"
-	void TestMethod ()
-	{
-		while (true) ;
-	}
+    void TestMethod ()
+    {
+        while (true) ;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -304,20 +318,20 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int state = 0;
+    int state = 0;
 
-	bool Foo()
-	{
-		return state < 10;
-	}
+    bool Foo()
+    {
+        return state < 10;
+    }
 
-	void TestMethod()
-	{
-		if (Foo()) {
-			++state;
-			TestMethod ();	
-		}
-	}
+    void TestMethod()
+    {
+        if (Foo()) {
+            ++state;
+            TestMethod ();	
+        }
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -329,13 +343,13 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int foo;
-	void TestMethod()
-	{
-		switch (foo) {
-			case 0: TestMethod();
-		}
-	}
+    int foo;
+    void TestMethod()
+    {
+        switch (foo) {
+            case 0: TestMethod();
+        }
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -347,14 +361,14 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int foo;
-	void $TestMethod$()
-	{
-		switch (foo) {
-			case 0: case 1: TestMethod();
-			default: TestMethod();
-		}
-	}
+    int foo;
+    void $TestMethod$()
+    {
+        switch (foo) {
+            case 0: case 1: TestMethod();
+            default: TestMethod();
+        }
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -366,14 +380,14 @@ class TestClass
             var input = @"
 class TestClass
 {
-	int foo;
-	int $TestMethod$()
-	{
-		switch (TestMethod()) {
-			case 0: return 0;
-		}
-		return 1;
-	}
+    int foo;
+    int $TestMethod$()
+    {
+        switch (TestMethod()) {
+            case 0: return 0;
+        }
+        return 1;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -407,10 +421,10 @@ using System.Linq;
 using System.Collections.Generic;
 class TestClass
 {
-	IEnumerable<int> $TestMethod$()
-	{
-		return from y in TestMethod() select y;
-	}
+    IEnumerable<int> $TestMethod$()
+    {
+        return from y in TestMethod() select y;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -424,12 +438,12 @@ using System.Linq;
 using System.Collections.Generic;
 class TestClass
 {
-	IEnumerable<int> TestMethod()
-	{
-		return from y in Enumerable.Empty<int>()
-		       from z in TestMethod()
-		       select y;
-	}
+    IEnumerable<int> TestMethod()
+    {
+        return from y in Enumerable.Empty<int>()
+               from z in TestMethod()
+               select y;
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -442,11 +456,11 @@ class TestClass
 using System.Linq;
 class TestClass
 {
-	void TestMethod()
-	{
-		foreach (var x in new int[0])
-			TestMethod();
-	}
+    void TestMethod()
+    {
+        foreach (var x in new int[0])
+            TestMethod();
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -458,11 +472,11 @@ class TestClass
 using System.Linq;
 class TestClass
 {
-	void TestMethod()
-	{
-		for (int i = 0; i < 0; ++i)
-			TestMethod ();
-	}
+    void TestMethod()
+    {
+        for (int i = 0; i < 0; ++i)
+            TestMethod ();
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -475,12 +489,12 @@ class TestClass
 using System.Linq;
 class TestClass
 {
-	TestClass parent;
-	int? value;
-	int TestMethod()
-	{
-		return value ?? parent.TestMethod();
-	}
+    TestClass parent;
+    int? value;
+    int TestMethod()
+    {
+        return value ?? parent.TestMethod();
+    }
 }";
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
@@ -491,11 +505,11 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(@"using System;
 class TestClass
 {
-	int a;
-	int Foo {
-		get { return 1; }
-		set { a = Foo; }
-	}
+    int a;
+    int Foo {
+        get { return 1; }
+        set { a = Foo; }
+    }
 }");
         }
 
@@ -505,10 +519,10 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(@"using System;
 class TestClass
 {
-	bool Foo (int i)
-	{
-		return i < 0 || Foo (i - 1);
-	}
+    bool Foo (int i)
+    {
+        return i < 0 || Foo (i - 1);
+    }
 }");
         }
 
@@ -530,6 +544,58 @@ class A
     }
 }
 ");
+        }
+
+        [Test]
+        public void TestSelfUnregisteringEvent()
+        {
+            var input = @"
+using System;   
+class TestClass
+{
+    public event EventHandler SomeEvent;
+
+    void OnSomeEvent(object o, EventArgs e)
+    {
+        ((TestClass) o).SomeEvent -= OnSomeEvent;
+        //OnSomeEvent(o, e);
+    }
+}";
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestConditionalExpression()
+        {
+            var input = @"
+using System;   
+class TestClass
+{
+    TestClass another;
+
+    int Test(bool recursive)
+    {
+        return recursive ? another.Test(true) : 0;
+    }
+}";
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestConditionalAccessExpression()
+        {
+            var input = @"
+using System;   
+class TestClass
+{
+    TestClass another;
+
+    void Test()
+    {
+        another?.Test();
+    }
+}";
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
     }
 }

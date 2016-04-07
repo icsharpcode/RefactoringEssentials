@@ -86,7 +86,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             {
                 base.VisitAnonymousMethodExpression(node);
                 VisitBody("Delegate", node.DelegateKeyword, node.Body as StatementSyntax, null);
-                
+
             }
 
             public override void VisitSimpleLambdaExpression(Microsoft.CodeAnalysis.CSharp.Syntax.SimpleLambdaExpressionSyntax node)
@@ -115,23 +115,27 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     return;
                 var recursiveDetector = new RecursiveDetector(semanticModel, symbol, accessorKind);
                 var reachability = ReachabilityAnalysis.Create((StatementSyntax)body, this.semanticModel, recursiveDetector, context.CancellationToken);
-				bool hasReachableReturn = false;
-				foreach (var statement in reachability.ReachableStatements) {
-                    if (statement.IsKind(SyntaxKind.ReturnStatement) || statement.IsKind(SyntaxKind.ThrowStatement) || statement.IsKind(SyntaxKind.YieldBreakStatement)) {
-                        if (!recursiveDetector.Visit(statement)) {
-							hasReachableReturn = true;
-							break;
-						}
-					}
-				}
-				if (!hasReachableReturn && !reachability.IsEndpointReachable(body)) {
+                bool hasReachableReturn = false;
+                foreach (var statement in reachability.ReachableStatements)
+                {
+                    if (statement.IsKind(SyntaxKind.ReturnStatement) || statement.IsKind(SyntaxKind.ThrowStatement) || statement.IsKind(SyntaxKind.YieldBreakStatement))
+                    {
+                        if (!recursiveDetector.Visit(statement))
+                        {
+                            hasReachableReturn = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasReachableReturn && !reachability.IsEndpointReachable(body))
+                {
                     context.ReportDiagnostic(Diagnostic.Create(
-                        descriptor, 
+                        descriptor,
                         markerToken.GetLocation(),
                         entityType
                     ));
-				}
-			}
+                }
+            }
 
 
             class RecursiveDetector : ReachabilityAnalysis.RecursiveDetectorVisitor
@@ -198,7 +202,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
                 public override bool VisitIdentifierName(IdentifierNameSyntax node)
                 {
-                    return CheckRecursion(node);
+                    return CheckRecursion((SyntaxNode)(node.Parent as MemberAccessExpressionSyntax) ?? node);
                 }
 
 
@@ -234,6 +238,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         return false;
                     }
 
+                    // Exit on method groups
+                    if (memberResolveResult.IsKind(SymbolKind.Method))
+                    {
+                        var invocation = (node as InvocationExpressionSyntax) ?? (node.Parent as InvocationExpressionSyntax);
+                        if (invocation == null)
+                            return false;
+                    }
+
                     //Now check for virtuals
                     if (memberResolveResult.IsVirtual && !memberResolveResult.ContainingType.IsSealed)
                     {
@@ -251,24 +263,26 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         {
                             return parentAssignment.IsKind(SyntaxKind.SubtractAssignmentExpression);
                         }
-                        if (accessorRole == SyntaxKind.GetAccessorDeclaration) {
+                        if (accessorRole == SyntaxKind.GetAccessorDeclaration)
+                        {
                             return !parentAssignment.IsKind(SyntaxKind.SimpleAssignmentExpression);
-						}
+                        }
 
-						return true;
-					}
+                        return true;
+                    }
 
                     if (node.Parent.IsKind(SyntaxKind.PreIncrementExpression) ||
                         node.Parent.IsKind(SyntaxKind.PreDecrementExpression) ||
                         node.Parent.IsKind(SyntaxKind.PostIncrementExpression) ||
-                        node.Parent.IsKind(SyntaxKind.PostDecrementExpression)) {
+                        node.Parent.IsKind(SyntaxKind.PostDecrementExpression))
+                    {
 
-						return true;
-					}
+                        return true;
+                    }
 
                     return accessorRole == SyntaxKind.UnknownAccessorDeclaration || accessorRole == SyntaxKind.GetAccessorDeclaration;
-				}
+                }
             }
-		}
+        }
     }
 }
