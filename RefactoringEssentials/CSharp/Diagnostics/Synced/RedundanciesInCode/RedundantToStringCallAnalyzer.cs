@@ -40,6 +40,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 AnalyzeBinaryExpression,
                 new SyntaxKind[] { SyntaxKind.AddExpression }
@@ -54,8 +55,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         static void AnalyzeBinaryExpression(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var node = nodeContext.Node as BinaryExpressionSyntax;
             var visitor = new BinaryExpressionVisitor(nodeContext);
             visitor.Visit(node);
@@ -63,8 +62,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         static void AnalyzeInvocationExpression(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var invocationExpression = nodeContext.Node as InvocationExpressionSyntax;
 
             if (invocationExpression.Parent is BinaryExpressionSyntax)

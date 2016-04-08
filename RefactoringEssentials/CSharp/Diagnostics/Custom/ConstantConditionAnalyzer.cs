@@ -23,6 +23,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -66,9 +67,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         void Check(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax condition)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
-
             if (condition == null)
                 return;
 

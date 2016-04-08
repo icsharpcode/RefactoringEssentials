@@ -44,6 +44,9 @@ namespace RefactoringEssentials.Samples.CSharp
 
         public override void Initialize(AnalysisContext context)
         {
+            // Use this configuration to prevent the analyzer from creating warnings on generated code
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+
             // With SyntaxNodeActions we can register a delegate executed for
             // all nodes of given SyntaxKinds. In this delegate we create a Diagnostic
             // object for our analyzer.
@@ -64,11 +67,10 @@ namespace RefactoringEssentials.Samples.CSharp
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
-            // nodeContext is used to retrieve the SyntaxNode for which the delegate has been called.
-            // By the way it usually makes sense to exit, if we are analyzing generated code.
+            // Don't forget to initialize the out parameter
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
+
+            // nodeContext is used to retrieve the SyntaxNode for which the delegate has been called.
             var node = nodeContext.Node as ClassDeclarationSyntax;
 
             string className = node.Identifier.ValueText;
