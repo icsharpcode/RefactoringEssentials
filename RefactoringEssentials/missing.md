@@ -36,7 +36,6 @@
 * InconsistentNamingAnalyzer
 * LockThisAnalyzer
 * NegativeRelationalExpressionAnalyzer
-* NonReadonlyReferencedInGetHashCodeAnalyzer
 * OptionalParameterHierarchyMismatchAnalyzer
 * ParameterCanBeDeclaredWithBaseTypeAnalyzer
 * PolymorphicFieldLikeEventInvocationAnalyzer
