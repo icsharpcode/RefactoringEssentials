@@ -26,6 +26,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterCompilationStartAction(nodeContext => Analyze(nodeContext));
         }
 
@@ -41,8 +42,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     var semanticModel = compilation.GetSemanticModel(context.Tree);
                     var root = await context.Tree.GetRootAsync(context.CancellationToken).ConfigureAwait(false);
                     var model = compilationContext.Compilation.GetSemanticModel(context.Tree);
-                    if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
-                        return;
                     foreach (var type in root.DescendantNodesAndSelf(SkipMembers).OfType<ClassDeclarationSyntax>())
                     {
                         var allMembers = type.GetMembersFromAllParts(model);

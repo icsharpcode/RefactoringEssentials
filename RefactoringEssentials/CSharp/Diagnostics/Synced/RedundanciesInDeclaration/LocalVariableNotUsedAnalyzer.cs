@@ -67,8 +67,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var localDeclarationUnused = nodeContext.Node as LocalDeclarationStatementSyntax;
             var body = localDeclarationUnused?.Parent as BlockSyntax;

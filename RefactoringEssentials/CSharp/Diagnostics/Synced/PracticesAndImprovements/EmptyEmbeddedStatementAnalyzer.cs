@@ -23,6 +23,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -68,8 +69,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnosticForWhile(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var node = nodeContext.Node as WhileStatementSyntax;
 
             if (!Check(node.Statement))
@@ -85,8 +84,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnosticForForeach(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var node = nodeContext.Node as ForEachStatementSyntax;
 
             if (!Check(node.Statement))
@@ -102,8 +99,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnosticForIf(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var node = nodeContext.Node as IfStatementSyntax;
 
             if (Check(node.Statement))
@@ -130,8 +125,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnosticForFor(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var node = nodeContext.Node as ForStatementSyntax;
 
             if (!Check(node.Statement))

@@ -25,6 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 AnalyzeForStatement, 
                 new SyntaxKind[] { SyntaxKind.ForStatement }
@@ -33,8 +34,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         void AnalyzeForStatement(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var node = nodeContext.Node as ForStatementSyntax;
             if (node?.Declaration?.Variables == null)
                 return;
