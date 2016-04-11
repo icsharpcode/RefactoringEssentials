@@ -4,19 +4,18 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantStringToCharArrayCallTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSimpleForeachCase()
         {
-            Test<RedundantStringToCharArrayCallAnalyzer>(@"
+            Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
 using System;
 class FooBar
 {
 	public void Test (string str)
 	{
-		foreach (char c in str.ToCharArray ()) {
+		foreach (char c in str.$ToCharArray ()$) {
 			Console.WriteLine (c);
 		}
 	}
@@ -36,15 +35,32 @@ class FooBar
         }
 
         [Test]
-        public void TestVarForeachCase()
+        public void TestForeachEachWichParametrizedCharToArray()
         {
-            Test<RedundantStringToCharArrayCallAnalyzer>(@"
+            Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
 using System;
 class FooBar
 {
 	public void Test (string str)
 	{
-		foreach (var c in str.ToCharArray ()) {
+		foreach (char c in str.ToCharArray (1, 5)) {
+			Console.WriteLine (c);
+		}
+	}
+}
+");
+        }
+
+        [Test]
+        public void TestVarForeachCase()
+        {
+            Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
+using System;
+class FooBar
+{
+	public void Test (string str)
+	{
+		foreach (var c in str.$ToCharArray ()$) {
 			Console.WriteLine (c);
 		}
 	}
@@ -66,13 +82,13 @@ class FooBar
         [Test]
         public void TestIndexerCase()
         {
-            Test<RedundantStringToCharArrayCallAnalyzer>(@"
+            Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
 using System;
 class FooBar
 {
 	public void Test (string str)
 	{
-		Console.WriteLine ((str.ToCharArray ())[5]);
+		Console.WriteLine (str.$ToCharArray ()$[5]);
 	}
 }
 ", @"
@@ -81,7 +97,7 @@ class FooBar
 {
 	public void Test (string str)
 	{
-		Console.WriteLine (str [5]);
+		Console.WriteLine (str[5]);
 	}
 }
 ");
@@ -98,6 +114,7 @@ class FooBar
 	public void Test (string str)
 	{
 		// ReSharper disable once RedundantStringToCharArrayCall
++#pragma warning disable " + CSharpDiagnosticIDs.RedundantStringToCharArrayCallAnalyzerID + @"
 		foreach (char c in str.ToCharArray ()) {
 			Console.WriteLine (c);
 		}

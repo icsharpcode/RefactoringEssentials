@@ -46,8 +46,21 @@ namespace RefactoringEssentials.CSharp.CodeFixes
                 return;
 
             var message = diagnostic.GetMessage();
+
             var idx2 = message.LastIndexOf('\'');
+            if (idx2 < 0)
+            {
+                idx2 = message.LastIndexOf('"');
+            }
+            if (idx2 < 0)
+                return;
             var idx1 = message.LastIndexOf('\'', idx2 - 1);
+            if (idx1 < 0)
+            {
+                idx1 = message.LastIndexOf('"', idx2 - 1);
+            }
+            if (idx1 < 0)
+                return;
             string castToType = message.Substring(idx1 + 1, idx2 - idx1 - 1);
 
             // Explicit conversion exists
@@ -66,59 +79,87 @@ namespace RefactoringEssentials.CSharp.CodeFixes
             if (expression.Parent.IsKind(SyntaxKind.EqualsValueClause) && expression.Parent.Parent.IsKind(SyntaxKind.VariableDeclarator))
             {
                 idx1 = message.IndexOf('\'');
-                idx2 = message.IndexOf('\'', idx1 + 1);
-                string castFromType = message.Substring(idx1 + 1, idx2 - idx1 - 1);
-
-                var fd = expression.Parent.Parent.Parent.Parent as FieldDeclarationSyntax;
-                if (fd != null)
+                if (idx1 < 0)
                 {
-                    context.RegisterCodeFix(CodeActionFactory.Create(
-                        expression.Span,
-                        diagnostic.Severity,
-                        GettextCatalog.GetString("Change field type"),
-                        token =>
-                        {
-                            var newRoot = root.ReplaceNode(fd.Declaration, fd.Declaration.WithType(SyntaxFactory.ParseTypeName(castFromType).WithLeadingTrivia(fd.Declaration.GetLeadingTrivia()).WithTrailingTrivia(fd.Declaration.GetTrailingTrivia()).WithAdditionalAnnotations(Simplifier.Annotation)));
-                            return Task.FromResult(document.WithSyntaxRoot(newRoot));
-                        }
-                    ), diagnostic);
+                    idx1 = message.IndexOf('"');
                 }
-
-                var lc = expression.Parent.Parent.Parent.Parent as LocalDeclarationStatementSyntax;
-                if (lc != null)
+                if (idx1 >= 0)
                 {
-                    context.RegisterCodeFix(CodeActionFactory.Create(
-                        expression.Span,
-                        diagnostic.Severity,
-                        GettextCatalog.GetString("Change local variable type"),
-                        token =>
+                    idx2 = message.IndexOf('\'', idx1 + 1);
+                    if (idx2 < 0)
+                    {
+                        idx2 = message.IndexOf('"', idx1 + 1);
+                    }
+                    if (idx2 >= 0)
+                    {
+                        string castFromType = message.Substring(idx1 + 1, idx2 - idx1 - 1);
+
+                        var fd = expression.Parent.Parent.Parent.Parent as FieldDeclarationSyntax;
+                        if (fd != null)
                         {
-                            var newRoot = root.ReplaceNode(lc.Declaration, lc.Declaration.WithType(SyntaxFactory.IdentifierName("var").WithLeadingTrivia(lc.Declaration.Type.GetLeadingTrivia()).WithTrailingTrivia(lc.Declaration.Type.GetTrailingTrivia()).WithAdditionalAnnotations(Simplifier.Annotation)));
-                            return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                            context.RegisterCodeFix(CodeActionFactory.Create(
+                                expression.Span,
+                                diagnostic.Severity,
+                                GettextCatalog.GetString("Change field type"),
+                                token =>
+                                {
+                                    var newRoot = root.ReplaceNode(fd.Declaration, fd.Declaration.WithType(SyntaxFactory.ParseTypeName(castFromType).WithLeadingTrivia(fd.Declaration.GetLeadingTrivia()).WithTrailingTrivia(fd.Declaration.GetTrailingTrivia()).WithAdditionalAnnotations(Simplifier.Annotation)));
+                                    return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                                }
+                            ), diagnostic);
                         }
-                    ), diagnostic);
+
+                        var lc = expression.Parent.Parent.Parent.Parent as LocalDeclarationStatementSyntax;
+                        if (lc != null)
+                        {
+                            context.RegisterCodeFix(CodeActionFactory.Create(
+                                expression.Span,
+                                diagnostic.Severity,
+                                GettextCatalog.GetString("Change local variable type"),
+                                token =>
+                                {
+                                    var newRoot = root.ReplaceNode(lc.Declaration, lc.Declaration.WithType(SyntaxFactory.IdentifierName("var").WithLeadingTrivia(lc.Declaration.Type.GetLeadingTrivia()).WithTrailingTrivia(lc.Declaration.Type.GetTrailingTrivia()).WithAdditionalAnnotations(Simplifier.Annotation)));
+                                    return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                                }
+                            ), diagnostic);
+                        }
+                    }
                 }
             }
 
             if (expression.Parent is ReturnStatementSyntax)
             {
                 idx1 = message.IndexOf('\'');
-                idx2 = message.IndexOf('\'', idx1 + 1);
-                string castFromType = message.Substring(idx1 + 1, idx2 - idx1 - 1);
-
-                var method = expression.Parent.AncestorsAndSelf().OfType<MethodDeclarationSyntax>().First();
-                if (method != null)
+                if (idx1 < 0)
                 {
-                    context.RegisterCodeFix(CodeActionFactory.Create(
-                        expression.Span,
-                        diagnostic.Severity,
-                        GettextCatalog.GetString("Change return type of method"),
-                        token =>
+                    idx1 = message.IndexOf('"');
+                }
+                if (idx1 >= 0)
+                {
+                    idx2 = message.IndexOf('\'', idx1 + 1);
+                    if (idx2 < 0)
+                    {
+                        idx2 = message.IndexOf('"', idx1 + 1);
+                    }
+                    if (idx2 >= 0)
+                    {
+                        string castFromType = message.Substring(idx1 + 1, idx2 - idx1 - 1);
+
+                        var method = expression.Parent.AncestorsAndSelf().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+                        if (method != null)
                         {
-                            var newRoot = root.ReplaceNode(method, method.WithReturnType(SyntaxFactory.ParseTypeName(castFromType).WithLeadingTrivia(method.ReturnType.GetLeadingTrivia()).WithTrailingTrivia(method.ReturnType.GetTrailingTrivia()).WithAdditionalAnnotations(Simplifier.Annotation)));
-                            return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                            context.RegisterCodeFix(CodeActionFactory.Create(
+                                expression.Span,
+                                diagnostic.Severity,
+                                GettextCatalog.GetString("Change return type of method"),
+                                token =>
+                                {
+                                    var newRoot = root.ReplaceNode(method, method.WithReturnType(SyntaxFactory.ParseTypeName(castFromType).WithLeadingTrivia(method.ReturnType.GetLeadingTrivia()).WithTrailingTrivia(method.ReturnType.GetTrailingTrivia()).WithAdditionalAnnotations(Simplifier.Annotation)));
+                                    return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                                }
+                            ), diagnostic);
                         }
-                    ), diagnostic);
+                    }
                 }
             }
         }

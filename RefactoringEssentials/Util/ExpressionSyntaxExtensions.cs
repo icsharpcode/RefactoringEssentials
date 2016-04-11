@@ -18,34 +18,23 @@ namespace RefactoringEssentials
 #if NR6
     public
 #endif
-    static partial class ExpressionSyntaxExtensions
+    static class ExpressionSyntaxExtensions
     {
-        static MethodInfo castIfPossibleMethod;
-
-
-        static ExpressionSyntaxExtensions()
-        {
-            var typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.ExpressionSyntaxExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-            castIfPossibleMethod = typeInfo.GetMethod("CastIfPossible", BindingFlags.Static | BindingFlags.Public);
-            tryReduceOrSimplifyExplicitNameMethod = typeInfo.GetMethod("TryReduceOrSimplifyExplicitName", BindingFlags.Static | BindingFlags.Public);
-        }
-
         /// <summary>
         /// Adds to <paramref name="targetType"/> if it does not contain an anonymous
         /// type and binds to the same type at the given <paramref name="position"/>.
         /// </summary>
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static ExpressionSyntax CastIfPossible(
             this ExpressionSyntax expression,
             ITypeSymbol targetType,
             int position,
-            SemanticModel semanticModel,
-            out bool wasCastAdded)
+            SemanticModel semanticModel)
         {
             try
             {
-                var args = new object[] { expression, targetType, position, semanticModel, false };
-                var result = (ExpressionSyntax)castIfPossibleMethod.Invoke(null, args);
-                wasCastAdded = (bool)args[4];
+                var args = new object[] { expression, targetType, position, semanticModel };
+                var result = (ExpressionSyntax)RoslynReflection.ExpressionSyntaxExtensions.CastIfPossibleMethod.Invoke(null, args);
                 return result;
             }
             catch (TargetInvocationException ex)
@@ -585,8 +574,7 @@ namespace RefactoringEssentials
         //			return false;
         //		}
 
-        readonly static MethodInfo tryReduceOrSimplifyExplicitNameMethod;
-
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool TryReduceOrSimplifyExplicitName(
             this ExpressionSyntax expression,
             SemanticModel semanticModel,
@@ -598,7 +586,7 @@ namespace RefactoringEssentials
             try
             {
                 var args = new object[] { expression, semanticModel, default(ExpressionSyntax), default(TextSpan), optionSet, cancellationToken };
-                var result = (bool)tryReduceOrSimplifyExplicitNameMethod.Invoke(null, args);
+                var result = (bool)RoslynReflection.ExpressionSyntaxExtensions.TryReduceOrSimplifyExplicitNameMethod.Invoke(null, args);
                 replacementNode = (ExpressionSyntax)args[2];
                 issueSpan = (TextSpan)args[3];
                 return result;

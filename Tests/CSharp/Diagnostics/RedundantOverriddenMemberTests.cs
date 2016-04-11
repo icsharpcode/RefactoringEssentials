@@ -357,22 +357,49 @@ class Bar
             Analyze<RedundantOverriddenMemberAnalyzer>(@"
 class BaseFoo
 {
-	public virtual int Foo { get; set; }
+    public virtual int Foo { get; set; }
 }
 
 class Bar : BaseFoo
 {
-	int bar;
-	public override int Foo {
-		get {
-			return base.Foo;
-		}
-		set {
-			base.Foo = bar = value;
-		}
-	}
+    int bar;
+    public override int Foo {
+        get {
+            return base.Foo;
+        }
+        set {
+            base.Foo = bar = value;
+        }
+    }
 }");
         }
+
+        /// <summary>
+        /// Bug 21533 - Incorrect warning: "Redundant method override"
+        /// </summary>
+        [Test]
+        public void TestBug21533()
+        {
+            Analyze<RedundantOverriddenMemberAnalyzer>(@"
+public class MyClass
+{
+    public virtual void SomeMethod(bool someArgument = false)
+    {
+    }
+}
+
+public class DerivedClass : MyClass
+{
+    public override void SomeMethod(bool someArgument = false)
+    {
+        base.SomeMethod(true);
+    }
+}
+");
+        }
+
+
+
 
     }
 }

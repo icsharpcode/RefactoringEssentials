@@ -23,6 +23,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             //context.RegisterSyntaxNodeAction(
             //	(nodeContext) => {
             //		Diagnostic diagnostic;
@@ -37,8 +38,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             //var node = nodeContext.Node as ;
             //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
             //return true;
@@ -52,7 +51,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         //			{
         //			}
 
-        ////			bool IsDefaultValue(Expression arg, ICSharpCode.NRefactory.TypeSystem.IParameter par)
+        ////			bool IsDefaultValue(Expression arg, RefactoringEssentials.TypeSystem.IParameter par)
         ////			{
         ////				var ne = arg as NamedArgumentExpression;
         ////				if (ne != null) {

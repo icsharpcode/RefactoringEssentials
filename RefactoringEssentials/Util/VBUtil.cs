@@ -46,7 +46,7 @@ namespace RefactoringEssentials
                     return SyntaxFactory.BinaryExpression(
                         kind, 
                         InvertCondition(bOp.Left), 
-                        SyntaxFactory.Token(GetBinaryExpressionOperatorTokenKind(kind)), 
+                        SyntaxFactory.Token(GetExpressionOperatorTokenKind(kind)), 
                         InvertCondition(bOp.Right));
                 }
 
@@ -61,7 +61,7 @@ namespace RefactoringEssentials
                     return SyntaxFactory.BinaryExpression(
                         kind, 
                         bOp.Left, 
-                        SyntaxFactory.Token(GetBinaryExpressionOperatorTokenKind(kind)), 
+                        SyntaxFactory.Token(GetExpressionOperatorTokenKind(kind)), 
                         bOp.Right);
                 }
 
@@ -99,7 +99,7 @@ namespace RefactoringEssentials
                 AddParensForUnaryExpressionIfRequired(condition));
         }
 
-        static SyntaxKind GetBinaryExpressionOperatorTokenKind(SyntaxKind op)
+        public static SyntaxKind GetExpressionOperatorTokenKind(SyntaxKind op)
         {
             switch (op)
             {
@@ -123,6 +123,32 @@ namespace RefactoringEssentials
                     return SyntaxKind.AndKeyword;
                 case SyntaxKind.AndAlsoExpression:
                     return SyntaxKind.AndAlsoKeyword;
+                case SyntaxKind.AddExpression:
+                    return SyntaxKind.PlusToken;
+                case SyntaxKind.ConcatenateExpression:
+                    return SyntaxKind.AmpersandToken;
+                case SyntaxKind.SubtractExpression:
+                    return SyntaxKind.MinusToken;
+                case SyntaxKind.MultiplyExpression:
+                    return SyntaxKind.AsteriskToken;
+                case SyntaxKind.DivideExpression:
+                    return SyntaxKind.SlashToken;
+                case SyntaxKind.ModuloExpression:
+                    return SyntaxKind.ModKeyword;
+			    // assignments
+				case SyntaxKind.SimpleAssignmentStatement:
+					return SyntaxKind.EqualsToken;
+                case SyntaxKind.AddAssignmentStatement:
+                    return SyntaxKind.PlusEqualsToken;
+                case SyntaxKind.SubtractAssignmentStatement:
+                    return SyntaxKind.MinusEqualsToken;
+                // unary
+                case SyntaxKind.UnaryPlusExpression:
+                    return SyntaxKind.PlusToken;
+                case SyntaxKind.UnaryMinusExpression:
+                    return SyntaxKind.MinusToken;
+                case SyntaxKind.NotExpression:
+                    return SyntaxKind.NotKeyword;
             }
             throw new ArgumentOutOfRangeException(nameof(op));
         }
@@ -197,6 +223,72 @@ namespace RefactoringEssentials
                     return SyntaxKind.OrElseExpression;
             }
             throw new ArgumentOutOfRangeException(nameof(op));
+        }
+
+        /// <summary>
+        /// Returns true, if the specified operator is a relational operator
+        /// </summary>
+        public static bool IsRelationalOperator(SyntaxKind op)
+        {
+            switch (op)
+            {
+                case SyntaxKind.EqualsExpression:
+                case SyntaxKind.NotEqualsExpression:
+                case SyntaxKind.GreaterThanExpression:
+                case SyntaxKind.GreaterThanOrEqualExpression:
+                case SyntaxKind.LessThanExpression:
+                case SyntaxKind.LessThanOrEqualExpression:
+                case SyntaxKind.OrExpression:
+                case SyntaxKind.OrElseExpression:
+                case SyntaxKind.AndExpression:
+                case SyntaxKind.AndAlsoExpression:
+                    return true;
+            }
+            return false;
+        }
+
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
+        {
+            if (node == null)
+            {
+                return false;
+            }
+
+            var vbKind = node.Kind();
+            return vbKind == kind1 || vbKind == kind2;
+        }
+
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3)
+        {
+            if (node == null)
+            {
+                return false;
+            }
+
+            var vbKind = node.Kind();
+            return vbKind == kind1 || vbKind == kind2 || vbKind == kind3;
+        }
+
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3, SyntaxKind kind4)
+        {
+            if (node == null)
+            {
+                return false;
+            }
+
+            var vbKind = node.Kind();
+            return vbKind == kind1 || vbKind == kind2 || vbKind == kind3 || vbKind == kind4;
+        }
+
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2, SyntaxKind kind3, SyntaxKind kind4, SyntaxKind kind5)
+        {
+            if (node == null)
+            {
+                return false;
+            }
+
+            var vbKind = node.Kind();
+            return vbKind == kind1 || vbKind == kind2 || vbKind == kind3 || vbKind == kind4 || vbKind == kind5;
         }
     }
 }

@@ -24,6 +24,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -38,8 +39,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var node = nodeContext.Node as IfStatementSyntax;
 
             ExpressionSyntax target;
@@ -114,7 +113,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (expressionStatement == null)
                 return false;
             var assignmentExpression = expressionStatement.Expression as AssignmentExpressionSyntax;
-            if (assignmentExpression == null)
+            if ((assignmentExpression == null) || !assignmentExpression.IsKind(SyntaxKind.SimpleAssignmentExpression))
                 return false;
             assignmentTarget = assignmentExpression.Left as IdentifierNameSyntax;
             assignmentTrailingTriviaList = assignmentExpression.OperatorToken.TrailingTrivia;

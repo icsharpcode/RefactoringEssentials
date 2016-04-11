@@ -195,6 +195,26 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     }
 }");
         }
+
+		[Test]
+		public void TestNestedExpressions()
+		{
+			Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Test
+{
+    void TestCase()
+    {
+      string s = null;
+      var q = $s != null ? s : true ? ""a"" : ""b""$;
+    }
+}", @"class Test
+{
+    void TestCase()
+    {
+      string s = null;
+      var q = s ?? (true ? ""a"" : ""b"");
+    }
+}");
+		}
     }
 }
 

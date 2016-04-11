@@ -24,6 +24,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -40,8 +41,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var parameter = nodeContext.Node as ParameterSyntax;
             if (parameter == null)
@@ -55,7 +54,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var method = parameter.Parent.Parent as MethodDeclarationSyntax;
-            if ((method == null) || (method.Body == null))
+            if (method == null || method.Body == null)
                 return false;
 
             var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(method.Body);
@@ -66,8 +65,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 {
                     var expression = statement as ExpressionStatementSyntax;
                     var assignment = expression?.Expression as AssignmentExpressionSyntax;
-                    if (assignment != null && 
-                        (nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol)!= null)
+                    if (assignment == null)
+                        continue;
+                    var symbol = nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol;
+                    if (localParamSymbol.Equals(symbol))
                     {
                         diagnostic = Diagnostic.Create(descriptor, assignment.GetLocation());
                         return true;

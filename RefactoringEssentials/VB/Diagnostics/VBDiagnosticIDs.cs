@@ -152,7 +152,7 @@ namespace RefactoringEssentials.VB.Diagnostics
         public const string UseIsOperatorAnalyzerID = "REVB0148";
         public const string CallToObjectEqualsViaBaseAnalyzerID = "REVB0149";
         public const string RedundantToStringCallForValueTypesAnalyzerID = "REVB0150";
-        public const string RedundantParamsAnalyzerID = "REVB0151";
+//        public const string RedundantParamsAnalyzerID = "REVB0151";
         public const string ConvertIfStatementToNullCoalescingExpressionAnalyzerID = "REVB0152";
         public const string ConvertToConstantAnalyzerID = "REVB0153";
         public const string UnusedParameterAnalyzerID = "REVB0154";
@@ -161,7 +161,7 @@ namespace RefactoringEssentials.VB.Diagnostics
         public const string ThreadStaticAtInstanceFieldAnalyzerID = "REVB0157";
         public const string RedundantUnsafeContextAnalyzerID = "REVB0158";
         public const string RedundantOverriddenMemberAnalyzerID = "REVB0159";
-        public const string RewriteIfReturnToReturnAnalyzerID = "REVB0160";
+//        public const string RewriteIfReturnToReturnAnalyzerID = "REVB0160";
         public const string ConvertToAutoPropertyAnalyzerID = "REVB0161";
         public const string NotResolvedInTextAnalyzer_SwapID = "REVB0162";
         public const string NameOfSuggestionAnalyzerID = "REVB0163";

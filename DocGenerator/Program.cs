@@ -26,15 +26,15 @@ namespace RefactoringEssentials.DocGenerator
                 missingMDWriter.WriteLine("");
 
                 var codeRefactorings = typeof(NotPortedYetAttribute).Assembly.GetTypes()
-                    .Where(t => t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(ExportCodeRefactoringProviderAttribute).FullName))
+                    .Where(t => !t.FullName.StartsWith("RefactoringEssentials.Samples.") && t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(ExportCodeRefactoringProviderAttribute).FullName))
                     .OrderBy(t => t.Name);
 
                 var codeAnalyzers = typeof(NotPortedYetAttribute).Assembly.GetTypes()
-                    .Where(t => t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(DiagnosticAnalyzerAttribute).FullName))
+                    .Where(t => !t.FullName.StartsWith("RefactoringEssentials.Samples.") && t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(DiagnosticAnalyzerAttribute).FullName))
                     .OrderBy(t => t.Name);
 
                 var codeFixes = typeof(NotPortedYetAttribute).Assembly.GetTypes()
-                    .Where(t => t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(ExportCodeFixProviderAttribute).FullName) && CodeFixUnrelatedToNRAnalyzer(t))
+                    .Where(t => !t.FullName.StartsWith("RefactoringEssentials.Samples.") && t.CustomAttributes.Any(a => a.AttributeType.FullName == typeof(ExportCodeFixProviderAttribute).FullName) && CodeFixUnrelatedToNRAnalyzer(t))
                     .OrderBy(t => t.Name);
 
                 // Code Refactorings

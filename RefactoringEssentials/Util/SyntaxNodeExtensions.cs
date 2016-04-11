@@ -712,9 +712,6 @@ namespace RefactoringEssentials
                 Matcher.Sequence(
                     Matcher.OneOrMore(commentLine),
                     s_oneOrMoreBlankLines);
-
-            var typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.SyntaxNodeExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-            containsInterleavedDirectiveMethod = typeInfo.GetMethod("ContainsInterleavedDirective", new[] { typeof(SyntaxNode), typeof(CancellationToken) });
         }
 
         private static Matcher<SyntaxTrivia> Match(SyntaxKind kind, string description)
@@ -872,7 +869,35 @@ namespace RefactoringEssentials
             return node.WithLeadingTrivia(leadingTrivia).WithTrailingTrivia(trailingTrivia);
         }
 
-        public static TNode ConvertToSingleLine<TNode>(this TNode node)
+		public static T WithOrderedTriviaFromSubTree<T>(
+			this T node,
+			SyntaxNode subTree) where T : SyntaxNode
+		{
+			if (!subTree.Contains(node))
+				throw new InvalidOperationException(nameof(node) + " must be a descendant of " + nameof(subTree));
+
+			var location = node.FullSpan;
+			var leadingTrivia = new List<SyntaxTrivia>();
+			var trailingTrivia = new List<SyntaxTrivia>();
+
+			bool wasWSOrEOL = false;
+
+			foreach (var trivia in subTree.DescendantTrivia())
+			{
+				// ignore superfluous eol
+				if (wasWSOrEOL && trivia.IsWhitespaceOrEndOfLine())
+					continue;
+				if (trivia.Span.End <= location.Start)
+					leadingTrivia.Add(trivia);
+				else if (trivia.Span.Start >= location.End)
+					trailingTrivia.Add(trivia);
+				wasWSOrEOL = trivia.IsWhitespaceOrEndOfLine();
+			}
+
+			return node.With(leadingTrivia.Concat(node.GetLeadingTrivia()), node.GetTrailingTrivia().Concat(trailingTrivia)); 
+		}
+
+		public static TNode ConvertToSingleLine<TNode>(this TNode node)
             where TNode : SyntaxNode
         {
             if (node == null)
@@ -933,8 +958,6 @@ namespace RefactoringEssentials
             return node.IsAnyLambda() || node.IsKind(SyntaxKind.AnonymousMethodExpression);
         }
 
-        readonly static MethodInfo containsInterleavedDirectiveMethod;
-
         /// <summary>
         /// Returns true if the passed in node contains an interleaved pp directive.
         /// 
@@ -972,11 +995,12 @@ namespace RefactoringEssentials
         /// constructs (like #if/#endif or #region/#endregion), but the grouping construct isn't
         /// entirely contained within the span of the node.
         /// </summary>
+        [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static bool ContainsInterleavedDirective(
             this SyntaxNode syntaxNode,
             CancellationToken cancellationToken)
         {
-            return (bool)containsInterleavedDirectiveMethod.Invoke(null, new object[] { syntaxNode, cancellationToken });
+            return (bool)RoslynReflection.SyntaxNodeExtensions.ContainsInterleavedDirectiveMethod.Invoke(null, new object[] { syntaxNode, cancellationToken });
         }
 
 
@@ -1636,16 +1660,30 @@ namespace RefactoringEssentials
                 return result;
             }
 
-            var method = node as BaseMethodDeclarationSyntax;
-            if (method != null)
+            var baseMethod = node as BaseMethodDeclarationSyntax;
+            if (baseMethod != null)
             {
-                return SpecializedCollections.SingletonEnumerable<SyntaxNode>(method.Body).WhereNotNull();
+                if (baseMethod.Body != null)
+                    return SpecializedCollections.SingletonEnumerable<SyntaxNode>(baseMethod.Body);
+                var method = baseMethod as MethodDeclarationSyntax;
+                if ((method != null) && (method.ExpressionBody != null))
+                {
+                    return SpecializedCollections.SingletonEnumerable<SyntaxNode>(method.ExpressionBody);
+                }
             }
 
-            var property = node as BasePropertyDeclarationSyntax;
-            if (property != null)
+            var baseProperty = node as BasePropertyDeclarationSyntax;
+            if (baseProperty != null)
             {
-                return property.AccessorList.Accessors.Select(a => a.Body).WhereNotNull();
+                if (baseProperty.AccessorList != null)
+                {
+                    return baseProperty.AccessorList.Accessors.Select(a => a.Body).WhereNotNull();
+                }
+                var indexer = baseProperty as IndexerDeclarationSyntax;
+                if ((indexer != null) && (indexer.ExpressionBody != null))
+                {
+                    return SpecializedCollections.SingletonEnumerable<SyntaxNode>(indexer.ExpressionBody);
+                }
             }
 
             var @enum = node as EnumMemberDeclarationSyntax;

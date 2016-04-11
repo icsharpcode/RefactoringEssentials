@@ -1,12 +1,16 @@
+using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
-using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Editing;
+using Microsoft.CodeAnalysis.Formatting;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantIfElseBlockCodeFixProvider : CodeFixProvider
     {
@@ -31,11 +35,28 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant 'else'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var node = root.FindToken(context.Span.Start).Parent as ElseClauseSyntax;
+            if (node == null)
+                return;
+
+            context.RegisterCodeFix(CodeAction.Create("Remove redundant 'else'", token =>
+            {
+                var replacementNodes = new List<SyntaxNode>();
+                replacementNodes.Add(((IfStatementSyntax)node.Parent).WithElse(null).WithAdditionalAnnotations(Formatter.Annotation));
+
+                if (node.Statement is BlockSyntax)
+                {
+                    var bs = (BlockSyntax)node.Statement;
+                    replacementNodes.AddRange(bs.Statements.Select(s => s.WithAdditionalAnnotations(Formatter.Annotation)));
+                }
+                else
+                {
+                    replacementNodes.Add(node.Statement.WithAdditionalAnnotations(Formatter.Annotation));
+                }
+
+                var newRoot = root.ReplaceNode(node.Parent, replacementNodes);
+                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+            }, string.Empty), diagnostic);
         }
     }
 }

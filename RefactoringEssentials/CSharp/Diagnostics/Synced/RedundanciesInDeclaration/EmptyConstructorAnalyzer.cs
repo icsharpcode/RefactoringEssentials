@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("An empty public constructor without paramaters is redundant."),
             GettextCatalog.GetString("Empty constructor is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EmptyConstructorAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
@@ -25,6 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 nodeContext =>
                 {
@@ -42,8 +43,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             var constructorDeclaration = nodeContext.Node as ConstructorDeclarationSyntax;
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             if (!IsEmpty(constructorDeclaration) || !constructorDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
                 return false;

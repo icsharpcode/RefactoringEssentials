@@ -4,13 +4,12 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class MethodOverloadWithOptionalParameterTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestSingleMethod()
         {
-            TestIssue<MethodOverloadWithOptionalParameterAnalyzer>(@"
+            Analyze<MethodOverloadWithOptionalParameterAnalyzer>(@"
 using System;
 
 public class FooBar
@@ -20,7 +19,7 @@ public class FooBar
 		Console.WriteLine(message);
 	}
 
-	private void Print(string message, string messageDelimiter = ""==="")
+	private void Print(string message, $string messageDelimiter = ""===""$)
 	{
 		Console.WriteLine(message + messageDelimiter);
 	}
@@ -31,7 +30,7 @@ public class FooBar
         [Test]
         public void TestTwoParameters()
         {
-            TestIssue<MethodOverloadWithOptionalParameterAnalyzer>(@"
+            Analyze<MethodOverloadWithOptionalParameterAnalyzer>(@"
 using System;
 
 public class FooBar
@@ -46,17 +45,17 @@ public class FooBar
         Console.WriteLine(message);
     }
 
-    private void Print(string message, string messageDelimiter = ""==="", string secondmessage = ""==="")
+    private void Print(string message, $string messageDelimiter = ""===""$, $string secondmessage = ""===""$)
 	{
 		Console.WriteLine(message + messageDelimiter);
 	}
-}", 2);
+}");
         }
 
         [Test]
         public void TestIndexer()
         {
-            TestIssue<MethodOverloadWithOptionalParameterAnalyzer>(@"
+            Analyze<MethodOverloadWithOptionalParameterAnalyzer>(@"
 using System;
 
 public class FooBar
@@ -66,7 +65,7 @@ public class FooBar
 		get { return message; }
 	}
 
-	private string this[string message, string messageDelimiter = ""===""]
+	private string this[string message, $string messageDelimiter = ""===""$]
 	{
 		get { return message + messageDelimiter; }
 	}
@@ -88,7 +87,7 @@ public class FooBar
 		Console.WriteLine(message);
 	}
 
-	// ReSharper disable once MethodOverloadWithOptionalParameter
+#pragma warning disable " + CSharpDiagnosticIDs.MethodOverloadWithOptionalParameterAnalyzerID + @"
 	private void Print(string message, string messageDelimiter = ""==="")
 	{
 		Console.WriteLine(message + messageDelimiter);
@@ -105,10 +104,10 @@ class TestClass
 {
 	void TestMethod (int a)
 	{ }
-	void TestMethod (int a, int b = 1)
+	void TestMethod (int a, $int b = 1$)
 	{ }
 }";
-            Test<MethodOverloadWithOptionalParameterAnalyzer>(input, 1);
+            Analyze<MethodOverloadWithOptionalParameterAnalyzer>(input);
         }
 
         [Test]
@@ -119,10 +118,10 @@ class TestClass
 {
 	void TestMethod (int a, int b)
 	{ }
-	void TestMethod (int a, int b = 1, int c = 1)
+	void TestMethod (int a, int b = 1, $int c = 1$)
 	{ }
 }";
-            Test<MethodOverloadWithOptionalParameterAnalyzer>(input, 1);
+            Analyze<MethodOverloadWithOptionalParameterAnalyzer>(input);
         }
 
         [Test]
@@ -134,7 +133,7 @@ class TestClass
 	void TestMethod (int a, int b = 1, int c = 1)
 	{ }
 }";
-            Test<MethodOverloadWithOptionalParameterAnalyzer>(input, 0);
+            Analyze<MethodOverloadWithOptionalParameterAnalyzer>(input);
         }
 
         [Test]
@@ -146,7 +145,7 @@ class TestClass
 	void TestMethod (object obj) { }
 	void TestMethod<T> (object obj, int arg = 0) { }
 }";
-            Test<MethodOverloadWithOptionalParameterAnalyzer>(input, 0);
+            Analyze<MethodOverloadWithOptionalParameterAnalyzer>(input);
         }
 
     }

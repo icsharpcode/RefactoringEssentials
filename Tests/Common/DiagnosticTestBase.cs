@@ -7,10 +7,10 @@ using Microsoft.CodeAnalysis;
 using System.Threading;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.Host.Mef;
 using System.Text;
 using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.CodeActions;
+using RefactoringEssentials.Tests.Common;
 
 namespace RefactoringEssentials.Tests
 {
@@ -212,7 +212,11 @@ namespace RefactoringEssentials.Tests
             for (int i = 0; i < input.Length; i++)
             {
                 char ch = input[i];
-                if (ch == '$')
+                if (ch == '$' && ((i > 0) && (input[i - 1] == '$')))
+                {
+                    // Ignore 2nd "$" in "$$"
+                }
+                else if (ch == '$' && (i + 1 >= input.Length || input[i + 1] != '$'))
                 {
                     if (start < 0)
                     {
@@ -237,6 +241,9 @@ namespace RefactoringEssentials.Tests
             var compilationWithAnalyzers = compilation.WithAnalyzers(System.Collections.Immutable.ImmutableArray<DiagnosticAnalyzer>.Empty.Add(new T()));
             var result = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
             diagnostics.AddRange(result);
+
+            diagnostics.Sort((d1, d2) => d1.Location.SourceSpan.Start.CompareTo(d2.Location.SourceSpan.Start));
+            expectedDiagnosics.Sort((d1, d2) => d1.Start.CompareTo(d2.Start));
 
             if (expectedDiagnosics.Count != diagnostics.Count)
             {
@@ -292,8 +299,8 @@ namespace RefactoringEssentials.Tests
             }
 
             var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
-            output = CodeFixTestBase.HomogenizeEol(output);
-            txt = CodeFixTestBase.HomogenizeEol(txt);
+            output = Utils.HomogenizeEol(output);
+            txt =  Utils.HomogenizeEol(txt);
             if (output != txt)
             {
                 Console.WriteLine("expected:");
@@ -408,8 +415,8 @@ namespace RefactoringEssentials.Tests
             }
 
             var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
-            txt = CodeFixTestBase.HomogenizeEol(txt);
-            output = CodeFixTestBase.HomogenizeEol(output);
+            txt = Utils.HomogenizeEol(txt);
+            output = Utils.HomogenizeEol(output);
             if (output != txt)
             {
                 Console.WriteLine("expected:");

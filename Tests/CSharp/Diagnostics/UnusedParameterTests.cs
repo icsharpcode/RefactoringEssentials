@@ -4,7 +4,6 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class UnusedParameterTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -12,11 +11,11 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             var input = @"
 class TestClass {
-	void TestMethod (int i)
+	void TestMethod (int $i$)
 	{
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 1);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -24,12 +23,12 @@ class TestClass {
         {
             var input = @"
 class TestClass {
-	void TestMethod (int i)
+	void TestMethod (int $i$)
 	{
 		TestMethod(0);
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 1);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -44,7 +43,7 @@ class TestClass : ITestClass {
 	{
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -59,7 +58,7 @@ class TestClass : TestBase {
 	{
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -72,7 +71,7 @@ class TestClass {
 		i = 1;
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -86,7 +85,7 @@ class TestClass {
 		};
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -96,11 +95,11 @@ class TestClass {
 class TestClass {
 	void TestMethod ()
 	{
-		System.Action<int> a = delegate (int i) {
+		System.Action<int> a = delegate (int $i$) {
 		};
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
 
@@ -116,7 +115,7 @@ class TestClass {
 	}
 	void FooBar (object sender, EventArgs e) {}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -124,9 +123,9 @@ class TestClass {
         {
             var input = @"using System;
 class TestClass {
-	void FooBar (object sender, EventArgs e) {}
+	void FooBar (object $sender$, EventArgs $e$) {}
 }";
-            Test<UnusedParameterAnalyzer>(input, 2);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -139,7 +138,7 @@ class TestClass {
 partial class TestClass {
 	void FooBar (object sender, EventArgs e) {}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -147,11 +146,11 @@ partial class TestClass {
         {
             var input = @"
 class TestClass {
-	public TestClass(int i)
+	public TestClass(int $i$)
 	{
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 1);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -163,7 +162,7 @@ class TestClass {
 	{
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -175,7 +174,7 @@ class TestClass {
 	{
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -187,7 +186,7 @@ partial class TestClass {
 	{
 	}
 }";
-            Test<UnusedParameterAnalyzer>(input, 0);
+            Analyze<UnusedParameterAnalyzer>(input);
         }
 
         [Test]
@@ -211,6 +210,12 @@ class TestClass : ISerializable {
             // https://bugzilla.xamarin.com/show_bug.cgi?id=29572
             var input = @"using System;
 using System.Runtime.Serialization;
+using Foundation;
+
+namespace Foundation {
+    public class ExportAttribute : Attribute {}
+}
+
 class TestClass : ISerializable {
 	
 	[Export (""run:"")]
@@ -218,6 +223,48 @@ class TestClass : ISerializable {
 	{
 	    // something
 	}
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
+
+        [Test]
+        [Ignore("Support for indexers disabled")]
+        public void TestUnusedParameterInExpressionBodiedIndexer()
+        {
+            var input = @"
+class TestClass {
+	public string this[int $i$] => "";
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
+
+        [Test]
+        [Ignore("Support for indexers disabled")]
+        public void TestUsedParameterInExpressionBodiedIndexer()
+        {
+            var input = @"
+class TestClass {
+	public string this[int i] => i.ToString();
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestUnusedParameterInExpressionBodiedMethod()
+        {
+            var input = @"
+class TestClass {
+	public string TestMethod(int $i$) => "";
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestUsedParameterInExpressionBodiedMethod()
+        {
+            var input = @"
+class TestClass {
+	public string TestMethod(int i) => i.ToString();
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }

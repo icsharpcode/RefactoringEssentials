@@ -1,10 +1,12 @@
+using System.Collections.Immutable;
+using System.Linq;
+using System.Threading.Tasks;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
-using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Linq;
+using Microsoft.CodeAnalysis.Rename;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -33,12 +35,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            if (!node.IsKind(SyntaxKind.Parameter))
+            var parameter = root.FindNode(context.Span);
+            if (!parameter.IsKind(SyntaxKind.Parameter))
                 return;
-            var renamedParameter = ((ParameterSyntax)node).WithIdentifier(SyntaxFactory.Identifier(diagnostic.Descriptor.CustomTags.First()));
-            var newRoot = root.ReplaceNode((SyntaxNode)node, renamedParameter);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, string.Format("Rename to '{0}'", diagnostic.Descriptor.CustomTags.First()), document.WithSyntaxRoot(newRoot)), diagnostic);
+            var newName = diagnostic.Descriptor.CustomTags.First();
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            var parameterSymbol = semanticModel.GetDeclaredSymbol(parameter, cancellationToken);
+            var solution = document.Project.Solution;
+
+            if (parameterSymbol == null || solution == null)
+                return;
+            context.RegisterCodeFix(CodeAction.Create($"Rename to '{newName}'", ct => Renamer.RenameSymbolAsync(solution, parameterSymbol, newName, solution.Workspace.Options, ct), CSharpDiagnosticIDs.BaseMethodParameterNameMismatchAnalyzerID), diagnostic);
         }
     }
 }

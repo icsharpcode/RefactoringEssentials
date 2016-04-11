@@ -74,6 +74,28 @@ class C
         }
 
         [Test]
+        public void HandlesBasicCaseWithFullNamespace()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"
+namespace TestNamespace
+{
+    class A { }
+    static class B
+    {
+        public static bool Ext (this A a, int i);
+    }
+}
+class C
+{
+	void F()
+	{
+		TestNamespace.A a = new TestNamespace.A();
+		TestNamespace.B.Ext(a, 1);
+	}
+}");
+        }
+
+        [Test]
         public void HandlesReturnValueUsage()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -180,6 +202,51 @@ class C
         }
 
         [Test]
+        public void IgnoresTypeMismatchImplicitConversion()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"
+using System;
+
+static class Foo
+{
+    public static decimal? Abs(this decimal? value)
+    {
+        return value != null ? Math.Abs(value.Value) : (decimal?) null;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Console.WriteLine(Foo.Abs(1.0m));
+    }
+}");
+
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"
+using System;
+
+struct ImplicitDecimal
+{
+    public static implicit operator decimal(ImplicitDecimal x) => 0;
+}
+
+static class Bar
+{
+    public static decimal Abs(this decimal value) => Math.Abs(value);
+}
+
+class Program
+{
+    static void Main()
+    {
+        var x = new ImplicitDecimal();
+        Console.WriteLine(Bar.Abs(x));
+    }
+}");
+        }
+
+        [Test]
         public void HandlesDelegateExtensionMethodOnVariable()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -216,6 +283,38 @@ class C
         }
 
         [Test]
+        public void AddParenthesesIfNecessary()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
+
+static class Foo
+{
+    public static decimal Abs(this decimal value) => Math.Abs(value);
+}
+
+class Program
+{
+    static void Main()
+    {
+        Foo.$Abs$(-1.0m); // Apply code fix here
+    }
+}", @"using System;
+
+static class Foo
+{
+    public static decimal Abs(this decimal value) => Math.Abs(value);
+}
+
+class Program
+{
+    static void Main()
+    {
+        (-1.0m).Abs(); // Apply code fix here
+    }
+}");
+        }
+
+        [Test]
         public void IgnoresDelegateExtensionMethodOnMethod()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
@@ -235,6 +334,25 @@ class C
     void PrintIntHandler(int i)
     {
         Console.WriteLine(i);
+    }
+}");
+        }
+
+        [Test]
+        public void IgnoresLambdaAsExtensionMethodParameter()
+        {
+            Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
+static class B
+{
+    public static void CallPrintIntHandler(this Action<int> a, int i) { }
+}
+
+class C
+{
+    void F()
+    {
+        int a = 4;
+        B.CallPrintIntHandler(i => Console.WriteLine(i), a);
     }
 }");
         }

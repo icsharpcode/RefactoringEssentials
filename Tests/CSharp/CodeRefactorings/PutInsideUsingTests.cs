@@ -365,6 +365,34 @@ class TestClass
     }
 }");
         }
+
+        /// <summary>
+        /// Bug 39041 - NOP refactoring option for using
+        /// </summary>
+        [Test]
+        public void TestBug39041()
+        {
+            TestWrongContext<PutInsideUsingAction>(@"
+interface ITest : System.IDisposable
+{
+    void Test ();
+}
+class TestClass
+{
+    void TestMethod (int i)
+    {
+        int a;
+        using (ITest obj $= null)
+        {
+            obj.Test();
+            if (i > 0)
+                obj.Test();
+        }
+
+        a = 0;
+    }
+}");
+        }
     }
 
    

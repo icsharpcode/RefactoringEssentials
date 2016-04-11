@@ -61,7 +61,8 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                     ImmutableArray.Create("DEBUG", "TEST")
                 );
             }
-            workspace.Options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, false);
+            workspace.Options = workspace.Options
+                .WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, true);
             workspace.Open(ProjectInfo.Create(
                 projectId,
                 VersionStamp.Create(),
@@ -72,6 +73,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 null,
                 new CSharpCompilationOptions(
                     OutputKind.DynamicallyLinkedLibrary,
+                    false,
                     "",
                     "",
                     "Script",

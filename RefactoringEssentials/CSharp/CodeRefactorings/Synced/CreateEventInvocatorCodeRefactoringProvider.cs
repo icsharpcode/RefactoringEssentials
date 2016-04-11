@@ -4,6 +4,8 @@ using Microsoft.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
@@ -72,7 +74,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             return CreateEventInvocator(declaringTypeName, isSealed, isStatic, eventName, invokeMethod, useExplictType);
         }
 
-        static MethodDeclarationSyntax CreateMethodStub(bool isSealed, bool isStatic, string eventName, IMethodSymbol invokeMethod)
+        static MethodDeclarationSyntax CreateMethodStub(bool isSealed, bool isStatic, string eventName, IMethodSymbol invokeMethod, int parameterIndex)
         {
             var node = SyntaxFactory.MethodDeclaration(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.VoidKeyword)), SyntaxFactory.Identifier(GetEventMethodName(eventName)));
             if (isStatic)
@@ -88,7 +90,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 node = node.WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword), SyntaxFactory.Token(SyntaxKind.VirtualKeyword)));
             }
             node = node.WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList<ParameterSyntax>(new[] {
-                SyntaxFactory.Parameter (SyntaxFactory.Identifier (invokeMethod.Parameters [1].Name)).WithType (invokeMethod.Parameters [1].Type.GenerateTypeSyntax ())
+                SyntaxFactory.Parameter (SyntaxFactory.Identifier (invokeMethod.Parameters [parameterIndex].Name)).WithType (invokeMethod.Parameters [parameterIndex].Type.GenerateTypeSyntax ())
             })));
             return node;
         }
@@ -104,14 +106,20 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.ThisExpression(), SyntaxFactory.IdentifierName(eventName));
         }
 
-        static ArgumentSyntax GetInvokeArgument(bool isStatic)
+        static IEnumerable<ArgumentSyntax> GetInvokeArguments(bool isStatic, ImmutableArray<IParameterSymbol> parameters, int parameterIndex)
         {
-            return SyntaxFactory.Argument(isStatic ? (ExpressionSyntax)SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression) : SyntaxFactory.ThisExpression());
+            if (parameters.Length > 1)
+            {
+                yield return SyntaxFactory.Argument(isStatic ? (ExpressionSyntax)SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression) : SyntaxFactory.ThisExpression());
+            }
+
+            yield return SyntaxFactory.Argument(SyntaxFactory.IdentifierName(parameters[parameterIndex].Name));
         }
 
         static MethodDeclarationSyntax CreateEventInvocator(string declaringTypeName, bool isSealed, bool isStatic, string eventName, IMethodSymbol invokeMethod, bool useExplictType)
         {
-            var result = CreateMethodStub(isSealed, isStatic, eventName, invokeMethod);
+            int parameterIndex = (invokeMethod.Parameters.Length) > 1 ? 1 : 0;
+            var result = CreateMethodStub(isSealed, isStatic, eventName, invokeMethod, parameterIndex);
             var targetExpr = GetTargetExpression(declaringTypeName, isStatic, eventName);
             result = result.WithBody(SyntaxFactory.Block(
                 SyntaxFactory.ExpressionStatement(
@@ -121,10 +129,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                             SyntaxFactory.MemberBindingExpression(SyntaxFactory.IdentifierName("Invoke"))
                         ),
                         SyntaxFactory.ArgumentList(
-                            SyntaxFactory.SeparatedList<ArgumentSyntax>(new[] {
-                                GetInvokeArgument (isStatic),
-                                SyntaxFactory.Argument (SyntaxFactory.IdentifierName (invokeMethod.Parameters [1].Name))
-                            })
+                            SyntaxFactory.SeparatedList<ArgumentSyntax>(GetInvokeArguments(isStatic, invokeMethod.Parameters, parameterIndex))
                         )
                     )
                 )
@@ -136,8 +141,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         static MethodDeclarationSyntax CreateOldEventInvocator(string declaringTypeName, bool isSealed, bool isStatic, string eventName, IMethodSymbol invokeMethod, bool useExplictType)
         {
+            int parameterIndex = (invokeMethod.Parameters.Length) > 1 ? 1 : 0;
             //	var invokeMethod = member.GetReturnType ().GetDelegateInvokeMethod ();
-            var result = CreateMethodStub(isSealed, isStatic, eventName, invokeMethod);
+            var result = CreateMethodStub(isSealed, isStatic, eventName, invokeMethod, parameterIndex);
             const string handlerName = "handler";
             var targetExpr = GetTargetExpression(declaringTypeName, isStatic, eventName);
             result = result.WithBody(SyntaxFactory.Block(
@@ -163,12 +169,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         SyntaxFactory.InvocationExpression(
                             SyntaxFactory.IdentifierName(handlerName),
                             SyntaxFactory.ArgumentList(
-                                SyntaxFactory.SeparatedList<ArgumentSyntax>(new[] {
-                                    GetInvokeArgument (isStatic),
-                                    SyntaxFactory.Argument (SyntaxFactory.IdentifierName (invokeMethod.Parameters [1].Name))
-                                })
+                                SyntaxFactory.SeparatedList<ArgumentSyntax>(GetInvokeArguments(isStatic, invokeMethod.Parameters, parameterIndex))
                             )
-                    )
+                        )
                     )
                 )
             ));
@@ -177,7 +180,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         static string GetEventMethodName(string eventName)
         {
-            return "On" + char.ToUpper(eventName[0]) + eventName.Substring(1);
+            return NameProposalService.GetNameProposal("On" + char.ToUpper(eventName[0]) + eventName.Substring(1), SyntaxKind.MethodDeclaration);
         }
     }
 }

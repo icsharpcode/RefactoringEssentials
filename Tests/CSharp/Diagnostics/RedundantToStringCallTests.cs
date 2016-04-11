@@ -4,28 +4,26 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantToStringCallTests : CSharpDiagnosticTestBase
     {
-
         [Test]
         public void ConcatenationOperator()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = """" + i.ToString() + """" + i.ToString();
+		string s = """" + i$.ToString()$ + """" + i$.ToString()$;
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = """" + i + """" + i;
+		string s = """" + i + """" + i.ToString();
 	}
-}");
+}", 0);
         }
 
         [Test]
@@ -36,7 +34,7 @@ class Foo
 {
 	void Bar (int i)
 	{
-		string s = """" + i.ToString() + """" + i.ToString();
+		string s = """" + i$.ToString()$ + """" + i$.ToString()$;
 	}
 }");
         }
@@ -71,15 +69,15 @@ class Foo
         [Test]
         public void StringTarget()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (string str)
 	{
-		string s = str.ToString();
-		string inOperator = """" + str.ToString();
+		string s = str$.ToString()$;
+		string inOperator = """" + str$.ToString()$;
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (string str)
@@ -93,19 +91,19 @@ class Foo
         [Test]
         public void FormatStringTests()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = string.Format(""{0}"", i.ToString());
+		string s = string.Format(""{0}"", i$.ToString()$);
 	}
 }", @"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = string.Format (""{0}"", i);
+		string s = string.Format(""{0}"", i);
 	}
 }");
         }
@@ -113,13 +111,13 @@ class Foo
         [Test]
         public void HandlesNonLiteralFormatParameter()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
 	{
 		string format = ""{0}"";
-		string s = string.Format(format, i.ToString());
+		string s = string.Format(format, i$.ToString()$);
 	}
 }", @"
 class Foo
@@ -127,20 +125,21 @@ class Foo
 	void Bar (object i)
 	{
 		string format = ""{0}"";
-		string s = string.Format (format, i);
+		string s = string.Format(format, i);
 	}
 }");
         }
 
+        [Ignore("Not supported")]
         [Test]
         public void FormatStringWithNonObjectParameterTests()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = FakeFormat(""{0} {1}"", i.ToString(), i.ToString());
+		string s = FakeFormat(""{0} {1}"", i.ToString(), i$.ToString()$);
 	}
 
 	void FakeFormat(string format, string arg0, object arg1)
@@ -154,7 +153,7 @@ class Foo
 {
 	void Bar (object i)
 	{
-		string s = FakeFormat (""{0} {1}"", i.ToString (), i);
+		string s = FakeFormat(""{0} {1}"", i.ToString (), i);
 	}
 
 	void FakeFormat(string format, string arg0, object arg1)
@@ -166,26 +165,27 @@ class Foo
 }");
         }
 
+        [Ignore("Not supported")]
         [Test]
         public void FormatMethodWithObjectParamsArray()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = FakeFormat(""{0} {1}"", i.ToString(), i.ToString());
+		string s = FakeFormat(""{0} {1}"", i$.ToString()$, i$.ToString()$);
 	}
 
 	void FakeFormat(string format, params object[] args)
 	{
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (object i)
 	{
-		string s = FakeFormat (""{0} {1}"", i, i);
+		string s = FakeFormat(""{0} {1}"", i, i);
 	}
 
 	void FakeFormat(string format, params object[] args)
@@ -194,26 +194,26 @@ class Foo
 }");
         }
 
-        [Test, Ignore("broken")]
+        [Test]
         public void DetectsBlacklistedCalls()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (object i)
 	{
 		var w = new System.IO.StringWriter ();
-		w.Write (i.ToString());
-		w.WriteLine (i.ToString());
+		w.Write(i$.ToString()$);
+		w.WriteLine(i$.ToString()$);
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (object i)
 	{
 		var w = new System.IO.StringWriter ();
-		w.Write (i);
-		w.WriteLine (i);
+		w.Write(i);
+		w.WriteLine(i);
 	}
 }");
         }
@@ -221,21 +221,21 @@ class Foo
         [Test]
         public void ConcatenationOperator2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = """" + i.ToString() + """" + i.ToString();
+		string s = """" + i$.ToString()$ + """" + i$.ToString()$;
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = """" + i + """" + i;
+		string s = """" + i.ToString() + """" + i;
 	}
-}");
+}", 1);
         }
 
         [Test]
@@ -246,7 +246,7 @@ class Foo
 {
 	void Bar (object i)
 	{
-		string s = """" + i.ToString() + """" + i.ToString();
+		string s = """" + i$.ToString()$ + """" + i$.ToString()$;
 	}
 }");
         }
@@ -280,19 +280,19 @@ class Foo
         [Test]
         public void FormatStringTests2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = string.Format(""{0}"", i.ToString());
+		string s = string.Format(""{0}"", i$.ToString()$);
 	}
 }", @"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = string.Format (""{0}"", i);
+		string s = string.Format(""{0}"", i);
 	}
 }");
         }
@@ -300,13 +300,13 @@ class Foo
         [Test]
         public void HandlesNonLiteralFormatParameter2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
 	{
 		string format = ""{0}"";
-		string s = string.Format(format, i.ToString());
+		string s = string.Format(format, i$.ToString()$);
 	}
 }", @"
 class Foo
@@ -314,20 +314,21 @@ class Foo
 	void Bar (int i)
 	{
 		string format = ""{0}"";
-		string s = string.Format (format, i);
+		string s = string.Format(format, i);
 	}
 }");
         }
 
+        [Ignore("Not supported")]
         [Test]
         public void FormatStringWithNonObjectParameterTests2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = FakeFormat(""{0} {1}"", i.ToString(), i.ToString());
+		string s = FakeFormat(""{0} {1}"", i.ToString(), i$.ToString()$);
 	}
 
 	void FakeFormat(string format, string arg0, object arg1)
@@ -341,7 +342,7 @@ class Foo
 {
 	void Bar (int i)
 	{
-		string s = FakeFormat (""{0} {1}"", i.ToString (), i);
+		string s = FakeFormat(""{0} {1}"", i.ToString (), i);
 	}
 
 	void FakeFormat(string format, string arg0, object arg1)
@@ -353,26 +354,27 @@ class Foo
 }");
         }
 
+        [Ignore("Not supported")]
         [Test]
         public void FormatMethodWithObjectParamsArray2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = FakeFormat(""{0} {1}"", i.ToString(), i.ToString());
+		string s = FakeFormat(""{0} {1}"", i$.ToString()$, i$.ToString()$);
 	}
 
 	void FakeFormat(string format, params object[] args)
 	{
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (int i)
 	{
-		string s = FakeFormat (""{0} {1}"", i, i);
+		string s = FakeFormat(""{0} {1}"", i, i);
 	}
 
 	void FakeFormat(string format, params object[] args)
@@ -384,27 +386,58 @@ class Foo
         [Test]
         public void DetectsBlacklistedCalls2()
         {
-            Test<RedundantToStringCallAnalyzer>(@"
+            Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
 	void Bar (int i)
 	{
 		var w = new System.IO.StringWriter ();
-		w.Write (i.ToString());
-		w.WriteLine (i.ToString());
+		w.Write(i$.ToString()$);
+		w.WriteLine(i$.ToString()$);
 	}
-}", 2, @"
+}", @"
 class Foo
 {
 	void Bar (int i)
 	{
 		var w = new System.IO.StringWriter ();
-		w.Write (i);
-		w.WriteLine (i);
+		w.Write(i);
+		w.WriteLine(i);
 	}
+}");
+        }
+
+        /// <summary>
+        /// Bug 39162 - Incorrect "Redundant ToString() call"
+        /// </summary>
+        [Test]
+        public void TestBug39162()
+        {
+            Analyze<RedundantToStringCallAnalyzer>(@"
+class Foo
+{
+    void Bar (object i)
+    {
+        string s = i != null ? i.ToString()  : ""Foo"";
+    }
+}");
+        }
+
+
+        [Test]
+        public void TestNoRedundantParameter()
+        {
+            Analyze<RedundantToStringCallAnalyzer>(@"
+class Foo
+{
+    void Bar (object i)
+    {
+        Foo(i.ToString());
+    }
+
+    void Foo (string s) {}
 }");
         }
 
     }
 }
-

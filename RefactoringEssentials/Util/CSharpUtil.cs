@@ -8,11 +8,11 @@ namespace RefactoringEssentials
 {
     class ReflectionNamespaces
     {
-        public const string WorkspacesAsmName = ", Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CSWorkspacesAsmName = ", Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string VBWorkspacesAsmName = ", Microsoft.CodeAnalysis.VisualBasic.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CAAsmName = ", Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CACSharpAsmName = ", Microsoft.CodeAnalysis.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+        public const string WorkspacesAsmName = ", Microsoft.CodeAnalysis.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+        public const string CSWorkspacesAsmName = ", Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+        public const string VBWorkspacesAsmName = ", Microsoft.CodeAnalysis.VisualBasic.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+        public const string CAAsmName = ", Microsoft.CodeAnalysis, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+        public const string CACSharpAsmName = ", Microsoft.CodeAnalysis.CSharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
     }
 
     static class CSharpUtil
@@ -77,14 +77,14 @@ namespace RefactoringEssentials
                     return SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression);
             }
 
-            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, AddParensForUnaryExpressionIfRequired(condition));
+            return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, AddParensIfRequired(condition, false));
         }
 
         /// <summary>
         /// When negating an expression this is required, otherwise you would end up with
         /// a or b -> !a or b
         /// </summary>
-        public static ExpressionSyntax AddParensForUnaryExpressionIfRequired(ExpressionSyntax expression)
+        public static ExpressionSyntax AddParensIfRequired(ExpressionSyntax expression, bool parenthesesRequiredForUnaryExpressions = true)
         {
             if ((expression is BinaryExpressionSyntax) ||
                 (expression is AssignmentExpressionSyntax) ||
@@ -92,6 +92,13 @@ namespace RefactoringEssentials
                 (expression is ParenthesizedLambdaExpressionSyntax) ||
                 (expression is SimpleLambdaExpressionSyntax) ||
                 (expression is ConditionalExpressionSyntax))
+            {
+                return SyntaxFactory.ParenthesizedExpression(expression);
+            }
+
+            if (parenthesesRequiredForUnaryExpressions &&
+                ((expression is PostfixUnaryExpressionSyntax) ||
+                (expression is PrefixUnaryExpressionSyntax)))
             {
                 return SyntaxFactory.ParenthesizedExpression(expression);
             }

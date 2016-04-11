@@ -26,6 +26,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterCompilationStartAction(nodeContext => Analyze(nodeContext));
         }
 
@@ -41,10 +42,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     var semanticModel = compilation.GetSemanticModel(context.Tree);
                     var root = await context.Tree.GetRootAsync(context.CancellationToken).ConfigureAwait(false);
                     var model = compilationContext.Compilation.GetSemanticModel(context.Tree);
-                    if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
-                        return;
                     foreach (var type in root.DescendantNodesAndSelf(SkipMembers).OfType<ClassDeclarationSyntax>())
                     {
+                        var allMembers = type.GetMembersFromAllParts(model);
+                        if (allMembers == null)
+                            continue;
+
                         var fieldDeclarations = type
                             .ChildNodes()
                             .OfType<FieldDeclarationSyntax>()
@@ -66,9 +69,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                                     continue;
                                 }
                             }
+                            if (field.GetAttributes().Any(ad => ad.AttributeClass.Name == "SerializableAttribute" && ad.AttributeClass.ContainingNamespace.GetFullName() == "System"))
+                                continue;
                             bool wasAltered = false;
                             bool wasUsed = false;
-                            foreach (var member in type.Members)
+                            foreach (var member in allMembers)
                             {
                                 if (member == candidateField.Field)
                                     continue;

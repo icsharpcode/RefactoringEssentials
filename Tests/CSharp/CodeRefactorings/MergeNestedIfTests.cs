@@ -195,5 +195,61 @@ class TestClass
     }
 }");
         }
+
+        [Test]
+        public void TestInnerIfWithComplexCondition()
+        {
+            Test<MergeNestedIfAction>(@"
+class TestClass
+{
+    int TestMethod (int a)
+    {
+        if (a > 0) {
+
+        {
+            $if (a < 5 || a < 10) 
+                return 1;
+        }
+
+        }
+    }
+}", @"
+class TestClass
+{
+    int TestMethod (int a)
+    {
+        if (a > 0 && (a < 5 || a < 10))
+            return 1;
+    }
+}");
+        }
+
+        [Test]
+        public void TestOuterIfWithComplexCondition()
+        {
+            Test<MergeNestedIfAction>(@"
+class TestClass
+{
+    int TestMethod (int a)
+    {
+        if (a > 0 || a < 10) {
+
+        {
+            $if (a < 5) 
+                return 1;
+        }
+
+        }
+    }
+}", @"
+class TestClass
+{
+    int TestMethod (int a)
+    {
+        if ((a > 0 || a < 10) && a < 5)
+            return 1;
+    }
+}");
+        }
     }
 }

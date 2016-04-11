@@ -34,11 +34,20 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
             var node = root.FindToken(span.Start).Parent;
-            if (!(node.Parent is MemberAccessExpressionSyntax))
+            var memberAccessExpr = node.Parent as MemberAccessExpressionSyntax;
+            if (memberAccessExpr == null)
                 return;
             var info = model.GetSymbolInfo(node, cancellationToken);
             if (info.Symbol == null || info.Symbol.Kind != SymbolKind.NamedType || !info.Symbol.IsStatic)
                 return;
+
+            var parentMemberAccessExpr = memberAccessExpr.Parent as MemberAccessExpressionSyntax;
+            if (parentMemberAccessExpr != null)
+            {
+                var memberInfoSymbol = model.GetSymbolInfo(parentMemberAccessExpr).Symbol;
+                if ((memberInfoSymbol == null) || memberInfoSymbol.IsExtensionMethod())
+                    return;
+            }
 
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
@@ -47,33 +56,31 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     GettextCatalog.GetString("Import static class with using"),
                     t2 =>
                     {
-                        return ImportStaticClassWithUsing(document, model, root, node, info, t2);
+                        return Task.FromResult(ImportStaticClassWithUsing(document, model, root, node, info, t2));
                     }
                 )
             );
         }
 
-        async Task<Document> ImportStaticClassWithUsing(Document document, SemanticModel model, SyntaxNode root, SyntaxNode node, SymbolInfo info, CancellationToken cancellationToken)
+        Document ImportStaticClassWithUsing(Document document, SemanticModel model, SyntaxNode root, SyntaxNode node, SymbolInfo info, CancellationToken cancellationToken)
         {
             var cu = root as CompilationUnitSyntax;
-            var staticUsing = SyntaxFactory
-                .UsingDirective(SyntaxFactory.ParseName(info.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)))
-                .WithStaticKeyword(SyntaxFactory.Token(SyntaxKind.StaticKeyword))
-                .WithAdditionalAnnotations(Formatter.Annotation);
-            cu = cu.AddUsingDirective(staticUsing, node, true);
-            var newDoc = document.WithSyntaxRoot(cu);
 
-            var newModel = await newDoc.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            var visitor = new SearchImportReplacementsVisitor(newModel, info, cancellationToken);
-            var newRoot = await newModel.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            visitor.Visit(newRoot);
-            cu = (CompilationUnitSyntax)newRoot.TrackNodes(visitor.ReplaceNodes);
+            var visitor = new SearchImportReplacementsVisitor(model, info, cancellationToken);
+            visitor.Visit(root);
+            cu = (CompilationUnitSyntax)root.TrackNodes(visitor.ReplaceNodes);
 
             foreach (var ma in visitor.ReplaceNodes)
             {
                 var current = cu.GetCurrentNode<MemberAccessExpressionSyntax>(ma);
                 cu = cu.ReplaceNode(current, current.Name.WithAdditionalAnnotations(Formatter.Annotation));
             }
+
+            var staticUsing = SyntaxFactory
+                .UsingDirective(SyntaxFactory.ParseName(info.Symbol.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)))
+                .WithStaticKeyword(SyntaxFactory.Token(SyntaxKind.StaticKeyword))
+                .WithAdditionalAnnotations(Formatter.Annotation);
+            cu = cu.AddUsingDirective(staticUsing, node, true);
 
             return document.WithSyntaxRoot(cu);
         }
@@ -126,7 +133,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 {
                     foreach (var member in node.Members)
                     {
-                        result.Add(GetNameToken(member).ValueText);
+                        var nameTokenText = GetNameToken(member).ValueText;
+                        if (nameTokenText != null)
+                            result.Add(nameTokenText);
                     }
                 }
                 return result;

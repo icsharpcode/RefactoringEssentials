@@ -1,11 +1,15 @@
+using System;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
+using System.Linq.Expressions;
+using System.Collections.Generic;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantStringToCharArrayCallAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -23,71 +27,53 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.InvocationExpression
+            );
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
+            var node = nodeContext.Node as InvocationExpressionSyntax;
+            if (node == null)
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            if (!(node.Parent is ForEachStatementSyntax) && !(node.Parent is ElementAccessExpressionSyntax))
+                return false;
+            if (!VerifyMethodCalled(node, nodeContext))
+                return false;
+
+            var accessExpression = (MemberAccessExpressionSyntax)node.Expression;
+            if (accessExpression == null)
+                return false;
+
+            diagnostic = Diagnostic.Create(descriptor, accessExpression.Name.GetLocation(),
+                (IEnumerable<Location>) new[] { node.ArgumentList.GetLocation() });
+            return true;
         }
 
-        //		class GatherVisitor : GatherVisitorBase<RedundantStringToCharArrayCallAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			void AddProblem(AstNode replaceExpression, InvocationExpression invocationExpression)
-        ////			{
-        ////				var t = invocationExpression.Target as MemberReferenceExpression;
-        ////				AddDiagnosticAnalyzer(new CodeIssue (
-        ////					t.DotToken.StartLocation,
-        ////					t.MemberNameToken.EndLocation,
-        ////					ctx.TranslateString(""),
-        ////					ctx.TranslateString(""),
-        ////					s => s.Replace(replaceExpression, t.Target.Clone())
-        ////				) { IssueMarker = IssueMarker.GrayOut });
-        ////			}
-        ////
-        ////			public override void VisitInvocationExpression(InvocationExpression invocationExpression)
-        ////			{
-        ////				base.VisitInvocationExpression(invocationExpression);
-        ////
-        ////				var t = invocationExpression.Target as MemberReferenceExpression;
-        ////				if (t == null || t.MemberName != "ToCharArray")
-        ////					return;
-        ////				var rr = ctx.Resolve(t.Target);
-        ////				if (!rr.Type.IsKnownType(KnownTypeCode.String))
-        ////					return;
-        ////				if (invocationExpression.Parent is ForeachStatement && invocationExpression.Role == Roles.Expression) {
-        ////					AddProblem(invocationExpression, invocationExpression);
-        ////					return;
-        ////				}
-        ////				var p = invocationExpression.Parent;
-        ////				while (p is ParenthesizedExpression) {
-        ////					p = p.Parent;
-        ////				}
-        ////				var idx = p as IndexerExpression;
-        ////				if (idx != null) {
-        ////					AddProblem(idx.Target, invocationExpression);
-        ////					return;
-        ////				}
-        ////			}
-        //		}
+        static bool VerifyMethodCalled(InvocationExpressionSyntax methodCalled, SyntaxNodeAnalysisContext nodeContext)
+        {
+            if (methodCalled == null)
+                throw new ArgumentNullException();
+            if ((methodCalled.ArgumentList != null) && (methodCalled.ArgumentList.Arguments.Count > 0))
+                return false;
+            var expression = methodCalled.Expression as MemberAccessExpressionSyntax;
+            if (expression == null)
+                return false;
+            var symbol = nodeContext.SemanticModel.GetSymbolInfo(expression).Symbol;
+            if (symbol == null)
+                return false;
+            return symbol.ContainingType.SpecialType == SpecialType.System_String && symbol.Name == "ToCharArray";
+        }
     }
 }

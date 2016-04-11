@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Empty destructor is redundant"),
             GettextCatalog.GetString("Empty destructor is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Info,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.EmptyDestructorAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
@@ -24,6 +24,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 nodeContext =>
                 {
@@ -41,8 +42,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             var destructorDeclaration = nodeContext.Node as DestructorDeclarationSyntax;
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             if (!IsEmpty(destructorDeclaration.Body))
                 return false;

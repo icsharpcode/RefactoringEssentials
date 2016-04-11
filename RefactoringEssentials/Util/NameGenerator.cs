@@ -155,5 +155,21 @@ namespace RefactoringEssentials
 
             return name;
         }
+
+        public static string GenerateSafeCSharpName(string name)
+        {
+            var token = Microsoft.CodeAnalysis.CSharp.SyntaxFactory.ParseToken(name);
+            if (!token.IsKind(Microsoft.CodeAnalysis.CSharp.SyntaxKind.IdentifierToken))
+                return "@" + name;
+            return name;
+        }
+
+        public static string GenerateSafeVBName(string name)
+        {
+            var token = Microsoft.CodeAnalysis.VisualBasic.SyntaxFactory.ParseToken(name);
+            if (!token.IsKind(Microsoft.CodeAnalysis.VisualBasic.SyntaxKind.IdentifierToken))
+                return "[" + name + "]";
+            return name;
+        }
     }
 }

@@ -48,6 +48,39 @@ class TestClass
 }");
         }
 
+        /// <summary>
+        /// Newline character handling for "To interpolated string" #182
+        /// </summary>
+        [Test]
+        public void TestIssue182()
+        {
+            Test<ConvertStringFormatToInterpolatedStringCodeRefactoringProvider>(@"
+class TestClass
+{
+    void Foo ()
+    {
+        var world = ""World"";
+        var str = $string.Format (""Hello\n {0}"", world);
+    }
+}", @"
+class TestClass
+{
+    void Foo ()
+    {
+        var world = ""World"";
+        var str = $""Hello\n {world}"";
+    }
+}");
+        }
+
+        [Ignore("Broken on windows")]
+        [Test]
+        public void TestVerbatimStringFormat()
+        {
+            Test<ConvertStringFormatToInterpolatedStringCodeRefactoringProvider>(
+                "class TestClass\n{\n    void Foo ()\n    {\n        var world = \"World\";\n        var str = $string.Format (@\"Hello \"\" {0}\n!\", world);\n    }\n}", 
+                "class TestClass\n{\n    void Foo ()\n    {\n        var world = \"World\";\n        var str = $\"Hello \\\" {world}\\n!\";\n    }\n}");
+        }
     }
 }
 

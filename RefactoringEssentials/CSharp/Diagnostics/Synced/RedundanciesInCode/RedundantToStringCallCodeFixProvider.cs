@@ -3,6 +3,8 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -14,7 +16,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             get
             {
-                return ImmutableArray.Create(CSharpDiagnosticIDs.RedundantToStringCallAnalyzerID);
+                return ImmutableArray.Create(CSharpDiagnosticIDs.RedundantToStringCallAnalyzerID, CSharpDiagnosticIDs.RedundantToStringCallAnalyzer_ValueTypesID);
             }
         }
 
@@ -31,10 +33,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+            var parent = root.FindToken(context.Span.Start).Parent;
+            var node = parent as MemberAccessExpressionSyntax;
+            if (node == null)
+                return;
+            var newRoot = root.ReplaceNode(node.Parent, node.Expression.WithTrailingTrivia(node.Parent.GetTrailingTrivia()).WithLeadingTrivia(node.Parent.GetLeadingTrivia()));
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant '.ToString()'", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }

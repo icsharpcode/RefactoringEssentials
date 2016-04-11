@@ -436,6 +436,20 @@ public class MyClass
 ");
         }
 
+        [Test]
+        public void TestSimpleVoidLambdaConditional()
+        {
+            Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
+class Foo
+{
+	void Bar (string str)
+	{
+		Action<int, int> action = (foo, bar) => MyMethod (foo, bar);
+	}
+	[System.Diagnostics.Conditional(""DEBUG"")]
+	void MyMethod(int foo, int bar) {}
+}");
+        }
     }
 }
 

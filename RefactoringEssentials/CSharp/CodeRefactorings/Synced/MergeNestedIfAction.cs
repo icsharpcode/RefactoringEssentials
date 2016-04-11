@@ -8,6 +8,7 @@ using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Simplification;
 using Microsoft.CodeAnalysis.Text;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
@@ -41,15 +42,28 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 yield break;
             }
 
-            yield return CodeActionFactory.Create(span, DiagnosticSeverity.Info, "Merged nested 'if'", ct =>
+            yield return CodeActionFactory.Create(span, DiagnosticSeverity.Info, "Merge nested 'if'", ct =>
             {
-                var newCondition = SyntaxFactory.BinaryExpression(SyntaxKind.LogicalAndExpression, outerIf.Condition, innerIf.Condition);
+                var innerCondition = SyntaxFactory.ParenthesizedExpression(innerIf.Condition);
+                var outerCondition = SyntaxFactory.ParenthesizedExpression(outerIf.Condition);
+
+                var newCondition = SyntaxFactory.BinaryExpression(SyntaxKind.LogicalAndExpression, outerCondition, innerCondition);
+
+                if (((ParenthesizedExpressionSyntax)newCondition.Right).CanRemoveParentheses())
+                {
+                    newCondition = newCondition.ReplaceNode(newCondition.Right, innerCondition.Expression);
+                }
+
+                if (((ParenthesizedExpressionSyntax)newCondition.Left).CanRemoveParentheses())
+                {
+                    newCondition = newCondition.ReplaceNode(newCondition.Left, outerCondition.Expression);
+                }
 
                 var newIf = SyntaxFactory.IfStatement(newCondition, innerIf.Statement)
                     .WithAdditionalAnnotations(Formatter.Annotation);
 
                 var newRoot = root.ReplaceNode(outerIf, newIf);
-
+                
                 return Task.FromResult(document.WithSyntaxRoot(newRoot));
             });
         }

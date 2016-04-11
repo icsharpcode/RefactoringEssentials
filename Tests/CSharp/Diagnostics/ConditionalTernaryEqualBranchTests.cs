@@ -58,6 +58,34 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Test]
+        public void TestNotEqualBranchesWithLambdas()
+        {
+            Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
+{
+	void Bar (string str)
+	{
+		List<string> someList;
+		string c = str != null ? someList.FirstOrDefault(s => { return s == s.ToLower(); }) : someList.FirstOrDefault(s => { return s == s.ToUpper(); });
+	}
+}");
+
+        }
+
+        [Test]
+        [Ignore("Won't work with Roslyn < 1.1 due to a bug with equivalence checking of interpolated strings. Activate with Roslyn 1.1.")]
+        public void TestNotEqualBranchesWithInterpolatedStrings()
+        {
+            Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
+{
+	void Bar (string str)
+	{
+		string c = str != null ? $$""default"" : $$""default2"";
+	}
+}");
+
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo

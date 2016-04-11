@@ -25,6 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 nodeContext =>
                 {
@@ -41,14 +42,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var node = nodeContext.Node as SwitchStatementSyntax;
             var defaultCase = node.Sections.FirstOrDefault(s => s.Labels.Any(l => l.IsKind(SyntaxKind.DefaultSwitchLabel)));
             if (defaultCase == null || defaultCase.Statements.Any(s => !s.IsKind(SyntaxKind.BreakStatement)))
                 return false;
-            var switchLabelSyntax = defaultCase.Labels.Last() as DefaultSwitchLabelSyntax;
+            var switchLabelSyntax = defaultCase.Labels.OfType<DefaultSwitchLabelSyntax>().LastOrDefault();
+            if (switchLabelSyntax == null)
+                return false;
             diagnostic = Diagnostic.Create(descriptor, switchLabelSyntax.Keyword.GetLocation());
             return true;
         }

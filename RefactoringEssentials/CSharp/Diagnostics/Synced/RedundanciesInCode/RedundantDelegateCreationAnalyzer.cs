@@ -1,11 +1,12 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class RedundantDelegateCreationAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -23,55 +24,38 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) =>
+                {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic))
+                    {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.AddAssignmentExpression,
+                SyntaxKind.SubtractAssignmentExpression
+            );
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
+
+            var semanticModel = nodeContext.SemanticModel;
+            var addOrSubstractExpression = nodeContext.Node as AssignmentExpressionSyntax;
+            var rightMember = addOrSubstractExpression?.Right as ObjectCreationExpressionSyntax;
+
+            if (rightMember == null || rightMember.ArgumentList.Arguments.Count != 1)
                 return false;
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+
+            var leftTypeInfo = ModelExtensions.GetTypeInfo(semanticModel, addOrSubstractExpression.Left).ConvertedType;
+            if (leftTypeInfo == null || leftTypeInfo.Kind.Equals(SyntaxKind.EventDeclaration))
+                return false;
+
+            diagnostic = Diagnostic.Create(descriptor, addOrSubstractExpression.Right.GetLocation());
+            return true;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantDelegateCreationAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitAssignmentExpression(AssignmentExpression assignmentExpression)
-        ////			{
-        ////				base.VisitAssignmentExpression(assignmentExpression);
-        ////				if (assignmentExpression.Operator != AssignmentOperatorType.Add && assignmentExpression.Operator != AssignmentOperatorType.Subtract)
-        ////					return;
-        ////				var oce = assignmentExpression.Right as ObjectCreateExpression;
-        ////				if (oce == null || oce.Arguments.Count != 1)
-        ////					return;
-        ////				var left = ctx.Resolve(assignmentExpression.Left) as MemberResolveResult;
-        ////				if (left == null || left.Member.SymbolKind != SymbolKind.Event)
-        ////					return;
-        ////				var right = ctx.Resolve(assignmentExpression.Right);
-        ////				if (right.IsError || !Equals(left.Type, right.Type))
-        ////					return;
-        ////				AddDiagnosticAnalyzer(new CodeIssue(oce.StartLocation, oce.Type.EndLocation,
-        ////					ctx.TranslateString(""),
-        ////					ctx.TranslateString(""),
-        ////					s => s.Replace(assignmentExpression.Right, oce.Arguments.First())
-        ////				) { IssueMarker = IssueMarker.GrayOut });
-        ////			}
-        //		}
     }
 }

@@ -23,6 +23,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -43,24 +44,34 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = nodeContext.CancellationToken;
 
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var memberReference = node.Expression as MemberAccessExpressionSyntax;
             if (memberReference == null)
                 return false;
-            var firstArgument = node.ArgumentList.Arguments.FirstOrDefault();
-            if (firstArgument == null || firstArgument.Expression.IsKind(SyntaxKind.NullLiteralExpression))
+            var firstArgument = node.ArgumentList?.Arguments.FirstOrDefault()?.Expression;
+            if (firstArgument == null|| firstArgument.IsKind(SyntaxKind.NullLiteralExpression))
+                return false;
+            if (firstArgument is AnonymousFunctionExpressionSyntax)
                 return false;
             var expressionSymbol = semanticModel.GetSymbolInfo(node.Expression).Symbol as IMethodSymbol;
             // Ignore non-extensions and reduced extensions (so a.Ext, as opposed to B.Ext(a))
             if (expressionSymbol == null || !expressionSymbol.IsExtensionMethod || expressionSymbol.MethodKind == MethodKind.ReducedExtension)
                 return false;
 
-            // Don't allow conversion if first parameter is a method name instead of variable (extension method on delegate type)
-            var firstParameter = node.ArgumentList?.Arguments.FirstOrDefault();
-            if ((firstParameter != null) && (firstParameter.Expression is IdentifierNameSyntax))
+            var extensionMethodDeclaringType = expressionSymbol.ContainingType;
+            if (extensionMethodDeclaringType.Name != memberReference.Expression.ToString())
+                return false;
+
+            var firstArgumentType = semanticModel.GetTypeInfo(firstArgument).Type;
+            if (firstArgumentType != null)
             {
-                var extensionMethodTargetExpression = semanticModel.GetSymbolInfo(firstParameter.Expression).Symbol as IMethodSymbol;
+                if (!firstArgumentType.Equals(expressionSymbol.Parameters[0].Type))
+                    return false;
+            }
+
+            // Don't allow conversion if first parameter is a method name instead of variable (extension method on delegate type)
+            if (firstArgument is IdentifierNameSyntax)
+            {
+                var extensionMethodTargetExpression = semanticModel.GetSymbolInfo(firstArgument).Symbol as IMethodSymbol;
                 if (extensionMethodTargetExpression != null)
                     return false;
             }

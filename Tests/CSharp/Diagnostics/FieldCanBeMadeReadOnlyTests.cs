@@ -1,8 +1,10 @@
 using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using System;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
+
     [TestFixture]
     public class FieldCanBeMadeReadOnlyTests : CSharpDiagnosticTestBase
     {
@@ -52,6 +54,27 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         Console.WriteLine(fooBar);
     }
 }");
+        }
+
+        [Test]
+        public void TestInitializedFieldAssignedInAnotherClassPart()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"partial class Test
+{
+    object fooBar = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}
+class Test
+{
+    public void SomeMethod()
+    {
+        fooBar = null;
+    }
+}
+");
         }
 
         [Test]
@@ -294,6 +317,26 @@ struct MutableStruct {
         fooBar = 5;
     }
 }");
+        }
+
+        /// <summary>
+        /// Bug 19832 - Source Analysis should probably not suggest making a serialized field readonly
+        /// </summary>
+        [Test]
+        public void TestBug19832()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"
+using System;
+class Test
+{
+    [Serializable]
+    object fooBar = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}
+");
         }
     }
 }

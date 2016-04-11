@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using System.Text;
 using Microsoft.CodeAnalysis.Text;
+using RefactoringEssentials.Tests.Common;
 
 namespace RefactoringEssentials.Tests
 {
@@ -13,23 +14,7 @@ namespace RefactoringEssentials.Tests
 
         internal static string HomogenizeEol(string str)
         {
-            var sb = new StringBuilder();
-            for (int i = 0; i < str.Length; i++)
-            {
-                var ch = str[i];
-                var possibleNewline = NewLine.GetDelimiterLength(ch, i + 1 < str.Length ? str[i + 1] : '\0');
-                if (possibleNewline > 0)
-                {
-                    sb.AppendLine();
-                    if (possibleNewline == 2)
-                        i++;
-                }
-                else
-                {
-                    sb.Append(ch);
-                }
-            }
-            return sb.ToString();
+            return Utils.HomogenizeEol(str);
         }
 
         protected static string ParseText(string input, out TextSpan selectedSpan, out TextSpan markedSpan)
@@ -41,7 +26,7 @@ namespace RefactoringEssentials.Tests
             for (int i = 0; i < upper; i++)
             {
                 var ch = input[i];
-                if (ch == '$' && (i + 1 >= upper || input[i + 1] != '"') || ch == '…')
+                if (ch == '$' && (i + 1 >= upper || input[i + 1] != '"') || ch == '…' || (int)ch == 65533)
                 {
                     start = end = i;
                     continue;
@@ -86,8 +71,7 @@ namespace RefactoringEssentials.Tests
                     result.Append(lastChar);
                 }
             }
-
-            selectedSpan = TextSpan.FromBounds(start, end);
+            selectedSpan = start < 0 ? new TextSpan(0, 0) : TextSpan.FromBounds(start, end);
             markedSpan = start2 < 0 ? new TextSpan(0, 0) : TextSpan.FromBounds(start2, end2);
             return result.ToString();
         }

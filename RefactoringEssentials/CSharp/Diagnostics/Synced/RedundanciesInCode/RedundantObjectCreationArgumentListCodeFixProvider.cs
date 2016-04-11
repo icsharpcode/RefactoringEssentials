@@ -3,6 +3,10 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -23,7 +27,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             return WellKnownFixAllProviders.BatchFixer;
         }
 
-        public async override Task RegisterCodeFixesAsync(CodeFixContext context)
+        public override async Task RegisterCodeFixesAsync(CodeFixContext context)
         {
             var document = context.Document;
             var cancellationToken = context.CancellationToken;
@@ -31,11 +35,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove '()'", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var node = root.FindNode(context.Span) as ArgumentListSyntax;
+
+            if (node == null)
+                return;
+
+            var nodeToRemove = node;
+
+            var newRoot = root.RemoveNode(nodeToRemove, SyntaxRemoveOptions.KeepTrailingTrivia);
+            context.RegisterCodeFix(
+                CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove '()'", document.WithSyntaxRoot(newRoot)),
+                diagnostic);
         }
     }
 }

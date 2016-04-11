@@ -61,6 +61,58 @@ class TestClass
         }
 
         [Test]
+        public void TestAssignmentWithDifferingTypes1()
+        {
+            Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
+class TestClass
+{
+    void TestMethod(int i)
+    {
+        int a;
+        $if (i > 0) {
+            a = 0;
+        } else {
+            a = ""1"";
+        }
+    }
+}", @"
+class TestClass
+{
+    void TestMethod(int i)
+    {
+        int a;
+        a = i > 0 ? 0 : (int)""1"";
+    }
+}");
+        }
+
+        [Test]
+        public void TestAssignmentWithDifferingTypes2()
+        {
+            Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
+class TestClass
+{
+    void TestMethod(int i)
+    {
+        Nullable<T> a;
+        $if (i > 0) {
+            a = 0;
+        } else {
+            a = ""1"";
+        }
+    }
+}", @"
+class TestClass
+{
+    void TestMethod(int i)
+    {
+        Nullable<T> a;
+        a = i > 0 ? (Nullable<T>)0 : (Nullable<T>)""1"";
+    }
+}");
+        }
+
+        [Test]
         public void TestAddAssignment()
         {
             Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"

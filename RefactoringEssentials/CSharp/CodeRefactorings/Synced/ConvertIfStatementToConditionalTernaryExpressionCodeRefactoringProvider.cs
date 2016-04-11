@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.Simplification;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
@@ -29,7 +30,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             {
                 if (embeddedBlock.Statements.Count > 1)
                     return false;
-                whenTrueExprStatement = node.Statement.DescendantNodesAndSelf().OfType<ExpressionStatementSyntax>().FirstOrDefault();
+                var childNodes = embeddedBlock.ChildNodes();
+                if (childNodes.Count() > 1)
+                    return false;
+                whenTrueExprStatement = childNodes.OfType<ExpressionStatementSyntax>().FirstOrDefault();
             }
             else
             {
@@ -41,7 +45,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             {
                 if (elseBlock.Statements.Count > 1)
                     return false;
-                whenFalseExprStatement = node.Else.Statement.DescendantNodesAndSelf().OfType<ExpressionStatementSyntax>().FirstOrDefault();
+                var childNodes = elseBlock.ChildNodes();
+                if (childNodes.Count() > 1)
+                    return false;
+                whenFalseExprStatement = childNodes.OfType<ExpressionStatementSyntax>().FirstOrDefault();
             }
             else
             {
@@ -54,7 +61,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             whenTrue = whenTrueExprStatement.Expression as AssignmentExpressionSyntax;
             whenFalse = whenFalseExprStatement.Expression as AssignmentExpressionSyntax;
             if (whenTrue == null || whenFalse == null || whenTrue.Kind() != whenFalse.Kind() ||
-                !whenTrue.Left.IsEquivalentTo(whenFalse.Left))
+                !SyntaxFactory.AreEquivalent(whenTrue.Left, whenFalse.Left))
                 return false;
 
             return true;
@@ -82,6 +89,26 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (!ParseIfStatement(node, out condition, out target, out trueAssignment, out falseAssignment))
                 return;
 
+            ExpressionSyntax trueAssignmentExpr = trueAssignment.Right;
+            ExpressionSyntax falseAssignmentExpr = falseAssignment.Right;
+            var assignmentTargetType = model.GetTypeInfo(trueAssignment.Left).Type;
+            var trueAssignmentExprType = model.GetTypeInfo(trueAssignment.Right).Type;
+            var falseAssignmentExprType = model.GetTypeInfo(falseAssignment.Right).Type;
+            if ((trueAssignmentExprType == null) || (falseAssignmentExprType == null))
+                return;
+            if (assignmentTargetType.CompareTo(trueAssignmentExprType) != 0)
+            {
+                trueAssignmentExpr = SyntaxFactory.CastExpression(
+                    assignmentTargetType.GenerateTypeSyntax(Simplifier.Annotation),
+                    trueAssignmentExpr).WithAdditionalAnnotations(Formatter.Annotation);
+            }
+            if (assignmentTargetType.CompareTo(falseAssignmentExprType) != 0)
+            {
+                falseAssignmentExpr = SyntaxFactory.CastExpression(
+                    assignmentTargetType.GenerateTypeSyntax(Simplifier.Annotation),
+                    falseAssignmentExpr).WithAdditionalAnnotations(Formatter.Annotation);
+            }
+
             context.RegisterRefactoring(
                 CodeActionFactory.Create(span, DiagnosticSeverity.Info, GettextCatalog.GetString("To '?:' expression"),
                     t2 =>
@@ -91,7 +118,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                                 SyntaxFactory.AssignmentExpression(
                                     trueAssignment.Kind(),
                                     trueAssignment.Left,
-                                    SyntaxFactory.ConditionalExpression(condition, trueAssignment.Right, falseAssignment.Right)
+                                    SyntaxFactory.ConditionalExpression(condition, trueAssignmentExpr, falseAssignmentExpr)
                                 )
                             ).WithAdditionalAnnotations(Formatter.Annotation).WithLeadingTrivia(node.GetLeadingTrivia())
                         );

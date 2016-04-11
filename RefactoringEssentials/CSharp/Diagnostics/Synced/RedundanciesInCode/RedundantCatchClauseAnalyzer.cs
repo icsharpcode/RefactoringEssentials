@@ -24,6 +24,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         // "Remove redundant catch clauses" / "Remove 'catch'" / "'try' statement is redundant" / "Remove all '{0}' redundant 'catch' clauses" / "Remove 'try' statement"
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             //context.RegisterSyntaxNodeAction(
             //	(nodeContext) => {
             //		Diagnostic diagnostic;
@@ -38,8 +39,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             //var node = nodeContext.Node as ;
             //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
             //return true;

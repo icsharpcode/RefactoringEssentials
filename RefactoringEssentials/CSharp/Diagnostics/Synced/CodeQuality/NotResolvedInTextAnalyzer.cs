@@ -36,6 +36,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -52,8 +53,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var objectCreateExpression = nodeContext.Node as ObjectCreationExpressionSyntax;
 
             ExpressionSyntax paramNode;
@@ -154,6 +153,20 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (indexer != null)
                 {
                     names.AddRange(indexer.ParameterList.Parameters.Select(p => p.Identifier.ToString()));
+                    break;
+                }
+
+                var convOperator = node as ConversionOperatorDeclarationSyntax;
+                if (convOperator != null)
+                {
+                    names.AddRange(convOperator.ParameterList.Parameters.Select(p => p.Identifier.ToString()));
+                    break;
+                }
+
+                var op = node as OperatorDeclarationSyntax;
+                if (op != null)
+                {
+                    names.AddRange(op.ParameterList.Parameters.Select(p => p.Identifier.ToString()));
                     break;
                 }
 

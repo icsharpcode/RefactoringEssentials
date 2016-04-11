@@ -3,6 +3,9 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -31,11 +34,23 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove redundant 'unsafe' modifier", document.WithSyntaxRoot(newRoot)), diagnostic);
+            var token = root.FindToken(context.Span.Start);
+            var node = token.Parent;
+            if (node.IsKind(SyntaxKind.ClassDeclaration)) {
+                var decl = node as ClassDeclarationSyntax;
+                var newRoot = root.ReplaceNode(decl, decl.WithModifiers(SyntaxFactory.TokenList(decl.Modifiers.Where(m => !m.IsKind(SyntaxKind.UnsafeKeyword)))));
+                context.RegisterCodeFix(CodeActionFactory.Create(token.Span, diagnostic.Severity, "Remove redundant 'unsafe' modifier", document.WithSyntaxRoot(newRoot)), diagnostic);
+            }
+            if (node.IsKind(SyntaxKind.StructDeclaration)) {
+                var decl = node as StructDeclarationSyntax;
+                var newRoot = root.ReplaceNode(decl, decl.WithModifiers(SyntaxFactory.TokenList(decl.Modifiers.Where(m => !m.IsKind(SyntaxKind.UnsafeKeyword)))));
+                context.RegisterCodeFix(CodeActionFactory.Create(token.Span, diagnostic.Severity, "Remove redundant 'unsafe' modifier", document.WithSyntaxRoot(newRoot)), diagnostic);
+            }
+            if (node.IsKind(SyntaxKind.UnsafeStatement)) {
+                var decl = node as UnsafeStatementSyntax;
+                var newRoot = root.ReplaceNode(decl, decl.Block.Statements.Select(s => s.WithAdditionalAnnotations(Formatter.Annotation)));
+                context.RegisterCodeFix(CodeActionFactory.Create(token.Span, diagnostic.Severity, "Replace 'unsafe' statement with its body", document.WithSyntaxRoot(newRoot)), diagnostic);
+            }
         }
     }
 }

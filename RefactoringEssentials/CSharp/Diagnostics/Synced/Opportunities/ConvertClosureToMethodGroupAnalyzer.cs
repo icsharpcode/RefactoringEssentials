@@ -26,6 +26,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -45,10 +46,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var parenLambda = nodeContext.Node as ParenthesizedLambdaExpressionSyntax;
             var anoMethod = nodeContext.Node as AnonymousMethodExpressionSyntax;
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var body = simpleLambda?.Body ?? parenLambda?.Body ?? anoMethod?.Block;
             if (body == null)
+                return false;
+
+            // (Bad) workaround for usage of SignatureComparer in this analyzer, when Roslyn's Workspaces are not loaded
+            if (!RoslynReflection.SignatureComparer.IsAvailable())
                 return false;
 
             var invocation = AnalyzeBody(body);
@@ -60,6 +63,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var symbolInfo = nodeContext.SemanticModel.GetSymbolInfo(invocation);
             var method = symbolInfo.Symbol as IMethodSymbol;
             if (method == null)
+                return false;
+
+            var memberAttributes = method.GetAttributes();
+            if ((memberAttributes != null) && memberAttributes.Any(ad => (ad.AttributeClass != null) && (ad.AttributeClass.GetFullName() == "System.Diagnostics.ConditionalAttribute")))
                 return false;
 
             foreach (var param in method.Parameters)
@@ -102,8 +109,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 {
                     if (otherMethod == method)
                         continue;
+#pragma warning disable RECS9000 // Using internal Roslyn features through reflection in wrong context.
                     if (SignatureComparer.HaveSameSignature(otherMethod.GetParameters(), invokeMethod.Parameters))
                         return false;
+#pragma warning restore RECS9000 // Using internal Roslyn features through reflection in wrong context.
                 }
             }
 

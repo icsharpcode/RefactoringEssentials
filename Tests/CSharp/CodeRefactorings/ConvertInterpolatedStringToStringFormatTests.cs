@@ -70,6 +70,28 @@ class TestClass
     }
 }");
         }
+
+        [Test]
+        public void TestEscapes()
+        {
+            Test<ConvertInterpolatedStringToStringFormatCodeRefactoringProvider>(@"
+class TestClass
+{
+    void Foo ()
+    {
+        var world = ""World"";
+        var str = $""Hel$lo\n {world}"";
+    }
+}", @"
+class TestClass
+{
+    void Foo ()
+    {
+        var world = ""World"";
+        var str = string.Format(""Hello\n {0}"", world);
+    }
+}");
+        }
     }
 }
 

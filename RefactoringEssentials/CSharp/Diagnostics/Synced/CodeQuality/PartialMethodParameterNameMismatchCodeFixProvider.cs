@@ -3,6 +3,8 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -31,10 +33,20 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
-            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, diagnostic.GetMessage(), document.WithSyntaxRoot(newRoot)), diagnostic);
+            if (node == null)
+                return;
+            var parameter = node.AncestorsAndSelf().OfType<ParameterSyntax>().FirstOrDefault();
+            var method = parameter != null ? parameter.AncestorsAndSelf().OfType<MethodDeclarationSyntax>().FirstOrDefault() : null;
+            if (method == null)
+                return;
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            var symbol = semanticModel.GetDeclaredSymbol(method) as IMethodSymbol;
+
+            var idx = method.ParameterList.Parameters.IndexOf(parameter);
+
+            var newName = symbol.PartialDefinitionPart.Parameters[idx].Name;
+            var newRoot = root.ReplaceNode(parameter, parameter.WithIdentifier(SyntaxFactory.Identifier(newName)));
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, string.Format(GettextCatalog.GetString("Rename to '{0}'"), newName), document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }

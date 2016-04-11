@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
@@ -24,6 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -40,59 +42,30 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         private static bool TryGetRedundantNullableDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var objectCreation = nodeContext.Node as ObjectCreationExpressionSyntax;
             if (objectCreation == null)
                 return false;
 
-            //Not so sure about this check but was there before
+            // No Nullable, but "var"
             var parentVarDeclaration = objectCreation?.Parent?.Parent?.Parent as VariableDeclarationSyntax;
             if (parentVarDeclaration != null && parentVarDeclaration.Type.IsVar)
                 return false;
+            
+            // No Nullable, but "var"
+            var conditionalExpression = objectCreation.WalkUpParentheses().Parent as ConditionalExpressionSyntax;
+            if (conditionalExpression != null && conditionalExpression.WhenFalse.SkipParens() == objectCreation)
+                return false;
 
             var objectCreationSymbol = nodeContext.SemanticModel.GetTypeInfo(objectCreation);
-            //IsNullable method fails the analysis
-            //Used string comparison for testing even though it's bad on performance.
-            if (objectCreationSymbol.Type != null && objectCreationSymbol.Type.OriginalDefinition.ToString().Equals("System.Nullable<T>"))
+            if (objectCreationSymbol.Type != null && objectCreationSymbol.Type.IsNullableType())
             {
-                diagnostic = Diagnostic.Create(descriptor, objectCreation.GetLocation());
+                var creationTypeLocation = objectCreation.Type.GetLocation();
+                var newKeywordLocation = objectCreation.NewKeyword.GetLocation();
+                diagnostic = Diagnostic.Create(descriptor, newKeywordLocation, (IEnumerable<Location>) (new[] { creationTypeLocation }));
                 return true;
             }
             return false;
         }
-
-        //		class GatherVisitor : GatherVisitorBase<RedundantExplicitNullableCreationAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-
-        ////			public override void VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
-        ////			{
-        ////				base.VisitObjectCreateExpression(objectCreateExpression);
-        ////
-        ////				// test for var foo = new ...
-        ////				var parentVarDecl = objectCreateExpression.Parent.Parent as VariableDeclarationStatement;
-        ////				if (parentVarDecl != null && parentVarDecl.Type.IsVar())
-        ////					return;
-        ////
-        ////				var rr = ctx.Resolve(objectCreateExpression);
-        ////				if (!NullableType.IsNullable(rr.Type))
-        ////					return;
-        ////				var arg = objectCreateExpression.Arguments.FirstOrDefault();
-        ////				if (arg == null)
-        ////					return;
-        ////				AddDiagnosticAnalyzer(new CodeIssue(
-        ////					objectCreateExpression.StartLocation,
-        ////					objectCreateExpression.Type.EndLocation,
-        ////					ctx.TranslateString(""),
-        ////					ctx.TranslateString(""),
-        ////					s => s.Replace(objectCreateExpression, arg.Clone())
-        ////				) { IssueMarker = IssueMarker.GrayOut });
-        ////			}
-        //		}
     }
 }

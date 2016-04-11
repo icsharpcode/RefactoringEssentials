@@ -171,14 +171,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     SyntaxFactory.InvocationExpression(
                         SyntaxFactory.MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.ParseExpression("System.Math"),
+                            SyntaxFactory.ParseTypeName("System.Math").WithAdditionalAnnotations(Microsoft.CodeAnalysis.Simplification.Simplifier.Annotation),
                             SyntaxFactory.IdentifierName("Abs")
                         ),
                         SyntaxFactory.ArgumentList(
                             arguments
                         )
                     ),
-                    SyntaxFactory.IdentifierName("EPSILON")
+                    SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("EPSILON").WithAdditionalAnnotations(RenameAnnotation.Create()))
                 );
                 expr = expr.WithAdditionalAnnotations(Formatter.Annotation);
                 newRoot = root.ReplaceNode((SyntaxNode)node, expr);
@@ -199,14 +199,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     SyntaxFactory.InvocationExpression(
                         SyntaxFactory.MemberAccessExpression(
                             SyntaxKind.SimpleMemberAccessExpression,
-                            SyntaxFactory.ParseExpression("System.Math"),
+                            SyntaxFactory.ParseTypeName("System.Math").WithAdditionalAnnotations(Microsoft.CodeAnalysis.Simplification.Simplifier.Annotation),
                             SyntaxFactory.IdentifierName("Abs")
                         ),
                         SyntaxFactory.ArgumentList(
                             arguments
                         )
                     ),
-                    SyntaxFactory.IdentifierName("EPSILON")
+                    SyntaxFactory.IdentifierName(SyntaxFactory.Identifier("EPSILON").WithAdditionalAnnotations(RenameAnnotation.Create()))
                 );
                 expr = expr.WithAdditionalAnnotations(Formatter.Annotation);
                 newRoot = root.ReplaceNode((SyntaxNode)node, expr);

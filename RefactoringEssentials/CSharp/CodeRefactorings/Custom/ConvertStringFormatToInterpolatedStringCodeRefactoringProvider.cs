@@ -52,13 +52,14 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         {
             var expr = invocation.ArgumentList.Arguments[0].Expression as LiteralExpressionSyntax;
 
-            var str = expr.Token.Value.ToString();
+            var str = expr.Token.ToString();
             var stringFormatDigits = new StringBuilder();
             var sb = new StringBuilder();
             sb.Append("$\"");
+            bool isVerbatim = str[0] == '@';
 
             bool inStringFormat = false;
-            for (int i = 0; i < str.Length; i++)
+            for (int i = isVerbatim ? 2 : 1; i < str.Length - 1; i++)
             {
                 var ch = str[i];
 
@@ -95,6 +96,65 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 else if (inStringFormat && char.IsDigit(ch))
                 {
                     stringFormatDigits.Append(ch);
+                    continue;
+                }
+
+                if (isVerbatim)
+                {
+                    switch (ch)
+                    {
+                        case '"':
+                            sb.Append("\\\"");
+                            i++; // end " is skipped so it's always a "" in verbatim strings
+                            break;
+                        case '\\':
+                            sb.Append("\\\\");
+                            break;
+                        case '\0':
+                            sb.Append("\\0");
+                            break;
+
+                        case '\a':
+                            sb.Append("\\a");
+                            break;
+
+                        case '\b':
+                            sb.Append("\\b");
+                            break;
+
+                        case '\f':
+                            sb.Append("\\f");
+                            break;
+
+                        case '\n':
+                            sb.Append("\\n");
+                            break;
+
+                        case '\r':
+                            sb.Append("\\r");
+                            break;
+
+                        case '\t':
+                            sb.Append("\\t");
+                            break;
+
+                        case '\v':
+                            sb.Append("\\v");
+                            break;
+
+                        default:
+                            if (char.IsControl(ch) || char.IsSurrogate(ch) ||
+                                // print all uncommon white spaces as numbers
+                                (char.IsWhiteSpace(ch) && ch != ' '))
+                            {
+                                sb.Append("\\u" + ((int)ch).ToString("x4"));
+                            }
+                            else {
+                                sb.Append(ch);
+                                break;
+                            }
+                            break;
+                    }
                     continue;
                 }
 

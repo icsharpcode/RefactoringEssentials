@@ -61,6 +61,110 @@ class Test
         }
 
         [Test]
+        public void TestDefaultRedundantCaseInReverseOrder()
+        {
+            Analyze<RedundantEmptyDefaultSwitchBranchAnalyzer>(@"
+class Test
+{
+	void TestMethod (int i = 0)
+	{
+		switch (i) {
+		$default$:
+			break;
+		case 0:
+			System.Console.WriteLine();
+			break;
+		}
+	}
+}", @"
+class Test
+{
+	void TestMethod (int i = 0)
+	{
+		switch (i) {
+		case 0:
+			System.Console.WriteLine();
+			break;
+		}
+	}
+}");
+        }
+
+        [Test]
+        public void TestDefaultRedundantCaseCombined()
+        {
+            Analyze<RedundantEmptyDefaultSwitchBranchAnalyzer>(@"
+class Test
+{
+	void TestMethod (int i = 0)
+	{
+		switch (i) {
+		case 0:
+		$default$:
+			break;
+		}
+	}
+}", @"
+class Test
+{
+	void TestMethod (int i = 0)
+	{
+		switch (i) {
+		case 0:
+			break;
+		}
+	}
+}");
+        }
+
+        [Test]
+        public void TestDefaultRedundantCaseCombinedReverseOrder()
+        {
+            Analyze<RedundantEmptyDefaultSwitchBranchAnalyzer>(@"
+class Test
+{
+	void TestMethod (int i = 0)
+	{
+		switch (i) {
+		$default$:
+		case 0:
+			break;
+		}
+	}
+}", @"
+class Test
+{
+	void TestMethod (int i = 0)
+	{
+		switch (i) {
+		case 0:
+			break;
+		}
+	}
+}");
+        }
+
+        [Test]
+        public void TestDefaultWithCode()
+        {
+            Analyze<RedundantEmptyDefaultSwitchBranchAnalyzer>(@"
+class Test
+{
+	void TestMethod (int i = 0)
+	{
+		switch (i) {
+		case 0:
+			System.Console.WriteLine();
+			break;
+		default:
+            System.Console.WriteLine(""default"");
+			break;
+		}
+	}
+}");
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<RedundantEmptyDefaultSwitchBranchAnalyzer>(@"

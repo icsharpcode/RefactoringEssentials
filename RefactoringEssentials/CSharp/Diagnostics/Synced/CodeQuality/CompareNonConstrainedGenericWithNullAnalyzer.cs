@@ -23,6 +23,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -38,8 +39,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var node = nodeContext.Node as BinaryExpressionSyntax;
             var left = node.Left.SkipParens();
@@ -58,7 +57,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (expr == null)
                 return false;
             var type = nodeContext.SemanticModel.GetTypeInfo(expr).Type;
-            if (type.TypeKind != TypeKind.TypeParameter || type.IsReferenceType)
+            if ((type == null) || (type.TypeKind != TypeKind.TypeParameter) || type.IsReferenceType)
                 return false;
             diagnostic = Diagnostic.Create(
                 descriptor,

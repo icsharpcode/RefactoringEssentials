@@ -117,7 +117,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (contentStatement == null)
                 return null;
 
-            var assignExpr = ((ExpressionStatementSyntax)contentStatement).Expression as AssignmentExpressionSyntax;
+            var assignExpr = (contentStatement as ExpressionStatementSyntax)?.Expression as AssignmentExpressionSyntax;
             if (assignExpr == null || !assignExpr.Left.IsEquivalentTo(nullIsRight ? condition.Left : condition.Right, true))
                 return null;
             rightSide = assignExpr.Right;

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -31,7 +32,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
+            var node = root.FindNode(context.Span, false, true) as ExpressionSyntax;
+            if (node == null)
+                return;
             bool isTrue = diagnostic.GetMessage().IndexOf("'true'", System.StringComparison.Ordinal) >= 0;
             var newRoot = root.ReplaceNode(
                 node,

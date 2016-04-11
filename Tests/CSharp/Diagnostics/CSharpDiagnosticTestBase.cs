@@ -16,7 +16,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             if (compOptions == null)
             {
-                compOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, "a.dll");
+                compOptions = new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary, false, "a.dll");
             }
 
             return CSharpCompilation.Create(
@@ -34,21 +34,22 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             string assemblyName = "")
         {
             var refs = new List<MetadataReference>();
+
+            refs.AddRange(DefaultMetadataReferences);
+
             if (references != null)
             {
                 refs.AddRange(references);
             }
 
-            refs.AddRange(DefaultMetadataReferences);
-
             return CreateCompilation(source, refs, compOptions, assemblyName);
         }
 
-        protected static void Analyze<T>(string input, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null) where T : DiagnosticAnalyzer, new()
+        protected static void Analyze<T>(string input, string output = null, int issueToFix = -1, int actionToRun = 0, Action<int, Diagnostic> diagnosticCheck = null, IEnumerable<MetadataReference> references = null) where T : DiagnosticAnalyzer, new()
         {
             Analyze<T>(
                 t => CSharpSyntaxTree.ParseText(t),
-                s => CreateCompilationWithMscorlib(s),
+                s => CreateCompilationWithMscorlib(s, references),
                 LanguageNames.CSharp,
                 input, output, issueToFix, actionToRun, diagnosticCheck
                 );

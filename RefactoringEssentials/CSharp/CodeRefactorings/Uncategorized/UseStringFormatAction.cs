@@ -1,204 +1,291 @@
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using System.Text;
+using System.Linq;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
+    /// <summary>
+    /// Refactors string and expression concatenation to use <see cref="string.Format(string, object[])"/>.
+    /// </summary>
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Use string.Format()")]
-    [NotPortedYet]
     public class UseStringFormatAction : CodeRefactoringProvider
     {
-        public override Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+
         {
-            //var document = context.Document;
-            //var span = context.Span;
-            //var cancellationToken = context.CancellationToken;
-            //var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            //if (model.IsFromGeneratedCode(cancellationToken))
-            //	return;
-            //var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            return Task.FromResult(0);
+            var document = context.Document;
+            if (document.Project.Solution.Workspace.Kind == WorkspaceKind.MiscellaneousFiles)
+                return;
+
+            var span = context.Span;
+            if (!span.IsEmpty)
+                return;
+
+            var cancellationToken = context.CancellationToken;
+            if (cancellationToken.IsCancellationRequested)
+                return;
+
+            var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            if (model.IsFromGeneratedCode(cancellationToken))
+                return;
+
+            var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+            var node = root.FindNode(span);
+            node = node.SkipArgument();
+
+            // Get ancestor binary expressions and ensure they are string concatenation type.
+            var ancestors = node.AncestorsAndSelf().Where(n => n is BinaryExpressionSyntax);
+
+            // If there is no binary expressions then why are we here?
+            if (!ancestors.Any())
+                return;
+
+            if (!(ancestors.Last().IsKind(SyntaxKind.AddExpression)))
+                return;
+
+            // Get highest binary expression available.
+            node = ancestors.LastOrDefault(n => n is BinaryExpressionSyntax);
+
+            // If there is not a binary expression, then there is no concatenaton to act on.
+            if (node == null)
+                return;
+
+            var parts = GetParts(node as BinaryExpressionSyntax);
+
+            // Ensure there are some parts, not sure how this could possibly happen, but better safe than sorry.
+            if (parts.Count() <= 0)
+                return;
+
+            // Get all string type parts.
+            var stringParts = parts.Where(p => IsStringExpression(p));
+
+            // Ensure there is at least one string type part.
+            if (!stringParts.Any())
+                return;
+
+            // Ensure strings are all verbatim or all not verbatim. It just gets ugly otherwise. ;p
+            var verbatimParts = stringParts.Where(p => p.GetFirstToken().Text.StartsWith("@", System.StringComparison.OrdinalIgnoreCase));
+            if (verbatimParts.Count() != 0 && verbatimParts.Count() != stringParts.Count())
+                return;
+
+            context.RegisterRefactoring(
+               CodeActionFactory.Create(
+                   node.Span,
+                   DiagnosticSeverity.Info,
+                   GettextCatalog.GetString("Use 'string.Format()'"),
+                   t2 =>
+                   {
+                       var newRoot = root.ReplaceNode(node, ReplaceNode(node as BinaryExpressionSyntax));
+                       return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                   }
+               )
+           );
+
+            return;
         }
-        //		public async Task ComputeRefactoringsAsync(Document document, TextSpan span, CancellationToken cancellationToken)
-        //		{
-        //			// NOTE: @, multiple occurance
-        //			var node = context.GetNode();
-        //			while (node != null && !IsStringConcatenation(context, node as BinaryOperatorExpression))
-        //				node = node.Parent;
-        //
-        //			if (node == null)
-        //				yield break;
-        //
-        //			var expr = (BinaryOperatorExpression)node;
-        //			var parent = expr.Parent as BinaryOperatorExpression;
-        //			while (parent != null && parent.Operator == BinaryOperatorType.Add) {
-        //				expr = parent;
-        //				parent = expr.Parent as BinaryOperatorExpression;
-        //			}
-        //
-        //			yield return new CodeAction(context.TranslateString("Use 'string.Format()'"),
-        //			                             script => {
-        //				var stringType = new PrimitiveType("string");
-        //				var formatInvocation = stringType.Invoke("Format");
-        //				var formatLiteral = new PrimitiveExpression("");
-        //				var counter = 0;
-        //				var arguments = new List<Expression>();
-        //
-        //				formatInvocation.Arguments.Add(formatLiteral);
-        //				var concatItems = GetConcatItems(context, expr);
-        //				bool hasVerbatimStrings = false;
-        //				bool hasNonVerbatimStrings = false;
-        //
-        //				foreach (var item in concatItems) {
-        //					if (IsStringLiteral(item)) {
-        //						var stringLiteral = (PrimitiveExpression)item;
-        //						if (stringLiteral.LiteralValue[0] == '@') {
-        //							hasVerbatimStrings = true;
-        //						} else {
-        //							hasNonVerbatimStrings = true;
-        //						}
-        //					}
-        //				}
-        //					
-        //				var format = new StringBuilder();
-        //				var verbatim = hasVerbatimStrings && hasNonVerbatimStrings;
-        //				format.Append('"');
-        //				foreach (var item in concatItems) {
-        //					if (IsStringLiteral(item)) {
-        //						var stringLiteral = (PrimitiveExpression)item;
-        //
-        //						string rawLiteral;
-        //						if (hasVerbatimStrings && hasNonVerbatimStrings) {
-        //							rawLiteral = stringLiteral.Value.ToString().Replace("\"", "\"\"");
-        //						} else {
-        //							if (stringLiteral.LiteralValue[0] == '@') {
-        //								verbatim = true;
-        //								rawLiteral = stringLiteral.LiteralValue.Substring(2, stringLiteral.LiteralValue.Length - 3);
-        //							} else {
-        //								rawLiteral = stringLiteral.LiteralValue.Substring(1, stringLiteral.LiteralValue.Length - 2);
-        //							}
-        //						}
-        //						format.Append(QuoteBraces(rawLiteral));
-        //					} else {
-        //						Expression myItem = RemoveUnnecessaryToString(item);
-        //						string itemFormatStr = DetermineItemFormatString(ref myItem);
-        //							
-        //						var index = IndexOf(arguments, myItem);
-        //						if (index == -1) {
-        //							// new item
-        //							formatInvocation.Arguments.Add(myItem.Clone());
-        //							arguments.Add(item);
-        //							format.Append("{" + counter++ + itemFormatStr + "}");
-        //						} else {
-        //							// existing item
-        //							format.Append("{" + index + itemFormatStr + "}");
-        //						}
-        //					}
-        //				}
-        //				format.Append('"');
-        //				if (verbatim)
-        //					format.Insert(0, '@');
-        //				formatLiteral.SetValue(format.ToString(), format.ToString());
-        //				if (arguments.Count > 0)
-        //					script.Replace(expr, formatInvocation);
-        //				else
-        //					script.Replace(expr, formatLiteral);
-        //			}, node);
-        //		}
-        //
-        //		Expression RemoveUnnecessaryToString(Expression myItem)
-        //		{
-        //			if (myItem is InvocationExpression) {
-        //				InvocationExpression invocation = (InvocationExpression)myItem;
-        //				if (invocation.Target is MemberReferenceExpression &&
-        //					((MemberReferenceExpression)invocation.Target).MemberName.Equals("ToString") &&
-        //					invocation.Arguments.Count == 0) {
-        //					myItem = invocation.Target.FirstChild as Expression;
-        //				}
-        //                
-        //			}
-        //			return myItem;
-        //		}
-        //
-        //		string QuoteBraces(string rawLiteral)
-        //		{
-        //			if (!rawLiteral.Contains("{") && !rawLiteral.Contains("}"))
-        //				return rawLiteral;
-        //
-        //			StringBuilder quoted = new StringBuilder();
-        //			for (int i = 0; i < rawLiteral.Length; i++) {
-        //				char c = rawLiteral[i];
-        //				if (c == '{')
-        //					quoted.Append("{{");
-        //				else if (c == '}')
-        //					quoted.Append("}}");
-        //				else
-        //					quoted.Append(c);
-        //			}
-        //			return quoted.ToString();
-        //		}
-        //
-        //		static string DetermineItemFormatString(ref Expression myItem)
-        //		{
-        //			if (myItem is InvocationExpression) {
-        //				InvocationExpression invocation = myItem as InvocationExpression;
-        //				if (invocation.Target is MemberReferenceExpression &&
-        //					((MemberReferenceExpression)invocation.Target).MemberName.Equals("ToString") &&
-        //					invocation.Arguments.Count == 1) {
-        //					IEnumerator<Expression> i = invocation.Arguments.GetEnumerator();
-        //					i.MoveNext();
-        //					Expression arg = i.Current;
-        //					if (IsStringLiteral(arg) && invocation.Target.FirstChild is Expression) {
-        //						string formatStr = ((PrimitiveExpression)arg).Value as string;
-        //						myItem = invocation.Target.FirstChild as Expression; // invocation target identifier is first child
-        //						return ":" + formatStr;
-        //					}
-        //				}
-        //			}
-        //            
-        //			return "";
-        //		}
-        //
-        //		static int IndexOf(IList<Expression> arguments, Expression item)
-        //		{
-        //			for (int i = 0; i < arguments.Count; i++) {
-        //				if (item.Match(arguments[i]).Success)
-        //					return i;
-        //			}
-        //			return -1;
-        //		}
-        //
-        //		static IEnumerable<Expression> GetConcatItems(SemanticModel context, BinaryOperatorExpression expr)
-        //		{
-        //			var leftExpr = expr.Left as BinaryOperatorExpression;
-        //			if (IsStringConcatenation(context, leftExpr)) {
-        //				foreach (var item in GetConcatItems (context, leftExpr))
-        //					yield return item;
-        //			} else {
-        //				yield return expr.Left;
-        //			}
-        //
-        //			var rightExpr = expr.Right as BinaryOperatorExpression;
-        //			if (IsStringConcatenation(context, rightExpr)) {
-        //				foreach (var item in GetConcatItems (context, rightExpr))
-        //					yield return item;
-        //			} else {
-        //				yield return expr.Right;
-        //			}
-        //		}
-        //
-        //		static bool IsStringConcatenation(SemanticModel context, BinaryOperatorExpression expr)
-        //		{
-        //			if (expr == null || expr.Operator != BinaryOperatorType.Add)
-        //				return false;
-        //			var typeDef = context.Resolve(expr).Type.GetDefinition();
-        //			return typeDef != null && typeDef.KnownTypeCode == KnownTypeCode.String;
-        //		}
-        //
-        //		static bool IsStringLiteral(AstNode node)
-        //		{
-        //			var expr = node as PrimitiveExpression;
-        //			return expr != null && expr.Value is string;
-        //		}
+
+        /// <summary>
+        /// Replace concatenation node with <see cref="string.Format(string, object[])"/>.
+        /// </summary>
+        /// <param name="node">A <see cref="BinaryExpressionSyntax"/> with string and expression concatenation.</param>
+        /// <returns>
+        /// The new node.
+        /// </returns>
+        static SyntaxNode ReplaceNode(BinaryExpressionSyntax node)
+        {
+            var parts = GetParts(node);
+
+            var format = new StringBuilder();
+            //var expressionIndex = 0;
+            var expressions = new List<string>();
+            var isVerbatim = false;
+
+            foreach (var part in parts)
+            {
+                var value = string.Empty;
+
+                if (IsStringExpression(part))
+                {
+                    // Get string.
+                    value = part.GetFirstToken().Text;
+
+                    if (value.StartsWith("@", System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        isVerbatim = true;
+                        value = value.Substring(2, value.Length - 3);
+                    }
+                    else
+                    {
+                        value = value.Substring(1, value.Length - 2);
+                    }
+
+                    // Escape braces if the exist.
+                    if (value.Contains("{"))
+                    {
+                        value = value.Replace("{", "{{");
+                    }
+
+                    if (value.Contains("}"))
+                    {
+                        value = value.Replace("}", "}}");
+                    }
+                }
+                else
+                {
+                    var p = TestForToStringAccess(part);
+
+                    var expression = string.Empty;
+                    var expressionArgs = string.Empty;
+
+                    // If ToString reference, then remove reference and pass arguments to format string.
+                    if (p.IsToString)
+                    {
+                        expression = p.Expression.ToString();
+                        if (p.HasArgument)
+                        {
+                            var argumentString = p.Argument.ToString();
+                            if (IsStringExpression(p.Argument.Expression))
+                            {
+                                argumentString = argumentString.TrimStart('"').TrimEnd('"');
+                            }
+
+                            expressionArgs = string.Format(@":{0}", argumentString);
+                        }
+                    }
+                    else
+                    {
+                        expression = part.ToString();
+                    }
+
+                    var expressionIndex = expressions.IndexOf(expression);
+                    if (expressionIndex <= -1)
+                    {
+                        expressions.Add(expression);
+                        expressionIndex = expressions.IndexOf(expression);
+                    }
+
+                    // Get expression.
+                    value = $"{{{expressionIndex}{expressionArgs}}}";
+                }
+
+                format.Append(value);
+            }
+
+            var startStringQuote = isVerbatim ? @"@""" : @"""";
+            var formatString = startStringQuote + format.ToString() + "\"";
+
+            var result = string.Empty;
+
+            if (expressions.Any())
+            {
+                var expressionString = (expressions.Any()) ? ", " + string.Join(", ", expressions) : string.Empty;
+                result = $@"string.Format({formatString}{expressionString})";
+            }
+            else
+            {
+                result = formatString;
+            }
+
+            return SyntaxFactory.ParseExpression(result);
+        }
+
+
+        static ToStringRef TestForToStringAccess(ExpressionSyntax myItem)
+        {
+            var result = new ToStringRef
+            {
+                IsToString = false,
+                HasArgument = false
+            };
+
+            var invocation = myItem as InvocationExpressionSyntax;
+            if (invocation != null)
+            {
+                var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
+
+                if (memberAccess != null)
+                {
+                    if (string.Equals("ToString", memberAccess.Name.ToString(), System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Only handle unecessary calls to ToString or calls with only a format string parameter.
+                        // IE: var.ToString() or var.ToString(""), but not var.ToString(a).
+                        if (!invocation.ArgumentList.Arguments.Any())
+                        {
+                            result.IsToString = true;
+                            result.Expression = memberAccess.Expression;
+                        }
+                        else if (invocation.ArgumentList.Arguments.Count == 1)
+                        {
+                            var argument = invocation.ArgumentList.Arguments.First();
+                            if (IsStringExpression(argument.Expression))
+                            {
+                                result.IsToString = true;
+                                result.Expression = memberAccess.Expression;
+                                result.HasArgument = true;
+                                result.Argument = argument;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private class ToStringRef
+        {
+            public bool IsToString { get; set; }
+
+            public bool HasArgument { get; set; }
+
+            public ExpressionSyntax Expression { get; set; }
+
+            public ArgumentSyntax Argument { get; set; }
+        }
+
+        /// <summary>
+        /// Get parts in order from a binary expression.
+        /// </summary>
+        /// <returns></returns>
+        static IEnumerable<ExpressionSyntax> GetParts(BinaryExpressionSyntax node)
+        {
+            var result = new List<ExpressionSyntax>();
+
+            var descendents = node.DescendantNodes();
+            if (!descendents.Any(d => IsStringExpression(d)))
+            {
+                result.Add(node);
+            }
+            else
+            {
+                result.AddRange((node.Left is BinaryExpressionSyntax) ?
+                GetParts(node.Left as BinaryExpressionSyntax) :
+                new[] { node.Left });
+
+                result.AddRange((node.Right is BinaryExpressionSyntax) ?
+                    GetParts(node.Right as BinaryExpressionSyntax) :
+                    new[] { node.Right });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Is the expression a string type?
+        /// </summary>
+        /// <param name="expr">An expression.</param>
+        /// <returns>
+        /// True if the expression is of kind <see cref="SyntaxKind.StringLiteralExpression"/>.
+        /// </returns>
+        static bool IsStringExpression(SyntaxNode expr)
+        {
+            return (expr is LiteralExpressionSyntax && expr.IsKind(SyntaxKind.StringLiteralExpression));
+        }
+
     }
 }

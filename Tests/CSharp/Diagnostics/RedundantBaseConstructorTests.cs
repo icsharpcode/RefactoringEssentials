@@ -3,9 +3,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantBaseConstructorTests : CSharpDiagnosticTestBase
     {
         [Test]
@@ -20,7 +18,7 @@ class BaseClass
 }
 class TestClass : BaseClass
 {
-    public TestClass(int data) : base() { }
+    public TestClass(int data) $: base()$ { }
 }
 ";
             var output = @"
@@ -32,11 +30,10 @@ class BaseClass
 }
 class TestClass : BaseClass
 {
-    public TestClass(int data)
-	{ }
+    public TestClass(int data) { }
 }
 ";
-            Test<RedundantBaseConstructorCallAnalyzer>(input, 1, output);
+            Analyze<RedundantBaseConstructorCallAnalyzer>(input, output);
         }
 
         [Test]
@@ -52,6 +49,7 @@ class BaseClass
 class TestClass : BaseClass
 {
 // ReSharper disable once RedundantBaseConstructorCall
+#pragma warning disable " + CSharpDiagnosticIDs.RedundantBaseConstructorCallAnalyzerID + @"
     public TestClass(int data) : base() { }
 }
 ";

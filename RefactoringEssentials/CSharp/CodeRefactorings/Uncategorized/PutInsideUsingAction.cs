@@ -21,12 +21,14 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var variableDeclaration = node.GetAncestor<VariableDeclarationSyntax>();
             var localDeclaration = node.GetAncestor<LocalDeclarationStatementSyntax>();
 
-            if (node.Initializer == null)
+            if (node.Initializer == null || node.Parent.Parent != null && node.Parent.Parent.IsKind(SyntaxKind.UsingStatement))
+                yield break;
+            
+            var symbol = semanticModel.GetDeclaredSymbol(node) as ILocalSymbol;
+            if (symbol == null)
                 yield break;
 
-            var symbol = (ILocalSymbol)semanticModel.GetDeclaredSymbol(node);
-
-            if (!IsDisposable(semanticModel, symbol.Type))
+            if (!symbol.Type.ImplementsSpecialTypeInterface(SpecialType.System_IDisposable))
                 yield break;
 
             var containingBlock = node.GetAncestor<BlockSyntax>();
@@ -182,21 +184,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
 
             return true;
-        }
-
-        private static bool IsDisposable(SemanticModel semanticModel, ITypeSymbol type)
-        {
-            var disposable = semanticModel.Compilation.GetSpecialType(SpecialType.System_IDisposable);
-
-            if (type.GetAllInterfacesIncludingThis().Contains(disposable))
-                return true;
-
-            var parameterType = type as ITypeParameterSymbol;
-
-            if (parameterType != null && parameterType.ConstraintTypes.Any(x => IsDisposable(semanticModel, x)))
-                return true;
-
-            return false;
         }
     }
 }

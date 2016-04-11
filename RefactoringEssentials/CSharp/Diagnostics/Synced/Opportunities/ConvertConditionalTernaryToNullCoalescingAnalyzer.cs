@@ -28,6 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -48,14 +49,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = nodeContext.CancellationToken;
 
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var obj = AnalyzeBinaryExpression(node.Condition);
             if (obj == null)
                 return false;
             if (node.Condition.SkipParens().IsKind(SyntaxKind.NotEqualsExpression))
             {
-                var whenTrue = ConvertConditionalTernaryToNullCoalescingCodeFixProvider.UnpackNullableValueAccess(semanticModel, node.WhenTrue, cancellationToken);
+                var whenTrue = UnpackNullableValueAccess(semanticModel, node.WhenTrue, cancellationToken);
                 if (!CanBeNull(semanticModel, whenTrue, cancellationToken))
                     return false;
                 if (obj.SkipParens().IsEquivalentTo(whenTrue.SkipParens(), true))
@@ -78,7 +77,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             }
             else
             {
-                var whenFalse = ConvertConditionalTernaryToNullCoalescingCodeFixProvider.UnpackNullableValueAccess(semanticModel, node.WhenFalse, cancellationToken);
+                var whenFalse = UnpackNullableValueAccess(semanticModel, node.WhenFalse, cancellationToken);
                 if (!CanBeNull(semanticModel, whenFalse, cancellationToken))
                     return false;
                 if (obj.SkipParens().IsEquivalentTo(whenFalse.SkipParens(), true))
@@ -114,6 +113,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (info.ConvertedType.IsReferenceType || info.ConvertedType.IsNullableType())
                 return true;
             return false;
+        }
+
+        internal static ExpressionSyntax UnpackNullableValueAccess(SemanticModel semanticModel, ExpressionSyntax expression, CancellationToken cancellationToken)
+        {
+            var expr = expression.SkipParens();
+            if (!expr.IsKind(SyntaxKind.SimpleMemberAccessExpression))
+                return expression;
+            var info = semanticModel.GetTypeInfo(((MemberAccessExpressionSyntax)expr).Expression, cancellationToken);
+            if (!info.ConvertedType.IsNullableType())
+                return expression;
+            return ((MemberAccessExpressionSyntax)expr).Expression;
         }
     }
 }

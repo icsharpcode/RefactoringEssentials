@@ -1,150 +1,119 @@
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Linq;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Formatting;
+using Microsoft.CodeAnalysis.CodeActions;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Iterate via 'foreach'")]
-    [NotPortedYet]
     public class IterateViaForeachAction : CodeRefactoringProvider
     {
-        public override Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            //var document = context.Document;
-            //var span = context.Span;
-            //var cancellationToken = context.CancellationToken;
-            //var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            //if (model.IsFromGeneratedCode(cancellationToken))
-            //	return;
-            //var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            return Task.FromResult(0);
+            var document = context.Document;
+            var span = context.Span;
+            var cancellationToken = context.CancellationToken;
+            var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            if (model.IsFromGeneratedCode(cancellationToken))
+                return;
+            var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+
+            var node = root.FindNode(span);
+            
+            var assignment = node.GetAncestor<AssignmentExpressionSyntax>();
+            if (assignment != null && IsEnumerable(model.GetTypeInfo(assignment.Left).ConvertedType) == true)
+            {
+                context.RegisterRefactoring(Handle(document, span, root, node, assignment.Left, false));
+                return;
+            }
+
+            var usingStatement = node.GetAncestor<UsingStatementSyntax>();
+            var variable = usingStatement?.Declaration?.ChildNodes()?.OfType<VariableDeclaratorSyntax>()?.FirstOrDefault();
+
+            if (usingStatement != null && variable != null && IsEnumerable(model.GetDeclaredSymbol(variable)) == true)
+            {
+                context.RegisterRefactoring(HandleUsingStatement(document, span, root, usingStatement, variable));
+                return;
+            }
+
+            var variableDeclarator = node.GetAncestorOrThis<VariableDeclaratorSyntax>();
+            var localDeclaration = node.GetAncestor<LocalDeclarationStatementSyntax>();
+
+            if (localDeclaration != null && variableDeclarator != null && IsEnumerable(model.GetDeclaredSymbol(variableDeclarator)) == true)
+            {
+                context.RegisterRefactoring(Handle(document, span, root, node, SyntaxFactory.IdentifierName(variableDeclarator.Identifier), false));
+                return;
+            }
+
+            var expressionStatement = node.GetAncestor<ExpressionStatementSyntax>();
+            if (expressionStatement != null && IsEnumerable(model.GetTypeInfo(expressionStatement.Expression).ConvertedType) == true)
+            {
+                context.RegisterRefactoring(Handle(document, span, root, node, expressionStatement.Expression.WithoutTrivia(), true));
+                return;
+            }
         }
-        //
-        //		public async Task ComputeRefactoringsAsync(Document document, TextSpan span, CancellationToken cancellationToken)
-        //		{
-        //			CodeAction action;
-        //			action = ActionFromUsingStatement(context);
-        //			if (action != null)
-        //				yield return action;
-        //			action = ActionFromVariableInitializer(context);
-        //			if (action != null)
-        //				yield return action;
-        //			action = ActionFromExpressionStatement(context);
-        //			if (action != null)
-        //				yield return action;
-        //		}
-        //
-        //		CodeAction ActionFromUsingStatement(SemanticModel context)
-        //		{
-        //			var initializer = context.GetNode<VariableInitializer>();
-        //			if (initializer == null || !initializer.NameToken.Contains(context.Location))
-        //				return null;
-        //			var initializerRR = context.Resolve(initializer) as LocalResolveResult;
-        //			if (initializerRR == null)
-        //				return null;
-        //			var elementType = GetElementType(initializerRR, context);
-        //			if (elementType == null)
-        //				return null;
-        //			var usingStatement = initializer.Parent.Parent as UsingStatement;
-        //			if (usingStatement == null)
-        //				return null;
-        //			return new CodeAction(context.TranslateString("Iterate via 'foreach'"), script => {
-        //				var iterator = MakeForeach(new IdentifierExpression(initializer.Name), elementType, context);
-        //				if (usingStatement.EmbeddedStatement is EmptyStatement) {
-        //					var blockStatement = new BlockStatement();
-        //					blockStatement.Statements.Add(iterator);
-        //					script.Replace(usingStatement.EmbeddedStatement, blockStatement);
-        //					script.FormatText((AstNode)blockStatement);
-        //				} else if (usingStatement.EmbeddedStatement is BlockStatement) {
-        //					var anchorNode = usingStatement.EmbeddedStatement.FirstChild;
-        //					script.InsertAfter(anchorNode, iterator);
-        //					script.FormatText(usingStatement.EmbeddedStatement);
-        //				}
-        //			}, initializer);
-        //		}
-        //
-        //		CodeAction ActionFromVariableInitializer(SemanticModel context)
-        //		{
-        //			var initializer = context.GetNode<VariableInitializer>();
-        //			if (initializer == null || initializer.Parent.Parent is ForStatement || !initializer.NameToken.Contains(context.Location))
-        //				return null;
-        //			var initializerRR = context.Resolve(initializer) as LocalResolveResult;
-        //			if (initializerRR == null)
-        //				return null;
-        //			var elementType = GetElementType(initializerRR, context);
-        //			if (elementType == null)
-        //				return null;
-        //
-        //			return new CodeAction(context.TranslateString("Iterate via foreach"), script => {
-        //				var iterator = MakeForeach(new IdentifierExpression(initializer.Name), elementType, context);
-        //				script.InsertAfter(context.GetNode<Statement>(), iterator);
-        //			}, initializer);
-        //		}
-        //
-        //		CodeAction ActionFromExpressionStatement(SemanticModel context)
-        //		{
-        //			var expressionStatement = context.GetNode<ExpressionStatement>();
-        //			if (expressionStatement == null)
-        //				return null;
-        //			var expression = expressionStatement.Expression;
-        //			var assignment = expression as AssignmentExpression;
-        //			if (assignment != null)
-        //				expression = assignment.Left;
-        //			if (!expression.Contains(context.Location))
-        //				return null;
-        //			var expressionRR = context.Resolve(expression);
-        //			if (expressionRR == null)
-        //				return null;
-        //			var elementType = GetElementType(expressionRR, context);
-        //			if (elementType == null)
-        //				return null;
-        //			return new CodeAction(context.TranslateString("Iterate via foreach"), script => {
-        //				var iterator = MakeForeach(expression, elementType, context);
-        //				if (expression == expressionStatement.Expression)
-        //					script.Replace(expressionStatement, iterator);
-        //				else
-        //					script.InsertAfter(expressionStatement, iterator);
-        //			}, expression);
-        //		}
-        //
-        //		static ForeachStatement MakeForeach(Expression node, IType type, SemanticModel context)
-        //		{
-        //			var namingHelper = new NamingHelper(context);
-        //			return new ForeachStatement {
-        //				VariableType = new SimpleType("var"),
-        //				VariableName = namingHelper.GenerateVariableName(type),
-        //				InExpression = node.Clone(),
-        //				EmbeddedStatement = new BlockStatement()
-        //			};
-        //		}
-        //
-        //		static IType GetElementType(ResolveResult rr, BaseSemanticModel context)
-        //		{
-        //			if (rr.IsError || rr.Type.Kind == TypeKind.Unknown)
-        //				return null;
-        //			var type = GetCollectionType(rr.Type);
-        //			if (type == null)
-        //				return null;
-        //
-        //			var parameterizedType = type as ParameterizedType;
-        //			if (parameterizedType != null)
-        //				return parameterizedType.TypeArguments.First();
-        //			return context.Compilation.FindType(KnownTypeCode.Object);
-        //		}
-        //
-        //		static IType GetCollectionType(IType type)
-        //		{
-        //			IType collectionType = null;
-        //			foreach (var baseType in type.GetAllBaseTypes()) {
-        //				if (baseType.IsKnownType(KnownTypeCode.IEnumerableOfT)) {
-        //					collectionType = baseType;
-        //					break;
-        //				} else if (baseType.IsKnownType(KnownTypeCode.IEnumerable)) {
-        //					collectionType = baseType;
-        //					// Don't break, continue in case type implements IEnumerable<T>
-        //				}
-        //			}
-        //			return collectionType;
-        //		}
+
+        static CodeAction HandleUsingStatement(Document document, Microsoft.CodeAnalysis.Text.TextSpan span, SyntaxNode root, UsingStatementSyntax usingStatement, VariableDeclaratorSyntax variable)
+        {
+            return CodeActionFactory.Create(
+                            span,
+                            DiagnosticSeverity.Info,
+                            "Iterate via 'foreach'",
+                            ct =>
+                            {
+                                ForEachStatementSyntax foreachStmt = BuildForeach(SyntaxFactory.IdentifierName(variable.Identifier));
+
+                                var innerBlock = usingStatement.Statement.EnsureBlock();
+
+                                var newBlock = innerBlock.WithStatements(innerBlock.Statements.Insert(0, foreachStmt)).WithAdditionalAnnotations(Formatter.Annotation);
+                                var newUsing = usingStatement.WithStatement(newBlock);
+                                var newRoot = root.ReplaceNode(usingStatement, newUsing.WithTrailingTrivia(usingStatement.GetTrailingTrivia()));
+
+                                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                            }
+                        );
+        }           
+
+        static CodeAction Handle(Document document, Microsoft.CodeAnalysis.Text.TextSpan span, SyntaxNode root, SyntaxNode node, ExpressionSyntax iterateOver, bool replaceNode)
+        {
+            return CodeActionFactory.Create(
+                span,
+                DiagnosticSeverity.Info,
+                "Iterate via 'foreach'",
+                ct =>
+                {
+                    ForEachStatementSyntax foreachStmt = BuildForeach(iterateOver);
+
+                    SyntaxNode newRoot;
+                    var ancestor = node.GetAncestor<StatementSyntax>();
+                    if (replaceNode)
+                    {
+                        newRoot = root.ReplaceNode(ancestor, new[] { foreachStmt.WithTrailingTrivia(ancestor.GetTrailingTrivia()) });
+                    }
+                    else
+                    {
+                        newRoot = root.InsertNodesAfter(ancestor, new[] { foreachStmt.WithTrailingTrivia(ancestor.GetTrailingTrivia()) });
+                    }
+                    return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                }
+            );
+        }
+
+        static ForEachStatementSyntax BuildForeach(ExpressionSyntax iterateOver)
+        {
+            var itemVariable = SyntaxFactory.Identifier("item").WithAdditionalAnnotations(RenameAnnotation.Create());
+
+            return SyntaxFactory.ForEachStatement(SyntaxFactory.ParseTypeName("var"), itemVariable, iterateOver, SyntaxFactory.Block())
+                                                        .WithAdditionalAnnotations(Formatter.Annotation);
+        }
+
+        static bool? IsEnumerable(ISymbol symbol)
+        {
+            return symbol?.GetSymbolType()?.IsIEnumerable();
+        }
     }
 }

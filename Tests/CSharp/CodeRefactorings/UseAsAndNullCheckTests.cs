@@ -66,6 +66,36 @@ class Bar
 ");
         }
 
+        [Test]
+        public void SimpleCaseWithKeywordVarNames()
+        {
+            Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
+class Int
+{
+    public Int Baz (object foo)
+    {
+        if (foo $is Int) {
+            Baz ((Int)foo);
+            return (Int)foo;
+        }
+        return null;
+    }
+}
+", @"
+class Int
+{
+    public Int Baz (object foo)
+    {
+        var @int = foo as Int;
+        if (@int != null) {
+            Baz (@int);
+            return @int;
+        }
+        return null;
+    }
+}
+");
+        }
 
         [Test]
         public void NegatedCase()

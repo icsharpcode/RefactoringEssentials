@@ -28,6 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 nodeContext =>
                 {
@@ -44,18 +45,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
+
+            // (Bad) workaround for usage of SpeculationAnalyzer in this analyzer, when Roslyn's Workspaces are not loaded
+            if (!RoslynReflection.SpeculationAnalyzer.IsAvailable())
                 return false;
 
             var node = nodeContext.Node as MemberAccessExpressionSyntax;
             if (node.Expression.IsKind(SyntaxKind.BaseExpression))
             {
                 var replacementNode = node.Name.WithLeadingTrivia(node.GetLeadingTrivia()).WithTrailingTrivia(node.GetTrailingTrivia());
+#pragma warning disable RECS9000 // Using internal Roslyn features through reflection in wrong context.
                 if (node.CanReplaceWithReducedName(replacementNode, nodeContext.SemanticModel, nodeContext.CancellationToken))
                 {
                     diagnostic = Diagnostic.Create(descriptor, node.Expression.GetLocation(), additionalLocations: new[] { node.OperatorToken.GetLocation() });
                     return true;
                 }
+#pragma warning restore RECS9000 // Using internal Roslyn features through reflection in wrong context.
             }
             return false;
         }

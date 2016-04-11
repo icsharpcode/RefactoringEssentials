@@ -3,26 +3,25 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [Ignore("TODO roslyn port.")]
     [TestFixture]
     public class ConstantNullCoalescingConditionTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TestNullRightSide()
         {
-            Test<ConstantNullCoalescingConditionAnalyzer>(@"
+            Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		object o = new object () ?? null;
+		object o = new object() ?? $null$;
 	}
 }", @"
 class TestClass
 {
 	void Foo()
 	{
-		object o = new object ();
+		object o = new object();
 	}
 }");
         }
@@ -30,19 +29,19 @@ class TestClass
         [Test]
         public void TestNullLeftSide()
         {
-            Test<ConstantNullCoalescingConditionAnalyzer>(@"
+            Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		object o = null ?? new object ();
+		object o = $null$ ?? new object();
 	}
 }", @"
 class TestClass
 {
 	void Foo()
 	{
-		object o = new object ();
+		object o = new object();
 	}
 }");
         }
@@ -50,19 +49,19 @@ class TestClass
         [Test]
         public void TestEqualExpressions()
         {
-            Test<ConstantNullCoalescingConditionAnalyzer>(@"
+            Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		object o = new object () ?? new object ();
+		object o = new object() ?? $new object()$;
 	}
 }", @"
 class TestClass
 {
 	void Foo()
 	{
-		object o = new object ();
+		object o = new object();
 	}
 }");
         }
@@ -73,19 +72,19 @@ class TestClass
             //Previously, this was a "TestWrongContext".
             //However, since smart null coallescing was introduced, this can now be
             //detected as redundant
-            Test<ConstantNullCoalescingConditionAnalyzer>(@"
+            Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		object o = new object () ?? """";
+		object o = new object() ?? $""""$;
 	}
 }", @"
 class TestClass
 {
 	void Foo()
 	{
-		object o = new object ();
+		object o = new object();
 	}
 }");
         }
@@ -103,7 +102,6 @@ class TestClass
 }");
         }
 
-        [Ignore("enable again")]
         [Test]
         public void TestDisable()
         {
@@ -112,8 +110,37 @@ class TestClass
 {
 	void Foo()
 	{
-		// ReSharper disable once ConstantNullCoalescingCondition
-		object o = new object () ?? null;
+#pragma warning disable " + CSharpDiagnosticIDs.ConstantNullCoalescingConditionAnalyzerID + @"
+		object o = new object() ?? null;
+	}
+}");
+        }
+
+        // "RECS0098: Remove redundant right side" reports incorrectly when left side is an equation
+        [Test]
+        public void TestIssue172()
+        {
+            Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
+class TestClass
+{
+    void Foo()
+    {
+        decimal? a = null;
+        decimal? b = 2;
+        decimal? c = (a + 1) ?? b;
+    }
+}");
+        }
+
+        [Test]
+        public void TestNullableCreationOnLeftSide()
+        {
+            Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
+class TestClass
+{
+	void Foo()
+	{
+		int i = new int?() ?? 1;
 	}
 }");
         }

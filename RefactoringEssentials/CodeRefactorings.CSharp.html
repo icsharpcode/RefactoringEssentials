@@ -15,11 +15,7 @@
 
     -->
     <h2>Supported Refactorings</h2>
-<<<<<<< HEAD
-    <p>94 code refactorings for C#</p>
-=======
-    <p>95 code refactorings for C#</p>
->>>>>>> 3f203cae26bdb876c92ae8386c952376453830cf
+    <p>102 code refactorings for C#</p>
     <ul>
       <li>Adds another accessor (AddAnotherAccessorCodeRefactoringProvider)</li>
       <li>Add braces (AddBracesCodeRefactoringProvider)</li>
@@ -27,6 +23,7 @@
       <li>Add an exception description to the xml documentation (AddExceptionDescriptionCodeRefactoringProvider)</li>
       <li>Add name for argument (AddNameToArgumentCodeRefactoringProvider)</li>
       <li>Introduce format item (AddNewFormatItemCodeRefactoringProvider)</li>
+      <li>Add null check (AddNullCheckCodeRefactoringProvider)</li>
       <li>Add one or more optional parameters to an invocation, using their default values (AddOptionalParameterToInvocationCodeRefactoringProvider)</li>
       <li>Check array index value (CheckArrayIndexValueCodeRefactoringProvider)</li>
       <li>Check collection index value (CheckCollectionIndexValueCodeRefactoringProvider)</li>
@@ -35,6 +32,8 @@
       <li>Check StringBuilder index value (CheckStringBuilderIndexValueCodeRefactoringProvider)</li>
       <li>Check string index value (CheckStringIndexValueCodeRefactoringProvider)</li>
       <li>Compute constant value (ComputeConstantValueCodeRefactoringProvider)</li>
+      <li>Add a Contract to specify the return value must not be null (ContractEnsuresNotNullReturnCodeRefactoringProvider)</li>
+      <li>Add a Contract to specify the parameter must not be null (ContractRequiresNotNullCodeRefactoringProvider)</li>
       <li>Convert anonymous method to lambda expression (ConvertAnonymousMethodToLambdaCodeRefactoringProvider)</li>
       <li>Convert auto-property to computed propertyy (ConvertAutoPropertyToPropertyCodeRefactoringProvider)</li>
       <li>Replace bitwise flag comparison with call to 'Enum.HasFlag' (ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider)</li>
@@ -55,6 +54,7 @@
       <li>Convert 'if' to 'return' (ConvertIfStatementToReturnStatementAction)</li>
       <li>Convert 'if' to 'switch' (ConvertIfStatementToSwitchStatementCodeRefactoringProvider)</li>
       <li>Convert implict to explicit implementation (ConvertImplicitToExplicitImplementationCodeRefactoringProvider)</li>
+      <li>Convert instance to static method (ConvertInstanceToStaticMethodCodeRefactoringProvider)</li>
       <li>Convert string interpolation to 'string.Format' (ConvertInterpolatedStringToStringFormatCodeRefactoringProvider)</li>
       <li>Converts expression of lambda body to statement (ConvertLambdaBodyExpressionToStatementCodeRefactoringProvider)</li>
       <li>Converts statement of lambda body to expression (ConvertLambdaStatementToExpressionCodeRefactoringProvider)</li>
@@ -72,7 +72,9 @@
       <li>Copy comments from base (CopyCommentsFromBaseCodeRefactoringProvider)</li>
       <li>Create changed event for property (CreateChangedEventCodeRefactoringProvider)</li>
       <li>Create custom event implementation (CreateCustomEventImplementationAction)</li>
+      <li>Create delegate (CreateDelegateAction)</li>
       <li>Create event invocator (CreateEventInvocatorCodeRefactoringProvider)</li>
+      <li>Create overload without parameter (CreateOverloadWithoutParameterCodeRefactoringProvider)</li>
       <li>Extract field (ExtractWhileConditionToInternalIfStatementCodeRefactoringProvider)</li>
       <li>Swap 'Equals' target and argument (FlipEqualsTargetAndArgumentCodeRefactoringProvider)</li>
       <li>Flip an operator operands (FlipOperatorArgumentsCodeRefactoringProvider)</li>
@@ -86,6 +88,7 @@
       <li>Invert if (InvertIfCodeRefactoringProvider)</li>
       <li>Invert logical expression (InvertLogicalExpressionCodeRefactoringProvider)</li>
       <li>Invoke as static method (InvokeAsStaticMethodCodeRefactoringProvider)</li>
+      <li>Iterate via 'foreach' (IterateViaForeachAction)</li>
       <li>Join local variable declaration and assignment (JoinLocalVariableDeclarationAndAssignmentCodeRefactoringProvider)</li>
       <li>Join string literal (JoinStringCodeRefactoringProvider)</li>
       <li>Merge nested 'if' (MergeNestedIfAction)</li>
@@ -106,7 +109,6 @@
       <li>Replaces 'var' with explicit type specification (ReplaceVarWithExplicitTypeCodeRefactoringProvider)</li>
       <li>Replace assignment with operator assignment (ReplaceWithOperatorAssignmentCodeRefactoringProvider)</li>
       <li>Reverse the direction of a for  (ReverseDirectionForForLoopCodeRefactoringProvider)</li>
-      <li>Sort usings (SortUsingsAction)</li>
       <li>Split declaration list (SplitDeclarationListCodeRefactoringProvider)</li>
       <li>Split 'if' with '&amp;&amp;' condition in two nested 'if' statements (SplitIfWithAndConditionInTwoCodeRefactoringProvider)</li>
       <li>Split 'if' with '||' condition in two 'if' statements (SplitIfWithOrConditionInTwoCodeRefactoringProvider)</li>
@@ -114,6 +116,7 @@
       <li>Split string literal (SplitStringCodeRefactoringProvider)</li>
       <li>Make abstract member virtual (ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider)</li>
       <li>Use 'as' and check for null (UseAsAndNullCheckCodeRefactoringProvider)</li>
+      <li>Use string.Format() (UseStringFormatAction)</li>
       <li>Use System.Environment.NewLine (UseSystemEnvironmentNewLineCodeRefactoringProvider)</li>
       <li>Use string.Empty (UseSystemStringEmptyCodeRefactoringProvider)</li>
     </ul>

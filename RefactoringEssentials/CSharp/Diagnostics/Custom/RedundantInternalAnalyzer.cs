@@ -18,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Removes 'internal' modifiers that are not required"),
             GettextCatalog.GetString("'internal' modifier is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantInternalAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
@@ -28,6 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -44,8 +45,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var node = nodeContext.Node as BaseTypeDeclarationSyntax;
             if (node == null)
                 return false;

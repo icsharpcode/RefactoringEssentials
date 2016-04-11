@@ -3,6 +3,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
@@ -31,10 +34,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span);
-            //if (!node.IsKind(SyntaxKind.BaseList))
-            //	continue;
-            var newRoot = root.RemoveNode(node, SyntaxRemoveOptions.KeepNoTrivia);
+            var node = root.FindToken(context.Span.Start).Parent?.Parent as VariableDeclaratorSyntax;
+            if (node == null)
+                return;
+            var newRoot = root.ReplaceNode(node, node.WithInitializer(null).WithAdditionalAnnotations(Formatter.Annotation));
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove field initializer", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }

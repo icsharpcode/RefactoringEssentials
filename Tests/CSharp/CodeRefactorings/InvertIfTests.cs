@@ -10,36 +10,35 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         [Test]
         public void TestSimple()
         {
-            string result = RunContextAction(
-                                         new InvertIfCodeRefactoringProvider(),
-                                         "class TestClass" + Environment.NewLine +
-                                         "{" + Environment.NewLine +
-                                         "    void Test ()" + Environment.NewLine +
-                                         "    {" + Environment.NewLine +
-                                         "        $if (true) {" + Environment.NewLine +
-                                         "            Case1 ();" + Environment.NewLine +
-                                         "        } else {" + Environment.NewLine +
-                                         "            Case2 ();" + Environment.NewLine +
-                                         "        }" + Environment.NewLine +
-                                         "    }" + Environment.NewLine +
-                                         "}"
-                                     );
-
-            Assert.AreEqual(
-                "class TestClass" + Environment.NewLine +
-                "{" + Environment.NewLine +
-                "    void Test ()" + Environment.NewLine +
-                "    {" + Environment.NewLine +
-                "        if (false)" + Environment.NewLine +
-                "        {" + Environment.NewLine +
-                "            Case2();" + Environment.NewLine +
-                "        }" + Environment.NewLine +
-                "        else" + Environment.NewLine +
-                "        {" + Environment.NewLine +
-                "            Case1();" + Environment.NewLine +
-                "        }" + Environment.NewLine +
-                "    }" + Environment.NewLine +
-                "}", result);
+            Test<InvertIfCodeRefactoringProvider>(@"
+class TestClass
+{
+    void Test ()
+    {
+        $if (true)
+        {
+            Case1 ();
+        }
+        else
+        {
+            Case2 ();
+        }
+    }
+}", @"
+class TestClass
+{
+    void Test ()
+    {
+        if (false)
+        {
+            Case2();
+        }
+        else
+        {
+            Case1();
+        }
+    }
+}");
         }
 
         [Test]

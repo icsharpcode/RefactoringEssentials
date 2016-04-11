@@ -4,18 +4,17 @@ using RefactoringEssentials.CSharp.Diagnostics;
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class FormatStringProblemTests : CSharpDiagnosticTestBase
     {
         [Test]
         public void TooFewArguments()
         {
-            TestIssue<FormatStringProblemAnalyzer>(@"
+            Analyze<FormatStringProblemAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		string.Format(""{0}"");
+		string.Format(""${0}$"");
 	}
 }");
         }
@@ -54,38 +53,38 @@ class TestClass
         [Test]
         public void FormatItemIndexOutOfRangeOfArguments()
         {
-            TestIssue<FormatStringProblemAnalyzer>(@"
+            Analyze<FormatStringProblemAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		string.Format(""{1}"", 1);
+		string.Format(""${1}$"", $1$);
 	}
-}", 2);
+}");
         }
 
         [Test]
         public void FormatItemIndexOutOfRangeOfArguments_ExplicitArrayCreation()
         {
-            TestIssue<FormatStringProblemAnalyzer>(@"
+            Analyze<FormatStringProblemAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		string.Format(""{1}"", new object[] { 1 });
+		string.Format(""${1}$"", $new object[] { 1 }$);
 	}
-}", 2);
+}");
         }
 
         [Test]
         public void FormatItemMissingEndBrace()
         {
-            TestIssue<FormatStringProblemAnalyzer>(@"
+            Analyze<FormatStringProblemAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		string.Format(""Text text text {0 text text text"", 1);
+		string.Format(""Text text text ${0$ text text text"", 1);
 	}
 }");
         }
@@ -93,14 +92,14 @@ class TestClass
         [Test]
         public void UnescapedLeftBrace()
         {
-            TestIssue<FormatStringProblemAnalyzer>(@"
+            Analyze<FormatStringProblemAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		string.Format(""a { a"", 1);
+		string.Format(""a ${$ a"", $1$);
 	}
-}", 2);
+}");
         }
 
         [Test]
@@ -159,12 +158,12 @@ class TestClass
         [Test]
         public void TooManyArguments()
         {
-            TestIssue<FormatStringProblemAnalyzer>(@"
+            Analyze<FormatStringProblemAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		string.Format(""{0}"", 1, 2);
+		string.Format(""{0}"", 1, $2$);
 	}
 }");
         }
@@ -172,12 +171,12 @@ class TestClass
         [Test]
         public void UnreferencedArgument()
         {
-            TestIssue<FormatStringProblemAnalyzer>(@"
+            Analyze<FormatStringProblemAnalyzer>(@"
 class TestClass
 {
 	void Foo()
 	{
-		string.Format(""{0} {2}"", 1, 2, 3);
+		string.Format(""{0} {2}"", 1, $2$, 3);
 	}
 }");
         }
@@ -206,7 +205,7 @@ class TestClass
 {
 	void Foo()
 	{
-		// ReSharper disable once FormatStringProblem
+#pragma warning disable " + CSharpDiagnosticIDs.FormatStringProblemAnalyzerID + @"
 		string.Format(""{0}"", 1, 2);
 	}
 }");
