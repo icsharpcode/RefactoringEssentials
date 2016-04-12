@@ -78,7 +78,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             foreach (var variable in node.Declaration.Variables)
             {
-                var hidingMember = symbols.FirstOrDefault(v => v.Name == variable.Identifier.ValueText && ((memberSymbol.IsStatic && v.IsStatic) || !memberSymbol.IsStatic) && !v.IsKind(SymbolKind.Local) && !v.IsKind(SymbolKind.Parameter));
+                var hidingMember = symbols.FirstOrDefault(v =>
+                    v.Name == variable.Identifier.ValueText 
+                        && ((memberSymbol.IsStatic && v.IsStatic) || !memberSymbol.IsStatic) 
+                        && !v.IsKind(SymbolKind.Local) 
+                        && !v.IsKind(SymbolKind.Parameter)
+                        && !v.IsType());
                 if (hidingMember == null)
                     continue;
 
