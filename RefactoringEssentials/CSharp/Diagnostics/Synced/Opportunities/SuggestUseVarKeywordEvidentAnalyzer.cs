@@ -50,6 +50,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             {
                 var localVariableSyntax = localVariableStatement.Declaration;
 
+                // 'var' is not allowed with more than one variable declarator
+                if (localVariableSyntax.Variables.Count > 1)
+                    return false;
+
                 if (!TryValidateLocalVariableType(localVariableStatement, localVariableSyntax))
                     return false;
 

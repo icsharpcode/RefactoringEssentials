@@ -87,6 +87,19 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 	}
 }");
         }
+
+        [Test]
+        public void TestMultipleInitializers()
+        {
+            TestWrongContext(new ReplaceExplicitTypeWithVarCodeRefactoringProvider(),
+                @"class TestClass
+{
+	void Test ()
+	{
+		$TestClass aVar1 = this, aVar2 = this;
+	}
+}");
+        }
     }
 }
 

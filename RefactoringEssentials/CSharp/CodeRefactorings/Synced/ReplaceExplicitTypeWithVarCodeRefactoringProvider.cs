@@ -46,6 +46,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var varDecl = GetVariableDeclarationStatement(token.Parent);
             if (varDecl != null && varDecl.Parent is BaseFieldDeclarationSyntax)
                 return;
+            if ((varDecl != null) && (varDecl.Variables.Count > 1))
+                return;
             if (varDecl != null)
                 type = varDecl.Type;
             var foreachStmt = GetForeachStatement(token.Parent);
