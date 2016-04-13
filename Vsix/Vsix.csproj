@@ -111,6 +111,15 @@
     <Compile Include="CodeConversion.cs" />
     <Compile Include="ConvertCSToVBCommand.cs" />
     <Compile Include="ConvertCSToVBCommandPackage.cs" />
+    <Compile Include="GeneralOptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GeneralOptionsDialogPageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GeneralOptionsDialogPageControl.Designer.cs">
+      <DependentUpon>GeneralOptionsDialogPageControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="VisualStudioInteraction.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -242,6 +251,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="GeneralOptionsDialogPageControl.resx">
+      <DependentUpon>GeneralOptionsDialogPageControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
