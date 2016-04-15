@@ -776,7 +776,7 @@
       <NuGet>$(SolutionDir)\.nuget\NuGet.exe</NuGet>
       <NuGet Condition="$(OS)=='Unix'">mono $(NuGet)</NuGet>
     </PropertyGroup>
-    <Exec Condition="$(SolutionDir) != $([System.IO.Path]::GetFullPath('..'))" Command="$(NuGet) restore -SolutionDirectory .." />
+    <Exec Condition="$(SolutionDir) != $([System.IO.Path]::GetFullPath('..')) And '$(Configuration)' != 'Mono_Debug' And '$(Configuration)' != 'Mono_Release'" Command="$(NuGet) restore -SolutionDirectory .." />
   </Target>
   <PropertyGroup>
   </PropertyGroup>
