@@ -789,13 +789,13 @@
   -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Debug|AnyCPU' ">
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug_Mono</OutputPath>
+    <OutputPath>..\..\..\build\bin</OutputPath>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Release|AnyCPU' ">
     <Optimize>false</Optimize>
-    <OutputPath>bin\Mono_Release</OutputPath>
+    <OutputPath>..\..\..\build\bin</OutputPath>
     <WarningLevel>4</WarningLevel>
     <NoStdLib>true</NoStdLib>
   </PropertyGroup>
