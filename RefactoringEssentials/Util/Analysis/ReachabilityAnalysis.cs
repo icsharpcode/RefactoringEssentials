@@ -122,6 +122,13 @@ namespace RefactoringEssentials.Util.Analysis
                 return Visit(node.WhenFalse);
             }
 
+            public override bool VisitConditionalAccessExpression(ConditionalAccessExpressionSyntax node)
+            {
+                if (!Visit(node.Expression))
+                    return false;
+                return Visit(node.WhenNotNull);
+            }
+
             public override bool VisitBinaryExpression(BinaryExpressionSyntax node)
             {
                 if (node.IsKind(SyntaxKind.CoalesceExpression)) {

@@ -28,6 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -48,8 +49,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = nodeContext.CancellationToken;
 
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             var obj = AnalyzeBinaryExpression(node.Condition);
             if (obj == null)
                 return false;

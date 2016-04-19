@@ -198,5 +198,38 @@ class TestClass
             // so we suppress the warning.
             Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
+
+        [Test]
+        public void TestClashWithTypeName1()
+        {
+            var input = @"
+class i
+{
+}
+class TestClass
+{
+	void Method ()
+	{
+		int i = 0;
+	}
+}";
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
+        }
+
+        [Test]
+        public void TestClashWithTypeName2()
+        {
+            var input = @"
+delegate int i();
+
+class TestClass
+{
+	void Method ()
+	{
+		int i = 0;
+	}
+}";
+            Analyze<LocalVariableHidesMemberAnalyzer>(input);
+        }
     }
 }

@@ -26,13 +26,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(AnalyzeField,  new SyntaxKind[] { SyntaxKind.FieldDeclaration });
         }
 
         static void AnalyzeField(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var node = nodeContext.Node as FieldDeclarationSyntax;
             if (node?.Declaration?.Variables == null)
                 return;

@@ -25,6 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterCompilationStartAction(compilationContext =>
             {
                 var compilation = compilationContext.Compilation;
@@ -37,8 +38,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         var semanticModel = compilation.GetSemanticModel(ctx.Tree);
                         var root = await ctx.Tree.GetRootAsync(ctx.CancellationToken).ConfigureAwait(false);
                         var model = compilationContext.Compilation.GetSemanticModel(ctx.Tree);
-                        if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
-                            return;
                         new GatherVisitor(ctx, semanticModel).Visit(root);
                     }
                     catch (OperationCanceledException) { }

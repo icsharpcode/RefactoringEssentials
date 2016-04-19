@@ -24,6 +24,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -35,8 +36,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         static void ScanDiagnostic(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var node1 = nodeContext.Node as IndexerDeclarationSyntax;
             if (node1 != null)
             {

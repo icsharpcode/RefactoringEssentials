@@ -42,7 +42,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 yield break;
             }
 
-            yield return CodeActionFactory.Create(span, DiagnosticSeverity.Info, "Merged nested 'if'", ct =>
+            yield return CodeActionFactory.Create(span, DiagnosticSeverity.Info, "Merge nested 'if'", ct =>
             {
                 var innerCondition = SyntaxFactory.ParenthesizedExpression(innerIf.Condition);
                 var outerCondition = SyntaxFactory.ParenthesizedExpression(outerIf.Condition);

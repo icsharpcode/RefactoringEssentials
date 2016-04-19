@@ -24,13 +24,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(AnalyzeParameterList, new SyntaxKind[] { SyntaxKind.ParameterList });
         }
 
         static void AnalyzeParameterList(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var node = nodeContext.Node as ParameterListSyntax;
 
             var member = node.AncestorsAndSelf().FirstOrDefault(n => n is MemberDeclarationSyntax);

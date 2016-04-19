@@ -24,6 +24,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 nodeContext =>
                 {
@@ -41,8 +42,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             var enumDeclaration = nodeContext.Node as EnumDeclarationSyntax;
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
             if (enumDeclaration.BaseList == null || enumDeclaration.BaseList.Types.Count == 0)
                 return false;
             var underlyingType = enumDeclaration.BaseList.Types.First();

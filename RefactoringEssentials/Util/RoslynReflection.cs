@@ -342,10 +342,10 @@ namespace RefactoringEssentials
         }
 
         // SpeculationAnalyzer
-        public static AbstractSpeculationAnalyzer_8Wrapper AbstractSpeculationAnalyzer_8 => abstractSpeculationAnalyzer_8Wrapper.Value;
-        static readonly Lazy<AbstractSpeculationAnalyzer_8Wrapper> abstractSpeculationAnalyzer_8Wrapper =
-            new Lazy<AbstractSpeculationAnalyzer_8Wrapper>(() => new AbstractSpeculationAnalyzer_8Wrapper());
-        public class AbstractSpeculationAnalyzer_8Wrapper
+        public static AbstractSpeculationAnalyzer_9Wrapper AbstractSpeculationAnalyzer_9 => abstractSpeculationAnalyzer_9Wrapper.Value;
+        static readonly Lazy<AbstractSpeculationAnalyzer_9Wrapper> abstractSpeculationAnalyzer_9Wrapper =
+            new Lazy<AbstractSpeculationAnalyzer_9Wrapper>(() => new AbstractSpeculationAnalyzer_9Wrapper());
+        public class AbstractSpeculationAnalyzer_9Wrapper
         {
             public readonly Type type;
 
@@ -353,7 +353,7 @@ namespace RefactoringEssentials
             public readonly MethodInfo ReplacementChangesSemanticsMethod;
             public readonly MethodInfo SymbolInfosAreCompatibleMethod;
 
-            public AbstractSpeculationAnalyzer_8Wrapper()
+            public AbstractSpeculationAnalyzer_9Wrapper()
             {
                 Type[] abstractSpeculationAnalyzerGenericParams = {
                     Type.GetType ("Microsoft.CodeAnalysis.SyntaxNode" + ReflectionNamespaces.CAAsmName, true),

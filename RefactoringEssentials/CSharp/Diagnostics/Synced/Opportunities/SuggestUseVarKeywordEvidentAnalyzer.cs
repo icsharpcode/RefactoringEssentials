@@ -28,6 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -42,14 +43,16 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var localVariableStatement = nodeContext.Node as LocalDeclarationStatementSyntax;
 
             if (localVariableStatement != null)
             {
                 var localVariableSyntax = localVariableStatement.Declaration;
+
+                // 'var' is not allowed with more than one variable declarator
+                if (localVariableSyntax.Variables.Count > 1)
+                    return false;
 
                 if (!TryValidateLocalVariableType(localVariableStatement, localVariableSyntax))
                     return false;

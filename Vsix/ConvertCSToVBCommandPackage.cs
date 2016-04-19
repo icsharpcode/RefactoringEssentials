@@ -39,6 +39,7 @@ namespace RefactoringEssentials.VsExtension
     [InstalledProductRegistration("#110", "#112", "1.0")] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string)]
+    [ProvideOptionPage(typeof(GeneralOptionsDialogPage), "Refactoring Essentials", "General", 0, 0, true)]
     [Guid(ConvertCSToVBCommandPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class ConvertCSToVBCommandPackage : Package
@@ -69,6 +70,15 @@ namespace RefactoringEssentials.VsExtension
         {
             ConvertCSToVBCommand.Initialize(this);
             base.Initialize();
+        }
+
+        public bool DisableConverterInContextMenu
+        {
+            get
+            {
+                GeneralOptionsDialogPage page = (GeneralOptionsDialogPage)GetDialogPage(typeof(GeneralOptionsDialogPage));
+                return page.HideConverterFromContextMenu;
+            }
         }
 
         #endregion

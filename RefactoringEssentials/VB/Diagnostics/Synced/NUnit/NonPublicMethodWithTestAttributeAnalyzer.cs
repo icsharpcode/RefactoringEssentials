@@ -24,6 +24,7 @@ namespace RefactoringEssentials.VB.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 nodeContext =>
                 {
@@ -41,8 +42,6 @@ namespace RefactoringEssentials.VB.Diagnostics
         {
             var methodDeclaration = nodeContext.Node as MethodStatementSyntax;
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var methodSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(methodDeclaration);
             if (methodSymbol == null || methodSymbol.IsOverride || methodSymbol.IsStatic || methodDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))

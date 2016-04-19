@@ -32,7 +32,7 @@ namespace RefactoringEssentials.VsExtension
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        readonly Package package;
+        readonly ConvertCSToVBCommandPackage package;
 
         /// <summary>
         /// Gets the instance of the command.
@@ -58,7 +58,7 @@ namespace RefactoringEssentials.VsExtension
         /// Initializes the singleton instance of the command.
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        public static void Initialize(Package package)
+        public static void Initialize(ConvertCSToVBCommandPackage package)
         {
             Instance = new ConvertCSToVBCommand(package);
         }
@@ -68,7 +68,7 @@ namespace RefactoringEssentials.VsExtension
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        ConvertCSToVBCommand(Package package)
+        ConvertCSToVBCommand(ConvertCSToVBCommandPackage package)
         {
             if (package == null)
             {
@@ -105,7 +105,14 @@ namespace RefactoringEssentials.VsExtension
             var menuItem = sender as OleMenuCommand;
             if (menuItem != null)
             {
-                menuItem.Visible = !CodeConversion.GetCSSelectionInCurrentView(ServiceProvider)?.StreamSelectionSpan.IsEmpty ?? false;
+                if (!package.DisableConverterInContextMenu)
+                {
+                    menuItem.Visible = !CodeConversion.GetCSSelectionInCurrentView(ServiceProvider)?.StreamSelectionSpan.IsEmpty ?? false;
+                }
+                else
+                {
+                    menuItem.Visible = false;
+                }
             }
         }
 
@@ -117,13 +124,16 @@ namespace RefactoringEssentials.VsExtension
                 menuItem.Visible = false;
                 menuItem.Enabled = false;
 
-                string itemPath = VisualStudioInteraction.GetSingleSelectedItemPath();
-                var fileInfo = new FileInfo(itemPath);
-                if (!CodeConversion.IsCSFileName(fileInfo.Name))
-                    return;
+                if (!package.DisableConverterInContextMenu)
+                {
+                    string itemPath = VisualStudioInteraction.GetSingleSelectedItemPath();
+                    var fileInfo = new FileInfo(itemPath);
+                    if (!CodeConversion.IsCSFileName(fileInfo.Name))
+                        return;
 
-                menuItem.Visible = true;
-                menuItem.Enabled = true;
+                    menuItem.Visible = true;
+                    menuItem.Enabled = true;
+                }
             }
         }
 

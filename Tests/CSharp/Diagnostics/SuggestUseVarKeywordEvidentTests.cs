@@ -249,5 +249,17 @@ public class Foo
 	}
 }");
         }
+
+        [Test]
+        public void TestMultipleInitializers()
+        {
+            Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
+{
+	void Bar (object o)
+	{
+		Foo foo1 = new Foo(), foo2 = new Foo();
+	}
+}");
+        }
     }
 }

@@ -24,6 +24,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>
                 {
@@ -40,8 +41,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         private static bool TryGetUnusedLocalVariableDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var method = nodeContext.Node as MethodDeclarationSyntax;
             if ((method == null) || (method.Body == null))
@@ -68,8 +67,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            if (nodeContext.IsFromGeneratedCode())
-                return false;
 
             var localDeclarationUnused = nodeContext.Node as LocalDeclarationStatementSyntax;
             var body = localDeclarationUnused?.Parent as BlockSyntax;

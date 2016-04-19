@@ -25,6 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 AnalyzeForStatement, 
                 new SyntaxKind[] { SyntaxKind.ForStatement }
@@ -33,8 +34,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         void AnalyzeForStatement(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var node = nodeContext.Node as ForStatementSyntax;
             if (node?.Declaration?.Variables == null)
                 return;
@@ -42,7 +41,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var local = nodeContext.SemanticModel.GetDeclaredSymbol(variable);
                 if (local == null)
                     return;
-                if (!node.Condition.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().Any(n => n.Identifier.ValueText == local.Name))
+                if ((node.Condition == null) || !node.Condition.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().Any(n => n.Identifier.ValueText == local.Name))
                     continue;
                 bool wasModified = false;
                 foreach (var identifier in node.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>()) {

@@ -15,6 +15,9 @@
     - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
     - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
   
+  before_build: 
+    - cmd: nuget restore RefactoringEssentials.sln
+
   build_script:
     - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
   
@@ -44,6 +47,7 @@
   
   before_build: 
     - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
+    - cmd: nuget restore RefactoringEssentials.sln
   
   build_script:
     - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m

@@ -25,6 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 AnalyzeMethod,
                 new SyntaxKind[] { SyntaxKind.MethodDeclaration }
@@ -33,8 +34,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         static void AnalyzeMethod(SyntaxNodeAnalysisContext nodeContext)
         {
-            if (nodeContext.IsFromGeneratedCode())
-                return;
             var node = nodeContext.Node as MethodDeclarationSyntax;
             if (node == null || !node.Modifiers.Any(m => m.IsKind(SyntaxKind.PartialKeyword)))
                 return;
@@ -42,7 +41,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return;
 
             var symbol = nodeContext.SemanticModel.GetDeclaredSymbol(node) as IMethodSymbol;
-            if (symbol == null)
+            if ((symbol == null) || (symbol.PartialDefinitionPart == null))
                 return;
             for (int i = 0; i < symbol.PartialDefinitionPart.Parameters.Length && i < node.ParameterList.Parameters.Count; i++) {
                 if (symbol.PartialDefinitionPart.Parameters[i].Name != node.ParameterList.Parameters[i].Identifier.ValueText) {

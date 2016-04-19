@@ -16,19 +16,19 @@
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
 		<description>Analyzers and Code Fixes as a library, intended for IDE builders</description>
 		<releaseNotes>Please see <#= releaseNotesLink #> for more information.</releaseNotes>
-		<copyright>Copyright (c) 2014-2015 AlphaSierraPapa</copyright>
+		<copyright><#= copyright #></copyright>
 		<tags>VS 2015 Roslyn Analyzer Refactoring</tags>
 		<dependencies>
 			<dependency id="Microsoft.CodeAnalysis.Analyzers" version="1.1.0" />
-			<dependency id="Microsoft.CodeAnalysis.Common" version="1.1.0" />
-			<dependency id="Microsoft.CodeAnalysis.CSharp" version="1.1.0" />
-			<dependency id="Microsoft.CodeAnalysis.CSharp.Workspaces" version="1.1.0" />
-			<dependency id="Microsoft.CodeAnalysis.VisualBasic" version="1.1.0" />
-			<dependency id="Microsoft.CodeAnalysis.VisualBasic.Workspaces" version="1.1.0" />
-			<dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.1.0" />
+			<dependency id="Microsoft.CodeAnalysis.Common" version="1.2.1" />
+			<dependency id="Microsoft.CodeAnalysis.CSharp" version="1.2.1" />
+			<dependency id="Microsoft.CodeAnalysis.CSharp.Workspaces" version="1.2.1" />
+			<dependency id="Microsoft.CodeAnalysis.VisualBasic" version="1.2.1" />
+			<dependency id="Microsoft.CodeAnalysis.VisualBasic.Workspaces" version="1.2.1" />
+			<dependency id="Microsoft.CodeAnalysis.Workspaces.Common" version="1.2.1" />
 			<dependency id="Microsoft.Composition" version="1.0.27" />
 			<dependency id="System.Collections.Immutable" version="1.1.37" />
-			<dependency id="System.Reflection.Metadata" version="1.1.0" />
+			<dependency id="System.Reflection.Metadata" version="1.2.0" />
 		</dependencies>
 	</metadata>
 	<files>

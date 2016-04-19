@@ -11,18 +11,18 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		$if$ (o < 10)
-			b = true;
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        $if$ (o < 10)
+            b = true;
+    }
 }", @"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10 || o < 10;
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10 || o < 10;
+    }
 }");
         }
 
@@ -31,20 +31,20 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		// Some comment
-		bool b = o > 10;
-		$if$ (o < 10)
-			b = true;
-	}
+    int Bar(int o)
+    {
+        // Some comment
+        bool b = o > 10;
+        $if$ (o < 10)
+            b = true;
+    }
 }", @"class Foo
 {
-	int Bar(int o)
-	{
-		// Some comment
-		bool b = o > 10 || o < 10;
-	}
+    int Bar(int o)
+    {
+        // Some comment
+        bool b = o > 10 || o < 10;
+    }
 }");
         }
 
@@ -53,20 +53,20 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		$if$ (o < 10)
-		{
-			b = true;
-		}
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        $if$ (o < 10)
+        {
+            b = true;
+        }
+    }
 }", @"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10 || o < 10;
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10 || o < 10;
+    }
 }");
         }
 
@@ -75,21 +75,21 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		Console.WriteLine ();
-		$if$ (o < 10)
-			b = true;
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        Console.WriteLine ();
+        $if$ (o < 10)
+            b = true;
+    }
 }", @"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		Console.WriteLine ();
-		b |= o < 10;
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        Console.WriteLine ();
+        b |= o < 10;
+    }
 }");
         }
 
@@ -98,23 +98,23 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		Console.WriteLine ();
-		// Some comment
-		$if$ (o < 10)
-			b = true;
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        Console.WriteLine ();
+        // Some comment
+        $if$ (o < 10)
+            b = true;
+    }
 }", @"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		Console.WriteLine ();
-		// Some comment
-		b |= o < 10;
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        Console.WriteLine ();
+        // Some comment
+        b |= o < 10;
+    }
 }");
         }
 
@@ -123,23 +123,23 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		Console.WriteLine ();
-		$if$ (o < 10)
-		{
-			b = true;
-		}
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        Console.WriteLine ();
+        $if$ (o < 10)
+        {
+            b = true;
+        }
+    }
 }", @"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		Console.WriteLine ();
-		b |= o < 10;
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        Console.WriteLine ();
+        b |= o < 10;
+    }
 }");
         }
 
@@ -148,19 +148,19 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
-		Console.WriteLine ();
-		if (o < 10)
-		{
-			b = true;
-		}
-		else
-		{
-			return 21;
-		}
-	}
+    int Bar(int o)
+    {
+        bool b = o > 10;
+        Console.WriteLine ();
+        if (o < 10)
+        {
+            b = true;
+        }
+        else
+        {
+            return 21;
+        }
+    }
 }");
         }
 
@@ -169,23 +169,23 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		SomeType st = new SomeType();
-		st.IsEnabled = o > 10;
-		Console.WriteLine ();
-		$if$ (o < 10)
-			st.IsEnabled = true;
-	}
+    int Bar(int o)
+    {
+        SomeType st = new SomeType();
+        st.IsEnabled = o > 10;
+        Console.WriteLine ();
+        $if$ (o < 10)
+            st.IsEnabled = true;
+    }
 }", @"class Foo
 {
-	int Bar(int o)
-	{
-		SomeType st = new SomeType();
-		st.IsEnabled = o > 10;
-		Console.WriteLine ();
-		st.IsEnabled |= o < 10;
-	}
+    int Bar(int o)
+    {
+        SomeType st = new SomeType();
+        st.IsEnabled = o > 10;
+        Console.WriteLine ();
+        st.IsEnabled |= o < 10;
+    }
 }");
         }
 
@@ -194,17 +194,17 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	public override void VisitComposedType (ComposedType composedType)
-	{
-		$if$ (composedType.PointerRank > 0)
-			unsafeStateStack.Peek ().UseUnsafeConstructs = true;
-	}
+    public override void VisitComposedType (ComposedType composedType)
+    {
+        $if$ (composedType.PointerRank > 0)
+            unsafeStateStack.Peek ().UseUnsafeConstructs = true;
+    }
 }", @"class Foo
 {
-	public override void VisitComposedType (ComposedType composedType)
-	{
-		unsafeStateStack.Peek ().UseUnsafeConstructs |= composedType.PointerRank > 0;
-	}
+    public override void VisitComposedType (ComposedType composedType)
+    {
+        unsafeStateStack.Peek ().UseUnsafeConstructs |= composedType.PointerRank > 0;
+    }
 }");
         }
 
@@ -213,13 +213,13 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	int Bar(int o)
-	{
-		bool b = o > 10;
+    int Bar(int o)
+    {
+        bool b = o > 10;
 #pragma warning disable " + CSharpDiagnosticIDs.ConvertIfToOrExpressionAnalyzerID + @"
-		if (o < 10)
-			b = true;
-	}
+        if (o < 10)
+            b = true;
+    }
 }");
         }
 
@@ -228,13 +228,13 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
 {
-	public bool Enabled { get; set; }
+    public bool Enabled { get; set; }
 
-	int Bar(Foo fileChangeWatcher)
-	{
-		if (fileChangeWatcher != null)
-			fileChangeWatcher.Enabled = true;
-	}
+    int Bar(Foo fileChangeWatcher)
+    {
+        if (fileChangeWatcher != null)
+            fileChangeWatcher.Enabled = true;
+    }
 }");
         }
 
@@ -248,16 +248,31 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         public bool Enabled { get; set; }
     }
     public FooChild Child { get; set; }
-	
+    
 
-	int Bar(Foo fileChangeWatcher)
-	{
-		if (fileChangeWatcher.Child != null)
-			fileChangeWatcher.Child.Enabled = true;
-	}
+    int Bar(Foo fileChangeWatcher)
+    {
+        if (fileChangeWatcher.Child != null)
+            fileChangeWatcher.Child.Enabled = true;
+    }
 }");
         }
 
+        [Test]
+        public void TestComplexAssignmentCase()
+        {
+            Analyze<ConvertIfToOrExpressionAnalyzer>(@"class Foo
+{
+    int Bar(bool foo)
+    {
+        bool bar = false;
+        if (foo)
+        {
+            bar ^= true;
+        }
+    }
+}");
+        }
     }
 }
 
