@@ -61,7 +61,6 @@
 * StringCompareIsCultureSpecificAnalyzer
 * UnassignedReadonlyFieldAnalyzer
 * UnusedAnonymousMethodSignatureAnalyzer
-* UnusedParameterAnalyzer
 * UseArrayCreationExpressionAnalyzer
 * UseIsOperatorAnalyzer
 * UseMethodAnyAnalyzer
