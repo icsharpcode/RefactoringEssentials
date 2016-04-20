@@ -162,6 +162,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             public override void VisitUnsafeStatement(UnsafeStatementSyntax node)
             {
+                if (unsafeStateStack.Count == 0)
+                    return;
+
                 MarkUnsafe();
                 bool isRedundant = unsafeStateStack.Peek().InUnsafeContext;
                 unsafeStateStack.Push(new UnsafeState(true));
