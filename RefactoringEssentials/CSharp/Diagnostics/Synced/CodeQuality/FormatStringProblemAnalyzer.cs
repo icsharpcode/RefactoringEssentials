@@ -27,6 +27,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.EnableConcurrentExecution();
             context.RegisterSyntaxNodeAction(
             	AnalyzeInvocation, 
                 new SyntaxKind[] { SyntaxKind.InvocationExpression }
