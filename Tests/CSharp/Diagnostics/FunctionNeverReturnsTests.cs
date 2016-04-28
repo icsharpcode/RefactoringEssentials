@@ -156,6 +156,31 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
+        [Test]
+        public void TestNonRecursivePropertyWithPassingPropertyName()
+        {
+            var input = @"
+class TestClass
+{
+    private int TryProperty(string propertyName)
+    {
+    }
+    private void SetProperty(string propertyName, int newValue)
+    {
+    }
+
+
+    int Foo
+    {
+        get { return TryProperty(nameof(Foo)); }
+        set
+        {
+            SetProperty(nameof(Foo), value);
+        }
+    }
+}";
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
+        }
 
         [Test]
         public void TestGetterNeverReturns()
