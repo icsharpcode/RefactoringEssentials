@@ -95,5 +95,31 @@ class TestClass
 }";
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(input);
         }
+
+        [Test]
+        public void TestPreserveTrivia()
+        {
+            Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
+class TestClass
+{
+	void TestMethod()
+	{
+		var a = new int[] {
+			1,
+			2$,$
+		};
+	}
+}", @"
+class TestClass
+{
+	void TestMethod()
+	{
+		var a = new int[] {
+			1,
+			2
+		};
+	}
+}");
+        }
     }
 }

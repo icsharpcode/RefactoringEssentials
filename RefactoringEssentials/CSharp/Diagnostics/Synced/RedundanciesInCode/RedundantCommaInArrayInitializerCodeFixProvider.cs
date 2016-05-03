@@ -46,11 +46,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return;
 
             var redundantComma = node.Expressions.GetSeparator(elementCount - 1);
+            var newSeparatedExpList = new List<SyntaxNodeOrToken>(node.Expressions.GetWithSeparators().Where(t => t != redundantComma));
+            var lastExp = newSeparatedExpList.Last();
+            newSeparatedExpList.RemoveAt(newSeparatedExpList.Count - 1);
+            newSeparatedExpList.Add(lastExp.WithTrailingTrivia(redundantComma.TrailingTrivia));
+
             var newRoot = root.ReplaceNode(
                 node,
                 node
-                .WithExpressions(SyntaxFactory.SeparatedList(node.Expressions.ToArray()))
-                .WithAdditionalAnnotations(Formatter.Annotation));
+                .WithExpressions(SyntaxFactory.SeparatedList<ExpressionSyntax>(SyntaxFactory.NodeOrTokenList(newSeparatedExpList))));
 
             context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove ','", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
