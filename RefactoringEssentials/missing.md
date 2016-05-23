@@ -8,7 +8,6 @@
 * AutoLinqSumAction
 * ChangeAccessModifierAction
 * CreateIndexerAction
-* ExtractAnonymousMethodAction
 * GenerateGetterAction
 * IntroduceConstantAction
 * LinqFluentToQueryAction

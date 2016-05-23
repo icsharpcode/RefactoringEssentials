@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CodeActions;
+using Microsoft.CodeAnalysis.Simplification;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
@@ -62,7 +63,9 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 );
             }
             workspace.Options = workspace.Options
-                .WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, true);
+                .WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, true)
+                .WithChangedOption(SimplificationOptions.PreferIntrinsicPredefinedTypeKeywordInDeclaration, LanguageNames.CSharp, true)
+                .WithChangedOption(SimplificationOptions.PreferIntrinsicPredefinedTypeKeywordInMemberAccess, LanguageNames.CSharp, true);
             workspace.Open(ProjectInfo.Create(
                 projectId,
                 VersionStamp.Create(),
