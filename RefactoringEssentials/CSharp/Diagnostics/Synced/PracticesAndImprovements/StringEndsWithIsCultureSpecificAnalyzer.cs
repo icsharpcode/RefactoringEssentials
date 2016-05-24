@@ -54,6 +54,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (!(symbol.ContainingType != null && symbol.ContainingType.SpecialType == SpecialType.System_String))
                 return false;
             var parameters = symbol.GetParameters();
+            // Ignore calls to EndsWith(String, bool, CultureInfo), there is no overload with StringComparison for them
+            if (parameters.Length == 3)
+                return false;
             var firstParameter = parameters.FirstOrDefault();
             if (firstParameter == null || firstParameter.Type.SpecialType != SpecialType.System_String)
                 return false;   // First parameter not a string
