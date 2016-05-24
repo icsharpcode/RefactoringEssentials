@@ -145,17 +145,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (target.IsKind(SyntaxKind.IdentifierName))
                 return !expr.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().Any(n => ((IdentifierNameSyntax)target).Identifier.ValueText == n.Identifier.ValueText);
             if (target.IsKind(SyntaxKind.SimpleMemberAccessExpression))
+            {
+                var descendantTargetNodes = target.DescendantNodesAndSelf();
                 return !expr.DescendantNodesAndSelf().Any(
                         n =>
                         {
-                            // StartsWith() is a very simple solution, but should be enough in usual cases
+                            // If n is a simple idenifier, try to find it in target expression as well
                             if (n.IsKind(SyntaxKind.IdentifierName))
-                                return ((MemberAccessExpressionSyntax)target).Expression.ToString().StartsWith(((IdentifierNameSyntax)n).Identifier.ValueText);
+                                return descendantTargetNodes.Any(tn =>
+                                    tn.IsKind(SyntaxKind.IdentifierName) && (((IdentifierNameSyntax)tn).Identifier.ValueText == ((IdentifierNameSyntax)n).Identifier.ValueText));
+                            // StartsWith() is a very simple solution, but should be enough in usual cases
                             if (n.IsKind(SyntaxKind.SimpleMemberAccessExpression))
                                 return ((MemberAccessExpressionSyntax)target).Expression.ToString().StartsWith(((MemberAccessExpressionSyntax)n).Expression.ToString());
                             return false;
                         }
                     );
+            }
             return false;
         }
 
