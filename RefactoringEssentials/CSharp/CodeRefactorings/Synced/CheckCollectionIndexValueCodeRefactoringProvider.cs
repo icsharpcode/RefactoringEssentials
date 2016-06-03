@@ -43,7 +43,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
             if (!IsCollection(type as INamedTypeSymbol) && !type.AllInterfaces.Any(IsCollection))
                 return;
-            var argument = elementAccess.ArgumentList?.Arguments?.FirstOrDefault();
+            var argument = elementAccess.ArgumentList?.Arguments.FirstOrDefault();
             if (argument == null)
                 return;
             context.RegisterRefactoring(
