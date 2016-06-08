@@ -249,6 +249,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         var invocation = (node as InvocationExpressionSyntax) ?? (node.Parent as InvocationExpressionSyntax);
                         if (invocation == null)
                             return false;
+                        var memberAccExpr = (invocation.Expression ?? node) as MemberAccessExpressionSyntax;
+                        if (memberAccExpr != null)
+                        {
+                            if (!memberAccExpr.Expression.IsKind(SyntaxKind.ThisExpression))
+                                return false;
+                        }
                     }
 
                     //Now check for virtuals

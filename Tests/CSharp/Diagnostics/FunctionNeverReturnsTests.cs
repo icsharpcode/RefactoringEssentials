@@ -137,6 +137,20 @@ class Base
         }
 
         [Test]
+        public void TestOverrideNonRecursive()
+        {
+            var input = @"
+class Base
+{
+    public Base anotherInstance;
+    public override int GetHashCode() {
+        return anotherInstance.GetHashCode();
+    }
+}";
+            Analyze<FunctionNeverReturnsAnalyzer>(input);
+        }
+
+        [Test]
         public void TestNonRecursiveProperty()
         {
             var input = @"
