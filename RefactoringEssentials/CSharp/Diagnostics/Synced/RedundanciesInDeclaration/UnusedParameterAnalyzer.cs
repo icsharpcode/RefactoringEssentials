@@ -12,7 +12,6 @@ using System.Threading;
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class UnusedParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -29,6 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         public override void Initialize(AnalysisContext context)
         {
+            context.EnableConcurrentExecution();
             context.RegisterCompilationStartAction(nodeContext => Analyze(nodeContext));
         }
 

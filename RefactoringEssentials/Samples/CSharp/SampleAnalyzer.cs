@@ -44,6 +44,10 @@ namespace RefactoringEssentials.Samples.CSharp
 
         public override void Initialize(AnalysisContext context)
         {
+            // Use this configuration to improve analyzer's performance by allowing Roslyn to execute it concurrently.
+            // Be careful if the analyzer instance has any dependency on an external state (like configuration or other analyzers).
+            context.EnableConcurrentExecution();
+
             // Use this configuration to prevent the analyzer from creating warnings on generated code
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
 

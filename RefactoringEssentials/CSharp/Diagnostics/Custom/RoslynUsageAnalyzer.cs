@@ -10,7 +10,8 @@ using Microsoft.CodeAnalysis.CodeRefactorings;
 
 namespace RefactoringEssentials.CSharp
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    // Disabled for now to avoid exceptions in compiler-only case, because this analyzer requires types from Roslyn's Workspaces layer.
+    //[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RoslynUsageAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -27,6 +28,7 @@ namespace RefactoringEssentials.CSharp
 
         public override void Initialize(AnalysisContext context)
         {
+            context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
                 (nodeContext) =>

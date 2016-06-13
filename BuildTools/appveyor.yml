@@ -4,7 +4,7 @@
     only:
       - release
   
-  version: 4.0.{build}
+  version: 4.1.{build}
   
   os: Visual Studio 2015
 
@@ -34,7 +34,7 @@
     only:
       - master
   
-  version: 4.0.{build}
+  version: 4.1.{build}
   
   os: Visual Studio 2015
   

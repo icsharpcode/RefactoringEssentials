@@ -29,6 +29,34 @@ public class Test
         }
 
         [Test]
+        public void TestEndsWithStringComparisonOverload()
+        {
+            Analyze<StringEndsWithIsCultureSpecificAnalyzer>(@"
+public class Test
+{
+    public void Foo (string bar)
+    {
+        bar.EndsWith("".com"", System.StringComparison.Ordinal);
+    }
+}
+");
+        }
+
+        [Test]
+        public void TestEndsWithCultureInfoOverload()
+        {
+            Analyze<StringEndsWithIsCultureSpecificAnalyzer>(@"
+public class Test
+{
+    public void Foo (string bar)
+    {
+        bar.EndsWith("".com"", true, System.Globalization.CultureInfo.CurrentCulture);
+    }
+}
+");
+        }
+
+        [Test]
         public void TestDisable()
         {
             Analyze<StringEndsWithIsCultureSpecificAnalyzer>(@"

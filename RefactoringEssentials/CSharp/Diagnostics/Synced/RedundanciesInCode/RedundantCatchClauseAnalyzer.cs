@@ -24,6 +24,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         // "Remove redundant catch clauses" / "Remove 'catch'" / "'try' statement is redundant" / "Remove all '{0}' redundant 'catch' clauses" / "Remove 'try' statement"
         public override void Initialize(AnalysisContext context)
         {
+            context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             //context.RegisterSyntaxNodeAction(
             //	(nodeContext) => {

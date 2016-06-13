@@ -233,6 +233,30 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     }
 }");
         }
+
+        [Test]
+        public void TestComplexMemberAssignment()
+        {
+            Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Item
+{
+    public bool Selected;
+}
+
+class ItemList
+{
+    public List<Item> Rows = new List<Item>();
+}
+
+class Foo
+{
+    int selectedIndex;
+
+    int Bar(ItemList itemList)
+    {
+        if (selectedIndex > -1) { itemList.Rows[selectedIndex].Selected = false; }
+    }
+}");
+        }
     }
 }
 
