@@ -61,9 +61,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                             var trackedRoot = root.TrackNodes(ctor);
                             var newRoot = trackedRoot.InsertNodesBefore(trackedRoot.GetCurrentNode(ctor), new List<SyntaxNode>() {
                                 newProperty
-                            });
-                            newRoot = newRoot.ReplaceNode(newRoot.GetCurrentNode(ctor), ctor.WithBody(
-                                ctor.Body.WithStatements(SyntaxFactory.List<StatementSyntax>(new[] { assignmentStatement }.Concat(ctor.Body.Statements)))
+							});
+							var ctorBody = ctor.Body ?? SyntaxFactory.Block ();
+							newRoot = newRoot.ReplaceNode (newRoot.GetCurrentNode(ctor), ctor.WithBody(
+								ctorBody.WithStatements (SyntaxFactory.List(new[] { assignmentStatement }.Concat(ctorBody.Statements)))
                             ));
 
                             return Task.FromResult(document.WithSyntaxRoot(newRoot));
