@@ -129,5 +129,38 @@ class TestClass
     System.Action<Int32> a = Method;
 }");
         }
+
+        [Test]
+        public void TestNameClash()
+        {
+            Test<ExtractAnonymousMethodCodeRefactoringProvider>(@"
+class TestClass
+{
+    int Method()
+    {
+    }
+
+    void TestMethod ()
+    {
+        System.Action<Int32> a = i $=>  { i++; };
+    }
+}", @"
+class TestClass
+{
+    int Method()
+    {
+    }
+
+    void Method1(Int32 i)
+    {
+        i++;
+    }
+
+    void TestMethod ()
+    {
+        System.Action<Int32> a = Method1;
+    }
+}");
+        }
     }
 }
