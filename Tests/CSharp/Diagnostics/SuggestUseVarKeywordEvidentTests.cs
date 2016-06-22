@@ -11,16 +11,16 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
 {
-	void Bar (object o)
-	{
-		$Foo$ foo = (Foo)o;
-	}
+    void Bar (object o)
+    {
+        $Foo$ foo = (Foo)o;
+    }
 }", @"class Foo
 {
-	void Bar (object o)
-	{
-		var foo = (Foo)o;
-	}
+    void Bar (object o)
+    {
+        var foo = (Foo)o;
+    }
 }");
         }
 
@@ -29,16 +29,16 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
 {
-	void Bar (object o)
-	{
-		$Foo$ foo = (Foo)o;
-	}
+    void Bar (object o)
+    {
+        $Foo$ foo = (Foo)o;
+    }
 }", @"class Foo
 {
-	void Bar (object o)
-	{
-		var foo = (Foo)o;
-	}
+    void Bar (object o)
+    {
+        var foo = (Foo)o;
+    }
 }");
         }
 
@@ -47,16 +47,16 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
 {
-	void Bar (object o)
-	{
-		$Foo$ foo = new Foo();
-	}
+    void Bar (object o)
+    {
+        $Foo$ foo = new Foo();
+    }
 }", @"class Foo
 {
-	void Bar (object o)
-	{
-		var foo = new Foo();
-	}
+    void Bar (object o)
+    {
+        var foo = new Foo();
+    }
 }");
         }
 
@@ -70,10 +70,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
 class Foo : IFoo
 {
-	void Bar (object o)
-	{
-		IFoo foo = new Foo();
-	}
+    void Bar (object o)
+    {
+        IFoo foo = new Foo();
+    }
 }");
         }
 
@@ -82,10 +82,10 @@ class Foo : IFoo
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
 {
-	void Bar (object o)
-	{
-		dynamic foo = new Foo();
-	}
+    void Bar (object o)
+    {
+        dynamic foo = new Foo();
+    }
 }");
         }
 
@@ -94,16 +94,16 @@ class Foo : IFoo
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
 {
-	void Bar (object o)
-	{
-	    $int[]$ foo = new int[] { 1, 2, 3 };
-	}
+    void Bar (object o)
+    {
+        $int[]$ foo = new int[] { 1, 2, 3 };
+    }
 }", @"class Foo
 {
-	void Bar (object o)
-	{
-	    var foo = new int[] { 1, 2, 3 };
-	}
+    void Bar (object o)
+    {
+        var foo = new int[] { 1, 2, 3 };
+    }
 }");
 
         }
@@ -113,10 +113,10 @@ class Foo : IFoo
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
 {
-	void Bar (object o)
-	{
-	    int[] foo = new[] { 1, 2, 3 };
-	}
+    void Bar (object o)
+    {
+        int[] foo = new[] { 1, 2, 3 };
+    }
 }");
         }
 
@@ -243,10 +243,10 @@ public class Foo
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
 {
-	void Bar (object o)
-	{
-		Foo foo;
-	}
+    void Bar (object o)
+    {
+        Foo foo;
+    }
 }");
         }
 
@@ -255,10 +255,55 @@ public class Foo
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
 {
-	void Bar (object o)
-	{
-		Foo foo1 = new Foo(), foo2 = new Foo();
-	}
+    void Bar (object o)
+    {
+        Foo foo1 = new Foo(), foo2 = new Foo();
+    }
+}");
+        }
+
+        [Test]
+        public void TestMethodReturn()
+        {
+            Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
+{
+    Foo SomeMethod()
+    {
+        return null;
+    }
+
+    void Bar ()
+    {
+        $Foo$ foo = SomeMethod();
+    }
+}", @"class Foo
+{
+    Foo SomeMethod()
+    {
+        return null;
+    }
+
+    void Bar ()
+    {
+        var foo = SomeMethod();
+    }
+}");
+        }
+
+        [Test]
+        public void TestMethodReturn_NotOfSameType()
+        {
+            Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
+{
+    Foo SomeMethod()
+    {
+        return null;
+    }
+
+    void Bar ()
+    {
+        object foo = SomeMethod();
+    }
 }");
         }
     }
