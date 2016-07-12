@@ -52,7 +52,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     if (!IsModified(identifier))
                         continue;
 
-                    if (nodeContext.SemanticModel.GetSymbolInfo(identifier).Symbol == local) {
+                    if (nodeContext.SemanticModel.GetSymbolInfo(identifier).Symbol.Equals(local)) {
                         wasModified = true;
                         break;
                     }
