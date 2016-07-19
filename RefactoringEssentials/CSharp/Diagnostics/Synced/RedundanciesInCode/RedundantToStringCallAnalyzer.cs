@@ -25,18 +25,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             customTags: DiagnosticCustomTags.Unnecessary
         );
 
-        static readonly DiagnosticDescriptor descriptor2 = new DiagnosticDescriptor(
-            CSharpDiagnosticIDs.RedundantToStringCallAnalyzer_ValueTypesID,
-            GettextCatalog.GetString("Finds calls to ToString() which would be generated automatically by the compiler"),
-            GettextCatalog.GetString("Redundant 'ToString()' call"),
-            DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Warning,
-            isEnabledByDefault: true,
-            helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantToStringCallAnalyzerID),
-            customTags: DiagnosticCustomTags.Unnecessary
-        );
-
-        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor1, descriptor2);
+        public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(descriptor1);
 
         public override void Initialize(AnalysisContext context)
         {
@@ -161,15 +150,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     return;
                 }
                 var type = nodeContext.SemanticModel.GetTypeInfo(memberExpression.Expression).Type;
-                AddRedundantToStringIssue(memberExpression, invocationExpression, type?.IsValueType == true);
+                if ((type != null) && type.IsValueType)
+                    return;
+                AddRedundantToStringIssue(memberExpression, invocationExpression);
             }
 
-            void AddRedundantToStringIssue(MemberAccessExpressionSyntax memberExpression, InvocationExpressionSyntax invocationExpression, bool isValueType)
+            void AddRedundantToStringIssue(MemberAccessExpressionSyntax memberExpression, InvocationExpressionSyntax invocationExpression)
             {
                 // Simon Lindgren 2012-09-14: Previously there was a check here to see if the node had already been processed
                 // This has been moved out to the callers, to check it earlier for a 30-40% run time reduction
                 processedNodes.Add(invocationExpression);
-                nodeContext.ReportDiagnostic(Diagnostic.Create(isValueType ? descriptor2 : descriptor1, GetLocation (invocationExpression)));
+                nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor1, GetLocation (invocationExpression)));
             }
 
         }
@@ -189,9 +180,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 }
             }
         }
-		static string [] membersCallingToString = { "M:System.IO.TextWriter.Write", "M:System.Console.Write" };
+        static string [] membersCallingToString = { "M:System.IO.TextWriter.Write", "M:System.Console.Write" };
         
-		static void CheckAutomaticToStringCallers(SyntaxNodeAnalysisContext nodeContext, InvocationExpressionSyntax invocationExpression, ISymbol member)
+        static void CheckAutomaticToStringCallers(SyntaxNodeAnalysisContext nodeContext, InvocationExpressionSyntax invocationExpression, ISymbol member)
         {
             if (member.IsOverride)
             {
@@ -205,9 +196,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var method = member as IMethodSymbol;
             if (method == null)
                 return;
-			var id = method.GetDocumentationCommentId ();
-			if (!membersCallingToString.Any (m => id.StartsWith (m, StringComparison.Ordinal)))
-				return;
+            var id = method.GetDocumentationCommentId ();
+            if (!membersCallingToString.Any (m => id.StartsWith (m, StringComparison.Ordinal)))
+                return;
 
             var arguments = invocationExpression.ArgumentList.Arguments;
             for (int i = 0; i < arguments.Count; ++i)
@@ -243,7 +234,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return;
             }
             var type = nodeContext.SemanticModel.GetTypeInfo(memberExpression.Expression).Type;
-                        nodeContext.ReportDiagnostic(Diagnostic.Create(type?.IsValueType == true ? descriptor2 : descriptor1, GetLocation(invocationExpression)));
+            if ((type != null) && type.IsValueType)
+                return;
+            nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor1, GetLocation(invocationExpression)));
         }
 
         static Location GetLocation(InvocationExpressionSyntax invocationExpression)
