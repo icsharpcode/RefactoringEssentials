@@ -95,7 +95,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
             return IsArrayTypeSomeObviousTypeCase(nodeContext, initializerExpression, variableType, localVariable) ||
                 IsObjectCreationSomeObviousTypeCase(nodeContext, initializerExpression, variableType) ||
-                IsCastingSomeObviousTypeCase(nodeContext, initializerExpression, variableType) /*||
+                IsCastingSomeObviousTypeCase(nodeContext, initializerExpression, variableType) ||
+                IsInvocationSomeObviousTypeCase(nodeContext, initializerExpression, variableType) /*||
 				IsPropertyAccessSomeObviousTypeCase(nodeContext, initializerExpression, variableType)*/;
         }
 
@@ -154,6 +155,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     var castExpressionType = nodeContext.SemanticModel.GetTypeInfo(castExpression, nodeContext.CancellationToken).Type;
                     return castExpressionType != null && castExpressionType.Equals(variableType);
                 }
+            }
+
+            return false;
+        }
+
+        protected static bool IsInvocationSomeObviousTypeCase(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax initializerExpression, ITypeSymbol variableType)
+        {
+            var invocationExpression = initializerExpression as InvocationExpressionSyntax;
+            if (invocationExpression != null)
+            {
+                var invokedMethod = nodeContext.SemanticModel.GetSymbolInfo(invocationExpression, nodeContext.CancellationToken).Symbol as IMethodSymbol;
+                return invokedMethod != null && variableType.Equals(invokedMethod.ReturnType);
             }
 
             return false;

@@ -70,13 +70,15 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 this.type = type;
             }
 
-            void Check(SyntaxNode n)
+            void Check(SyntaxNode n, bool skipMethods)
             {
                 var info = nodeContext.SemanticModel.GetSymbolInfo(n);
                 var symbol = info.Symbol;
                 if ((symbol == null) || (symbol.ContainingType == null) || symbol.ContainingType.Locations.Where(loc => loc.IsInSource && loc.SourceTree.FilePath == type.SyntaxTree.FilePath).All(loc => !type.Span.Contains(loc.SourceSpan)))
                     return;
                 if (symbol is ITypeSymbol)
+                    return;
+                if (skipMethods && (symbol.Kind == SymbolKind.Method))
                     return;
                 if (!symbol.IsSealed && (symbol.IsVirtual || symbol.IsAbstract || symbol.IsOverride))
                 {
@@ -113,7 +115,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (node.Parent is MemberAccessExpressionSyntax || node.Parent is InvocationExpressionSyntax)
                     return;
                 if (node.Expression.IsKind(SyntaxKind.ThisExpression))
-                    Check(node);
+                    Check(node, true);
             }
 
             public override void VisitIdentifierName(IdentifierNameSyntax node)
@@ -123,7 +125,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (ancestors.Any(n => (n is MemberAccessExpressionSyntax) || (n is InvocationExpressionSyntax)))
                     return;
 
-                Check(node);
+                Check(node, true);
             }
 
             static bool IsSimpleThisCall(ExpressionSyntax expression)
@@ -140,7 +142,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (node.Parent is MemberAccessExpressionSyntax || node.Parent is InvocationExpressionSyntax)
                     return;
                 if (node.Expression.IsKind(SyntaxKind.IdentifierName) || IsSimpleThisCall(node.Expression))
-                    Check(node);
+                    Check(node, false);
             }
 
             public override void VisitParenthesizedLambdaExpression(ParenthesizedLambdaExpressionSyntax node)

@@ -12,15 +12,15 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		$Bar()$;
-		$this.Bar()$;
-	}
+    Foo()
+    {
+        $Bar()$;
+        $this.Bar()$;
+    }
 
-	virtual void Bar ()
-	{
-	}
+    virtual void Bar ()
+    {
+    }
 }");
         }
 
@@ -29,15 +29,15 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
+    Foo()
+    {
 #pragma warning disable " + CSharpDiagnosticIDs.DoNotCallOverridableMethodsInConstructorAnalyzerID + @"
-		Bar();
-	}
+        Bar();
+    }
 
-	virtual void Bar ()
-	{
-	}
+    virtual void Bar ()
+    {
+    }
 }");
         }
 
@@ -48,15 +48,15 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		Bar();
-		Bar();
-	}
+    Foo()
+    {
+        Bar();
+        Bar();
+    }
 
-	void Bar ()
-	{
-	}
+    void Bar ()
+    {
+    }
 }");
         }
 
@@ -65,15 +65,15 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"sealed class Foo
 {
-	Foo()
-	{
-		Bar();
-		Bar();
-	}
+    Foo()
+    {
+        Bar();
+        Bar();
+    }
 
-	virtual void Bar ()
-	{
-	}
+    virtual void Bar ()
+    {
+    }
 }");
         }
 
@@ -83,22 +83,22 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
 class BaseClass
 {
-	protected virtual void Bar ()
-	{
-	}
+    protected virtual void Bar ()
+    {
+    }
 }
 
 class DerivedClass : BaseClass
 {
-	DerivedClass()
-	{
-		Bar();
-		Bar();
-	}
+    DerivedClass()
+    {
+        Bar();
+        Bar();
+    }
 
-	protected override sealed void Bar ()
-	{
-	}
+    protected override sealed void Bar ()
+    {
+    }
 }");
         }
 
@@ -107,15 +107,15 @@ class DerivedClass : BaseClass
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		Foo f = new Foo();
-		f.Bar();
-	}
+    Foo()
+    {
+        Foo f = new Foo();
+        f.Bar();
+    }
 
-	virtual void Bar ()
-	{
-	}
+    virtual void Bar ()
+    {
+    }
 }");
         }
 
@@ -124,14 +124,56 @@ class DerivedClass : BaseClass
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		SomeEvent += delegate { Bar(); };
-	}
+    Foo()
+    {
+        SomeEvent += delegate { Bar(); };
+    }
 
-	virtual void Bar ()
-	{
-	}
+    virtual void Bar ()
+    {
+    }
+}");
+        }
+
+        [Test]
+        public void IgnoresDelegates1()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
+using System;
+class Foo
+{
+    private Action barAction;
+
+    Foo()
+    {
+        barAction = Bar;
+    }
+
+    virtual void Bar()
+    {
+    }
+}");
+        }
+
+        [Test]
+        public void IgnoresDelegates2()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
+using System;
+class Foo
+{
+    Foo()
+    {
+        SaveBarAction(this.Bar);
+    }
+
+    void SaveBarAction(Action barAction)
+    {
+    }
+
+    virtual void Bar()
+    {
+    }
 }");
         }
 
@@ -158,12 +200,12 @@ public class Test {
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		$this.AutoProperty$ = 1;
-	}
+    Foo()
+    {
+        $this.AutoProperty$ = 1;
+    }
 
-	public virtual int AutoProperty { get; set; }
+    public virtual int AutoProperty { get; set; }
 }");
         }
 
@@ -172,12 +214,12 @@ public class Test {
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		$AutoProperty$ = 1;
-	}
+    Foo()
+    {
+        $AutoProperty$ = 1;
+    }
 
-	public virtual int AutoProperty { get; set; }
+    public virtual int AutoProperty { get; set; }
 }");
         }
 
@@ -186,12 +228,12 @@ public class Test {
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		var val = $this.AutoProperty$;
-	}
+    Foo()
+    {
+        var val = $this.AutoProperty$;
+    }
 
-	public virtual int AutoProperty { get; set; }
+    public virtual int AutoProperty { get; set; }
 }");
         }
 
@@ -200,12 +242,12 @@ public class Test {
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		var val = $AutoProperty$;
-	}
+    Foo()
+    {
+        var val = $AutoProperty$;
+    }
 
-	public virtual int AutoProperty { get; set; }
+    public virtual int AutoProperty { get; set; }
 }");
         }
 
@@ -214,12 +256,12 @@ public class Test {
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		var val = $AutoProperty$;
-	}
+    Foo()
+    {
+        var val = $AutoProperty$;
+    }
 
-	public virtual int AutoProperty { get; private set; }
+    public virtual int AutoProperty { get; private set; }
 }");
         }
 
@@ -228,12 +270,12 @@ public class Test {
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
 {
-	Foo()
-	{
-		AutoProperty = 1;
-	}
+    Foo()
+    {
+        AutoProperty = 1;
+    }
 
-	public virtual int AutoProperty { get; private set; }
+    public virtual int AutoProperty { get; private set; }
 }");
         }
 
