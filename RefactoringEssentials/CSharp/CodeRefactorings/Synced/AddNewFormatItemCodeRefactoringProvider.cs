@@ -34,7 +34,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
 
             var token = root.FindToken(span.Start);
-            if (!token.IsKind(SyntaxKind.StringLiteralToken) || token.Span.End < span.End)
+            if (!token.IsKind(SyntaxKind.StringLiteralToken) || token.Span.End < span.End || ((span.Start - token.SpanStart - 1) < 0))
                 return;
             //			if (pexpr.LiteralValue.StartsWith("@", StringComparison.Ordinal)) {
             //				if (!(pexpr.StartLocation < new TextLocation(context.Location.Line, context.Location.Column - 1) && new TextLocation(context.Location.Line, context.Location.Column + 1) < pexpr.EndLocation)) {
