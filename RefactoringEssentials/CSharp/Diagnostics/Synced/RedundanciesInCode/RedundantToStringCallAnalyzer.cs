@@ -149,9 +149,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 {
                     return;
                 }
+                if (!OverridesObjectToStringMethod(resolveResult))
+                    return;
                 var type = nodeContext.SemanticModel.GetTypeInfo(memberExpression.Expression).Type;
                 if ((type != null) && type.IsValueType)
                     return;
+                
                 AddRedundantToStringIssue(memberExpression, invocationExpression);
             }
 
@@ -166,6 +169,25 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         }
 
         #region Invocation expression
+
+        static bool OverridesObjectToStringMethod(ISymbol toStringSymbol)
+        {
+            ISymbol currentSymbol = toStringSymbol;
+            while (currentSymbol != null)
+            {
+                var currentMethodSymbol = currentSymbol as IMethodSymbol;
+                if ((currentMethodSymbol != null)
+                    && (currentSymbol.ContainingType != null)
+                    && (currentSymbol.ContainingType.SpecialType == SpecialType.System_Object))
+                {
+                    // Found object.ToString()
+                    return true;
+                }
+                currentSymbol = currentSymbol.OverriddenMember();
+            }
+
+            return false;
+        }
 
         static void CheckTargetedObject(SyntaxNodeAnalysisContext nodeContext, InvocationExpressionSyntax invocationExpression, ISymbol member)
         {
@@ -233,6 +255,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             {
                 return;
             }
+            if (!OverridesObjectToStringMethod(resolveResult))
+                return;
             var type = nodeContext.SemanticModel.GetTypeInfo(memberExpression.Expression).Type;
             if ((type != null) && type.IsValueType)
                 return;

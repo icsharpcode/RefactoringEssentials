@@ -12,17 +12,17 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = """" + i$.ToString()$ + """" + i$.ToString()$;
-	}
+    void Bar (object i)
+    {
+        string s = """" + i$.ToString()$ + """" + i$.ToString()$;
+    }
 }", @"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = """" + i + """" + i.ToString();
-	}
+    void Bar (object i)
+    {
+        string s = """" + i + """" + i.ToString();
+    }
 }", 0);
         }
 
@@ -32,10 +32,10 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		string s = """" + i.ToString() + """" + i.ToString();
-	}
+    void Bar (int i)
+    {
+        string s = """" + i.ToString() + """" + i.ToString();
+    }
 }");
         }
 
@@ -46,10 +46,10 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		string s = i.ToString() + i + i + i + 1.3;
-	}
+    void Bar (int i)
+    {
+        string s = i.ToString() + i + i + i + 1.3;
+    }
 }");
         }
 
@@ -59,10 +59,10 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (System.DateTime dt)
-	{
-		string s = dt.ToString("""", CultureInfo.InvariantCulture) + string.Empty;
-	}
+    void Bar (System.DateTime dt)
+    {
+        string s = dt.ToString("""", CultureInfo.InvariantCulture) + string.Empty;
+    }
 }");
         }
 
@@ -72,19 +72,19 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (string str)
-	{
-		string s = str$.ToString()$;
-		string inOperator = """" + str$.ToString()$;
-	}
+    void Bar (string str)
+    {
+        string s = str$.ToString()$;
+        string inOperator = """" + str$.ToString()$;
+    }
 }", @"
 class Foo
 {
-	void Bar (string str)
-	{
-		string s = str;
-		string inOperator = """" + str;
-	}
+    void Bar (string str)
+    {
+        string s = str;
+        string inOperator = """" + str;
+    }
 }");
         }
 
@@ -94,17 +94,17 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = string.Format(""{0}"", i$.ToString()$);
-	}
+    void Bar (object i)
+    {
+        string s = string.Format(""{0}"", i$.ToString()$);
+    }
 }", @"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = string.Format(""{0}"", i);
-	}
+    void Bar (object i)
+    {
+        string s = string.Format(""{0}"", i);
+    }
 }");
         }
 
@@ -114,19 +114,19 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (object i)
-	{
-		string format = ""{0}"";
-		string s = string.Format(format, i$.ToString()$);
-	}
+    void Bar (object i)
+    {
+        string format = ""{0}"";
+        string s = string.Format(format, i$.ToString()$);
+    }
 }", @"
 class Foo
 {
-	void Bar (object i)
-	{
-		string format = ""{0}"";
-		string s = string.Format(format, i);
-	}
+    void Bar (object i)
+    {
+        string format = ""{0}"";
+        string s = string.Format(format, i);
+    }
 }");
         }
 
@@ -137,31 +137,31 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = FakeFormat(""{0} {1}"", i.ToString(), i$.ToString()$);
-	}
+    void Bar (object i)
+    {
+        string s = FakeFormat(""{0} {1}"", i.ToString(), i$.ToString()$);
+    }
 
-	void FakeFormat(string format, string arg0, object arg1)
-	{
-	}
-	void FakeFormat(string format, params object[] arg1)
-	{
-	}
+    void FakeFormat(string format, string arg0, object arg1)
+    {
+    }
+    void FakeFormat(string format, params object[] arg1)
+    {
+    }
 }", @"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = FakeFormat(""{0} {1}"", i.ToString (), i);
-	}
+    void Bar (object i)
+    {
+        string s = FakeFormat(""{0} {1}"", i.ToString (), i);
+    }
 
-	void FakeFormat(string format, string arg0, object arg1)
-	{
-	}
-	void FakeFormat(string format, params object[] arg1)
-	{
-	}
+    void FakeFormat(string format, string arg0, object arg1)
+    {
+    }
+    void FakeFormat(string format, params object[] arg1)
+    {
+    }
 }");
         }
 
@@ -172,25 +172,25 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = FakeFormat(""{0} {1}"", i$.ToString()$, i$.ToString()$);
-	}
+    void Bar (object i)
+    {
+        string s = FakeFormat(""{0} {1}"", i$.ToString()$, i$.ToString()$);
+    }
 
-	void FakeFormat(string format, params object[] args)
-	{
-	}
+    void FakeFormat(string format, params object[] args)
+    {
+    }
 }", @"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = FakeFormat(""{0} {1}"", i, i);
-	}
+    void Bar (object i)
+    {
+        string s = FakeFormat(""{0} {1}"", i, i);
+    }
 
-	void FakeFormat(string format, params object[] args)
-	{
-	}
+    void FakeFormat(string format, params object[] args)
+    {
+    }
 }");
         }
 
@@ -200,21 +200,21 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (object i)
-	{
-		var w = new System.IO.StringWriter ();
-		w.Write(i$.ToString()$);
-		w.WriteLine(i$.ToString()$);
-	}
+    void Bar (object i)
+    {
+        var w = new System.IO.StringWriter ();
+        w.Write(i$.ToString()$);
+        w.WriteLine(i$.ToString()$);
+    }
 }", @"
 class Foo
 {
-	void Bar (object i)
-	{
-		var w = new System.IO.StringWriter ();
-		w.Write(i);
-		w.WriteLine(i);
-	}
+    void Bar (object i)
+    {
+        var w = new System.IO.StringWriter ();
+        w.Write(i);
+        w.WriteLine(i);
+    }
 }");
         }
 
@@ -224,10 +224,10 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		string s = """" + i.ToString() + """" + i.ToString();
-	}
+    void Bar (int i)
+    {
+        string s = """" + i.ToString() + """" + i.ToString();
+    }
 }");
         }
 
@@ -237,10 +237,10 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (object i)
-	{
-		string s = """" + i$.ToString()$ + """" + i$.ToString()$;
-	}
+    void Bar (object i)
+    {
+        string s = """" + i$.ToString()$ + """" + i$.ToString()$;
+    }
 }");
         }
 
@@ -250,10 +250,10 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		string s = i.ToString() + i + i + i + 1.3;
-	}
+    void Bar (int i)
+    {
+        string s = i.ToString() + i + i + i + 1.3;
+    }
 }");
         }
 
@@ -263,10 +263,10 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (System.DateTime dt)
-	{
-		string s = dt.ToString("""", CultureInfo.InvariantCulture) + string.Empty;
-	}
+    void Bar (System.DateTime dt)
+    {
+        string s = dt.ToString("""", CultureInfo.InvariantCulture) + string.Empty;
+    }
 }");
         }
 
@@ -276,10 +276,10 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		string s = string.Format(""{0}"", i.ToString());
-	}
+    void Bar (int i)
+    {
+        string s = string.Format(""{0}"", i.ToString());
+    }
 }");
         }
 
@@ -289,11 +289,11 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		string format = ""{0}"";
-		string s = string.Format(format, i.ToString());
-	}
+    void Bar (int i)
+    {
+        string format = ""{0}"";
+        string s = string.Format(format, i.ToString());
+    }
 }");
         }
 
@@ -304,17 +304,17 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		string s = FakeFormat(""{0} {1}"", i.ToString(), i.ToString());
-	}
+    void Bar (int i)
+    {
+        string s = FakeFormat(""{0} {1}"", i.ToString(), i.ToString());
+    }
 
-	void FakeFormat(string format, string arg0, object arg1)
-	{
-	}
-	void FakeFormat(string format, params object[] args)
-	{
-	}
+    void FakeFormat(string format, string arg0, object arg1)
+    {
+    }
+    void FakeFormat(string format, params object[] args)
+    {
+    }
 }");
         }
 
@@ -325,14 +325,14 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		string s = FakeFormat(""{0} {1}"", i.ToString(), i.ToString());
-	}
+    void Bar (int i)
+    {
+        string s = FakeFormat(""{0} {1}"", i.ToString(), i.ToString());
+    }
 
-	void FakeFormat(string format, params object[] args)
-	{
-	}
+    void FakeFormat(string format, params object[] args)
+    {
+    }
 }");
         }
 
@@ -342,12 +342,12 @@ class Foo
             Analyze<RedundantToStringCallAnalyzer>(@"
 class Foo
 {
-	void Bar (int i)
-	{
-		var w = new System.IO.StringWriter ();
-		w.Write(i.ToString());
-		w.WriteLine(i.ToString());
-	}
+    void Bar (int i)
+    {
+        var w = new System.IO.StringWriter ();
+        w.Write(i.ToString());
+        w.WriteLine(i.ToString());
+    }
 }");
         }
 
@@ -383,5 +383,46 @@ class Foo
 }");
         }
 
+        [Test]
+        public void TestIgnoresShadowedToStringInConcatenation()
+        {
+            Analyze<RedundantToStringCallAnalyzer>(@"
+class ClassShadowingToString
+{
+    public new string ToString()
+    {
+        return ""ANYTHING"";
+    }
+}
+
+class Foo
+{
+    void Bar (ClassShadowingToString v)
+    {
+        string s = """" + v.ToString();
+    }
+}");
+        }
+
+        [Test]
+        public void TestIgnoresShadowedToStringInFormatParameter()
+        {
+            Analyze<RedundantToStringCallAnalyzer>(@"
+class ClassShadowingToString
+{
+    public new string ToString()
+    {
+        return ""ANYTHING"";
+    }
+}
+
+class Foo
+{
+    void Bar (ClassShadowingToString v)
+    {
+        string s = string.Format(""{0}"", v.ToString());
+    }
+}");
+        }
     }
 }
