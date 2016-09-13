@@ -127,6 +127,20 @@ public static class TestClass
         }
 
         [Test]
+        public void TestFixed()
+        {
+            Analyze<RedundantUnsafeContextAnalyzer>(@"
+class Foo
+{
+    unsafe struct TestStruct
+    {
+        public fixed byte TestVar[32];
+    }
+}
+");
+        }
+
+        [Test]
         public void TestUnsafeProperty()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
