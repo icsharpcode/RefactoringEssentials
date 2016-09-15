@@ -61,12 +61,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         var newPropAnno = new SyntaxAnnotation();
                         var syntaxList = new SyntaxList<AccessorDeclarationSyntax>();
                         var hasSetter = property.AccessorList.Accessors.Any(acc => acc.IsKind(SyntaxKind.SetAccessorDeclaration));
-                        var hasGetter = property.AccessorList.Accessors.Any(acc => acc.IsKind(SyntaxKind.GetAccessorDeclaration));
+                        var hasGetter = property.AccessorList.Accessors.Any(acc => acc.IsKind (SyntaxKind.GetAccessorDeclaration));
 
                         if (hasGetter)
                         {
                             var getBody = SyntaxFactory.Block(SyntaxFactory.ReturnStatement(fieldExpression));
                             var getter = SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration, getBody);
+							getter = getter.WithModifiers (property.AccessorList.Accessors.First (acc => acc.IsKind (SyntaxKind.GetAccessorDeclaration)).Modifiers);
                             syntaxList = syntaxList.Add(getter);
                             if (!hasSetter)
                                 backingStore = backingStore.WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword)));
@@ -78,6 +79,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                                 SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, fieldExpression,
                                                                    SyntaxFactory.IdentifierName("value"))));
                             var setter = SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration, setBody);
+							setter = setter.WithModifiers (property.AccessorList.Accessors.First (acc => acc.IsKind (SyntaxKind.SetAccessorDeclaration)).Modifiers);
                             syntaxList = syntaxList.Add(setter);
                         }
                         var newProperty = property.WithAccessorList(SyntaxFactory.AccessorList(syntaxList))

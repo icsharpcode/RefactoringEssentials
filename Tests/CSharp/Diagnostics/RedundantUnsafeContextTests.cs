@@ -139,5 +139,32 @@ class Foo
 }
 ");
         }
+
+        [Test]
+        public void TestUnsafeProperty()
+        {
+            Analyze<RedundantUnsafeContextAnalyzer>(@"
+class Foo
+{
+    class TestStruct
+    {
+        unsafe byte* UnsafePointer
+        {
+            get {
+                return null;
+            }
+        }
+
+        public IntPtr SafeData {
+            get {
+                unsafe {
+                    return new IntPtr(UnsafePointer);
+                }
+            }
+        }
+    }
+}
+");
+        }
     }
 }

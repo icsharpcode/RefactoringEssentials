@@ -33,18 +33,18 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             context.RegisterCompilationStartAction(compilationContext =>
             {
                 var compilation = compilationContext.Compilation;
-                compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext ctx)
+                compilationContext.RegisterSyntaxTreeAction(delegate (SyntaxTreeAnalysisContext ctx)
                 {
                     try
                     {
                         if (!compilation.SyntaxTrees.Contains(ctx.Tree))
                             return;
                         var semanticModel = compilation.GetSemanticModel(ctx.Tree);
-                        var root = await ctx.Tree.GetRootAsync(ctx.CancellationToken).ConfigureAwait(false);
+                        var root = ctx.Tree.GetRoot(ctx.CancellationToken);
                         var model = compilationContext.Compilation.GetSemanticModel(ctx.Tree);
                         if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
                             return;
-                        new GatherVisitor(ctx).Visit(root);
+                        new GatherVisitor(ctx, semanticModel).Visit(root);
                     }
                     catch (OperationCanceledException) { }
                 });
@@ -54,10 +54,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         class GatherVisitor : CSharpSyntaxWalker
         {
             SyntaxTreeAnalysisContext ctx;
+            SemanticModel semanticModel;
 
-            public GatherVisitor(SyntaxTreeAnalysisContext ctx)
+            public GatherVisitor(SyntaxTreeAnalysisContext ctx, SemanticModel semanticModel)
             {
                 this.ctx = ctx;
+                this.semanticModel = semanticModel;
             }
 
             class UnsafeState
@@ -159,6 +161,35 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 base.VisitPrefixUnaryExpression(node);
                 if (node.IsKind(SyntaxKind.AddressOfExpression) || node.IsKind(SyntaxKind.PointerIndirectionExpression))  // TODO: Check
                     MarkUnsafe();
+            }
+
+            public override void VisitIdentifierName(IdentifierNameSyntax node)
+            {
+                base.VisitIdentifierName(node);
+
+                ISymbol symbol = semanticModel.GetSymbolInfo(node).Symbol;
+                if (symbol != null)
+                {
+                    switch (symbol.Kind)
+                    {
+                        case SymbolKind.ArrayType:
+                        case SymbolKind.DynamicType:
+                        case SymbolKind.ErrorType:
+                        case SymbolKind.Event:
+                        case SymbolKind.Field:
+                        case SymbolKind.Method:
+                        case SymbolKind.NamedType:
+                        case SymbolKind.Parameter:
+                        case SymbolKind.PointerType:
+                        case SymbolKind.Property:
+                        case SymbolKind.RangeVariable:
+                            if (symbol.IsUnsafe())
+                                MarkUnsafe();
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
 
             public override void VisitUnsafeStatement(UnsafeStatementSyntax node)

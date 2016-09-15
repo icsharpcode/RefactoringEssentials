@@ -213,6 +213,31 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     }
 }");
         }
+
+        [Test]
+        public void TestPreserveVisibility()
+        {
+            Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
+{
+    public string $Test { get; private set; }
+}", @"class TestClass
+{
+    string test;
+
+    public string Test
+    {
+        get
+        {
+            return test;
+        }
+
+        private set
+        {
+            test = value;
+        }
+    }
+}");
+        }
     }
 }
 

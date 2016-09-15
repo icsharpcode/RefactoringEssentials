@@ -35,14 +35,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         void Analyze(CompilationStartAnalysisContext compilationContext)
         {
             var compilation = compilationContext.Compilation;
-            compilationContext.RegisterSyntaxTreeAction(async delegate (SyntaxTreeAnalysisContext context)
+            compilationContext.RegisterSyntaxTreeAction(delegate (SyntaxTreeAnalysisContext context)
             {
                 try
                 {
                     if (!compilation.SyntaxTrees.Contains(context.Tree))
                         return;
                     var semanticModel = compilation.GetSemanticModel(context.Tree);
-                    var root = await context.Tree.GetRootAsync(context.CancellationToken).ConfigureAwait(false);
+                    var root = context.Tree.GetRoot(context.CancellationToken);
                     var model = compilationContext.Compilation.GetSemanticModel(context.Tree);
                     if (model.IsFromGeneratedCode(compilationContext.CancellationToken))
                         return;
