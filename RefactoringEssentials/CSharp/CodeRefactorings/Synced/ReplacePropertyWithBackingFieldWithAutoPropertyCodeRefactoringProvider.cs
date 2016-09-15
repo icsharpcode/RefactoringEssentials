@@ -73,8 +73,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         static bool IsEmptyComputedProperty(PropertyDeclarationSyntax property)
         {
-            var getter = property.AccessorList.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
-            var setter = property.AccessorList.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.SetAccessorDeclaration));
+			var getter = property.AccessorList.Accessors.FirstOrDefault (a => a.IsKind (SyntaxKind.GetAccessorDeclaration));
+			var setter = property.AccessorList.Accessors.FirstOrDefault (a => a.IsKind (SyntaxKind.SetAccessorDeclaration));
             return getter != null && setter != null && IsNotImplemented(getter.Body) && IsNotImplemented(setter.Body);
         }
         static bool IsNotImplemented(BlockSyntax body)
@@ -86,9 +86,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
 
         static PropertyDeclarationSyntax CreateNewProperty(PropertyDeclarationSyntax property)
-        {
-            // create new auto property
-            var accessorDeclList = new SyntaxList<AccessorDeclarationSyntax>().Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))).Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+		{
+			var getter = property.AccessorList.Accessors.FirstOrDefault (a => a.IsKind (SyntaxKind.GetAccessorDeclaration));
+			var setter = property.AccessorList.Accessors.FirstOrDefault (a => a.IsKind (SyntaxKind.SetAccessorDeclaration));
+
+			// create new auto property
+			var accessorDeclList = new SyntaxList<AccessorDeclarationSyntax>().Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithModifiers (getter.Modifiers).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)))
+			                                                                  .Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithModifiers (setter.Modifiers).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
             var newProperty = property.WithAccessorList(SyntaxFactory.AccessorList(accessorDeclList)).WithTrailingTrivia(property.GetTrailingTrivia()).WithAdditionalAnnotations(Formatter.Annotation);
             return newProperty;
         }

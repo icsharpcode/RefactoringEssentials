@@ -227,6 +227,27 @@ class TestClass
 }
 ");
         }
+
+        [Test]
+        public void TestPreserveVisibility()
+        {
+            Test<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int field;
+    public int $Field
+    {
+        get { return field; }
+        private set { field = value; }
+    }
+}
+", @"
+class TestClass
+{
+    public int Field { get; private set; }
+}
+");
+        }
     }
 }
 
