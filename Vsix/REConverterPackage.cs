@@ -40,9 +40,9 @@ namespace RefactoringEssentials.VsExtension
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideAutoLoad(VSConstants.UICONTEXT.SolutionExistsAndFullyLoaded_string)]
     [ProvideOptionPage(typeof(GeneralOptionsDialogPage), "Refactoring Essentials", "General", 0, 0, true)]
-    [Guid(ConvertCSToVBCommandPackage.PackageGuidString)]
+    [Guid(REConverterPackage.PackageGuidString)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    public sealed class ConvertCSToVBCommandPackage : Package
+    public sealed class REConverterPackage : Package
     {
         /// <summary>
         /// ConvertCSToVBCommandPackage GUID string.
@@ -50,9 +50,9 @@ namespace RefactoringEssentials.VsExtension
         public const string PackageGuidString = "2bc6f609-6f6e-4c54-a908-791dd169911d";
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConvertCSToVBCommand"/> class.
+        /// Initializes a new instance of package class.
         /// </summary>
-        public ConvertCSToVBCommandPackage()
+        public REConverterPackage()
         {
             // Inside this method you can place any initialization code that does not require
             // any Visual Studio service because at this point the package object is created but
@@ -69,6 +69,7 @@ namespace RefactoringEssentials.VsExtension
         protected override void Initialize()
         {
             ConvertCSToVBCommand.Initialize(this);
+            ConvertVBToCSCommand.Initialize(this);
             base.Initialize();
         }
 

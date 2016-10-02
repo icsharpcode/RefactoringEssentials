@@ -68,7 +68,7 @@
     <StartArguments>/rootsuffix Roslyn</StartArguments>
   </PropertyGroup>
   <ItemGroup>
-    <VSCTCompile Include="ConvertCSToVBCommandPackage.vsct">
+    <VSCTCompile Include="REConverterPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
@@ -110,8 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeConversion.cs" />
+    <Compile Include="ConvertVBToCSCommand.cs" />
     <Compile Include="ConvertCSToVBCommand.cs" />
-    <Compile Include="ConvertCSToVBCommandPackage.cs" />
+    <Compile Include="REConverterPackage.cs" />
     <Compile Include="GeneralOptionsDialogPage.cs">
       <SubType>Component</SubType>
     </Compile>

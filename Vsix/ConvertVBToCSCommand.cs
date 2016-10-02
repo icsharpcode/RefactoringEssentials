@@ -18,11 +18,11 @@ namespace RefactoringEssentials.VsExtension
     /// <summary>
     /// Command handler
     /// </summary>
-    internal sealed class ConvertCSToVBCommand
+    internal sealed class ConvertVBToCSCommand
     {
-        public const int MainMenuCommandId = 0x0100;
-        public const int CtxMenuCommandId = 0x0101;
-        public const int ProjectItemCtxMenuCommandId = 0x0102;
+        public const int MainMenuCommandId = 0x0200;
+        public const int CtxMenuCommandId = 0x0201;
+        public const int ProjectItemCtxMenuCommandId = 0x0202;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -37,7 +37,7 @@ namespace RefactoringEssentials.VsExtension
         /// <summary>
         /// Gets the instance of the command.
         /// </summary>
-        public static ConvertCSToVBCommand Instance
+        public static ConvertVBToCSCommand Instance
         {
             get;
             private set;
@@ -60,15 +60,15 @@ namespace RefactoringEssentials.VsExtension
         /// <param name="package">Owner package, not null.</param>
         public static void Initialize(REConverterPackage package)
         {
-            Instance = new ConvertCSToVBCommand(package);
+            Instance = new ConvertVBToCSCommand(package);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ConvertCSToVBCommand"/> class.
+        /// Initializes a new instance of the <see cref="ConvertVBToCSCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
         /// </summary>
         /// <param name="package">Owner package, not null.</param>
-        ConvertCSToVBCommand(REConverterPackage package)
+        ConvertVBToCSCommand(REConverterPackage package)
         {
             if (package == null)
             {
@@ -107,7 +107,7 @@ namespace RefactoringEssentials.VsExtension
             {
                 if (!package.DisableConverterInContextMenu)
                 {
-                    menuItem.Visible = !CodeConversion.GetCSSelectionInCurrentView(ServiceProvider)?.StreamSelectionSpan.IsEmpty ?? false;
+                    menuItem.Visible = !CodeConversion.GetVBSelectionInCurrentView(ServiceProvider)?.StreamSelectionSpan.IsEmpty ?? false;
                 }
                 else
                 {
@@ -128,7 +128,7 @@ namespace RefactoringEssentials.VsExtension
                 {
                     string itemPath = VisualStudioInteraction.GetSingleSelectedItemPath();
                     var fileInfo = new FileInfo(itemPath);
-                    if (!CodeConversion.IsCSFileName(fileInfo.Name))
+                    if (!CodeConversion.IsVBFileName(fileInfo.Name))
                         return;
 
                     menuItem.Visible = true;
@@ -139,15 +139,15 @@ namespace RefactoringEssentials.VsExtension
 
         void CodeEditorMenuItemCallback(object sender, EventArgs e)
         {
-            string selectedText = CodeConversion.GetCSSelectionInCurrentView(ServiceProvider)?.StreamSelectionSpan.GetText();
-            CodeConversion.PerformCSToVBConversion(ServiceProvider, selectedText);
+            string selectedText = CodeConversion.GetVBSelectionInCurrentView(ServiceProvider)?.StreamSelectionSpan.GetText();
+            CodeConversion.PerformVBToCSConversion(ServiceProvider, selectedText);
         }
 
         async void ProjectItemMenuItemCallback(object sender, EventArgs e)
         {
             string itemPath = VisualStudioInteraction.GetSingleSelectedItemPath();
             var fileInfo = new FileInfo(itemPath);
-            if (!CodeConversion.IsCSFileName(fileInfo.Name))
+            if (!CodeConversion.IsVBFileName(fileInfo.Name))
                 return;
 
             try
@@ -155,12 +155,12 @@ namespace RefactoringEssentials.VsExtension
                 using (StreamReader reader = new StreamReader(itemPath))
                 {
                     string csCode = await reader.ReadToEndAsync();
-                    CodeConversion.PerformCSToVBConversion(ServiceProvider, csCode);
+                    CodeConversion.PerformVBToCSConversion(ServiceProvider, csCode);
                 }
             }
             catch (Exception ex)
             {
-                VisualStudioInteraction.ShowException(ServiceProvider, CodeConversion.CSToVBConversionTitle, ex);
+                VisualStudioInteraction.ShowException(ServiceProvider, CodeConversion.VBToCSConversionTitle, ex);
             }
         }
     }
