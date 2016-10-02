@@ -149,6 +149,9 @@ namespace RefactoringEssentials.CSharp.Converter
 				case VBasic.SyntaxKind.IteratorKeyword:
 				case VBasic.SyntaxKind.DimKeyword:
 					return true;
+				case VBasic.SyntaxKind.ReadOnlyKeyword:
+				case VBasic.SyntaxKind.WriteOnlyKeyword:
+					return context == TokenContext.Member;
 				default:
 					return false;
 			}
