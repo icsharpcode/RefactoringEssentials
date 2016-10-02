@@ -1109,7 +1109,7 @@ End Function";
             public override VisualBasicSyntaxNode VisitArrayCreationExpression(CSS.ArrayCreationExpressionSyntax node)
             {
                 var upperBoundArguments = node.Type.RankSpecifiers.First()?.Sizes.Where(s => !(s is CSS.OmittedArraySizeExpressionSyntax)).Select(
-                    s => (ArgumentSyntax) SyntaxFactory.SimpleArgument(ReduceArrayUpperBoundExpression((ExpressionSyntax)s.Accept(this))));
+                    s => (ArgumentSyntax) SyntaxFactory.SimpleArgument(ReduceArrayUpperBoundExpression(s)));
                 var rankSpecifiers = node.Type.RankSpecifiers.Select(rs => (ArrayRankSpecifierSyntax)rs.Accept(this));
 
                 return SyntaxFactory.ArrayCreationExpression(
@@ -1129,7 +1129,7 @@ End Function";
                 );
             }
 
-            ExpressionSyntax ReduceArrayUpperBoundExpression(ExpressionSyntax expr)
+            ExpressionSyntax ReduceArrayUpperBoundExpression(CSS.ExpressionSyntax expr)
             {
 				var constant = semanticModel.GetConstantValue(expr);
 				if (constant.HasValue && constant.Value is int)
@@ -1137,7 +1137,7 @@ End Function";
 
                 return SyntaxFactory.BinaryExpression(
                     SyntaxKind.SubtractExpression,
-                    expr, SyntaxFactory.Token(SyntaxKind.MinusToken), SyntaxFactory.NumericLiteralExpression(SyntaxFactory.Literal(1)));
+                    (ExpressionSyntax)expr.Accept(this), SyntaxFactory.Token(SyntaxKind.MinusToken), SyntaxFactory.NumericLiteralExpression(SyntaxFactory.Literal(1)));
             }
 
             public override VisualBasicSyntaxNode VisitInitializerExpression(CSS.InitializerExpressionSyntax node)
