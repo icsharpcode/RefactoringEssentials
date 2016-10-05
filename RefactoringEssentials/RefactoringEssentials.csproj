@@ -624,6 +624,12 @@
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\StaticFieldOrAutoPropertyInGenericTypeAnalyzer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\src\core\MonoDevelop.Core\MonoDevelop.Core.csproj">
+      <Project>{7525BB88-6142-4A26-93B9-A30C6983390A}</Project>
+      <Name>MonoDevelop.Core</Name>
+      <Private>False</Private>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+	</ProjectReference>
     <Reference Include="Microsoft.CodeAnalysis">
       <HintPath>..\..\..\build\bin\Microsoft.CodeAnalysis.dll</HintPath>
       <Private>True</Private>
