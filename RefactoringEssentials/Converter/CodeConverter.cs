@@ -1,5 +1,6 @@
 ﻿using System;
 using ConvVB = RefactoringEssentials.VB.Converter;
+using ConvCS = RefactoringEssentials.CSharp.Converter;
 
 namespace RefactoringEssentials.Converter
 {
@@ -23,18 +24,26 @@ namespace RefactoringEssentials.Converter
                             return ConvVB.CSharpConverter.ConvertText(code.Text, code.References);
                     }
                     break;
-            }
+				case "Visual Basic":
+					switch (code.ToLanguage)
+					{
+						case "C#":
+							return ConvCS.VisualBasicConverter.ConvertText(code.Text, code.References);
+					}
+					break;
+
+			}
             return new ConversionResult(new NotSupportedException($"Converting from {code.FromLanguage} {code.FromLanguageVersion} to {code.ToLanguage} {code.ToLanguageVersion} is not supported!"));
         }
 
         static bool IsSupportedTarget(string toLanguage, int toLanguageVersion)
         {
-            return toLanguage == "Visual Basic" && toLanguageVersion == 14;
+            return (toLanguage == "Visual Basic" && toLanguageVersion == 14) || (toLanguage == "C#" && toLanguageVersion == 6);
         }
 
         static bool IsSupportedSource(string fromLanguage, int fromLanguageVersion)
         {
-            return fromLanguage == "C#" && fromLanguageVersion == 6;
+            return (fromLanguage == "C#" && fromLanguageVersion == 6) || (fromLanguage == "Visual Basic" && fromLanguageVersion == 14);
         }
     }
 }

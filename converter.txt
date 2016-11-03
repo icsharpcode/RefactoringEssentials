@@ -12,4 +12,16 @@ C# to VB:
 - unsafe code cannot be converted
 
 VB to C#:
-- not implemented
+- statements:
+	* special select case expressions
+	* special statements: call, erase, redim, a.o.
+- expressions:
+	* .. To .. arguments
+	* anonymous types
+- special cases:
+    * Should add Public Modifier to inner types, methods, properties and fields in structures
+	* Built-in methods => Prefix with class name
+    * Function A() \n A = SomeValue \n End Function -> convert to return statement
+    * Comparison with empty string literal -> string.IsNullOrEmpty
+    * Add default value to local variable declarations without initializer
+    * XML literals -> XLinq

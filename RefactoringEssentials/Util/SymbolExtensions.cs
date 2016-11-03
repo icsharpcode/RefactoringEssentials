@@ -688,7 +688,7 @@ namespace RefactoringEssentials
 
             public override bool DefaultVisit(ISymbol node)
             {
-                throw new NotImplementedException();
+                return false;
             }
 
             public override bool VisitArrayType(IArrayTypeSymbol symbol)

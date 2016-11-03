@@ -49,17 +49,24 @@ namespace CodeConverterWebApp.Controllers
 
         string ParseLanguage(string language)
         {
-            if ("cs".Equals(language, StringComparison.OrdinalIgnoreCase))
+			if (language == null)
+				throw new ArgumentNullException(nameof(language));
+			if (language.StartsWith("cs", StringComparison.OrdinalIgnoreCase))
                 return "C#";
-            return "Visual Basic";
+			if (language.StartsWith("vb", StringComparison.OrdinalIgnoreCase))
+				return "Visual Basic";
+			throw new ArgumentException($"{language} not supported!");
         }
 
         int GetDefaultVersionForLanguage(string language)
         {
-            if ("cs".Equals(language, StringComparison.OrdinalIgnoreCase))
-                return 6;
-            // Visual Basic
-            return 14;
-        }
+			if (language == null)
+				throw new ArgumentNullException(nameof(language));
+			if (language.StartsWith("cs", StringComparison.OrdinalIgnoreCase))
+				return 6;
+			if (language.StartsWith("vb", StringComparison.OrdinalIgnoreCase))
+				return 14;
+			throw new ArgumentException($"{language} not supported!");
+		}
     }
 }

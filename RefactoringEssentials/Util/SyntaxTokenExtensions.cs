@@ -756,19 +756,29 @@ namespace RefactoringEssentials
             }
 
             return false;
-        }
+		}
 
-        public static bool IsKindOrHasMatchingText(this SyntaxToken token, SyntaxKind kind)
-        {
-            return token.Kind() == kind || token.HasMatchingText(kind);
-        }
+		public static bool IsKindOrHasMatchingText(this SyntaxToken token, SyntaxKind kind)
+		{
+			return token.Kind() == kind || token.HasMatchingText(kind);
+		}
 
-        public static bool HasMatchingText(this SyntaxToken token, SyntaxKind kind)
-        {
-            return token.ToString() == SyntaxFacts.GetText(kind);
-        }
+		public static bool IsKindOrHasMatchingText(this SyntaxToken token, Microsoft.CodeAnalysis.VisualBasic.SyntaxKind kind)
+		{
+			return Microsoft.CodeAnalysis.VisualBasic.VisualBasicExtensions.Kind(token) == kind || token.HasMatchingText(kind);
+		}
 
-        public static bool IsKind(this SyntaxToken token, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind1, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind2)
+		public static bool HasMatchingText(this SyntaxToken token, SyntaxKind kind)
+		{
+			return token.ToString() == SyntaxFacts.GetText(kind);
+		}
+
+		public static bool HasMatchingText(this SyntaxToken token, Microsoft.CodeAnalysis.VisualBasic.SyntaxKind kind)
+		{
+			return token.ToString() == Microsoft.CodeAnalysis.VisualBasic.SyntaxFacts.GetText(kind);
+		}
+
+		public static bool IsKind(this SyntaxToken token, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind1, Microsoft.CodeAnalysis.CSharp.SyntaxKind kind2)
         {
             return Microsoft.CodeAnalysis.CSharp.CSharpExtensions.Kind(token) == kind1
                 || Microsoft.CodeAnalysis.CSharp.CSharpExtensions.Kind(token) == kind2;
