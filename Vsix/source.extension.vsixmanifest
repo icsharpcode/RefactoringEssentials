@@ -2,7 +2,7 @@
 
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="NR6Pack.Refactorings.Vsix..cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="4.5.0.0" Language="en-US" Publisher="IC#Code"/>
+    <Identity Id="NR6Pack.Refactorings.Vsix..cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="4.6.0.0" Language="en-US" Publisher="IC#Code"/>
     <DisplayName>Refactoring Essentials for Visual Studio</DisplayName>
     <Description xml:space="preserve">Free refactorings for C# and Visual Basic (VB) - plus more!</Description>
     <License>license.txt</License>
