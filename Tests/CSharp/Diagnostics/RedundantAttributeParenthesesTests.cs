@@ -7,10 +7,10 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     public class RedundantAttributeParenthesesTests : CSharpDiagnosticTestBase
     {
         [Test]
-        public void Test()
+        public void DefaultCase()
         {
             Analyze<RedundantAttributeParenthesesAnalyzer>(@"
-[$Test()$]
+[Test$()$]
 class TestClass { }", @"
 [Test]
 class TestClass { }");
