@@ -14,7 +14,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Remove redundant statement"),
             GettextCatalog.GetString("Statement is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RemoveRedundantOrStatementAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

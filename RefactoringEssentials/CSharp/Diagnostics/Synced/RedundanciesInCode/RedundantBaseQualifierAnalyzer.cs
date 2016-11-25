@@ -18,7 +18,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("'base.' is redundant and can safely be removed"),
             GettextCatalog.GetString("'base.' is redundant and can safely be removed"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantBaseQualifierAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

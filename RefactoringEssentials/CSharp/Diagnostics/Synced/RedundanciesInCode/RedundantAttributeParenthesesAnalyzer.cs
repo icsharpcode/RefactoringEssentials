@@ -14,7 +14,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Parentheses are redundant if attribute has no arguments"),
             GettextCatalog.GetString("Parentheses are redundant if attribute has no arguments"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantAttributeParenthesesAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

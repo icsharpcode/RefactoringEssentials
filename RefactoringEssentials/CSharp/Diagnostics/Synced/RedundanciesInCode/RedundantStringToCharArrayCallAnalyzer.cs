@@ -17,7 +17,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant 'string.ToCharArray()' call"),
             GettextCatalog.GetString("Redundant 'string.ToCharArray()' call"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantStringToCharArrayCallAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

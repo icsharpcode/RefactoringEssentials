@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant empty 'default' switch branch"),
             GettextCatalog.GetString("Redundant empty 'default' switch branch"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantEmptyDefaultSwitchBranchAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

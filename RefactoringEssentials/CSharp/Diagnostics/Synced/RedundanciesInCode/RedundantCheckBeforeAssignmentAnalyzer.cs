@@ -28,7 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Check for inequality before assignment is redundant if (x != value) x = value;"),
             GettextCatalog.GetString("Redundant condition check before assignment"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantCheckBeforeAssignmentAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

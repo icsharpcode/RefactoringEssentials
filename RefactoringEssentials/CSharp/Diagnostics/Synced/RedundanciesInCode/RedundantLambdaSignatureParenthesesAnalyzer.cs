@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant lambda signature parentheses"),
             GettextCatalog.GetString("Redundant lambda signature parentheses"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantLambdaSignatureParenthesesAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

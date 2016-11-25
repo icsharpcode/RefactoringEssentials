@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Default argument value is redundant"),
             GettextCatalog.GetString("The parameter is optional with the same default value"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantArgumentDefaultValueAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary
