@@ -48,6 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="appveyor.2017.yml">
+      <DependentUpon>appveyor.2017.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </None>
     <None Include="appveyor.yml">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -55,6 +60,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="appveyor.2017.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>appveyor.2017.yml</LastGenOutput>
+    </Content>
     <Content Include="appveyor.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>appveyor.yml</LastGenOutput>
