@@ -46,7 +46,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var node = nodeContext.Node as AttributeSyntax;
             if (node.ArgumentList == null || node.ArgumentList.Arguments.Count > 0)
                 return false;
-            diagnostic = Diagnostic.Create(descriptor, node.GetLocation());
+            diagnostic = Diagnostic.Create(descriptor, node.ArgumentList.GetLocation());
             return true;
         }
     }
