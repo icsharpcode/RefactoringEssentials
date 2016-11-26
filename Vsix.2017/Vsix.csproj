@@ -35,6 +35,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -54,7 +55,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>RefactoringEssentials.VsExtension</RootNamespace>
     <AssemblyName>RefactoringEssentials.VsExtension.2017</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
@@ -116,14 +117,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>source.extension.tt</DependentUpon>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\RefactoringEssentials.2017\RefactoringEssentials.csproj">
-      <Project>{c465a5dc-ad28-49a2-89c0-f81838814a7e}</Project>
-      <Name>RefactoringEssentials</Name>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIXLocalOnly>
-      <IncludeOutputGroupsInVSIX>DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -304,6 +297,14 @@
       <Link>VSPackage.resx</Link>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RefactoringEssentials.2017\RefactoringEssentials.csproj">
+      <Project>{18236d33-b3e1-45dc-99e7-230633a228b6}</Project>
+      <Name>RefactoringEssentials</Name>
+      <IncludeOutputGroupsInVSIX>DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />

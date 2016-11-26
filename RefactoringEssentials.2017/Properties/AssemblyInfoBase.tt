@@ -1,6 +1,6 @@
 ﻿<#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
-<#@ include file="../../RefactoringEssentials/Versioning.t4.template" #>
+<#@ include file="../Versioning.t4.template" #>
 <# ReadVersions(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), "../RefactoringEssentials.version")); #>
 using System.Reflection;
 using System.Runtime.CompilerServices;

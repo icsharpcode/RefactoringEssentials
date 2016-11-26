@@ -1,54 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props" Condition="Exists('..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <ProjectGuid>{C465A5DC-AD28-49A2-89C0-F81838814A7E}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>RefactoringEssentials</RootNamespace>
-    <AssemblyName>RefactoringEssentials</AssemblyName>
-    <TargetFrameworkProfile>Profile7</TargetFrameworkProfile>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-  </PropertyGroup>
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
-    <NoStdLib>true</NoStdLib>
+    <OutputPath>..\bin\Debug</OutputPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NoStdLib>true</NoStdLib>
+    <OutputPath>..\bin\Release</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <IncludeCopyLocalReferencesInVSIXContainer>false</IncludeCopyLocalReferencesInVSIXContainer>
-  </PropertyGroup>
-  <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
-  </PropertyGroup>
-  <PropertyGroup>
-    <AssemblyOriginatorKeyFile>
-    </AssemblyOriginatorKeyFile>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\RefactoringEssentials\Common\CodeContractsCodeRefactoringProvider.cs">
@@ -1576,7 +1536,7 @@
       <Link>Util\WordParser.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\AddAnotherAccessorCodeRefactoringProvider.cs">
-      <Link>VB\CodeRefactorings\AddAnotherAccessorCodeRefactoringProvider.cs</Link>
+      <Link>Converter\AddAnotherAccessorCodeRefactoringProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\AddCheckForNothingCodeRefactoringProvider.cs">
       <Link>VB\CodeRefactorings\AddCheckForNothingCodeRefactoringProvider.cs</Link>
@@ -1727,190 +1687,92 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\AssemblyInfoBase.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CodeAnalysis, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.1.2.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.1.2.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.1.2.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.VisualBasic, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.VisualBasic.1.2.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.VisualBasic.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.VisualBasic.Workspaces.1.2.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.2.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Composition.AttributedModel">
-      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Composition.Convention">
-      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Convention.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Composition.Hosting">
-      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Hosting.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Composition.Runtime">
-      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Runtime.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Composition.TypedParts">
-      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="System.Reflection.Metadata, Version=1.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Reflection.Metadata.1.2.0\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="RefactoringEssentials.Library.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RefactoringEssentials.Library.nuspec</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="RefactoringEssentials.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
-    <None Include="..\RefactoringEssentials\buildlibrarypackage.cmd">
-      <Link>buildlibrarypackage.cmd</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\RefactoringEssentials\buildpackage.cmd">
-      <Link>buildpackage.cmd</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\RefactoringEssentials\buildpackages_appveyor.cmd">
-      <Link>buildpackages_appveyor.cmd</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\RefactoringEssentials\Xml\ICSharpCode.NRefactory.Xml.csproj">
-      <Link>Xml\ICSharpCode.NRefactory.Xml.csproj</Link>
-    </None>
-    <Content Include="Properties\AssemblyInfoBase.tt">
+    <None Include="Properties\AssemblyInfoBase.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>
-    </Content>
-    <Content Include="CodeFixes.html.template" />
-    <None Include="..\RefactoringEssentials\tools\install.ps1">
-      <Link>tools\install.ps1</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
+      <Version>2.0.0-rc</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces">
+      <Version>2.0.0-rc</Version>
+    </PackageReference>
+    <PackageReference Include="NETStandard.Library">
+      <Version>1.6</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Sdk">
+      <Version>1.0.0-alpha-20161104-2</Version>
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.Serialization.Primitives">
+      <Version>4.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\RefactoringEssentials\buildlibrarypackage.cmd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>buildlibrarypackage.cmd</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\buildpackage.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>buildpackage.cmd</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\buildpackages_appveyor.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>buildpackages_appveyor.cmd</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\tools\install.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>tools\install.ps1</Link>
     </None>
     <None Include="..\RefactoringEssentials\tools\uninstall.ps1">
-      <Link>tools\uninstall.ps1</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>tools\uninstall.ps1</Link>
     </None>
     <None Include="..\RefactoringEssentials\Util\Reflection.md">
       <Link>Util\Reflection.md</Link>
     </None>
-    <None Include="packages.config" />
+    <None Include="..\RefactoringEssentials\Xml\ICSharpCode.NRefactory.Xml.csproj">
+      <Link>Xml\ICSharpCode.NRefactory.Xml.csproj</Link>
+    </None>
+    <None Include="CodeAnalyzers.html.template" />
+    <None Include="CodeFixes.html.template" />
+    <None Include="CodeRefactorings.html.template" />
+    <None Include="missing.md" />
     <None Include="RefactoringEssentials.Library.nuspec">
-      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>RefactoringEssentials.Library.tt</DependentUpon>
     </None>
-    <None Include="RefactoringEssentials.version" />
+    <None Include="RefactoringEssentials.Library.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RefactoringEssentials.Library.nuspec</LastGenOutput>
+    </None>
     <None Include="RefactoringEssentials.nuspec">
-      <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
       <DependentUpon>RefactoringEssentials.tt</DependentUpon>
     </None>
+    <None Include="RefactoringEssentials.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
+    </None>
+    <None Include="RefactoringEssentials.version" />
     <None Include="Versioning.t4.template" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="missing.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CSharp\Diagnostics\CompilerWarnings\" />
-    <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />
-    <Folder Include="Samples\VB\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="CodeRefactorings.html.template" />
-    <None Include="CodeAnalyzers.html.template" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
-    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <ProjectExtensions>
-    <MonoDevelop>
-      <Properties>
-        <Policies>
-          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
-          <CSharpFormattingPolicy IndentSwitchSection="True" NewLinesForBracesInProperties="True" NewLinesForBracesInAnonymousMethods="True" NewLinesForBracesInControlBlocks="True" NewLinesForBracesInAnonymousTypes="True" NewLinesForBracesInObjectCollectionArrayInitializers="True" NewLinesForBracesInLambdaExpressionBody="True" NewLineForElse="True" NewLineForCatch="True" NewLineForFinally="True" NewLineForMembersInObjectInit="True" NewLineForMembersInAnonymousTypes="True" NewLineForClausesInQuery="True" SpacingAfterMethodDeclarationName="False" SpaceAfterMethodCallName="False" SpaceBeforeOpenSquareBracket="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
-        </Policies>
-      </Properties>
-    </MonoDevelop>
-  </ProjectExtensions>
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <!--<Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />-->
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props'))" />
-  </Target>
-  <Target Name="RestorePackages" AfterTargets="EnsureNuGetPackageBuildImports">
-    <PropertyGroup>
-      <NuGet>$(SolutionDir)\.nuget\NuGet.exe</NuGet>
-      <NuGet Condition="$(OS)=='Unix'">mono $(NuGet)</NuGet>
-    </PropertyGroup>
-    <Exec Condition="$(SolutionDir) != $([System.IO.Path]::GetFullPath('..')) And '$(Configuration)' != 'Mono_Debug' And '$(Configuration)' != 'Mono_Release'" Command="$(NuGet) restore -SolutionDirectory .." />
-  </Target>
-  <PropertyGroup>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Debug|AnyCPU' ">
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\..\build\bin</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <NoStdLib>true</NoStdLib>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Release|AnyCPU' ">
-    <Optimize>false</Optimize>
-    <OutputPath>..\..\..\build\bin</OutputPath>
-    <WarningLevel>4</WarningLevel>
-    <NoStdLib>true</NoStdLib>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 </Project>
