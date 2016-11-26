@@ -52,7 +52,7 @@
   
   build:
     project: RefactoringEssentials.2017.sln
-	verbosity: normal
+    verbosity: normal
   
   after_test:
     - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
