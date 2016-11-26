@@ -13,7 +13,7 @@ not tied to Windows / Visual Studio.
 
 # Project Build Status
 
-Branch | Status
---- | ---
-*master* (Development) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/master?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/master) 
-*release* (Latest Release) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/release?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/release)
+Branch | Status 4.* (VS 2015) | Status 5.* (VS 2017)
+--- | --- | ---
+*master* (Development) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/master?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/r01wr5xdclj24y20/branch/master?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials-wgnsw/branch/master) 
+*release* (Latest Release) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/release?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/release) | [![Build status](https://ci.appveyor.com/api/projects/status/r01wr5xdclj24y20/branch/release?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials-wgnsw/branch/release)
