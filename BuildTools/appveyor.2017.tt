@@ -16,14 +16,11 @@
     - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
   
   before_build: 
-    - cmd: nuget restore RefactoringEssentials.sln
+    - cmd: nuget restore RefactoringEssentials.2017.sln
 
   build:
-    project: RefactoringEssentials.sln
+    project: RefactoringEssentials.2017.sln
 
-  build_script:
-    - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
-  
   after_test:
     - cmd: nuget pack bin\Release\RefactoringEssentials.nuspec -NoPackageAnalysis -BasePath bin\Release -OutputDirectory bin\Release
     - cmd: nuget pack bin\Release\RefactoringEssentials.Library.nuspec -NoPackageAnalysis -BasePath bin\Release -OutputDirectory bin\Release
@@ -50,10 +47,10 @@
   
   before_build: 
     - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
-    - cmd: nuget restore RefactoringEssentials.sln
+    - cmd: nuget restore RefactoringEssentials.2017.sln
   
   build:
-    project: RefactoringEssentials.sln
+    project: RefactoringEssentials.2017.sln
   
   after_test:
     - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
