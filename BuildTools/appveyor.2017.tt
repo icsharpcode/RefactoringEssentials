@@ -20,6 +20,7 @@
 
   build:
     project: RefactoringEssentials.2017.sln
+	verbosity: normal
 
   after_test:
     - cmd: nuget pack bin\Release\RefactoringEssentials.nuspec -NoPackageAnalysis -BasePath bin\Release -OutputDirectory bin\Release
@@ -51,6 +52,7 @@
   
   build:
     project: RefactoringEssentials.2017.sln
+	verbosity: normal
   
   after_test:
     - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
