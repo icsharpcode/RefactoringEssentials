@@ -5,15 +5,18 @@
       - release
   
   version: 5.0.{build}
+  configuration: Release
   
-  os: Visual Studio 2015
+  image: Visual Studio 2017 RC
 
   install: 
-    - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
     - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
   
   before_build: 
     - cmd: nuget restore RefactoringEssentials.sln
+
+  build:
+    project: RefactoringEssentials.sln
 
   build_script:
     - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
@@ -35,19 +38,19 @@
       - master
   
   version: 5.0.{build}
+  configuration: Release
   
-  os: Visual Studio 2015
+  image: Visual Studio 2017 RC
   
   install: 
-    - cmd: set PATH=C:\Program Files (x86)\MSBuild\14.0\Bin;%PATH%
     - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
   
   before_build: 
     - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
     - cmd: nuget restore RefactoringEssentials.sln
   
-  build_script:
-    - msbuild RefactoringEssentials.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  build:
+    project: RefactoringEssentials.sln
   
   after_test:
     - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
