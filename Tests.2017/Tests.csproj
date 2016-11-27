@@ -19,7 +19,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;UNIMPLEMENTED_CONVERTER_FEATURE_TESTS</DefineConstants>
+    <DefineConstants>DEBUG;RE2017;UNIMPLEMENTED_CONVERTER_FEATURE_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -33,18 +33,21 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AssemblyName>RefactoringEssentials.Tests</AssemblyName>
+    <DefineConstants>RE2017</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Debug|AnyCPU' ">
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug_Mono</OutputPath>
     <WarningLevel>4</WarningLevel>
     <AssemblyName>Tests</AssemblyName>
+    <DefineConstants>RE2017</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Release|AnyCPU' ">
     <Optimize>false</Optimize>
     <OutputPath>bin\Mono_Release</OutputPath>
     <WarningLevel>4</WarningLevel>
     <AssemblyName>Tests</AssemblyName>
+    <DefineConstants>RE2017</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -514,9 +517,6 @@
     <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceDirectCastWithSafeCastTest.cs">
       <Link>CSharp\CodeRefactorings\ReplaceDirectCastWithSafeCastTest.cs</Link>
     </Compile>
-    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceExplicitTypeWithVarTests.cs">
-      <Link>CSharp\CodeRefactorings\ReplaceExplicitTypeWithVarTests.cs</Link>
-    </Compile>
     <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceOperatorAssignmentWithAssignmentTests.cs">
       <Link>CSharp\CodeRefactorings\ReplaceOperatorAssignmentWithAssignmentTests.cs</Link>
     </Compile>
@@ -528,9 +528,6 @@
     </Compile>
     <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs">
       <Link>CSharp\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceVarWithExplicitTypeTests.cs">
-      <Link>CSharp\CodeRefactorings\ReplaceVarWithExplicitTypeTests.cs</Link>
     </Compile>
     <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceWithOperatorAssignmentTests.cs">
       <Link>CSharp\CodeRefactorings\ReplaceWithOperatorAssignmentTests.cs</Link>
@@ -1008,9 +1005,6 @@
     </Compile>
     <Compile Include="..\Tests\CSharp\Diagnostics\StringStartsWithIsCultureSpecificTests.cs">
       <Link>CSharp\Diagnostics\StringStartsWithIsCultureSpecificTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Tests\CSharp\Diagnostics\SuggestUseVarKeywordEvidentTests.cs">
-      <Link>CSharp\Diagnostics\SuggestUseVarKeywordEvidentTests.cs</Link>
     </Compile>
     <Compile Include="..\Tests\CSharp\Diagnostics\ThreadStaticAtInstanceFieldTests.cs">
       <Link>CSharp\Diagnostics\ThreadStaticAtInstanceFieldTests.cs</Link>

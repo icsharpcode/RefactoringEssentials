@@ -302,17 +302,11 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs</Link>
     </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplaceExplicitTypeWithVarCodeRefactoringProvider.cs">
-      <Link>CSharp\CodeRefactorings\Synced\ReplaceExplicitTypeWithVarCodeRefactoringProvider.cs</Link>
-    </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplaceVarWithExplicitTypeCodeRefactoringProvider.cs">
-      <Link>CSharp\CodeRefactorings\Synced\ReplaceVarWithExplicitTypeCodeRefactoringProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\SplitDeclarationListCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\SplitDeclarationListCodeRefactoringProvider.cs</Link>
@@ -745,12 +739,6 @@
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodCodeFixProvider.cs">
       <Link>CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodCodeFixProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentAnalyzer.cs">
-      <Link>CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentAnalyzer.cs</Link>
-    </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentCodeFixProvider.cs">
-      <Link>CSharp\Diagnostics\Synced\Opportunities\SuggestUseVarKeywordEvidentCodeFixProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\AccessToStaticMemberViaDerivedTypeAnalyzer.cs">
       <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\AccessToStaticMemberViaDerivedTypeAnalyzer.cs</Link>
@@ -1772,6 +1760,9 @@
     <None Include="Versioning.t4.template" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup Label="Configuration">
+    <DefineConstants>TRACE;DEBUG;RE2017</DefineConstants>
+  </PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
