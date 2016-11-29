@@ -172,7 +172,7 @@
     <Compile Include="..\DocGenerator\Program.cs">
       <Link>Program.cs</Link>
     </Compile>
-    <Compile Include="..\RefactoringEssentials\Properties\AssemblyInfoBase.cs">
+    <Compile Include="..\RefactoringEssentials.2017\Properties\AssemblyInfoBase.cs">
       <Link>Properties\AssemblyInfoBase.cs</Link>
       <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -183,13 +183,6 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="..\RefactoringEssentials\Properties\AssemblyInfoBase.tt">
-      <Link>Properties\AssemblyInfoBase.tt</Link>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -203,6 +196,13 @@
       <Project>{18236d33-b3e1-45dc-99e7-230633a228b6}</Project>
       <Name>RefactoringEssentials</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\RefactoringEssentials.2017\Properties\AssemblyInfoBase.tt">
+      <Link>Properties\AssemblyInfoBase.tt</Link>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
