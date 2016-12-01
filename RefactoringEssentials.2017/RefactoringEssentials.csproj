@@ -1681,6 +1681,7 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>
+    <Compile Include="Util\ReflectionNamespaces.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AssemblyInfoBase.tt">
