@@ -139,6 +139,7 @@
     <Compile Include="CSharp\CodeRefactorings\ContractEnsuresNotNullReturnTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\GenerateSwitchLabelsTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ImportStaticClassWithUsingTests.cs" />
+    <Compile Include="CSharp\CodeRefactorings\InitializeReadOnlyAutoPropertyFromConstructorParameterTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InitializeAutoPropertyFromConstructorParameterTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InitializeFieldFromConstructorParameterTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\InsertAnonymousMethodSignatureTests.cs" />
