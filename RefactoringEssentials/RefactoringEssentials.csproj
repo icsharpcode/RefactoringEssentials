@@ -63,6 +63,8 @@
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ConvertInstanceToStaticMethodCodeRefactoringProvider.cs" />
+    <Compile Include="CSharp\ConstructorParameterContext.cs" />
+    <Compile Include="CSharp\ConstructorParameterContextFinder.cs" />
     <Compile Include="CSharp\Converter\MethodBodyVisitor.cs" />
     <Compile Include="CSharp\Converter\NodesVisitor.cs" />
     <Compile Include="CSharp\Converter\VisualBasicConverter.cs" />
