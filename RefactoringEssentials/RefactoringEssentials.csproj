@@ -71,6 +71,7 @@
     <Compile Include="CSharp\ConvertUnitTestToVB.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\AvoidAsyncVoidAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\RoslynUsageAnalyzer.cs" />
+    <Compile Include="CSharp\Manipulations.cs" />
     <Compile Include="CSharp\SyntaxExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\AddAnotherAccessorCodeRefactoringProvider.cs" />
