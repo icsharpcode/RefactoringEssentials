@@ -167,14 +167,8 @@
     <Compile Include="CSharp\Diagnostics\DiagnosticFactory.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\PracticesAndImprovements\PublicConstructorInAbstractClass.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeAny.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\CS0659OverrideEqualWithoutGetHashCode.cs" />
     <Compile Include="CSharp\Diagnostics\DiagnosticAnalyzerCategories.cs" />
     <Compile Include="CSharp\Diagnostics\DiagnosticAnalyzerMarker.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\CS0126ReturnMustBeFollowedByAnyExpression.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\CS0169FieldIsNeverUsedAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\CS0618UsageOfObsoleteMemberAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\CS1729TypeHasNoConstructorWithNArgumentsAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Custom\CompilerErrors\StaticConstructorParameterAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\AdditionalOfTypeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\BaseMethodParameterNameMismatchAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Custom\CallToObjectEqualsViaBaseAnalyzer.cs" />
@@ -221,11 +215,7 @@
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\PossibleMultipleEnumerationAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\ThreadStaticAtInstanceFieldAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CodeQuality\ValueParameterNotUsedAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CompilerErrors\ProhibitedModifiersAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CompilerWarnings\CS0183ExpressionIsAlwaysOfProvidedTypeAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\CompilerWarnings\CS1573ParameterHasNoMatchingParamTagAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CompilerWarnings\CS1717AssignmentMadeToSameVariableAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\CompilerWarnings\UnassignedReadonlyFieldAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingConventionService.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingRule.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingStyle.cs" />
@@ -516,6 +506,7 @@
     <Compile Include="Util\GeneratedCodeRecognition.cs" />
     <Compile Include="Util\HelpLink.cs" />
     <Compile Include="Util\NRefactory6Host.cs" />
+    <Compile Include="Util\ReflectionNamespaces.cs" />
     <Compile Include="Util\RoslynReflection.cs" />
     <Compile Include="Util\SyntaxExtensions.cs" />
     <Compile Include="Util\TypeExtensions.cs" />

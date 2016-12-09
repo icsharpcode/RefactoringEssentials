@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Comparison of a boolean value with 'true' or 'false' constant"),
             GettextCatalog.GetString("Comparison with '{0}' is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantBoolCompareAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

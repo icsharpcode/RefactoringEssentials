@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Catch clause with a single 'throw' statement is redundant"),
             "{0}",
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantCatchClauseAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

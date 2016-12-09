@@ -315,7 +315,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 var accessors = new List<AccessorDeclarationSyntax>();
                 foreach (var accessor in property.AccessorList.Accessors)
                 {
-                    accessors.Add(SyntaxFactory.AccessorDeclaration(accessor.Kind(), accessor.AttributeLists, accessor.Modifiers, accessor.Keyword, null, SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+                    accessors.Add(SyntaxFactory.AccessorDeclaration(accessor.Kind(), accessor.AttributeLists, accessor.Modifiers, accessor.Keyword, (BlockSyntax) null, SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
                 }
                 return SyntaxFactory.PropertyDeclaration(
                     property.AttributeLists,
@@ -334,7 +334,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 var accessors = new List<AccessorDeclarationSyntax>();
                 foreach (var accessor in indexer.AccessorList.Accessors)
                 {
-                    accessors.Add(SyntaxFactory.AccessorDeclaration(accessor.Kind(), accessor.AttributeLists, accessor.Modifiers, accessor.Keyword, null, SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+                    accessors.Add(SyntaxFactory.AccessorDeclaration(accessor.Kind(), accessor.AttributeLists, accessor.Modifiers, accessor.Keyword, (BlockSyntax) null, SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
                 }
                 return SyntaxFactory.IndexerDeclaration(
                     indexer.AttributeLists,

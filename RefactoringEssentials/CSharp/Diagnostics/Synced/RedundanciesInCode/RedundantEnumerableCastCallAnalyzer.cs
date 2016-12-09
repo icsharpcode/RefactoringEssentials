@@ -14,7 +14,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant 'IEnumerable.Cast<T>' or 'IEnumerable.OfType<T>' call"),
             GettextCatalog.GetString("Redundant '{0}' call"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantEnumerableCastCallAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

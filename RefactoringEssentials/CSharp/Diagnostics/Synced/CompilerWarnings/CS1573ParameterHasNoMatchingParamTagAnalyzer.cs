@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+    //[DiagnosticAnalyzer(LanguageNames.CSharp)]
     [NotPortedYet]
     public class CS1573ParameterHasNoMatchingParamTagAnalyzer : DiagnosticAnalyzer
     {

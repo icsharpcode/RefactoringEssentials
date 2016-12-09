@@ -175,7 +175,13 @@ namespace RefactoringEssentials
             {
                 var typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.ITypeSymbolExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
 
+#if RE2017
+                // Since Roslyn 2.0 the parameter has the new type INamespaceOrTypeSymbol,
+                // which has become a parent type of ITypeSymbol.
+                GenerateTypeSyntaxMethod = typeInfo.GetMethod("GenerateTypeSyntax", new[] { typeof(INamespaceOrTypeSymbol) });
+#else
                 GenerateTypeSyntaxMethod = typeInfo.GetMethod("GenerateTypeSyntax", new[] { typeof(ITypeSymbol) });
+#endif
                 ContainingTypesOrSelfHasUnsafeKeywordMethod =
                     typeInfo.GetMethod("ContainingTypesOrSelfHasUnsafeKeyword", BindingFlags.Public | BindingFlags.Static);
             }

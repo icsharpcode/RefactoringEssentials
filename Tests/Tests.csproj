@@ -212,14 +212,7 @@
     <Compile Include="CSharp\Diagnostics\ConvertToConstantTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertToLambdaExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertToStaticTypeTests.cs" />
-    <Compile Include="CSharp\Diagnostics\CS0126ReturnMustBeFollowedByAnyExpressionTestes.cs" />
-    <Compile Include="CSharp\Diagnostics\CS0169FieldIsNeverUsedTests.cs" />
-    <Compile Include="CSharp\Diagnostics\CS0183ExpressionIsAlwaysOfProvidedTypeTests.cs" />
-    <Compile Include="CSharp\Diagnostics\CS0618UsageOfObsoleteMemberTests.cs" />
-    <Compile Include="CSharp\Diagnostics\CS0659OverrideEqualsWithoutGetHashCodeTests.cs" />
     <Compile Include="CSharp\Diagnostics\CS1573ParameterHasNoMatchingParamTagTests.cs" />
-    <Compile Include="CSharp\Diagnostics\CS1717AssignmentMadeToSameVariableTests.cs" />
-    <Compile Include="CSharp\Diagnostics\CS1729TypeHasNoConstructorWithNArgumentsTests.cs" />
     <Compile Include="CSharp\Diagnostics\DelegateSubtractionTests.cs" />
     <Compile Include="CSharp\Diagnostics\DoNotCallOverridableMethodsInConstructorTests.cs" />
     <Compile Include="CSharp\Diagnostics\DoubleNegationOperatorTests.cs" />
@@ -265,7 +258,6 @@
     <Compile Include="CSharp\Diagnostics\PossibleAssignmentToReadonlyFieldTests.cs" />
     <Compile Include="CSharp\Diagnostics\PossibleMistakenCallToGetTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\PossibleMultipleEnumerationTests.cs" />
-    <Compile Include="CSharp\Diagnostics\ProhibitedModifiersTests.cs" />
     <Compile Include="CSharp\Diagnostics\PublicConstructorInAbstractClassTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantAnonymousTypePropertyNameTests.cs" />
     <Compile Include="CSharp\Diagnostics\RedundantArgumentDefaultValueTests.cs" />
@@ -341,7 +333,6 @@
     <Compile Include="CSharp\Diagnostics\StringStartsWithIsCultureSpecificTests.cs" />
     <Compile Include="CSharp\Diagnostics\SuggestUseVarKeywordEvidentTests.cs" />
     <Compile Include="CSharp\Diagnostics\ThreadStaticAtInstanceFieldTests.cs" />
-    <Compile Include="CSharp\Diagnostics\UnassignedReadonlyFieldTests.cs" />
     <Compile Include="CSharp\Diagnostics\UnusedAnonymousMethodSignatureTests.cs" />
     <Compile Include="CSharp\Diagnostics\UnusedParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\UnusedTypeParameterTests.cs" />

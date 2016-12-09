@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Redundant empty object or collection initializer"),
             GettextCatalog.GetString("Empty object or collection initializer is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantObjectOrCollectionInitializerAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

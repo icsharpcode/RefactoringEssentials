@@ -1,0 +1,1781 @@
+﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+  <PropertyGroup Label="Configuration" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\bin\Debug</OutputPath>
+    <DefineConstants>TRACE;DEBUG;RE2017</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\bin\Release</OutputPath>
+    <DefineConstants>RE2017</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\RefactoringEssentials\Common\CodeContractsCodeRefactoringProvider.cs">
+      <Link>Common\CodeContractsCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Common\NotPortedYetAttribute.cs">
+      <Link>Common\NotPortedYetAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Common\RoslynReflectionUsageAttribute.cs">
+      <Link>Common\RoslynReflectionUsageAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Common\SpecializedCodeRefactoringProvider.cs">
+      <Link>Common\SpecializedCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Converter\CodeConverter.cs">
+      <Link>Converter\CodeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Converter\CodeWithOptions.cs">
+      <Link>Converter\CodeWithOptions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Converter\ConversionResult.cs">
+      <Link>Converter\ConversionResult.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0108UseNewKeywordIfHidingIntendedCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\CS0108UseNewKeywordIfHidingIntendedCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0152DuplicateCaseLabelValueCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\CS0152DuplicateCaseLabelValueCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0162UnreachableCodeDetectedCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\CS0162UnreachableCodeDetectedCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0164LabelHasNotBeenReferencedCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\CS0164LabelHasNotBeenReferencedCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0759RedundantPartialMethodCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\CS0759RedundantPartialMethodCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS1105ExtensionMethodMustBeDeclaredStaticCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\CS1105ExtensionMethodMustBeDeclaredStaticCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS1520MethodMustHaveAReturnTypeCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\CS1520MethodMustHaveAReturnTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\InvalidConversionCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\InvalidConversionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider.cs">
+      <Link>CSharp\CodeFixes\Custom\ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\AddBracesCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\AddBracesCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\AddOptionalParameterToInvocationCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\AddOptionalParameterToInvocationCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertDoWhileToWhileLoopCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertDoWhileToWhileLoopCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertForToWhileCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertForToWhileCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertHasFlagsToBitwiseFlagComparisonCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertHasFlagsToBitwiseFlagComparisonCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertInterpolatedStringToStringFormatCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertInterpolatedStringToStringFormatCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertMultiplyToShiftCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertMultiplyToShiftCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertShiftToMultiplyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertShiftToMultiplyCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertStringFormatToInterpolatedStringCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertStringFormatToInterpolatedStringCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ConvertWhileToDoWhileLoopCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ConvertWhileToDoWhileLoopCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\CreateChangedEventCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\CreateChangedEventCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ExtractWhileConditionToInternalIfStatementCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ExtractWhileConditionToInternalIfStatementCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\GenerateSwitchLabelsCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\GenerateSwitchLabelsCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\InvertLogicalExpressionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\InvertLogicalExpressionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\NegateIsExpressionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\NegateIsExpressionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\RemoveBracesCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\RemoveBracesCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ReplaceAssignmentWithPostfixExpressionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ReplaceAssignmentWithPostfixExpressionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ReplaceOperatorAssignmentWithAssignmentCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ReplaceOperatorAssignmentWithAssignmentCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ReplacePostfixExpressionWithAssignmentCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ReplacePostfixExpressionWithAssignmentCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ReplaceWithOperatorAssignmentCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ReplaceWithOperatorAssignmentCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\ReverseDirectionForForLoopCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\ReverseDirectionForForLoopCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\AddAnotherAccessorCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\AddAnotherAccessorCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\AddCatchExceptionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\AddCatchExceptionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\AddExceptionDescriptionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\AddExceptionDescriptionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\AddNameToArgumentCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\AddNameToArgumentCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\AddNewFormatItemCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\AddNewFormatItemCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\CheckArrayIndexValueCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\CheckArrayIndexValueCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\CheckCollectionIndexValueCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\CheckCollectionIndexValueCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\CheckDictionaryKeyValueCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\CheckDictionaryKeyValueCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\CheckIfParameterIsNullCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\CheckIfParameterIsNullCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\CheckStringBuilderIndexValueCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\CheckStringBuilderIndexValueCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\CheckStringIndexValueCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\CheckStringIndexValueCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ComputeConstantValueCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ComputeConstantValueCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertAnonymousMethodToLambdaCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertAnonymousMethodToLambdaCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertCoalescingToConditionalExpressionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertCoalescingToConditionalExpressionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertDecToHexCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertDecToHexCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertEqualityOperatorToEqualsCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertEqualityOperatorToEqualsCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertEqualityOperatorToReferenceEqualsCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertEqualityOperatorToReferenceEqualsCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertEqualsToEqualityOperatorCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertEqualsToEqualityOperatorCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertExplicitToImplicitImplementationCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertExplicitToImplicitImplementationCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertExpressionBodyToStatementBodyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertExpressionBodyToStatementBodyCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertForeachToForCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertForeachToForCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertHexToDecCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertHexToDecCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertIfStatementToSwitchStatementCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertIfStatementToSwitchStatementCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertImplicitToExplicitImplementationCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertImplicitToExplicitImplementationCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertInstanceToStaticMethodCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertInstanceToStaticMethodCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertLambdaBodyExpressionToStatementCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertLambdaBodyExpressionToStatementCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertLambdaStatementToExpressionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertLambdaStatementToExpressionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertLambdaToAnonymousMethodCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertLambdaToAnonymousMethodCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertMethodGroupToAnonymousMethodCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertMethodGroupToAnonymousMethodCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertMethodGroupToLambdaCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertMethodGroupToLambdaCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertReferenceEqualsToEqualityOperatorCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertReferenceEqualsToEqualityOperatorCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertStatementBodyToExpressionBodyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertStatementBodyToExpressionBodyCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertSwitchToIfCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertSwitchToIfCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertTernaryExpressionToIfStatementCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ConvertTernaryExpressionToIfStatementCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\CopyCommentsFromBaseCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\CopyCommentsFromBaseCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\CreateEventInvocatorCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\CreateEventInvocatorCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\FlipEqualsTargetAndArgumentCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\FlipEqualsTargetAndArgumentCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\FlipOperatorOperandsCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\FlipOperatorOperandsCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\FlipRelationalOperatorArgumentsCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\FlipRelationalOperatorArgumentsCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ImportStaticClassWithUsingCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ImportStaticClassWithUsingCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\InitializeAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\InitializeAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\InitializeFieldFromConstructorParameterCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\InitializeFieldFromConstructorParameterCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\InsertAnonymousMethodSignatureCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\InsertAnonymousMethodSignatureCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\InvertConditionalOperatorCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\InvertConditionalOperatorCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\InvertIfCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\InvertIfCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\InvokeAsStaticMethodCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\InvokeAsStaticMethodCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\JoinLocalVariableDeclarationAndAssignmentCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\JoinLocalVariableDeclarationAndAssignmentCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\JoinStringCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\JoinStringCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs">
+      <Link>CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\NegateLogicalExpressionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\NegateLogicalExpressionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\RemoveCatchExceptionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\RemoveCatchExceptionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\RemoveRegionEndRegionDirectivesCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\RemoveRegionEndRegionDirectivesCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\SplitDeclarationListCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\SplitDeclarationListCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\SplitIfWithAndConditionInTwoCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\SplitIfWithAndConditionInTwoCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\SplitIfWithOrConditionInTwoCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\SplitIfWithOrConditionInTwoCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\SplitStringCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\SplitStringCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\UseAsAndNullCheckCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\UseAsAndNullCheckCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\UseSystemEnvironmentNewLineCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\UseSystemEnvironmentNewLineCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\UseSystemStringEmptyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\UseSystemStringEmptyCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\AutoLinqSumAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\AutoLinqSumAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\ChangeAccessModifierAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\ChangeAccessModifierAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\ConvertIfStatementToNullCoalescingExpressionAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\ConvertIfStatementToNullCoalescingExpressionAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\ConvertIfStatementToReturnStatementAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\ConvertIfStatementToReturnStatementAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\CreateCustomEventImplementationAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\CreateCustomEventImplementationAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\CreateDelegateAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\CreateDelegateAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\CreateIndexerAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\CreateIndexerAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\CreateOverloadWithoutParameterCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\CreateOverloadWithoutParameterCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\ExtractAnonymousMethodCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\ExtractAnonymousMethodCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\GenerateGetterAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\GenerateGetterAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\IntroduceConstantAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\IntroduceConstantAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\IterateViaForeachAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\IterateViaForeachAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\LinqFluentToQueryAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\LinqFluentToQueryAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\LinqQueryToFluentAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\LinqQueryToFluentAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\MoveToOuterScopeAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\MoveToOuterScopeAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\PutInsideUsingAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\PutInsideUsingAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Uncategorized\UseStringFormatAction.cs">
+      <Link>CSharp\CodeRefactorings\Uncategorized\UseStringFormatAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Converter\MethodBodyVisitor.cs">
+      <Link>CSharp\Converter\MethodBodyVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Converter\NodesVisitor.cs">
+      <Link>CSharp\Converter\NodesVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Converter\VisualBasicConverter.cs">
+      <Link>CSharp\Converter\VisualBasicConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\ConvertUnitTestToVB.cs">
+      <Link>CSharp\ConvertUnitTestToVB.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\CodeActionFactory.cs">
+      <Link>CSharp\Diagnostics\CodeActionFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\CSharpDiagnosticIDs.cs">
+      <Link>CSharp\Diagnostics\CSharpDiagnosticIDs.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\AdditionalOfTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\AdditionalOfTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\AdditionalOfTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\AdditionalOfTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\AvoidAsyncVoidAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\AvoidAsyncVoidAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\BaseMethodParameterNameMismatchAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\BaseMethodParameterNameMismatchAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\BaseMethodParameterNameMismatchCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\BaseMethodParameterNameMismatchCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\CallToObjectEqualsViaBaseAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\CallToObjectEqualsViaBaseAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\CallToObjectEqualsViaBaseCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\CallToObjectEqualsViaBaseCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\CheckNamespaceAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\CheckNamespaceAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\ConstantConditionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\ConstantConditionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\ConstantConditionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\ConstantConditionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\ConvertIfToAndExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\ConvertIfToAndExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\ConvertIfToAndExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\ConvertIfToAndExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\LockThisAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\LockThisAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\LockThisCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\LockThisCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\NegativeRelationalExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\NegativeRelationalExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\NegativeRelationalExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\NegativeRelationalExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\NotImplementedExceptionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\NotImplementedExceptionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\ParameterOnlyAssignedAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\ParameterOnlyAssignedAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\ParameterOnlyAssignedCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\ParameterOnlyAssignedCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\RedundantAssignmentAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\RedundantAssignmentAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\RedundantAssignmentCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\RedundantAssignmentCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\RedundantInternalAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\RedundantInternalAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\RedundantInternalCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\RedundantInternalCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\RedundantPrivateAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\RedundantPrivateAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\RedundantPrivateCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Custom\RedundantPrivateCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\RoslynUsageAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\RoslynUsageAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\StaticEventSubscriptionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\StaticEventSubscriptionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\VariableOnlyAssignedAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\VariableOnlyAssignedAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Custom\XmlDocAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Custom\XmlDocAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\DiagnosticAnalyzerCategories.cs">
+      <Link>CSharp\Diagnostics\DiagnosticAnalyzerCategories.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\DiagnosticAnalyzerMarker.cs">
+      <Link>CSharp\Diagnostics\DiagnosticAnalyzerMarker.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\DiagnosticCustomTags.cs">
+      <Link>CSharp\Diagnostics\DiagnosticCustomTags.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\DiagnosticFactory.cs">
+      <Link>CSharp\Diagnostics\DiagnosticFactory.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\DocumentChangeAction.cs">
+      <Link>CSharp\Diagnostics\DocumentChangeAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\InsertionAction.cs">
+      <Link>CSharp\Diagnostics\InsertionAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\InsertionResult.cs">
+      <Link>CSharp\Diagnostics\InsertionResult.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\NRefactoryCodeAction.cs">
+      <Link>CSharp\Diagnostics\NRefactoryCodeAction.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\BaseMethodCallWithDefaultParameterAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\BaseMethodCallWithDefaultParameterAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\BitwiseOperatorOnEnumWithoutFlagsAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\BitwiseOperatorOnEnumWithoutFlagsAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\CompareNonConstrainedGenericWithNullCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\CompareOfFloatsByEqualityOperatorAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\CompareOfFloatsByEqualityOperatorAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\CompareOfFloatsByEqualityOperatorCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\CompareOfFloatsByEqualityOperatorCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\ConditionalTernaryEqualBranchAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\ConditionalTernaryEqualBranchAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\ConditionalTernaryEqualBranchCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\ConditionalTernaryEqualBranchCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\DelegateSubtractionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\DelegateSubtractionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\DoNotCallOverridableMethodsInConstructorAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\DoNotCallOverridableMethodsInConstructorAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\EmptyGeneralCatchClauseAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\EmptyGeneralCatchClauseAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\EqualExpressionComparisonAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\EqualExpressionComparisonAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\EqualExpressionComparisonCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\EqualExpressionComparisonCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\EventUnsubscriptionViaAnonymousDelegateAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\EventUnsubscriptionViaAnonymousDelegateAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\ForControlVariableIsNeverModifiedAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\ForControlVariableIsNeverModifiedAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\FormatStringProblemAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\FormatStringProblemAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\FunctionNeverReturnsAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\FunctionNeverReturnsAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\LocalVariableHidesMemberAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\LocalVariableHidesMemberAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\LongLiteralEndingLowerLAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\LongLiteralEndingLowerLAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\LongLiteralEndingLowerLCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\LongLiteralEndingLowerLCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\MemberHidesStaticFromOuterClassAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\MemberHidesStaticFromOuterClassAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\MethodOverloadWithOptionalParameterAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\MethodOverloadWithOptionalParameterAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\NonReadonlyReferencedInGetHashCodeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\NonReadonlyReferencedInGetHashCodeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\NotResolvedInTextAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\NotResolvedInTextAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\NotResolvedInTextIssueCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\NotResolvedInTextIssueCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\ObjectCreationAsStatementAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\ObjectCreationAsStatementAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\OperatorIsCanBeUsedAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\OperatorIsCanBeUsedAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\OperatorIsCanBeUsedIssueCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\OperatorIsCanBeUsedIssueCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\OptionalParameterHierarchyMismatchAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\OptionalParameterHierarchyMismatchAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\OptionalParameterHierarchyMismatchCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\OptionalParameterHierarchyMismatchCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\OptionalParameterRefOutAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\OptionalParameterRefOutAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\ParameterHidesMemberAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\ParameterHidesMemberAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\PartialMethodParameterNameMismatchAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\PartialMethodParameterNameMismatchAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\PartialMethodParameterNameMismatchCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\PartialMethodParameterNameMismatchCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\PolymorphicFieldLikeEventInvocationAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\PolymorphicFieldLikeEventInvocationAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\PossibleAssignmentToReadonlyFieldAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\PossibleAssignmentToReadonlyFieldAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\PossibleAssignmentToReadonlyFieldCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\PossibleAssignmentToReadonlyFieldCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\PossibleMultipleEnumerationAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\PossibleMultipleEnumerationAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\PossibleMultipleEnumerationCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\PossibleMultipleEnumerationCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\StaticFieldOrAutoPropertyInGenericTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\StaticFieldOrAutoPropertyInGenericTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\ThreadStaticAtInstanceFieldAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\ThreadStaticAtInstanceFieldAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\ThreadStaticAtInstanceFieldCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\ThreadStaticAtInstanceFieldCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CodeQuality\ValueParameterNotUsedAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CodeQuality\ValueParameterNotUsedAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\CompilerWarnings\CS1573ParameterHasNoMatchingParamTagAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\CompilerWarnings\CS1573ParameterHasNoMatchingParamTagAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\AffectedEntity.cs">
+      <Link>CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\AffectedEntity.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\DefaultRules.cs">
+      <Link>CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\DefaultRules.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\InconsistentNamingAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\InconsistentNamingAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\Modifiers.cs">
+      <Link>CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\Modifiers.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingConventionService.cs">
+      <Link>CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingConventionService.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingRule.cs">
+      <Link>CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingRule.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingStyle.cs">
+      <Link>CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNaming\NamingStyle.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertClosureToMethodGroupAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertClosureToMethodGroupAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertClosureToMethodGroupCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertClosureToMethodGroupCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertConditionalTernaryToNullCoalescingCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToNullCoalescingExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertIfStatementToSwitchStatementCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertNullableToShortFormCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertToAutoPropertyAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertToAutoPropertyAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertToAutoPropertyCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertToAutoPropertyCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertToLambdaExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertToLambdaExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertToLambdaExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertToLambdaExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertToStaticTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertToStaticTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ConvertToStaticTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ConvertToStaticTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\ForCanBeConvertedToForeachCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\Opportunities\InvokeAsExtensionMethodCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\AccessToStaticMemberViaDerivedTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\AccessToStaticMemberViaDerivedTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\AccessToStaticMemberViaDerivedTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\AccessToStaticMemberViaDerivedTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\BaseMemberHasParamsAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\BaseMemberHasParamsAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\BaseMemberHasParamsCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\BaseMemberHasParamsCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertIfDoToWhileAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertIfDoToWhileAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertIfDoToWhileCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertIfDoToWhileCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertIfToOrExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertIfToOrExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertIfToOrExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertIfToOrExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertToConstantAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertToConstantAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertToConstantCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ConvertToConstantCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\EmptyEmbeddedStatementAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\EmptyEmbeddedStatementAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\EmptyEmbeddedStatementCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\EmptyEmbeddedStatementCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\FieldCanBeMadeReadOnlyAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\FieldCanBeMadeReadOnlyAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\FieldCanBeMadeReadOnlyCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\FieldCanBeMadeReadOnlyCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\MemberCanBeMadeStaticAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\MemberCanBeMadeStaticAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\MemberCanBeMadeStaticCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\MemberCanBeMadeStaticCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ParameterCanBeDeclaredWithBaseTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ParameterCanBeDeclaredWithBaseTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ParameterCanBeDeclaredWithBaseTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ParameterCanBeDeclaredWithBaseTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\PossibleMistakenCallToGetTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\PossibleMistakenCallToGetTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\PossibleMistakenCallToGetTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\PossibleMistakenCallToGetTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\PublicConstructorInAbstractClass.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\PublicConstructorInAbstractClass.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\PublicConstructorInAbstractClassCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\PublicConstructorInAbstractClassCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReferenceEqualsWithValueTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReferenceEqualsWithValueTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReferenceEqualsWithValueTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReferenceEqualsWithValueTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithFirstOrDefaultAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithFirstOrDefaultAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithFirstOrDefaultCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithFirstOrDefaultCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithLastOrDefaultAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithLastOrDefaultAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithLastOrDefaultCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithLastOrDefaultCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeAny.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeAny.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeAnyCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeAnyCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeCountAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeCountAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeCountCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeCountCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeFirstAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeFirstAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeFirstCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeFirstCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeFirstOrDefaultAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeFirstOrDefaultAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeFirstOrDefaultCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeFirstOrDefaultCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLastAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLastAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLastCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLastCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLastOrDefaultAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLastOrDefaultAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLastOrDefaultCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLastOrDefaultCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLongCountAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLongCountAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLongCountCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeLongCountCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeSingleAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeSingleAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeSingleCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeSingleCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeSingleOrDefaultAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeSingleOrDefaultAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeSingleOrDefaultCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeSingleOrDefaultCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeWhereAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeWhereAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeWhereCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithOfTypeWhereCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSimpleAssignmentAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSimpleAssignmentAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSimpleAssignmentCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSimpleAssignmentCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToAnyAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToAnyAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToAnyCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToAnyCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToCountAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToCountAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToCountFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToCountFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToFirstAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToFirstAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToFirstCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToFirstCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToFirstOrDefaultAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToFirstOrDefaultAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToFirstOrDefaultCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToFirstOrDefaultCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLastAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLastAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLastCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLastCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLastOrDefaultAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLastOrDefaultAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLastOrDefaultCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLastOrDefaultCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLongCountAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLongCountAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLongCountCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToLongCountCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToSingleAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToSingleAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToSingleCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToSingleCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToSingleOrDefaultAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToSingleOrDefaultAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToSingleOrDefaultFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithSingleCallToSingleOrDefaultFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithStringIsNullOrEmptyAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithStringIsNullOrEmptyAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithStringIsNullOrEmptyCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\ReplaceWithStringIsNullOrEmptyCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\SimplifyConditionalTernaryExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\SimplifyConditionalTernaryExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\SimplifyConditionalTernaryExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\SimplifyConditionalTernaryExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\SimplifyLinqExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\SimplifyLinqExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\SimplifyLinqExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\SimplifyLinqExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringCompareIsCultureSpecificAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringCompareIsCultureSpecificAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringCompareIsCultureSpecificCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringCompareIsCultureSpecificCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringCompareToIsCultureSpecificAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringCompareToIsCultureSpecificAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringCompareToIsCultureSpecificCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringCompareToIsCultureSpecificCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringEndsWithIsCultureSpecificAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringEndsWithIsCultureSpecificAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringIndexOfIsCultureSpecificAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringIndexOfIsCultureSpecificAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringLastIndexOfIsCultureSpecificAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringLastIndexOfIsCultureSpecificAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringMethodIsCultureSpecificCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringMethodIsCultureSpecificCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\StringStartsWithIsCultureSpecificAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\StringStartsWithIsCultureSpecificAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\UseArrayCreationExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\UseArrayCreationExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\UseArrayCreationExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\UseArrayCreationExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\UseIsOperatorAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\UseIsOperatorAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\UseIsOperatorCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\UseIsOperatorCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\UseMethodAnyAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\UseMethodAnyAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\UseMethodAnyCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\UseMethodAnyCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\UseMethodIsInstanceOfTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\UseMethodIsInstanceOfTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\PracticesAndImprovements\UseMethodIsInstanceOfTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\PracticesAndImprovements\UseMethodIsInstanceOfTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\ArrayCreationCanBeReplacedWithArrayInitializerCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\ArrayCreationCanBeReplacedWithArrayInitializerCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\ConditionIsAlwaysTrueOrFalseAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\ConditionIsAlwaysTrueOrFalseAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\ConditionIsAlwaysTrueOrFalseCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\ConditionIsAlwaysTrueOrFalseCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\ConstantNullCoalescingConditionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\ConstantNullCoalescingConditionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\ConstantNullCoalescingConditionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\ConstantNullCoalescingConditionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\DoubleNegationOperatorAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\DoubleNegationOperatorAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\DoubleNegationOperatorCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\DoubleNegationOperatorCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\EmptyStatementAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\EmptyStatementAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\EmptyStatementCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\EmptyStatementCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\ForStatementConditionIsTrueAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\ForStatementConditionIsTrueAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\ForStatementConditionIsTrueCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\ForStatementConditionIsTrueCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantAnonymousTypePropertyNameAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantAnonymousTypePropertyNameAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantAnonymousTypePropertyNameCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantAnonymousTypePropertyNameCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantArgumentDefaultValueAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantArgumentDefaultValueAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantArgumentDefaultValueCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantArgumentDefaultValueCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantArgumentNameAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantArgumentNameAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantArgumentNameCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantArgumentNameCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantAttributeParenthesesAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantAttributeParenthesesAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantAttributeParenthesesCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantAttributeParenthesesCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantBaseQualifierAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantBaseQualifierAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantBaseQualifierCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantBaseQualifierCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantBoolCompareAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantBoolCompareAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantBoolCompareCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantBoolCompareCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCaseLabelAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCaseLabelAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCaseLabelCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCaseLabelCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCatchClauseAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCatchClauseAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCatchClauseCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCatchClauseCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCheckBeforeAssignmentAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCheckBeforeAssignmentAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCheckBeforeAssignmentCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCheckBeforeAssignmentCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCommaInArrayInitializerAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCommaInArrayInitializerAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCommaInArrayInitializerCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantCommaInArrayInitializerCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantComparisonWithNullAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantComparisonWithNullAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantComparisonWithNullCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantComparisonWithNullCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantDelegateCreationAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantDelegateCreationAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantDelegateCreationCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantDelegateCreationCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEmptyDefaultSwitchBranchAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEmptyDefaultSwitchBranchAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEmptyDefaultSwitchBranchCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEmptyDefaultSwitchBranchCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEmptyFinallyBlockAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEmptyFinallyBlockAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEmptyFinallyBlockCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEmptyFinallyBlockCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEnumerableCastCallAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEnumerableCastCallAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEnumerableCastCallCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantEnumerableCastCallCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitArrayCreationAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitArrayCreationAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitArrayCreationCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitArrayCreationCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitArraySizeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitArraySizeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitArraySizeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitArraySizeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitNullableCreationAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitNullableCreationAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitNullableCreationCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExplicitNullableCreationCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExtendsListEntryAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExtendsListEntryAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExtendsListEntryCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantExtendsListEntryCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantIfElseBlockAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantIfElseBlockAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantIfElseBlockCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantIfElseBlockCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLambdaParameterTypeAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLambdaParameterTypeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLambdaParameterTypeCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLambdaParameterTypeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLambdaSignatureParenthesesAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLambdaSignatureParenthesesAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLambdaSignatureParenthesesCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLambdaSignatureParenthesesCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLogicalConditionalExpressionOperandAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLogicalConditionalExpressionOperandAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLogicalConditionalExpressionOperandCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantLogicalConditionalExpressionOperandCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantObjectCreationArgumentListAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantObjectCreationArgumentListAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantObjectCreationArgumentListCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantObjectCreationArgumentListCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantObjectOrCollectionInitializerAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantObjectOrCollectionInitializerAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantObjectOrCollectionInitializerCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantObjectOrCollectionInitializerCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantStringToCharArrayCallAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantStringToCharArrayCallAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantStringToCharArrayCallCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantStringToCharArrayCallCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantTernaryExpressionAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantTernaryExpressionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantTernaryExpressionCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantTernaryExpressionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantToStringCallAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantToStringCallAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantToStringCallCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantToStringCallCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantUnsafeContextAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantUnsafeContextAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantUnsafeContextCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RedundantUnsafeContextCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RemoveRedundantOrStatementAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RemoveRedundantOrStatementAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\RemoveRedundantOrStatementCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\RemoveRedundantOrStatementCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\UnusedAnonymousMethodSignatureAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\UnusedAnonymousMethodSignatureAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInCode\UnusedAnonymousMethodSignatureCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInCode\UnusedAnonymousMethodSignatureCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyConstructorAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyConstructorAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyConstructorCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyConstructorCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyDestructorAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyDestructorAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyDestructorCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyDestructorCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyNamespaceAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyNamespaceAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyNamespaceCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyNamespaceCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantOverriddenMemberAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantOverriddenMemberAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantOverriddenMemberCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantOverriddenMemberCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\SealedMemberInSealedClassAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\SealedMemberInSealedClassAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\SealedMemberInSealedClassCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\SealedMemberInSealedClassCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterCodeFixProvider.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedParameterCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedTypeParameterAnalyzer.cs">
+      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedTypeParameterAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\SyntaxExtensions.cs">
+      <Link>CSharp\SyntaxExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Samples\CSharp\SampleAnalyzer.cs">
+      <Link>Samples\CSharp\SampleAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Samples\CSharp\SampleCodeFixProvider.cs">
+      <Link>Samples\CSharp\SampleCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Samples\CSharp\SampleCodeRefactoringProvider.cs">
+      <Link>Samples\CSharp\SampleCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\Analysis\ControlFlow.cs">
+      <Link>Util\Analysis\ControlFlow.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\Analysis\ReachabilityAnalysis.cs">
+      <Link>Util\Analysis\ReachabilityAnalysis.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\AnnotationTable.cs">
+      <Link>Util\AnnotationTable.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CaseCorrector.cs">
+      <Link>Util\CaseCorrector.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ClassDeclarationSyntaxExtensions.cs">
+      <Link>Util\ClassDeclarationSyntaxExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CodeFixContextExtensions.cs">
+      <Link>Util\CodeFixContextExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CommonAccessibilityUtilities.cs">
+      <Link>Util\CommonAccessibilityUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CompilationExtensions.cs">
+      <Link>Util\CompilationExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CompilationUnitSyntaxExtensions.cs">
+      <Link>Util\CompilationUnitSyntaxExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CompositieFormatStringParser\CompositeFormatStringParser.cs">
+      <Link>Util\CompositieFormatStringParser\CompositeFormatStringParser.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CompositieFormatStringParser\FormatItem.cs">
+      <Link>Util\CompositieFormatStringParser\FormatItem.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CompositieFormatStringParser\FormatStringSegmentBase.cs">
+      <Link>Util\CompositieFormatStringParser\FormatStringSegmentBase.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CompositieFormatStringParser\IFormatStringError.cs">
+      <Link>Util\CompositieFormatStringParser\IFormatStringError.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CompositieFormatStringParser\IFormatStringSegment.cs">
+      <Link>Util\CompositieFormatStringParser\IFormatStringSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CompositieFormatStringParser\TextSegment.cs">
+      <Link>Util\CompositieFormatStringParser\TextSegment.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CSharpSyntaxContext.cs">
+      <Link>Util\CSharpSyntaxContext.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\CSharpUtil.cs">
+      <Link>Util\CSharpUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\EnumerableExtensions.cs">
+      <Link>Util\EnumerableExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ExpressionSyntaxExtensions.cs">
+      <Link>Util\ExpressionSyntaxExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\FindTokenHelper.cs">
+      <Link>Util\FindTokenHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\Flow\FlowAnalysis.cs">
+      <Link>Util\Flow\FlowAnalysis.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\Flow\FlowAnalyzer.cs">
+      <Link>Util\Flow\FlowAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\Flow\FlowLocation.cs">
+      <Link>Util\Flow\FlowLocation.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\Flow\FlowState.cs">
+      <Link>Util\Flow\FlowState.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\Flow\NullFlowState.cs">
+      <Link>Util\Flow\NullFlowState.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\FormatStringHelper.cs">
+      <Link>Util\FormatStringHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\GeneratedCodeRecognition.cs">
+      <Link>Util\GeneratedCodeRecognition.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\GettextCatalog.cs">
+      <Link>Util\GettextCatalog.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\HelpLink.cs">
+      <Link>Util\HelpLink.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\IAssemblySymbolExtensions.cs">
+      <Link>Util\IAssemblySymbolExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\INamespaceOrTypeSymbolExtensions.cs">
+      <Link>Util\INamespaceOrTypeSymbolExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ISymbolExtensions.cs">
+      <Link>Util\ISymbolExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ITypeParameterSymbolExtensions.cs">
+      <Link>Util\ITypeParameterSymbolExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ITypeSymbolExtensions.cs">
+      <Link>Util\ITypeSymbolExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\Matcher.cs">
+      <Link>Util\Matcher.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\NameGenerator.cs">
+      <Link>Util\NameGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\NameProposalService.cs">
+      <Link>Util\NameProposalService.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\NamespaceDeclarationSyntaxExtensions.cs">
+      <Link>Util\NamespaceDeclarationSyntaxExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\NameSyntaxComparer.cs">
+      <Link>Util\NameSyntaxComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\NRefactory6Host.cs">
+      <Link>Util\NRefactory6Host.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ObjectExtensions.cs">
+      <Link>Util\ObjectExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\RefactoringHelpers.cs">
+      <Link>Util\RefactoringHelpers.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ReflectionCompatibilityExtensions.cs">
+      <Link>Util\ReflectionCompatibilityExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\RoslynReflection.cs">
+      <Link>Util\RoslynReflection.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SignatureComparer.cs">
+      <Link>Util\SignatureComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SpecializedCollections.cs">
+      <Link>Util\SpecializedCollections.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SpeculationAnalyzer.cs">
+      <Link>Util\SpeculationAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\StringExtensions.cs">
+      <Link>Util\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\StringPclExtensions.cs">
+      <Link>Util\StringPclExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SymbolExtensions.cs">
+      <Link>Util\SymbolExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SyntaxExtensions.cs">
+      <Link>Util\SyntaxExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SyntaxNodeExtensions.cs">
+      <Link>Util\SyntaxNodeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SyntaxTokenExtensions.cs">
+      <Link>Util\SyntaxTokenExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SyntaxTriviaExtensions.cs">
+      <Link>Util\SyntaxTriviaExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\SyntaxTriviaListExtensions.cs">
+      <Link>Util\SyntaxTriviaListExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\TokenComparer.cs">
+      <Link>Util\TokenComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\TypeExtensions.cs">
+      <Link>Util\TypeExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\TypeGenerator.cs">
+      <Link>Util\TypeGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\TypeGuessing.cs">
+      <Link>Util\TypeGuessing.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\TypeSyntaxComparer.cs">
+      <Link>Util\TypeSyntaxComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\UnicodeNewline.cs">
+      <Link>Util\UnicodeNewline.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\UsingsAndExternAliasesDirectiveComparer.cs">
+      <Link>Util\UsingsAndExternAliasesDirectiveComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ValueTuple.cs">
+      <Link>Util\ValueTuple.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ValueTuple`2.cs">
+      <Link>Util\ValueTuple`2.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\VBSyntaxExtensions.cs">
+      <Link>Util\VBSyntaxExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\VBUtil.cs">
+      <Link>Util\VBUtil.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\WordParser.cs">
+      <Link>Util\WordParser.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\AddAnotherAccessorCodeRefactoringProvider.cs">
+      <Link>Converter\AddAnotherAccessorCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\AddCheckForNothingCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\AddCheckForNothingCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\CheckDictionaryKeyValueCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\CheckDictionaryKeyValueCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\CheckIfParameterIsNothingCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\CheckIfParameterIsNothingCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ComputeConstantValueCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ComputeConstantValueCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ConvertDecToHexCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ConvertDecToHexCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ConvertHexToDecCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ConvertHexToDecCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ConvertSelectCaseToIfCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ConvertSelectCaseToIfCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ConvertToCustomEventCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ConvertToCustomEventCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\CopyCommentsFromBaseCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\CopyCommentsFromBaseCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\CreateChangedEventCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\CreateOverloadWithoutParameterCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\CreateOverloadWithoutParameterCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\InvertIfCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\InvertIfCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\InvertLogicalExpressionCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\InvertLogicalExpressionCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ReplaceDirectCastWithSafeCastCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\CodeRefactorings\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs">
+      <Link>VB\CodeRefactorings\ReplaceSafeCastWithDirectCastCodeRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Converter\ConversionExtensions.cs">
+      <Link>VB\Converter\ConversionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Converter\CSharpConverter.cs">
+      <Link>VB\Converter\CSharpConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Converter\MethodBodyVisitor.cs">
+      <Link>VB\Converter\MethodBodyVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Converter\NodesVisitor.cs">
+      <Link>VB\Converter\NodesVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs">
+      <Link>VB\Diagnostics\Custom\NameOfSuggestionAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs">
+      <Link>VB\Diagnostics\Custom\NameOfSuggestionCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs">
+      <Link>VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs">
+      <Link>VB\Diagnostics\Synced\NUnit\NonPublicMethodWithTestAttributeCodeFixProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\VB\Diagnostics\VBDiagnosticIDs.cs">
+      <Link>VB\Diagnostics\VBDiagnosticIDs.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlAttribute.cs">
+      <Link>Xml\AXmlAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlDocument.cs">
+      <Link>Xml\AXmlDocument.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlElement.cs">
+      <Link>Xml\AXmlElement.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlObject.cs">
+      <Link>Xml\AXmlObject.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlParser.cs">
+      <Link>Xml\AXmlParser.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlReader.cs">
+      <Link>Xml\AXmlReader.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlTag.cs">
+      <Link>Xml\AXmlTag.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlText.cs">
+      <Link>Xml\AXmlText.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\AXmlVisitor.cs">
+      <Link>Xml\AXmlVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\DocumentationElement.cs">
+      <Link>Xml\DocumentationElement.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\IncrementalParserState.cs">
+      <Link>Xml\IncrementalParserState.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\InternalDocument.cs">
+      <Link>Xml\InternalDocument.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\LazyInit.cs">
+      <Link>Xml\LazyInit.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\Log.cs">
+      <Link>Xml\Log.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\ObjectIterator.cs">
+      <Link>Xml\ObjectIterator.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\ReuseEqualityComparer.cs">
+      <Link>Xml\ReuseEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\SyntaxError.cs">
+      <Link>Xml\SyntaxError.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\TagMatchingHeuristics.cs">
+      <Link>Xml\TagMatchingHeuristics.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\TagReader.cs">
+      <Link>Xml\TagReader.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\TextType.cs">
+      <Link>Xml\TextType.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\TokenReader.cs">
+      <Link>Xml\TokenReader.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\Xml\TreeTraversal.cs">
+      <Link>Xml\TreeTraversal.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\AssemblyInfoBase.cs">
+      <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="Util\ReflectionNamespaces.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\AssemblyInfoBase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis">
+      <Version>2.0.0-rc</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
+      <Version>2.0.0-rc</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
+      <Version>2.0.0-rc</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic">
+      <Version>2.0.0-rc</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces">
+      <Version>2.0.0-rc</Version>
+    </PackageReference>
+    <PackageReference Include="NETStandard.Library">
+      <Version>1.6</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Sdk">
+      <Version>1.0.0-alpha-20161104-2</Version>
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Collections.Immutable">
+      <Version>1.3.0</Version>
+    </PackageReference>
+    <PackageReference Include="System.Runtime.Serialization.Primitives">
+      <Version>4.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\RefactoringEssentials\buildlibrarypackage.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>buildlibrarypackage.cmd</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\buildpackage.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>buildpackage.cmd</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\buildpackages_appveyor.cmd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>buildpackages_appveyor.cmd</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\tools\install.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>tools\install.ps1</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\tools\uninstall.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>tools\uninstall.ps1</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\Util\Reflection.md">
+      <Link>Util\Reflection.md</Link>
+    </None>
+    <None Include="..\RefactoringEssentials\Xml\ICSharpCode.NRefactory.Xml.csproj">
+      <Link>Xml\ICSharpCode.NRefactory.Xml.csproj</Link>
+    </None>
+    <None Include="CodeAnalyzers.html.template" />
+    <None Include="CodeFixes.html.template" />
+    <None Include="CodeRefactorings.html.template" />
+    <None Include="missing.md" />
+    <None Include="RefactoringEssentials.Library.nuspec">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RefactoringEssentials.Library.tt</DependentUpon>
+    </None>
+    <None Include="RefactoringEssentials.Library.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RefactoringEssentials.Library.nuspec</LastGenOutput>
+    </None>
+    <None Include="RefactoringEssentials.nuspec">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>RefactoringEssentials.tt</DependentUpon>
+    </None>
+    <None Include="RefactoringEssentials.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
+    </None>
+    <None Include="RefactoringEssentials.version" />
+    <None Include="Versioning.t4.template" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+</Project>

@@ -18,22 +18,26 @@ namespace RefactoringEssentials.CSharp
     /// Converts an instance method to a static method adding an additional parameter as "this" replacement.
     /// </summary>
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert instance to static method")]
-    public class ConvertInstanceToStaticMethodCodeRefactoringProvider : SpecializedCodeRefactoringProvider<MethodDeclarationSyntax>
+    public class ConvertInstanceToStaticMethodCodeRefactoringProvider : SpecializedCodeRefactoringProvider<SyntaxNode>
     {
-        protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, MethodDeclarationSyntax node, CancellationToken cancellationToken)
+        protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, SyntaxNode node, CancellationToken cancellationToken)
         {
-            TypeDeclarationSyntax enclosingTypeDeclaration = node.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+            MethodDeclarationSyntax methodDeclaration = node as MethodDeclarationSyntax;
+            if (methodDeclaration == null)
+                yield break;
+
+            TypeDeclarationSyntax enclosingTypeDeclaration = methodDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
             if (enclosingTypeDeclaration == null)
                 yield break;
-            if (node.Modifiers.Any(SyntaxKind.StaticKeyword))
+            if (methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
                 yield break;
 
             var declaringTypeSymbol = semanticModel.GetDeclaredSymbol(enclosingTypeDeclaration);
-            var methodSymbol = semanticModel.GetDeclaredSymbol(node);
+            var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
 
             yield return CodeActionFactory.Create(span, DiagnosticSeverity.Info, GettextCatalog.GetString("Convert to static method"), t2 =>
             {
-                return PerformAction(document, semanticModel, root, enclosingTypeDeclaration, declaringTypeSymbol, node, methodSymbol, cancellationToken);
+                return PerformAction(document, semanticModel, root, enclosingTypeDeclaration, declaringTypeSymbol, methodDeclaration, methodSymbol, cancellationToken);
             });
         }
 
@@ -294,9 +298,12 @@ namespace RefactoringEssentials.CSharp
                 if (!(node.Parent is MemberAccessExpressionSyntax))
                 {
                     var thisSymbolInfo = semanticModel.GetSymbolInfo(node);
-                    if (referenceSymbols.Contains(thisSymbolInfo.Symbol))
+                    if ((thisSymbolInfo.Symbol != null) && !(thisSymbolInfo.Symbol is ITypeSymbol))
                     {
-                        NodesToChange.Add(node);
+                        if (referenceSymbols.Contains(thisSymbolInfo.Symbol))
+                        {
+                            NodesToChange.Add(node);
+                        }
                     }
                 }
 

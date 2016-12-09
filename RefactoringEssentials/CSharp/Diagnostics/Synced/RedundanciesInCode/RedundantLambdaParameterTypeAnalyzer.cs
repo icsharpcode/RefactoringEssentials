@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Explicit type specification can be removed as it can be implicitly inferred"),
             GettextCatalog.GetString("Redundant lambda explicit type specification"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantLambdaParameterTypeAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("When 'is' keyword is used, which implicitly check null"),
             GettextCatalog.GetString("Redundant comparison with 'null'"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantComparisonWithNullAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

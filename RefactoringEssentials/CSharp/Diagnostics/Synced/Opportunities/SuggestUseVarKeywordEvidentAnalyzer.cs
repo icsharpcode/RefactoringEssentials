@@ -19,7 +19,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Use 'var' keyword when possible"),
             GettextCatalog.GetString("Use 'var' keyword"),
             DiagnosticAnalyzerCategories.Opportunities,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.SuggestUseVarKeywordEvidentAnalyzerID)
         );
@@ -97,7 +97,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 IsObjectCreationSomeObviousTypeCase(nodeContext, initializerExpression, variableType) ||
                 IsCastingSomeObviousTypeCase(nodeContext, initializerExpression, variableType) ||
                 IsInvocationSomeObviousTypeCase(nodeContext, initializerExpression, variableType) /*||
-				IsPropertyAccessSomeObviousTypeCase(nodeContext, initializerExpression, variableType)*/;
+                IsPropertyAccessSomeObviousTypeCase(nodeContext, initializerExpression, variableType)*/;
         }
 
         static bool IsArrayTypeSomeObviousTypeCase(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax initializerExpression, ITypeSymbol variableType, LocalDeclarationStatementSyntax localVariable)
