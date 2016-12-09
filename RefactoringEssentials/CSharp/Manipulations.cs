@@ -36,21 +36,25 @@ namespace RefactoringEssentials.CSharp
             ).WithAdditionalAnnotations(Formatter.Annotation);
         }
 
-        internal static PropertyDeclarationSyntax CreateAutoProperty(TypeSyntax type, string identifier, bool getOnly, SyntaxKind? accessibility)
+        internal static PropertyDeclarationSyntax CreateAutoProperty(TypeSyntax type, string identifier, SyntaxList<AccessorDeclarationSyntax> accessors, SyntaxKind? accessibility)
         {
-            var accessorDeclList = new SyntaxList<AccessorDeclarationSyntax>()
-            .Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
-
-            if (getOnly == false)
-                accessorDeclList.Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
-
             var newProperty = SyntaxFactory.PropertyDeclaration(type, identifier)
-                .WithAccessorList(SyntaxFactory.AccessorList(accessorDeclList));
+                .WithAccessorList(SyntaxFactory.AccessorList(accessors));
 
             if (accessibility.HasValue)
                 newProperty = newProperty.WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(accessibility.Value)));
 
             return newProperty.WithAdditionalAnnotations(Formatter.Annotation);
+        }
+
+        internal static SyntaxList<AccessorDeclarationSyntax> GetAccessor()
+        {
+            return new SyntaxList<AccessorDeclarationSyntax>().Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+        }
+
+        internal static SyntaxList<AccessorDeclarationSyntax> GetAndSetAccessors()
+        {
+            return new SyntaxList<AccessorDeclarationSyntax>().Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))).Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
         }
     }
 }

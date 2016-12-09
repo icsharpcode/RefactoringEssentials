@@ -6,76 +6,58 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.Formatting;
+using static RefactoringEssentials.CSharp.Manipulations;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Initialize auto property from constructor parameter")]
     public class InitializeAutoPropertyFromConstructorParameterCodeRefactoringProvider : CodeRefactoringProvider
     {
-        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        ConstructorParameterContextFinder ConstructorParameterContextFinder { get; }
+
+        public InitializeAutoPropertyFromConstructorParameterCodeRefactoringProvider()
         {
-            var document = context.Document;
-            if (document.Project.Solution.Workspace.Kind == WorkspaceKind.MiscellaneousFiles)
-                return;
-            var span = context.Span;
-            if (!span.IsEmpty)
-                return;
-            var cancellationToken = context.CancellationToken;
-            if (cancellationToken.IsCancellationRequested)
-                return;
-            var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            if (model.IsFromGeneratedCode(cancellationToken))
-                return;
-            var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            var token = root.FindToken(span.Start);
-            var parameter = token.Parent as ParameterSyntax;
-
-            if (parameter != null)
-            {
-                var ctor = parameter.Parent.Parent as ConstructorDeclarationSyntax;
-                if (ctor == null)
-                    return;
-
-                context.RegisterRefactoring(
-                    CodeActionFactory.Create(
-                        parameter.Span,
-                        DiagnosticSeverity.Info,
-                        GettextCatalog.GetString("Initialize auto-property from parameter"),
-                        t2 =>
-                        {
-                            var propertyName = GetPropertyName(parameter.Identifier.ToString());
-                            var accessorDeclList = new SyntaxList<AccessorDeclarationSyntax>().Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))).Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
-                            var newProperty = SyntaxFactory.PropertyDeclaration(parameter.Type, propertyName)
-                                .WithAccessorList(SyntaxFactory.AccessorList(accessorDeclList))
-                                .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword)))
-                                .WithAdditionalAnnotations(Formatter.Annotation);
-
-                            var assignmentStatement = SyntaxFactory.ExpressionStatement(
-                                SyntaxFactory.AssignmentExpression(
-                                    SyntaxKind.SimpleAssignmentExpression,
-                                    propertyName != parameter.Identifier.ToString() ? (ExpressionSyntax)SyntaxFactory.IdentifierName(propertyName) : SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.ThisExpression(), SyntaxFactory.IdentifierName(parameter.Identifier)),
-                                    SyntaxFactory.IdentifierName(parameter.Identifier)
-                                )
-                            ).WithAdditionalAnnotations(Formatter.Annotation);
-
-                            var trackedRoot = root.TrackNodes(ctor);
-                            var newRoot = trackedRoot.InsertNodesBefore(trackedRoot.GetCurrentNode(ctor), new List<SyntaxNode>() {
-                                newProperty
-							});
-							var ctorBody = ctor.Body ?? SyntaxFactory.Block ();
-							newRoot = newRoot.ReplaceNode (newRoot.GetCurrentNode(ctor), ctor.WithBody(
-								ctorBody.WithStatements (SyntaxFactory.List(new[] { assignmentStatement }.Concat(ctorBody.Statements)))
-                            ));
-
-                            return Task.FromResult(document.WithSyntaxRoot(newRoot));
-                        })
-                );
-            }
+            ConstructorParameterContextFinder = new ConstructorParameterContextFinder();
         }
 
-        static string GetPropertyName(string v)
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            return char.ToUpper(v[0]) + v.Substring(1);
+            var constructorParameterContext = await ConstructorParameterContextFinder.Find(context);
+
+            if (constructorParameterContext == null)
+                return;
+
+            context.RegisterRefactoring(
+                    CodeActionFactory.Create(
+                        constructorParameterContext.TextSpan,
+                        DiagnosticSeverity.Info,
+                        GettextCatalog.GetString("Initialize auto-property from parameter"),
+                        t2 => CreateAndInitialiseReadOnlyPropertyFromConstructorParameter(constructorParameterContext)
+                    )
+                );
+        }
+
+        static Task<Document> CreateAndInitialiseReadOnlyPropertyFromConstructorParameter(ConstructorParameterContext context)
+        {
+            var trackedRoot = context.Root.TrackNodes(context.Constructor);
+
+            var rootWithNewProperty = AddBefore(
+                root: trackedRoot,
+                loationToAddBefore: context.Constructor,
+                nodeToAdd: CreateAutoProperty(
+                    type: context.Type,
+                    identifier: context.PropertyName,
+                    accessors: GetAndSetAccessors(),
+                    accessibility: SyntaxKind.PublicKeyword));
+
+            var rootWithAssignmentAndProperty = AddStatementToConstructorBody(
+                root: rootWithNewProperty,
+                constructor: context.Constructor,
+                statement: CreateAssignmentStatement(
+                    leftHandSidePropertyName: context.PropertyName,
+                    rightHandSidePropertyName: context.ParameterName));
+
+            return Task.FromResult(context.Document.WithSyntaxRoot(rootWithAssignmentAndProperty));
         }
     }
 }

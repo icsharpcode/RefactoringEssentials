@@ -43,7 +43,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 nodeToAdd: CreateAutoProperty(
                     type: context.Type, 
                     identifier: context.PropertyName, 
-                    getOnly: true, 
+                    accessors: GetAccessor(), 
                     accessibility: SyntaxKind.PublicKeyword));
 
             var rootWithAssignmentAndProperty = AddStatementToConstructorBody(
