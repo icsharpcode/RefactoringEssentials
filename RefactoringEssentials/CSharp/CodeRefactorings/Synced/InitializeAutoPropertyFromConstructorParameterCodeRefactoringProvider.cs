@@ -32,12 +32,12 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         constructorParameterContext.TextSpan,
                         DiagnosticSeverity.Info,
                         GettextCatalog.GetString("Initialize auto-property from parameter"),
-                        t2 => CreateAndInitialiseReadOnlyPropertyFromConstructorParameter(constructorParameterContext)
+                        t => CreateAndInitialiseAutoPropertyFromConstructorParameter(constructorParameterContext)
                     )
                 );
         }
 
-        static Task<Document> CreateAndInitialiseReadOnlyPropertyFromConstructorParameter(ConstructorParameterContext context)
+        static Task<Document> CreateAndInitialiseAutoPropertyFromConstructorParameter(ConstructorParameterContext context)
         {
             var trackedRoot = context.Root.TrackNodes(context.Constructor);
 

@@ -7,7 +7,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class InitializeReadOnlyAutoPropertyFromConstructorParameterTests : CSharpCodeRefactoringTestBase
     {
         [Test]
-        public void AddInteger()
+        public void InitialiseInteger()
         {
             Test<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
 class Foo
@@ -28,12 +28,45 @@ class Foo
         }
 
         [Test]
+        public void InitialiseInterface()
+        {
+            Test<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
+class Foo
+{
+    public Foo(int x, ICedd $cedd)
+    {
+    }
+}", @"
+class Foo
+{
+    public ICedd Cedd { get; }
+
+    public Foo(int x, ICedd cedd)
+    {
+        Cedd = cedd;
+    }
+}");
+        }
+
+        [Test]
         public void NotInParameterList()
         {
             TestWrongContext<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
 class Foo
 {
     public $Foo(int x, int y)
+    {
+    }
+}");
+        }
+
+        [Test]
+        public void NotInParameterValue()
+        {
+            TestWrongContext<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
+class Foo
+{
+    public Foo($int x, int y)
     {
     }
 }");
