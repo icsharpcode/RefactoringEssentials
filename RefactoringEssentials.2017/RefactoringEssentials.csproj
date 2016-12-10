@@ -13,13 +13,13 @@
     <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CSharp\ConstructorParameterContext.cs">
+    <Compile Include="..\RefactoringEssentials\CSharp\ConstructorParameterContext.cs">
       <Link>CSharp\ConstructorParameterContext.cs</Link>
     </Compile>
-    <Compile Include="CSharp\ConstructorParameterContextFinder.cs">
+    <Compile Include="..\RefactoringEssentials\CSharp\ConstructorParameterContextFinder.cs">
       <Link>CSharp\ConstructorParameterContextFinder.cs</Link>
     </Compile>
-    <Compile Include="CSharp\CodeRefactorings\Custom\InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs">
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Custom\InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\Common\CodeContractsCodeRefactoringProvider.cs">
