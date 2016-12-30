@@ -287,7 +287,10 @@
     <Compile Include="..\Tests\CSharp\CodeRefactorings\ContractEnsuresNotNullReturnTests.cs">
       <Link>CSharp\CodeRefactorings\ContractEnsuresNotNullReturnTests.cs</Link>
     </Compile>
-    <Compile Include="..\Tests\CSharp\CodeRefactorings\ContractRequiresNotNullTests.cs">
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ContractRequiresStringNotNullOrEmptyTests.cs">
+      <Link>CSharp\CodeRefactorings\ContractRequiresNotNullTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ContractRequiresStringNotNullOrEmptyTests.cs">
       <Link>CSharp\CodeRefactorings\ContractRequiresNotNullTests.cs</Link>
     </Compile>
     <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertAnonymousMethodToLambdaTests.cs">

@@ -57,7 +57,7 @@ class Foo
         }
 
         [Test]
-        public void TestContractAlreadyPresent()
+        public void TestContractAlreadyPresentEqualsFalseFormat()
         {
             TestWrongContext<ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider>(@"class Foo
 {
@@ -65,6 +65,34 @@ class Foo
     {
         var lambda = (string $s, int e) => {
             Contract.Requires(string.IsNullOrEmpty(s) == false);
+        };
+    }
+}");
+        }
+
+        [Test]
+        public void TestContractAlreadyPresentFalseEqualsFormat()
+        {
+            TestWrongContext<ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider>(@"class Foo
+{
+    void Test ()
+    {
+        var lambda = (string $s, int e) => {
+            Contract.Requires(false==string.IsNullOrEmpty(s));
+        };
+    }
+}");
+        }
+
+        [Test]
+        public void TestContractAlreadyPresentNegateFormat()
+        {
+            TestWrongContext<ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider>(@"class Foo
+{
+    void Test ()
+    {
+        var lambda = (string $s, int e) => {
+            Contract.Requires(!string.IsNullOrEmpty(s));
         };
     }
 }");

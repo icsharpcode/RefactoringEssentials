@@ -58,6 +58,7 @@
     <Compile Include="Converter\CodeWithOptions.cs" />
     <Compile Include="Converter\ConversionResult.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs" />
+    <Compile Include="CSharp\CodeRefactorings\Synced\ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\MergeNestedIfAction.cs" />
