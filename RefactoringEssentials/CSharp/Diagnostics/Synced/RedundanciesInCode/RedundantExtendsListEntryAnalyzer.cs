@@ -16,7 +16,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Type is either mentioned in the base type list of another part or in another base type"),
             "{0}",
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantExtendsListEntryAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

@@ -338,6 +338,29 @@ class Test
 }
 ");
         }
+
+        [Test]
+        public void TestComments()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
+{
+    /// <summary>test</summary> 
+    object $fooBar$ = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}", @"class Test
+{
+    /// <summary>test</summary>
+    readonly object fooBar = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}");
+        }
+
     }
 }
 

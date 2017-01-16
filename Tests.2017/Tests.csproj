@@ -1,0 +1,1179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props" Condition="Exists('..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{21DBA1CE-AF55-4159-B04B-B8C621BE8921}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>RefactoringEssentials.Tests</RootNamespace>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;RE2017;UNIMPLEMENTED_CONVERTER_FEATURE_TESTS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AssemblyName>RefactoringEssentials.Tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <AssemblyName>RefactoringEssentials.Tests</AssemblyName>
+    <DefineConstants>RE2017</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Debug|AnyCPU' ">
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug_Mono</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <AssemblyName>Tests</AssemblyName>
+    <DefineConstants>RE2017</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Release|AnyCPU' ">
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Mono_Release</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <AssemblyName>Tests</AssemblyName>
+    <DefineConstants>RE2017</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CodeAnalysis, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Common.2.0.0-rc\lib\netstandard1.3\Microsoft.CodeAnalysis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.2.0.0-rc\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.2.0.0-rc\lib\netstandard1.3\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.VisualBasic, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.VisualBasic.2.0.0-rc\lib\netstandard1.3\Microsoft.CodeAnalysis.VisualBasic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.VisualBasic.Workspaces.2.0.0-rc\lib\netstandard1.3\Microsoft.CodeAnalysis.VisualBasic.Workspaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.0.0-rc\lib\net46\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces.Desktop, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeAnalysis.Workspaces.Common.2.0.0-rc\lib\net46\Microsoft.CodeAnalysis.Workspaces.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.AppContext.4.1.0\lib\net46\System.AppContext.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.3.0\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Console, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Console.4.0.0\lib\net46\System.Console.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Diagnostics.FileVersionInfo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.FileVersionInfo.4.0.0\lib\net46\System.Diagnostics.FileVersionInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Diagnostics.StackTrace, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Diagnostics.StackTrace.4.0.1\lib\net46\System.Diagnostics.StackTrace.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Compression, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Compression.4.1.0\lib\net46\System.IO.Compression.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.4.0.1\lib\net46\System.IO.FileSystem.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Reflection.Metadata, Version=1.4.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Reflection.Metadata.1.4.1-beta-24430-01\lib\portable-net45+win8\System.Reflection.Metadata.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Encoding.4.0.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.1.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Text.Encoding.CodePages, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Text.Encoding.CodePages.4.0.1\lib\net46\System.Text.Encoding.CodePages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Thread, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Thread.4.0.0\lib\net46\System.Threading.Thread.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Composition.AttributedModel">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Convention">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Convention.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Hosting">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Runtime">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.TypedParts">
+      <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.XmlDocument, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.XmlDocument.4.0.1\lib\net46\System.Xml.XmlDocument.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.XPath.4.0.1\lib\net46\System.Xml.XPath.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.XPath.XDocument, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Xml.XPath.XDocument.4.0.1\lib\net46\System.Xml.XPath.XDocument.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\RefactoringEssentials.2017\Properties\AssemblyInfoBase.cs">
+      <Link>Properties\AssemblyInfoBase.cs</Link>
+      <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="..\Tests\Common\CodeFixTestBase.cs">
+      <Link>Common\CodeFixTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\Common\CodeRefactoringTestBase.cs">
+      <Link>Common\CodeRefactoringTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\Common\ConverterTestBase.cs">
+      <Link>Common\ConverterTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\Common\DiagnosticTestBase.cs">
+      <Link>Common\DiagnosticTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\Common\Utils.cs">
+      <Link>Common\Utils.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CS0108UseNewKeywordIfHidingIntendedTests.cs">
+      <Link>CSharp\CodeFixes\CS0108UseNewKeywordIfHidingIntendedTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CS0152DuplicateCaseLabelValueTests.cs">
+      <Link>CSharp\CodeFixes\CS0152DuplicateCaseLabelValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CS0164LabelHasNotBeenReferencedTests.cs">
+      <Link>CSharp\CodeFixes\CS0164LabelHasNotBeenReferencedTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CS0759RedundantPartialMethodTests.cs">
+      <Link>CSharp\CodeFixes\CS0759RedundantPartialMethodTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CS1105ExtensionMethodMustBeDeclaredStaticTests.cs">
+      <Link>CSharp\CodeFixes\CS1105ExtensionMethodMustBeDeclaredStaticTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CS1520MethodMustHaveAReturnTypeTests.cs">
+      <Link>CSharp\CodeFixes\CS1520MethodMustHaveAReturnTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CSharpCodeFixTestBase.cs">
+      <Link>CSharp\CodeFixes\CSharpCodeFixTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\InvalidConversionTests.cs">
+      <Link>CSharp\CodeFixes\InvalidConversionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests.cs">
+      <Link>CSharp\CodeFixes\ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\UnreachableCodeTests.cs">
+      <Link>CSharp\CodeFixes\UnreachableCodeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\AddAnotherAccessorTests.cs">
+      <Link>CSharp\CodeRefactorings\AddAnotherAccessorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\AddArgumentNameTests.cs">
+      <Link>CSharp\CodeRefactorings\AddArgumentNameTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\AddBracesTests.cs">
+      <Link>CSharp\CodeRefactorings\AddBracesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\AddCatchExceptionTests.cs">
+      <Link>CSharp\CodeRefactorings\AddCatchExceptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\AddExceptionDescriptionTests.cs">
+      <Link>CSharp\CodeRefactorings\AddExceptionDescriptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\AddNullCheckTests.cs">
+      <Link>CSharp\CodeRefactorings\AddNullCheckTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\AddOptionalParameterToInvocationTests.cs">
+      <Link>CSharp\CodeRefactorings\AddOptionalParameterToInvocationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\AutoLinqSumTests.cs">
+      <Link>CSharp\CodeRefactorings\AutoLinqSumTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ChangeAccessModifierTests.cs">
+      <Link>CSharp\CodeRefactorings\ChangeAccessModifierTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CheckArrayIndexValueTests.cs">
+      <Link>CSharp\CodeRefactorings\CheckArrayIndexValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CheckCollectionIndexValueTests.cs">
+      <Link>CSharp\CodeRefactorings\CheckCollectionIndexValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CheckDictionaryKeyValueTests.cs">
+      <Link>CSharp\CodeRefactorings\CheckDictionaryKeyValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CheckIfParameterIsNullTests.cs">
+      <Link>CSharp\CodeRefactorings\CheckIfParameterIsNullTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CheckStringBuilderIndexValueTests.cs">
+      <Link>CSharp\CodeRefactorings\CheckStringBuilderIndexValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CheckStringIndexValueTests.cs">
+      <Link>CSharp\CodeRefactorings\CheckStringIndexValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ComputeConstantValueTests.cs">
+      <Link>CSharp\CodeRefactorings\ComputeConstantValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ContractEnsuresNotNullReturnTests.cs">
+      <Link>CSharp\CodeRefactorings\ContractEnsuresNotNullReturnTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ContractRequiresNotNullTests.cs">
+      <Link>CSharp\CodeRefactorings\ContractRequiresNotNullTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertAnonymousMethodToLambdaTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertAnonymousMethodToLambdaTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertAutoPropertyToPropertyTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertAutoPropertyToPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertBitwiseFlagComparisonToHasFlagsTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertBitwiseFlagComparisonToHasFlagsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertCoalescingToConditionalExpressionTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertCoalescingToConditionalExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertDecToHexTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertDecToHexTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertDoWhileToWhileLoopTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertDoWhileToWhileLoopTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertEqualityOperatorToEqualsTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertEqualityOperatorToEqualsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertEqualityOperatorToReferenceEqualsTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertEqualityOperatorToReferenceEqualsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertEqualsToEqualityOperatorTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertEqualsToEqualityOperatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertExplicitToImplicitImplementationTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertExplicitToImplicitImplementationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertExpressionBodyToStatementBodyTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertExpressionBodyToStatementBodyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertForeachToForTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertForeachToForTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertForToWhileTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertForToWhileTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertHasFlagsToBitwiseFlagComparisonTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertHasFlagsToBitwiseFlagComparisonTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertHexToDecTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertHexToDecTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertIfStatementToConditionalTernaryExpressionTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertIfStatementToConditionalTernaryExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertIfStatementToNullCoalescingExpressionActionTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertIfStatementToNullCoalescingExpressionActionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertIfStatementToReturnStatementActionTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertIfStatementToReturnStatementActionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertIfStatementToSwitchStatementTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertIfStatementToSwitchStatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertImplicitToExplicittImplementationTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertImplicitToExplicittImplementationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertInstanceToStaticMethodCodeRefactoringTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertInstanceToStaticMethodCodeRefactoringTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertInterpolatedStringToStringFormatTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertInterpolatedStringToStringFormatTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertLambdaBodyExpressionToStatementTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertLambdaBodyExpressionToStatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertLambdaStatementToExpressionTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertLambdaStatementToExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertLamdaToAnonymousMethodTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertLamdaToAnonymousMethodTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertMethodGroupToAnonymousMethodTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertMethodGroupToAnonymousMethodTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertMethodGroupToLambdaTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertMethodGroupToLambdaTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertMultiplyToShiftTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertMultiplyToShiftTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertReferenceEqualsToEqualityOperatorTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertReferenceEqualsToEqualityOperatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertShiftToMultiplyTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertShiftToMultiplyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertStatementBodyToExpressionBodyTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertStatementBodyToExpressionBodyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertStringFormatToInterpolatedStringTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertStringFormatToInterpolatedStringTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertSwitchToIfTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertSwitchToIfTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertTernaryExpressionToIfStatementCodeRefactoringProviderTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertTernaryExpressionToIfStatementCodeRefactoringProviderTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ConvertWhileToDoWhileLoopTests.cs">
+      <Link>CSharp\CodeRefactorings\ConvertWhileToDoWhileLoopTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CopyCommentsFromBaseTests.cs">
+      <Link>CSharp\CodeRefactorings\CopyCommentsFromBaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CreateChangedEventTests.cs">
+      <Link>CSharp\CodeRefactorings\CreateChangedEventTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CreateCustomEventImplementationTests.cs">
+      <Link>CSharp\CodeRefactorings\CreateCustomEventImplementationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CreateDelegateTests.cs">
+      <Link>CSharp\CodeRefactorings\CreateDelegateTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CreateEventInvocatorTests.cs">
+      <Link>CSharp\CodeRefactorings\CreateEventInvocatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CreateIndexerTests.cs">
+      <Link>CSharp\CodeRefactorings\CreateIndexerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CreateOverloadWithoutParameterTests.cs">
+      <Link>CSharp\CodeRefactorings\CreateOverloadWithoutParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\CSharpCodeRefactoringTestBase.cs">
+      <Link>CSharp\CodeRefactorings\CSharpCodeRefactoringTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ExtractAnonymousMethodTests.cs">
+      <Link>CSharp\CodeRefactorings\ExtractAnonymousMethodTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ExtractWhileConditionToInternalIfStatementTests.cs">
+      <Link>CSharp\CodeRefactorings\ExtractWhileConditionToInternalIfStatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\FlipEqualsTargetAndArgumentTests.cs">
+      <Link>CSharp\CodeRefactorings\FlipEqualsTargetAndArgumentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\FlipOperatorArguments.cs">
+      <Link>CSharp\CodeRefactorings\FlipOperatorArguments.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\FlipRelationalOperatorArgumentsTests.cs">
+      <Link>CSharp\CodeRefactorings\FlipRelationalOperatorArgumentsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\GenerateGetterTests.cs">
+      <Link>CSharp\CodeRefactorings\GenerateGetterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\GenerateSwitchLabelsTests.cs">
+      <Link>CSharp\CodeRefactorings\GenerateSwitchLabelsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ImportStaticClassWithUsingTests.cs">
+      <Link>CSharp\CodeRefactorings\ImportStaticClassWithUsingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\InitializeAutoPropertyFromConstructorParameterTests.cs">
+      <Link>CSharp\CodeRefactorings\InitializeAutoPropertyFromConstructorParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\InitializeFieldFromConstructorParameterTests.cs">
+      <Link>CSharp\CodeRefactorings\InitializeFieldFromConstructorParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\InsertAnonymousMethodSignatureTests.cs">
+      <Link>CSharp\CodeRefactorings\InsertAnonymousMethodSignatureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\IntroduceConstantTests.cs">
+      <Link>CSharp\CodeRefactorings\IntroduceConstantTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\IntroduceFormatItemTests.cs">
+      <Link>CSharp\CodeRefactorings\IntroduceFormatItemTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\InvertConditionalOperatorTests.cs">
+      <Link>CSharp\CodeRefactorings\InvertConditionalOperatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\InvertIfTests.cs">
+      <Link>CSharp\CodeRefactorings\InvertIfTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\InvertLogicalExpressionTests.cs">
+      <Link>CSharp\CodeRefactorings\InvertLogicalExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\InvokeAsStaticMethodTests.cs">
+      <Link>CSharp\CodeRefactorings\InvokeAsStaticMethodTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\IterateViaForeachTests.cs">
+      <Link>CSharp\CodeRefactorings\IterateViaForeachTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\JoinLocalVariableDeclarationAndAssignmentTests.cs">
+      <Link>CSharp\CodeRefactorings\JoinLocalVariableDeclarationAndAssignmentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\JoinStringTests.cs">
+      <Link>CSharp\CodeRefactorings\JoinStringTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\LinqFluentToQueryTests.cs">
+      <Link>CSharp\CodeRefactorings\LinqFluentToQueryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\LinqQueryToFluentTests.cs">
+      <Link>CSharp\CodeRefactorings\LinqQueryToFluentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\MergeNestedIfTests.cs">
+      <Link>CSharp\CodeRefactorings\MergeNestedIfTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\MoveToOuterScopeTests.cs">
+      <Link>CSharp\CodeRefactorings\MoveToOuterScopeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\NegateIsExpressionTests.cs">
+      <Link>CSharp\CodeRefactorings\NegateIsExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\NegateLogicalExpressionTests.cs">
+      <Link>CSharp\CodeRefactorings\NegateLogicalExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\PutInsideUsingTests.cs">
+      <Link>CSharp\CodeRefactorings\PutInsideUsingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\RemoveBracesTests.cs">
+      <Link>CSharp\CodeRefactorings\RemoveBracesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\RemoveCatchExceptionTests.cs">
+      <Link>CSharp\CodeRefactorings\RemoveCatchExceptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\RemoveRegionEndRegionDirectivesTests.cs">
+      <Link>CSharp\CodeRefactorings\RemoveRegionEndRegionDirectivesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceAssignmentWithPostfixExpressionTests.cs">
+      <Link>CSharp\CodeRefactorings\ReplaceAssignmentWithPostfixExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceAutoPropertyWithPropertyAndBackingFieldTests.cs">
+      <Link>CSharp\CodeRefactorings\ReplaceAutoPropertyWithPropertyAndBackingFieldTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceDirectCastWithSafeCastTest.cs">
+      <Link>CSharp\CodeRefactorings\ReplaceDirectCastWithSafeCastTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceOperatorAssignmentWithAssignmentTests.cs">
+      <Link>CSharp\CodeRefactorings\ReplaceOperatorAssignmentWithAssignmentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplacePostfixExpressionWithAssignmentTests.cs">
+      <Link>CSharp\CodeRefactorings\ReplacePostfixExpressionWithAssignmentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplacePropertyWithBackingFieldWithAutoPropertyTests.cs">
+      <Link>CSharp\CodeRefactorings\ReplacePropertyWithBackingFieldWithAutoPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs">
+      <Link>CSharp\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReplaceWithOperatorAssignmentTests.cs">
+      <Link>CSharp\CodeRefactorings\ReplaceWithOperatorAssignmentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ReverseDirectionForForLoopTests.cs">
+      <Link>CSharp\CodeRefactorings\ReverseDirectionForForLoopTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\SplitIfWithAndConditionInTwoTests.cs">
+      <Link>CSharp\CodeRefactorings\SplitIfWithAndConditionInTwoTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\SplitIfWithOrConditionInTwoTests.cs">
+      <Link>CSharp\CodeRefactorings\SplitIfWithOrConditionInTwoTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\SplitLocalVariableDeclarationAndAssignmentTests.cs">
+      <Link>CSharp\CodeRefactorings\SplitLocalVariableDeclarationAndAssignmentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\SplitStringTests.cs">
+      <Link>CSharp\CodeRefactorings\SplitStringTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\SplitVariableIntoSeveralOnesTests.cs">
+      <Link>CSharp\CodeRefactorings\SplitVariableIntoSeveralOnesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\ToAbstractVirtualNonVirtualConversionTests.cs">
+      <Link>CSharp\CodeRefactorings\ToAbstractVirtualNonVirtualConversionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\UseAsAndNullCheckTests.cs">
+      <Link>CSharp\CodeRefactorings\UseAsAndNullCheckTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\UseStringFormatTests.cs">
+      <Link>CSharp\CodeRefactorings\UseStringFormatTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\UseSystemEnvironmentNewLineTests.cs">
+      <Link>CSharp\CodeRefactorings\UseSystemEnvironmentNewLineTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeRefactorings\UseSystemStringEmptyTests.cs">
+      <Link>CSharp\CodeRefactorings\UseSystemStringEmptyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\AccessToStaticMemberViaDerivedTypeTests.cs">
+      <Link>CSharp\Diagnostics\AccessToStaticMemberViaDerivedTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\AdditionalOfTypeTests.cs">
+      <Link>CSharp\Diagnostics\AdditionalOfTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ArrayCreationCanBeReplacedWithArrayInitializerTests.cs">
+      <Link>CSharp\Diagnostics\ArrayCreationCanBeReplacedWithArrayInitializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\AvoidAsyncVoidTests.cs">
+      <Link>CSharp\Diagnostics\AvoidAsyncVoidTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\BaseMemberHasParamsTests.cs">
+      <Link>CSharp\Diagnostics\BaseMemberHasParamsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\BaseMethodCallWithDefaultParameterTests.cs">
+      <Link>CSharp\Diagnostics\BaseMethodCallWithDefaultParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\BaseMethodParameterNameMismatchTests.cs">
+      <Link>CSharp\Diagnostics\BaseMethodParameterNameMismatchTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\BitwiseOperatorOnEnumWithoutFlagsTests.cs">
+      <Link>CSharp\Diagnostics\BitwiseOperatorOnEnumWithoutFlagsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\CallToObjectEqualsViaBaseTests.cs">
+      <Link>CSharp\Diagnostics\CallToObjectEqualsViaBaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\CheckNamespaceTests.cs">
+      <Link>CSharp\Diagnostics\CheckNamespaceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\CompareNonConstrainedGenericWithNullTests.cs">
+      <Link>CSharp\Diagnostics\CompareNonConstrainedGenericWithNullTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\CompareOfFloatsByEqualityOperatorTests.cs">
+      <Link>CSharp\Diagnostics\CompareOfFloatsByEqualityOperatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConditionalTernaryEqualBranchTests.cs">
+      <Link>CSharp\Diagnostics\ConditionalTernaryEqualBranchTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConditionIsAlwaysTrueOrFalseTests.cs">
+      <Link>CSharp\Diagnostics\ConditionIsAlwaysTrueOrFalseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConstantConditionTests.cs">
+      <Link>CSharp\Diagnostics\ConstantConditionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConstantNullCoalescingConditionTests.cs">
+      <Link>CSharp\Diagnostics\ConstantNullCoalescingConditionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertClosureToMethodGroupTests.cs">
+      <Link>CSharp\Diagnostics\ConvertClosureToMethodGroupTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertConditionalTernaryToNullCoalescingTests.cs">
+      <Link>CSharp\Diagnostics\ConvertConditionalTernaryToNullCoalescingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertIfDoToWhileTests.cs">
+      <Link>CSharp\Diagnostics\ConvertIfDoToWhileTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertIfStatementToSwitchStatementTests.cs">
+      <Link>CSharp\Diagnostics\ConvertIfStatementToSwitchStatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertIfToAndExpressionTests.cs">
+      <Link>CSharp\Diagnostics\ConvertIfToAndExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertIfToOrExpressionTests.cs">
+      <Link>CSharp\Diagnostics\ConvertIfToOrExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertNullableToShortFormTests.cs">
+      <Link>CSharp\Diagnostics\ConvertNullableToShortFormTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertToAutoPropertyTests.cs">
+      <Link>CSharp\Diagnostics\ConvertToAutoPropertyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertToConstantTests.cs">
+      <Link>CSharp\Diagnostics\ConvertToConstantTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertToLambdaExpressionTests.cs">
+      <Link>CSharp\Diagnostics\ConvertToLambdaExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ConvertToStaticTypeTests.cs">
+      <Link>CSharp\Diagnostics\ConvertToStaticTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\CS1573ParameterHasNoMatchingParamTagTests.cs">
+      <Link>CSharp\Diagnostics\CS1573ParameterHasNoMatchingParamTagTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\CSharpDiagnosticTestBase.cs">
+      <Link>CSharp\Diagnostics\CSharpDiagnosticTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\DelegateSubtractionTests.cs">
+      <Link>CSharp\Diagnostics\DelegateSubtractionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\DoNotCallOverridableMethodsInConstructorTests.cs">
+      <Link>CSharp\Diagnostics\DoNotCallOverridableMethodsInConstructorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\DoubleNegationOperatorTests.cs">
+      <Link>CSharp\Diagnostics\DoubleNegationOperatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EmptyConstructorTests.cs">
+      <Link>CSharp\Diagnostics\EmptyConstructorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EmptyDestructorTests.cs">
+      <Link>CSharp\Diagnostics\EmptyDestructorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EmptyEmbeddedStatementTests.cs">
+      <Link>CSharp\Diagnostics\EmptyEmbeddedStatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EmptyGeneralCatchClauseTests.cs">
+      <Link>CSharp\Diagnostics\EmptyGeneralCatchClauseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EmptyNamespaceTests.cs">
+      <Link>CSharp\Diagnostics\EmptyNamespaceTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EmptyStatementIssueTests.cs">
+      <Link>CSharp\Diagnostics\EmptyStatementIssueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EnumUnderlyingTypeIsIntTests.cs">
+      <Link>CSharp\Diagnostics\EnumUnderlyingTypeIsIntTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EqualExpressionComparisonTests.cs">
+      <Link>CSharp\Diagnostics\EqualExpressionComparisonTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\EventUnsubscriptionViaAnonymousDelegateTests.cs">
+      <Link>CSharp\Diagnostics\EventUnsubscriptionViaAnonymousDelegateTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\FieldCanBeMadeReadOnlyTests.cs">
+      <Link>CSharp\Diagnostics\FieldCanBeMadeReadOnlyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ForCanBeConvertedToForeachTests.cs">
+      <Link>CSharp\Diagnostics\ForCanBeConvertedToForeachTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ForControlVariableIsNeverModifiedTests.cs">
+      <Link>CSharp\Diagnostics\ForControlVariableIsNeverModifiedTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\FormatStringProblemTests.cs">
+      <Link>CSharp\Diagnostics\FormatStringProblemTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ForStatementConditionIsTrueTests.cs">
+      <Link>CSharp\Diagnostics\ForStatementConditionIsTrueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\FunctionNeverReturnsTests.cs">
+      <Link>CSharp\Diagnostics\FunctionNeverReturnsTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\LocalVariableHidesMemberTests.cs">
+      <Link>CSharp\Diagnostics\LocalVariableHidesMemberTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\LocalVariableNotUsedIssueTests.cs">
+      <Link>CSharp\Diagnostics\LocalVariableNotUsedIssueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\LockThisTests.cs">
+      <Link>CSharp\Diagnostics\LockThisTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\LongLiteralEndingLowerLTests.cs">
+      <Link>CSharp\Diagnostics\LongLiteralEndingLowerLTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\MemberCanBeMadeStaticTests.cs">
+      <Link>CSharp\Diagnostics\MemberCanBeMadeStaticTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\MemberHidesStaticFromOuterClassTests.cs">
+      <Link>CSharp\Diagnostics\MemberHidesStaticFromOuterClassTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\MethodOverloadWithOptionalParameterTests.cs">
+      <Link>CSharp\Diagnostics\MethodOverloadWithOptionalParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\NameOfSuggestionTests.cs">
+      <Link>CSharp\Diagnostics\NameOfSuggestionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\NegativeRelationalExpressionTests.cs">
+      <Link>CSharp\Diagnostics\NegativeRelationalExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\NonPublicMethodWithTestAttributeTests.cs">
+      <Link>CSharp\Diagnostics\NonPublicMethodWithTestAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\NonReadonlyReferencedInGetHashCodeTests.cs">
+      <Link>CSharp\Diagnostics\NonReadonlyReferencedInGetHashCodeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\NotImplementedExceptionInspectorTests.cs">
+      <Link>CSharp\Diagnostics\NotImplementedExceptionInspectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\NotResolvedInTextTests.cs">
+      <Link>CSharp\Diagnostics\NotResolvedInTextTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ObjectCreationAsStatementTests.cs">
+      <Link>CSharp\Diagnostics\ObjectCreationAsStatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\OperatorIsCanBeUsedTests.cs">
+      <Link>CSharp\Diagnostics\OperatorIsCanBeUsedTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\OptionalParameterHierarchyMismatchTests.cs">
+      <Link>CSharp\Diagnostics\OptionalParameterHierarchyMismatchTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\OptionalParameterRefOutTests.cs">
+      <Link>CSharp\Diagnostics\OptionalParameterRefOutTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ParameterCanBeDemotedIssue\ParameterCanBeDeclaredWithBaseTypeIssueTests.cs">
+      <Link>CSharp\Diagnostics\ParameterCanBeDemotedIssue\ParameterCanBeDeclaredWithBaseTypeIssueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ParameterHidesMemberTests.cs">
+      <Link>CSharp\Diagnostics\ParameterHidesMemberTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ParameterOnlyAssignedTests.cs">
+      <Link>CSharp\Diagnostics\ParameterOnlyAssignedTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\PartialMethodParameterNameMismatchTests.cs">
+      <Link>CSharp\Diagnostics\PartialMethodParameterNameMismatchTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\PartialTypeWithSinglePartTests.cs">
+      <Link>CSharp\Diagnostics\PartialTypeWithSinglePartTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\PolymorphicFieldLikeEventInvocationTests.cs">
+      <Link>CSharp\Diagnostics\PolymorphicFieldLikeEventInvocationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\PossibleAssignmentToReadonlyFieldTests.cs">
+      <Link>CSharp\Diagnostics\PossibleAssignmentToReadonlyFieldTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\PossibleMistakenCallToGetTypeTests.cs">
+      <Link>CSharp\Diagnostics\PossibleMistakenCallToGetTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\PossibleMultipleEnumerationTests.cs">
+      <Link>CSharp\Diagnostics\PossibleMultipleEnumerationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\PublicConstructorInAbstractClassTests.cs">
+      <Link>CSharp\Diagnostics\PublicConstructorInAbstractClassTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantAnonymousTypePropertyNameTests.cs">
+      <Link>CSharp\Diagnostics\RedundantAnonymousTypePropertyNameTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantArgumentDefaultValueTests.cs">
+      <Link>CSharp\Diagnostics\RedundantArgumentDefaultValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantArgumentNameTests.cs">
+      <Link>CSharp\Diagnostics\RedundantArgumentNameTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantAssignmentIssueTests.cs">
+      <Link>CSharp\Diagnostics\RedundantAssignmentIssueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantAttributeParenthesesTests.cs">
+      <Link>CSharp\Diagnostics\RedundantAttributeParenthesesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantBaseConstructorTests.cs">
+      <Link>CSharp\Diagnostics\RedundantBaseConstructorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantBaseQualifierTests.cs">
+      <Link>CSharp\Diagnostics\RedundantBaseQualifierTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantBoolCompareTests.cs">
+      <Link>CSharp\Diagnostics\RedundantBoolCompareTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantCaseLabelTests.cs">
+      <Link>CSharp\Diagnostics\RedundantCaseLabelTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantCatchClauseTests.cs">
+      <Link>CSharp\Diagnostics\RedundantCatchClauseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantCheckBeforeAssignmentTests.cs">
+      <Link>CSharp\Diagnostics\RedundantCheckBeforeAssignmentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantCommaInArrayInitializerTests.cs">
+      <Link>CSharp\Diagnostics\RedundantCommaInArrayInitializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantComparisonWithNullTests.cs">
+      <Link>CSharp\Diagnostics\RedundantComparisonWithNullTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantDefaultFieldInitializerTests.cs">
+      <Link>CSharp\Diagnostics\RedundantDefaultFieldInitializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantDelegateCreationTests.cs">
+      <Link>CSharp\Diagnostics\RedundantDelegateCreationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantEmptyDefaultSwitchBranchTests.cs">
+      <Link>CSharp\Diagnostics\RedundantEmptyDefaultSwitchBranchTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantEmptyFinallyBlockTests.cs">
+      <Link>CSharp\Diagnostics\RedundantEmptyFinallyBlockTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantEnumerableCastCallTests.cs">
+      <Link>CSharp\Diagnostics\RedundantEnumerableCastCallTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantExplicitArrayCreationTests.cs">
+      <Link>CSharp\Diagnostics\RedundantExplicitArrayCreationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantExplicitArraySizeTests.cs">
+      <Link>CSharp\Diagnostics\RedundantExplicitArraySizeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantExplicitNullableCreationTests.cs">
+      <Link>CSharp\Diagnostics\RedundantExplicitNullableCreationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantExtendsListEntryTests.cs">
+      <Link>CSharp\Diagnostics\RedundantExtendsListEntryTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantIfElseBlockTests.cs">
+      <Link>CSharp\Diagnostics\RedundantIfElseBlockTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantInternalInspectorTests.cs">
+      <Link>CSharp\Diagnostics\RedundantInternalInspectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantLambdaParameterTypeTests.cs">
+      <Link>CSharp\Diagnostics\RedundantLambdaParameterTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantLambdaSignatureParenthesesTests.cs">
+      <Link>CSharp\Diagnostics\RedundantLambdaSignatureParenthesesTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantLogicalConditionalExpressionOperandTests.cs">
+      <Link>CSharp\Diagnostics\RedundantLogicalConditionalExpressionOperandTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantObjectCreationArgumentListTests.cs">
+      <Link>CSharp\Diagnostics\RedundantObjectCreationArgumentListTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantObjectOrCollectionInitializerTests.cs">
+      <Link>CSharp\Diagnostics\RedundantObjectOrCollectionInitializerTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantOverriddenMemberTests.cs">
+      <Link>CSharp\Diagnostics\RedundantOverriddenMemberTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantPrivateInspectorTests.cs">
+      <Link>CSharp\Diagnostics\RedundantPrivateInspectorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantStringToCharArrayCallTests.cs">
+      <Link>CSharp\Diagnostics\RedundantStringToCharArrayCallTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantTernaryExpressionTests.cs">
+      <Link>CSharp\Diagnostics\RedundantTernaryExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantToStringCallTests.cs">
+      <Link>CSharp\Diagnostics\RedundantToStringCallTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RedundantUnsafeContextTests.cs">
+      <Link>CSharp\Diagnostics\RedundantUnsafeContextTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReferenceEqualsWithValueTypeTests.cs">
+      <Link>CSharp\Diagnostics\ReferenceEqualsWithValueTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RemoveRedundantOrStatementTests.cs">
+      <Link>CSharp\Diagnostics\RemoveRedundantOrStatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithFirstOrDefaultTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithFirstOrDefaultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithLastOrDefaultTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithLastOrDefaultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeAnyTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeAnyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeCountTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeCountTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeFirstOrDefaultTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeFirstOrDefaultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeFirstTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeFirstTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeLastOrDefaultTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeLastOrDefaultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeLastTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeLastTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeLongCountTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeLongCountTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeSingleOrDefaultTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeSingleOrDefaultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeSingleTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeSingleTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithOfTypeWhereTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithOfTypeWhereTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSimpleAssignmentTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSimpleAssignmentTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSingleCallToCountTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSingleCallToCountTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSingleCallToFirstOrDefaultTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSingleCallToFirstOrDefaultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSingleCallToFirstTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSingleCallToFirstTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSingleCallToLastOrDefaultTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSingleCallToLastOrDefaultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSingleCallToLastTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSingleCallToLastTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSingleCallToLongCountTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSingleCallToLongCountTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSingleCallToSingleOrDefaultTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSingleCallToSingleOrDefaultTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithSingleCallToSingleTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithSingleCallToSingleTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ReplaceWithStringIsNullOrEmptyTests.cs">
+      <Link>CSharp\Diagnostics\ReplaceWithStringIsNullOrEmptyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\RoslynUsageTests.cs">
+      <Link>CSharp\Diagnostics\RoslynUsageTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\SealedMemberInSealedClassTests.cs">
+      <Link>CSharp\Diagnostics\SealedMemberInSealedClassTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs">
+      <Link>CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StaticConstructorParameterTests.cs">
+      <Link>CSharp\Diagnostics\StaticConstructorParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StaticEventSubscriptionTests.cs">
+      <Link>CSharp\Diagnostics\StaticEventSubscriptionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StaticFieldOrAutoPropertyInGenericTypeTests.cs">
+      <Link>CSharp\Diagnostics\StaticFieldOrAutoPropertyInGenericTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StaticMethodInvocationToExtensionMethodInvocationTests.cs">
+      <Link>CSharp\Diagnostics\StaticMethodInvocationToExtensionMethodInvocationTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StringCompareIsCultureSpecificTests.cs">
+      <Link>CSharp\Diagnostics\StringCompareIsCultureSpecificTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StringCompareToIsCultureSpecificTests.cs">
+      <Link>CSharp\Diagnostics\StringCompareToIsCultureSpecificTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StringEndsWithIsCultureSpecificTests.cs">
+      <Link>CSharp\Diagnostics\StringEndsWithIsCultureSpecificTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StringIndexOfIsCultureSpecificTests.cs">
+      <Link>CSharp\Diagnostics\StringIndexOfIsCultureSpecificTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StringLastIndexOfIsCultureSpecificTests.cs">
+      <Link>CSharp\Diagnostics\StringLastIndexOfIsCultureSpecificTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\StringStartsWithIsCultureSpecificTests.cs">
+      <Link>CSharp\Diagnostics\StringStartsWithIsCultureSpecificTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ThreadStaticAtInstanceFieldTests.cs">
+      <Link>CSharp\Diagnostics\ThreadStaticAtInstanceFieldTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\UnusedAnonymousMethodSignatureTests.cs">
+      <Link>CSharp\Diagnostics\UnusedAnonymousMethodSignatureTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\UnusedParameterTests.cs">
+      <Link>CSharp\Diagnostics\UnusedParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\UnusedTypeParameterTests.cs">
+      <Link>CSharp\Diagnostics\UnusedTypeParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\UseArrayCreationExpressionTests.cs">
+      <Link>CSharp\Diagnostics\UseArrayCreationExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\UseIsOperatorTests.cs">
+      <Link>CSharp\Diagnostics\UseIsOperatorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\UseMethodAnyTests.cs">
+      <Link>CSharp\Diagnostics\UseMethodAnyTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\UseMethodIsInstanceOfTypeTests.cs">
+      <Link>CSharp\Diagnostics\UseMethodIsInstanceOfTypeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\ValueParameterNotUsedTests.cs">
+      <Link>CSharp\Diagnostics\ValueParameterNotUsedTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\Diagnostics\XmlDocTests.cs">
+      <Link>CSharp\Diagnostics\XmlDocTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\Samples\CSharp\SampleCodeRefactoringTests.cs">
+      <Link>Samples\CSharp\SampleCodeRefactoringTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\SymbolChecksTest.cs">
+      <Link>SymbolChecksTest.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\AddAnotherAccessorTests.cs">
+      <Link>VB\CodeRefactorings\AddAnotherAccessorTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\AddCheckForNothingTests.cs">
+      <Link>VB\CodeRefactorings\AddCheckForNothingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\CheckDictionaryKeyValueTests.cs">
+      <Link>VB\CodeRefactorings\CheckDictionaryKeyValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\CheckIfParameterIsNothingTests.cs">
+      <Link>VB\CodeRefactorings\CheckIfParameterIsNothingTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ComputeConstantValueTests.cs">
+      <Link>VB\CodeRefactorings\ComputeConstantValueTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ConvertDecToHexTests.cs">
+      <Link>VB\CodeRefactorings\ConvertDecToHexTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopTests.cs">
+      <Link>VB\CodeRefactorings\ConvertDoLoopWhileToDoWhileLoopTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileTests.cs">
+      <Link>VB\CodeRefactorings\ConvertDoWhileLoopToDoLoopWhileTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ConvertHexToDecTests.cs">
+      <Link>VB\CodeRefactorings\ConvertHexToDecTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ConvertIfStatementToSelectCaseStatementTests.cs">
+      <Link>VB\CodeRefactorings\ConvertIfStatementToSelectCaseStatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ConvertSelectCaseToIfTests.cs">
+      <Link>VB\CodeRefactorings\ConvertSelectCaseToIfTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ConvertToCustomEventTests.cs">
+      <Link>VB\CodeRefactorings\ConvertToCustomEventTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\CopyCommentsFromBaseTests.cs">
+      <Link>VB\CodeRefactorings\CopyCommentsFromBaseTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\CreateChangedEventTests.cs">
+      <Link>VB\CodeRefactorings\CreateChangedEventTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\CreateOverloadWithoutParameterTests.cs">
+      <Link>VB\CodeRefactorings\CreateOverloadWithoutParameterTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\InvertIfTests.cs">
+      <Link>VB\CodeRefactorings\InvertIfTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\InvertLogicalExpressionTests.cs">
+      <Link>VB\CodeRefactorings\InvertLogicalExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ReplaceDirectCastWithSafeCastTests.cs">
+      <Link>VB\CodeRefactorings\ReplaceDirectCastWithSafeCastTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs">
+      <Link>VB\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\CodeRefactorings\VBCodeRefactoringTestBase.cs">
+      <Link>VB\CodeRefactorings\VBCodeRefactoringTestBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Converter\ExpressionTests.cs">
+      <Link>VB\Converter\ExpressionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Converter\MemberTests.cs">
+      <Link>VB\Converter\MemberTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Converter\NamespaceLevelTests.cs">
+      <Link>VB\Converter\NamespaceLevelTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Converter\SpecialConversionTests.cs">
+      <Link>VB\Converter\SpecialConversionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Converter\StatementTests.cs">
+      <Link>VB\Converter\StatementTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Converter\TypeCastTests.cs">
+      <Link>VB\Converter\TypeCastTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Diagnostics\NameOfSuggestionTests.cs">
+      <Link>VB\Diagnostics\NameOfSuggestionTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Diagnostics\NonPublicMethodWithTestAttributeTests.cs">
+      <Link>VB\Diagnostics\NonPublicMethodWithTestAttributeTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\VB\Diagnostics\VBDiagnosticTestBase.cs">
+      <Link>VB\Diagnostics\VBDiagnosticTestBase.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\RefactoringEssentials.2017\Properties\AssemblyInfoBase.tt">
+      <Link>Properties\AssemblyInfoBase.tt</Link>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
+    <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RefactoringEssentials.2017\RefactoringEssentials.csproj">
+      <Project>{18236d33-b3e1-45dc-99e7-230633a228b6}</Project>
+      <Name>RefactoringEssentials</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets') And '$(Configuration)'!='Mono_Debug' And  '$(Configuration)'!='Mono_Release'" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild" Condition="'$(Configuration)'!='Mono_Debug' And  '$(Configuration)'!='Mono_Release'">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props'))" />
+  </Target>
+  <ProjectExtensions>
+    <MonoDevelop>
+      <Properties>
+        <Policies>
+          <TextStylePolicy inheritsSet="VisualStudio" inheritsScope="text/plain" scope="text/x-csharp" />
+          <CSharpFormattingPolicy IndentSwitchSection="True" NewLinesForBracesInProperties="True" NewLinesForBracesInAnonymousMethods="True" NewLinesForBracesInControlBlocks="True" NewLinesForBracesInAnonymousTypes="True" NewLinesForBracesInObjectCollectionArrayInitializers="True" NewLinesForBracesInLambdaExpressionBody="True" NewLineForElse="True" NewLineForCatch="True" NewLineForFinally="True" NewLineForMembersInObjectInit="True" NewLineForMembersInAnonymousTypes="True" NewLineForClausesInQuery="True" SpacingAfterMethodDeclarationName="False" SpaceAfterMethodCallName="False" SpaceBeforeOpenSquareBracket="False" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
+        </Policies>
+      </Properties>
+    </MonoDevelop>
+  </ProjectExtensions>
+</Project>

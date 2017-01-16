@@ -12,7 +12,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.EmptyConstructorAnalyzerID,
-            GettextCatalog.GetString("An empty public constructor without paramaters is redundant."),
+            GettextCatalog.GetString("An empty public constructor without parameters is redundant."),
             GettextCatalog.GetString("Empty constructor is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
             DiagnosticSeverity.Info,

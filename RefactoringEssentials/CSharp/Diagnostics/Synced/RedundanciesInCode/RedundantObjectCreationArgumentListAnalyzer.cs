@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("When object creation uses object or collection initializer, empty argument list is redundant"),
             GettextCatalog.GetString("Empty argument list is redundant"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.RedundantObjectCreationArgumentListAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

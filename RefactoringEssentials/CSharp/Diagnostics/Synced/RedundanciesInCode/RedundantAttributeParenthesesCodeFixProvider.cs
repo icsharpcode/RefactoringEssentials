@@ -31,7 +31,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var diagnostics = context.Diagnostics;
             var root = await document.GetSyntaxRootAsync(cancellationToken);
             var diagnostic = diagnostics.First();
-            var node = root.FindNode(context.Span) as AttributeSyntax;
+            var node = (root.FindNode(context.Span) as AttributeArgumentListSyntax)?.Parent as AttributeSyntax;
             if (node == null)
                 return;
             var newRoot = root.ReplaceNode((SyntaxNode)node, node.WithArgumentList(null));

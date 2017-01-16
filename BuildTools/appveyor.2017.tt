@@ -1,0 +1,65 @@
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".yml" #>
+<#@ include file="../RefactoringEssentials.2017/Versioning.t4.template" #>
+<# ReadVersions(Path.Combine(Path.GetDirectoryName(Host.TemplateFile), "../RefactoringEssentials.2017/RefactoringEssentials.version")); #>
+-
+  branches:
+    only:
+      - release
+  
+  version: <#= generatedAppVeyorVersion #>.{build}
+  configuration: Release
+  
+  image: Visual Studio 2017 RC
+
+  install: 
+    - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+  
+  before_build: 
+    - cmd: set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin;%PATH%
+    - cmd: nuget install nuget.commandline -source https://dotnet.myget.org/F/nuget-build -prerelease -excludeversion
+    - cmd: set PATH=%appveyor_build_folder%\NuGet.CommandLine\tools;%PATH%
+    - cmd: nuget restore RefactoringEssentials.2017\RefactoringEssentials.csproj
+    - cmd: nuget restore RefactoringEssentials.2017.sln
+
+  build:
+    project: RefactoringEssentials.2017.sln
+
+  after_test:
+    - cmd: nuget pack bin\Release\RefactoringEssentials.nuspec -NoPackageAnalysis -BasePath bin\Release -OutputDirectory bin\Release
+    - cmd: nuget pack bin\Release\RefactoringEssentials.Library.nuspec -NoPackageAnalysis -BasePath bin\Release -OutputDirectory bin\Release
+  
+  artifacts:
+    - path: bin\**\*.nupkg
+      name: NuGet
+  
+    - path: bin\**\*.vsix
+      name: VSIX
+
+-
+  branches:
+    only:
+      - master
+  
+  version: <#= generatedAppVeyorVersion #>.{build}
+  configuration: Release
+  
+  image: Visual Studio 2017 RC
+  
+  install: 
+    - cmd: set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin;%PATH%
+    - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+  
+  before_build: 
+    - ps: Vsix-IncrementVsixVersion ".\Vsix.2017\source.extension.vsixmanifest" | Vsix-UpdateBuildVersion
+    - cmd: nuget install nuget.commandline -source https://dotnet.myget.org/F/nuget-build -prerelease -excludeversion
+    - cmd: set PATH=%appveyor_build_folder%\NuGet.CommandLine\tools;%PATH%
+    - cmd: nuget restore RefactoringEssentials.2017\RefactoringEssentials.csproj
+    - cmd: nuget restore RefactoringEssentials.2017.sln
+  
+  build:
+    project: RefactoringEssentials.2017.sln
+  
+  after_test:
+    - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
+ 

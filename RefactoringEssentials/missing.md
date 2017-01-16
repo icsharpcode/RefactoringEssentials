@@ -24,15 +24,7 @@
 * ConvertToAutoPropertyAnalyzer
 * ConvertToConstantAnalyzer
 * ConvertToLambdaExpressionAnalyzer
-* CS0126ReturnMustBeFollowedByAnyExpression
-* CS0169FieldIsNeverUsedAnalyzer
-* CS0183ExpressionIsAlwaysOfProvidedTypeAnalyzer
-* CS0618UsageOfObsoleteMemberAnalyzer
-* CS1573ParameterHasNoMatchingParamTagAnalyzer
-* CS1717AssignmentMadeToSameVariableAnalyzer
-* CS1729TypeHasNoConstructorWithNArgumentsAnalyzer
 * ForCanBeConvertedToForeachAnalyzer
-* InconsistentNamingAnalyzer
 * LockThisAnalyzer
 * NegativeRelationalExpressionAnalyzer
 * OptionalParameterHierarchyMismatchAnalyzer
@@ -40,7 +32,6 @@
 * PolymorphicFieldLikeEventInvocationAnalyzer
 * PossibleAssignmentToReadonlyFieldAnalyzer
 * PossibleMultipleEnumerationAnalyzer
-* ProhibitedModifiersAnalyzer
 * RedundantArgumentDefaultValueAnalyzer
 * RedundantAssignmentAnalyzer
 * RedundantBoolCompareAnalyzer
@@ -58,7 +49,6 @@
 * SimplifyLinqExpressionAnalyzer
 * StaticEventSubscriptionAnalyzer
 * StringCompareIsCultureSpecificAnalyzer
-* UnassignedReadonlyFieldAnalyzer
 * UnusedAnonymousMethodSignatureAnalyzer
 * UseArrayCreationExpressionAnalyzer
 * UseIsOperatorAnalyzer

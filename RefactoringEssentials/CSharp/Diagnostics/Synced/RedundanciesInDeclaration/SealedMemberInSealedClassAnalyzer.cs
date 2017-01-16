@@ -15,7 +15,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("'sealed' modifier is redundant in sealed classes"),
             GettextCatalog.GetString("'sealed' modifier is redundant in sealed classes"),
             DiagnosticAnalyzerCategories.RedundanciesInDeclarations,
-            DiagnosticSeverity.Warning,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.SealedMemberInSealedClassAnalyzerID),
             customTags: DiagnosticCustomTags.Unnecessary

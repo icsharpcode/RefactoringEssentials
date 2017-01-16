@@ -13,7 +13,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             GettextCatalog.GetString("Detects when no delegate parameter is used in the anonymous method body"),
             GettextCatalog.GetString("Specifying signature is redundant because no parameter is used"),
             DiagnosticAnalyzerCategories.RedundanciesInCode,
-            DiagnosticSeverity.Info,
+            DiagnosticSeverity.Hidden,
             isEnabledByDefault: true,
             helpLinkUri: HelpLink.CreateFor(CSharpDiagnosticIDs.UnusedAnonymousMethodSignatureAnalyzerID)
         );
