@@ -42,7 +42,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (declaration == null
                 || declaration is BaseTypeDeclarationSyntax
                 || declaration is ConstructorDeclarationSyntax
-                || declaration is DestructorDeclarationSyntax)
+                || declaration is DestructorDeclarationSyntax
+                || declaration.GetBodies().IsEmpty())
                 return;
             var modifiers = declaration.GetModifiers();
             if (modifiers.Any(m => m.IsKind(SyntaxKind.OverrideKeyword)))
