@@ -66,6 +66,14 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             ExpressionSyntax expr;
             if (!IsExpressionBody(method.Body, method.ExpressionBody, out expr))
                 return;
+            
+            var returnType = method.ReturnType as PredefinedTypeSyntax;
+            if (returnType == null)
+                return;
+            BlockSyntax methodBody = returnType.Keyword.IsKind(SyntaxKind.VoidKeyword) ?
+                SyntaxFactory.Block(SyntaxFactory.ExpressionStatement(expr)) :
+                SyntaxFactory.Block(SyntaxFactory.ReturnStatement(expr));
+
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
                     token.Span,
@@ -76,7 +84,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         var newRoot = root.ReplaceNode((SyntaxNode)
                             method,
                             method
-                            .WithBody(SyntaxFactory.Block(SyntaxFactory.ReturnStatement(expr)))
+                            .WithBody(methodBody)
                             .WithExpressionBody(null)
                             .WithSemicolonToken(SyntaxFactory.MissingToken(SyntaxKind.SemicolonToken))
                             .WithAdditionalAnnotations(Formatter.Annotation)

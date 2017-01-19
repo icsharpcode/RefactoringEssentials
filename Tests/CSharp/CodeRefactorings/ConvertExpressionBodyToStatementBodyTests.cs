@@ -43,6 +43,25 @@ class TestClass
     }
 }");
         }
+
+        [Test]
+        public void TestVoidMethod()
+        {
+            Test<ConvertExpressionBodyToStatementBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    void Foo();
+    void $TestMethod() => Foo();
+}", @"
+class TestClass
+{
+    void Foo();
+    void TestMethod()
+    {
+        Foo();
+    }
+}");
+        }
     }
 }
 
