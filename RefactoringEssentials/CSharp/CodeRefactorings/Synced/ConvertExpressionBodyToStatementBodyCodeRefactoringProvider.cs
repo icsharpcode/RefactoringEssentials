@@ -66,10 +66,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             ExpressionSyntax expr;
             if (!IsExpressionBody(method.Body, method.ExpressionBody, out expr))
                 return;
-            
-            var returnType = method.ReturnType as PredefinedTypeSyntax;
-            if (returnType == null)
-                return;
+                
             BlockSyntax methodBody = method.ReturnType.ToString().ToLower() == "void" ?
                 SyntaxFactory.Block(SyntaxFactory.ExpressionStatement(expr)) :
                 SyntaxFactory.Block(SyntaxFactory.ReturnStatement(expr));
