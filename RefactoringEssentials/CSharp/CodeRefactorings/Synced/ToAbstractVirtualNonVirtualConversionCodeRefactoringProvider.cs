@@ -50,7 +50,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
 
             var declarationParent = declaration.Parent as TypeDeclarationSyntax;
-            if (declarationParent == null)
+            if (declarationParent == null || declarationParent is InterfaceDeclarationSyntax)
                 return;
 
             var explicitInterface = declaration.GetExplicitInterfaceSpecifierSyntax();

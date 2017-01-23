@@ -35,6 +35,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
             if (property.AccessorList.Accessors.Any(b => b.Body != null)) //ignore properties with >=1 accessor body
                 return;
+
+            if (property.Parent is InterfaceDeclarationSyntax)
+                return;
+
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
                     property.Identifier.Span,
