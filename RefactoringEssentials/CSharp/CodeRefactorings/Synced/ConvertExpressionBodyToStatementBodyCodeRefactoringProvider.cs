@@ -70,7 +70,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var returnType = method.ReturnType as PredefinedTypeSyntax;
             if (returnType == null)
                 return;
-            BlockSyntax methodBody = returnType.Keyword.IsKind(SyntaxKind.VoidKeyword) ?
+            BlockSyntax methodBody = method.ReturnType.ToString().ToLower() == "void" ?
                 SyntaxFactory.Block(SyntaxFactory.ExpressionStatement(expr)) :
                 SyntaxFactory.Block(SyntaxFactory.ReturnStatement(expr));
 
