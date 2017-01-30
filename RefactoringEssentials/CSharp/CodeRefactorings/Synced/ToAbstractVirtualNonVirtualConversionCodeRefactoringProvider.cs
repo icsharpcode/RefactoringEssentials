@@ -43,7 +43,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 || declaration is BaseTypeDeclarationSyntax
                 || declaration is ConstructorDeclarationSyntax
                 || declaration is DestructorDeclarationSyntax
-                || declaration.GetBodies().IsEmpty())
+                /*|| declaration.GetBodies().IsEmpty()*/)
                 return;
             var modifiers = declaration.GetModifiers();
             if (modifiers.Any(m => m.IsKind(SyntaxKind.OverrideKeyword)))
