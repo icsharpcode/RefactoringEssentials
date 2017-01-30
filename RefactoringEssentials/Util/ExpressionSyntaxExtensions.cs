@@ -9,7 +9,6 @@ using Microsoft.CodeAnalysis.Simplification;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
-using System;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 
@@ -18,7 +17,7 @@ namespace RefactoringEssentials
 #if NR6
     public
 #endif
-    static class ExpressionSyntaxExtensions
+	static class ExpressionSyntaxExtensions
     {
         /// <summary>
         /// Adds to <paramref name="targetType"/> if it does not contain an anonymous

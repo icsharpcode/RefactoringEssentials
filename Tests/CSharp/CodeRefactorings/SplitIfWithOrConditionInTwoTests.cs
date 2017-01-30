@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class SplitIfWithOrConditionInTwoTests : CSharpCodeRefactoringTestBase
     {
 
-        [Test]
+        [Fact]
         public void TestOrSimple()
         {
             Test<SplitIfWithOrConditionInTwoCodeRefactoringProvider>(@"
@@ -38,7 +37,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestOrIfElse()
         {
             Test<SplitIfWithOrConditionInTwoCodeRefactoringProvider>(@"
@@ -79,7 +78,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestAndOr()
         {
             Test<SplitIfWithOrConditionInTwoCodeRefactoringProvider>(@"

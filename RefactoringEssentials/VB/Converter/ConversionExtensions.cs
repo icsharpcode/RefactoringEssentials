@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using CS = Microsoft.CodeAnalysis.CSharp;
 
 namespace RefactoringEssentials.VB.Converter
 {
-    static class ConversionExtensions
+	static class ConversionExtensions
     {
         public static bool HasUsingDirective(this CS.CSharpSyntaxTree tree, string fullName)
         {

@@ -4,15 +4,11 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using RefactoringEssentials.Converter;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace RefactoringEssentials.VsExtension
 {
-    static class CodeConversion
+	static class CodeConversion
     {
         public static readonly string CSToVBConversionTitle = "Convert C# to VB:";
         public static readonly string VBToCSConversionTitle = "Convert VB to C#:";

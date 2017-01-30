@@ -1,20 +1,17 @@
 using System.Linq;
-using System.Threading;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Simplification;
 using Microsoft.CodeAnalysis.Formatting;
-using System.Diagnostics.Contracts;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the return value must not be null")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the return value must not be null")]
     /// <summary>
     /// Creates a 'Contract.Ensures(return != null);' contract for a method return value.
     /// </summary>

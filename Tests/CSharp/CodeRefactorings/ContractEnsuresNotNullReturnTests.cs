@@ -1,17 +1,14 @@
-using System;
-using NUnit.Framework;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using RefactoringEssentials.CSharp.CodeRefactorings;
-using System.Diagnostics.Contracts;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ContractEnsuresNotNullReturnTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void ValueTypeReturnType()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -23,7 +20,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             }");
         }
 
-        [Test]
+        [Fact]
         public void NullableValueTypeLocalVariable()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -36,7 +33,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             }");
         }
 
-        [Test]
+        [Fact]
         public void VoidReturnType()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -48,7 +45,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             }");
         }
 
-        [Test]
+        [Fact]
         // Not sure why anyone would want this when can just change the return type to be non nullable. Maybe you have to implement an interface you don't control or something strange like that.
         public void NullableValueTypeReturnType()
         {
@@ -69,7 +66,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void ObjectReturnType()
         {
             Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -89,7 +86,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void UsingStatementAlreadyThere()
         {
             Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -111,7 +108,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestContractEnsuresReturnAlreadyThere()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(@"class Test
@@ -123,7 +120,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestContractEnsuresReturnAlreadyThereWithWhitespace()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(@"class Test
@@ -135,7 +132,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestContractEnsuresReturnAlreadyThereReversedParameters()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(@"class Test
@@ -147,7 +144,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void ObjectPropertyGetter()
         {
             Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -175,7 +172,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void ContractEnsuresReturnAlreadyThereForPropertyGetter()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -192,7 +189,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void UsingStatementAlreadyThereForPropertyGetter()
         {
             Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -220,7 +217,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void ObjectPropertyIndexer()
         {
             Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -248,7 +245,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void NullablePropertyIndexer()
         {
             Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -276,7 +273,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void ContractEnsuresReturnAlreadyThereForPropertyIndexer()
         {
             TestWrongContext<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -293,7 +290,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void UsingStatementAlreadyThereForPropertyIndexer()
         {
             Test<ContractEnsuresNotNullReturnCodeRefactoringProvider>(
@@ -321,7 +318,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void Test_OldCSharp()
         {
             var parseOptions = new CSharpParseOptions(

@@ -1,14 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.Samples.CSharp;
 using RefactoringEssentials.Tests.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.Samples.CSharp
 {
-    /// <summary>
-    /// Tests for SampleCodeRefactoringProvider.
-    /// </summary>
-    [TestFixture]
-    [Ignore("Sample refactoring tests: Remove this line to activate them.")]
+	/// <summary>
+	/// Tests for SampleCodeRefactoringProvider.
+	/// </summary>
     public class SampleCodeRefactoringTests : CSharpCodeRefactoringTestBase
     {
         /*
@@ -20,7 +18,7 @@ namespace RefactoringEssentials.Tests.Samples.CSharp
             interface namings.
         */
 
-        [Test]
+        [Fact(Skip="Sample refactoring tests: Remove this line to activate them.")]
         public void TestInterfaceWithoutIPrefix()
         {
             /*
@@ -46,7 +44,7 @@ interface ITest
 }");
         }
 
-        [Test]
+        [Fact(Skip="Sample refactoring tests: Remove this line to activate them.")]
         public void TestInterfaceWithIPrefix()
         {
             /*
@@ -64,7 +62,7 @@ interface $ITest
 }");
         }
 
-        [Test]
+        [Fact(Skip="Sample refactoring tests: Remove this line to activate them.")]
         public void TestInterfaceWithINonPrefix()
         {
             /*

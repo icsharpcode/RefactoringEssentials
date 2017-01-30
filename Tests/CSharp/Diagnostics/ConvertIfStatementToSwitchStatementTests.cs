@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConvertIfStatementToSwitchStatementTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBreak()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -28,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -50,7 +49,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestConstantExpression()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -91,7 +90,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedOr()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -112,7 +111,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexSwitchExpression()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -133,7 +132,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNonConstantExpression()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -189,7 +188,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNonEqualityComparison()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -211,7 +210,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestValidType()
         {
             // enum
@@ -270,7 +269,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidType()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -288,7 +287,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoElse()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -308,7 +307,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedIf()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -330,7 +329,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestτooSimpleCase1()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"
@@ -347,7 +346,7 @@ class TestClass
 	}
 }");
         }
-        [Test]
+        [Fact]
         public void TestτooSimpleCase2()
         {
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"

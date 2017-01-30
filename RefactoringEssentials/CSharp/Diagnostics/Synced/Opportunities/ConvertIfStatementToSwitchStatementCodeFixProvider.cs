@@ -7,11 +7,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Formatting;
-using RefactoringEssentials.CSharp.CodeRefactorings;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class ConvertIfStatementToSwitchStatementCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds

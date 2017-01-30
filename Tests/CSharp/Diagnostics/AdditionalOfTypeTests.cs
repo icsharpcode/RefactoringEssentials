@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [Ignore("TODO - AST pattern machting!")]
-    [TestFixture]
     public class AdditionalOfTypeTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO - AST pattern machting!")]
         public void TestAdditionalCase()
         {
             Analyze<AdditionalOfTypeAnalyzer>(@"using System.Linq;
@@ -27,8 +25,8 @@ class Test
 }");
         }
 
-        [Test]
-        public void TestInvalid()
+		[Fact(Skip = "TODO - AST pattern machting!")]
+		public void TestInvalid()
         {
             Analyze<AdditionalOfTypeAnalyzer>(@"using System.Linq;
 class Test

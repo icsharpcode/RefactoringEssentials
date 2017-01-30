@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class AutoLinqSumActionTests : CSharpCodeRefactoringTestBase
     {
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestSimpleIntegerLoop()
         {
             string source = @"
@@ -34,10 +33,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestMergedIntegerLoop()
         {
             string source = @"
@@ -64,10 +63,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestNonZeroMergedIntegerLoop()
         {
             string source = @"
@@ -94,10 +93,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestMergedAssignmentIntegerLoop()
         {
             string source = @"
@@ -126,10 +125,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestMergedDecimal()
         {
             string source = @"
@@ -156,10 +155,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestIntegerLoopInBlock()
         {
             string source = @"
@@ -188,10 +187,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestExpression()
         {
             string source = @"
@@ -220,10 +219,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForStrings()
         {
             string source = @"
@@ -242,7 +241,7 @@ class TestClass
             TestWrongContext<AutoLinqSumAction>(source);
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestShort()
         {
             string source = @"
@@ -270,10 +269,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestLong()
         {
             string source = @"
@@ -301,10 +300,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestUnsignedLong()
         {
             string source = @"
@@ -332,10 +331,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestFloat()
         {
             string source = @"
@@ -363,10 +362,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestDouble()
         {
             string source = @"
@@ -394,10 +393,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestDecimal()
         {
             string source = @"
@@ -425,10 +424,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestMinus()
         {
             string source = @"
@@ -457,10 +456,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestCombined()
         {
             string source = @"
@@ -490,10 +489,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestCombinedPrecedence()
         {
             string source = @"
@@ -523,10 +522,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestEmptyStatements()
         {
             string source = @"
@@ -556,10 +555,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestSimpleConditional()
         {
             string source = @"
@@ -589,10 +588,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestInvertedConditional()
         {
             string source = @"
@@ -624,10 +623,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestIncrement()
         {
             string source = @"
@@ -656,10 +655,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestCompleteConditional()
         {
             string source = @"
@@ -691,10 +690,10 @@ class TestClass
 	}
 }";
 
-            Assert.AreEqual(result, RunContextAction(new AutoLinqSumAction(), source));
+            Assert.Equal(result, RunContextAction(new AutoLinqSumAction(), source));
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForSideEffects()
         {
             string source = @"
@@ -714,7 +713,7 @@ class TestClass
             TestWrongContext<AutoLinqSumAction>(source);
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForInnerAssignments()
         {
             string source = @"
@@ -734,7 +733,7 @@ class TestClass
             TestWrongContext<AutoLinqSumAction>(source);
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForInnerIncrements()
         {
             string source = @"
@@ -754,7 +753,7 @@ class TestClass
             TestWrongContext<AutoLinqSumAction>(source);
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForNoLinq()
         {
             string source = @"

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -14,10 +13,10 @@ using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace RefactoringEssentials.CSharp
 {
-    /// <summary>
-    /// Converts an instance method to a static method adding an additional parameter as "this" replacement.
-    /// </summary>
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert instance to static method")]
+	/// <summary>
+	/// Converts an instance method to a static method adding an additional parameter as "this" replacement.
+	/// </summary>
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert instance to static method")]
     public class ConvertInstanceToStaticMethodCodeRefactoringProvider : SpecializedCodeRefactoringProvider<SyntaxNode>
     {
         protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, SyntaxNode node, CancellationToken cancellationToken)

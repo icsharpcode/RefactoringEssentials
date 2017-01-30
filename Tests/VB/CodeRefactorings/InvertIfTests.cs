@@ -1,12 +1,11 @@
-﻿using NUnit.Framework;
-using RefactoringEssentials.VB.CodeRefactorings;
+﻿using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class InvertIfTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimple()
         {
             Test<InvertIfCodeRefactoringProvider>(@"
@@ -30,7 +29,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestConditions()
         {
             Test<InvertIfCodeRefactoringProvider>(@"
@@ -54,7 +53,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Test<InvertIfCodeRefactoringProvider>(@"
@@ -75,7 +74,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestInLoop()
         {
             Test<InvertIfCodeRefactoringProvider>(@"
@@ -100,7 +99,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void Test2()
         {
             Test<InvertIfCodeRefactoringProvider>(@"
@@ -125,7 +124,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNonVoidMoreComplexMethod()
         {
             Test<InvertIfCodeRefactoringProvider>(@"
@@ -150,7 +149,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestComment()
         {
             Test<InvertIfCodeRefactoringProvider>(@"

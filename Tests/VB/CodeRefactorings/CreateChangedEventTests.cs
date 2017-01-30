@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class CreateChangedEventTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Test<CreateChangedEventCodeRefactoringProvider>(@"
@@ -43,7 +42,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestSimplify()
         {
             Test<CreateChangedEventCodeRefactoringProvider>(@"Imports System
@@ -80,7 +79,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestSharedPropertyCase()
         {
             Test<CreateChangedEventCodeRefactoringProvider>(@"
@@ -117,7 +116,7 @@ NotInheritable Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNonInheritableClassCase()
         {
             Test<CreateChangedEventCodeRefactoringProvider>(@"
@@ -154,7 +153,7 @@ NotInheritable Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestReadOnlyProperty()
         {
             TestWrongContext<CreateChangedEventCodeRefactoringProvider>(@"
@@ -169,7 +168,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestWriteOnlyProperty()
         {
             TestWrongContext<CreateChangedEventCodeRefactoringProvider>(@"
@@ -184,7 +183,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestWrongLocation()
         {
             TestWrongContext<CreateChangedEventCodeRefactoringProvider>(@"

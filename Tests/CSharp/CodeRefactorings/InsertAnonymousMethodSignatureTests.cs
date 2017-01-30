@@ -1,13 +1,12 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class InsertAnonymousMethodSignatureTests : CSharpCodeRefactoringTestBase
     {
-        [Test()]
+        [Fact]
         public void Test()
         {
             string result = RunContextAction(
@@ -23,7 +22,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "using System;" + Environment.NewLine +
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +

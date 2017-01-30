@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceAutoPropertyWithPropertyAndBackingFieldTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleStore()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -31,7 +30,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticStore()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -56,7 +55,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWrongLocation()
         {
             TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -85,7 +84,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
 
-        [Test]
+        [Fact]
         public void TestUnimplementedComputedProperty()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -121,7 +120,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGetter()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -141,7 +140,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGetterAndSetter()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -174,7 +173,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
 
-        [Test]
+        [Fact]
         public void TestWrongLocation2()
         {
             TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -214,7 +213,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestPreserveVisibility()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass

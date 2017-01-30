@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class FormatStringProblemTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TooFewArguments()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -20,7 +19,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void SupportsFixedArguments()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -37,7 +36,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresCallWithUnknownNumberOfArguments()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -50,7 +49,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void FormatItemIndexOutOfRangeOfArguments()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -63,7 +62,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void FormatItemIndexOutOfRangeOfArguments_ExplicitArrayCreation()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -76,7 +75,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void FormatItemMissingEndBrace()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -89,7 +88,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void UnescapedLeftBrace()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -102,7 +101,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresStringWithGoodArguments()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -115,7 +114,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresStringWithGoodArguments_ExplicitArrayCreation()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -128,7 +127,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresNonFormattingCall()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -141,7 +140,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesCallsWithExtraArguments()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -155,7 +154,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TooManyArguments()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -168,7 +167,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void UnreferencedArgument()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -184,7 +183,7 @@ class TestClass
         /// <summary>
         /// Bug 14405 - Incorrect "argument not used in string format" warning
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug14405()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -197,7 +196,7 @@ class TestClass
 	}
 }");
         }
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<FormatStringProblemAnalyzer>(@"
@@ -214,7 +213,7 @@ class TestClass
         /// <summary>
         /// Bug 15867 - Wrong Context for string formatting
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug15867()
         {
             Analyze<FormatStringProblemAnalyzer>(@"

@@ -3,13 +3,11 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using System.Linq;
-using Microsoft.CodeAnalysis.FindSymbols;
 using System.Collections.Generic;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class UnusedTypeParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

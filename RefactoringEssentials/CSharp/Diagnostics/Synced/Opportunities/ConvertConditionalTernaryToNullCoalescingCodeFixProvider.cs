@@ -1,17 +1,15 @@
 using System.Collections.Immutable;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Formatting;
-using System;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class ConvertConditionalTernaryToNullCoalescingCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds

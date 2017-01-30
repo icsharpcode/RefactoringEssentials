@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceDirectCastWithSafeCastTests : VBCodeRefactoringTestBase
     {
         void TestType(string type)
@@ -25,19 +24,19 @@ End Class";
             Test<ReplaceDirectCastWithSafeCastCodeRefactoringProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void Test()
         {
             TestType("Exception");
         }
 
-        [Test]
+        [Fact]
         public void TestNullable()
         {
             TestType("Integer?");
         }
 
-        [Test]
+        [Fact]
         public void TestWithComment()
         {
             string input = @"
@@ -60,7 +59,7 @@ End Class";
             Test<ReplaceDirectCastWithSafeCastCodeRefactoringProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestNonReferenceType()
         {
             TestWrongContext<ReplaceDirectCastWithSafeCastCodeRefactoringProvider>(@"

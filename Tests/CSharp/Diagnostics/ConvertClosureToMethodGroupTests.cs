@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConvertClosureToMethodGroupTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleVoidLambda()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -28,7 +27,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleBoolLambda()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -50,7 +49,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLambdaWithBody()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -72,7 +71,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void Lambda_SwapParameterOrder()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -86,7 +85,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleAnonymousMethod()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -110,7 +109,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSkipComplexCase()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -127,7 +126,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void CallInvolvesOptionalParameter()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -142,7 +141,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void CallExpandsParams()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -157,7 +156,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void CallAsUnambiguousMethodParameter1()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -191,7 +190,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void CallAsAmbiguousMethodParameter()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -212,7 +211,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void CallAsUnambiguousMethodParameter2()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -249,7 +248,7 @@ class Foo
         /// <summary>
         /// Bug 12184 - Expression can be reduced to delegate fix can create ambiguity
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug12184()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -279,7 +278,7 @@ class C
 
         }
 
-        [Test]
+        [Fact]
         public void Return_ReferenceConversion()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -293,7 +292,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void Return_BoxingConversion()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -307,7 +306,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void Parameter_ReferenceConversion()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -321,7 +320,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void Parameter_BoxingConversion()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -338,7 +337,7 @@ class Foo
         /// <summary>
         /// Bug 14759 - Lambda expression can be simplified to method group issue
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug14759()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;
@@ -361,7 +360,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestTargetCollision()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"
@@ -382,7 +381,7 @@ class Program
         /// <summary>
         /// Bug 15868 - Wrong context for Anonymous method can be simplified to method group
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug15868()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"
@@ -402,7 +401,7 @@ public class MyClass
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestBug15868Case2()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"
@@ -436,7 +435,7 @@ public class MyClass
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleVoidLambdaConditional()
         {
             Analyze<ConvertClosureToMethodGroupAnalyzer>(@"using System;

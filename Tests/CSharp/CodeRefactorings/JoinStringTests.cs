@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class JoinStringTests : CSharpCodeRefactoringTestBase
     {
         public void Test(string input, string output)
@@ -25,20 +24,23 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRegularString()
         {
             Test("\"a\" $+ \"a\"", "\"aa\"");
             Test("arg + \"a\" $+ \"a\"", "arg + \"aa\"");
         }
 
-        [Test]
+        [Fact]
         public void TestVerbatimString()
         {
             Test("@\"a\" $+ @\"a\"", "@\"aa\"");
         }
 
-        public void TestWrongContext(string input)
+		[Theory]
+		[InlineData("@\"a\" $+ \"a\"")]
+		[InlineData("\"a\" $+ @\"a\"")]
+		public void TestWrongContext(string input)
         {
             TestWrongContext<JoinStringCodeRefactoringProvider>(@"
 class TestClass
@@ -48,13 +50,6 @@ class TestClass
 		return " + input + @";
 	}
 }");
-        }
-
-        [Test]
-        public void TestWrongContext()
-        {
-            TestWrongContext("@\"a\" $+ \"a\"");
-            TestWrongContext("\"a\" $+ @\"a\"");
         }
     }
 }

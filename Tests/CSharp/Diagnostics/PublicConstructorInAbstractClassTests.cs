@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class PublicConstructorInAbstractClassTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<PublicConstructorInAbstractClassAnalyzer>(@"
@@ -24,7 +23,7 @@ abstract class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<PublicConstructorInAbstractClassAnalyzer>(@"
@@ -40,7 +39,7 @@ abstract class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase3()
         {
             Analyze<PublicConstructorInAbstractClassAnalyzer>(@"
@@ -76,7 +75,7 @@ abstract class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<PublicConstructorInAbstractClassAnalyzer>(@"

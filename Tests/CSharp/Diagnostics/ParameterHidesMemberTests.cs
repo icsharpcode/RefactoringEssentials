@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ParameterHidesMemberTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestField()
         {
             var input = @"
@@ -20,7 +19,7 @@ class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             var input = @"
@@ -35,7 +34,7 @@ class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestMethod()
         {
             var input = @"
@@ -50,7 +49,7 @@ class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestConstructor()
         {
             var input = @"
@@ -64,7 +63,7 @@ class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestStatic()
         {
             var input = @"
@@ -78,7 +77,7 @@ class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestStaticNoIssue()
         {
             var input = @"
@@ -96,7 +95,7 @@ class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestAccessiblePrivate()
         {
             var input = @"
@@ -111,7 +110,7 @@ class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestAccessiblePrivateDueToTypeNesting()
         {
             var input = @"
@@ -134,7 +133,7 @@ class RootClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestInternalAccessibility()
         {
             var input = @"
@@ -151,7 +150,7 @@ class TestClass : BaseClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestInaccessiblePrivate()
         {
             var input = @"
@@ -168,7 +167,7 @@ class TestClass : BaseClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestIgnorePublicMethods()
         {
             var input = @"
@@ -182,7 +181,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestIgnoreAbstractMethods()
         {
             var input = @"
@@ -195,7 +194,7 @@ abstract class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreOverriddenMethods()
         {
             var input = @"
@@ -210,7 +209,7 @@ class TestClass
             Analyze<ParameterHidesMemberAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreInterfaceImplementations()
         {
             var input = @"

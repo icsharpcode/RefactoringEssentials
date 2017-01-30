@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ThreadStaticAtInstanceFieldTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<ThreadStaticAtInstanceFieldAnalyzer>(@"using System;
@@ -21,7 +20,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<ThreadStaticAtInstanceFieldAnalyzer>(@"using System;
@@ -37,7 +36,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase3()
         {
             Analyze<ThreadStaticAtInstanceFieldAnalyzer>(@"class Foo
@@ -53,7 +52,7 @@ class Foo
 
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ThreadStaticAtInstanceFieldAnalyzer>(@"using System;
@@ -68,7 +67,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void InstanceField()
         {
             Analyze<ThreadStaticAtInstanceFieldAnalyzer>(@"
@@ -85,7 +84,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void InstanceFieldWithMultiAttributeSection()
         {
             Analyze<ThreadStaticAtInstanceFieldAnalyzer>(@"
@@ -103,7 +102,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void StaticField()
         {
             Analyze<ThreadStaticAtInstanceFieldAnalyzer>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceOperatorAssignmentWithAssignmentTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestAdd()
         {
             Test<ReplaceOperatorAssignmentWithAssignmentCodeRefactoringProvider>(@"
@@ -26,7 +25,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAddWithComment()
         {
             Test<ReplaceOperatorAssignmentWithAssignmentCodeRefactoringProvider>(@"

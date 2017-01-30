@@ -6,12 +6,11 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
-using Microsoft.CodeAnalysis.FindSymbols;
 using System.Threading;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class UnusedParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

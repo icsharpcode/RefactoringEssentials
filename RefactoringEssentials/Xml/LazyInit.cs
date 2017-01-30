@@ -16,16 +16,11 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
-using System.Xml;
-using Microsoft.CodeAnalysis.Text;
 
 namespace RefactoringEssentials.Xml
 {
-    public static class LazyInit
+	public static class LazyInit
     {
         public static object Thread { get; private set; }
 

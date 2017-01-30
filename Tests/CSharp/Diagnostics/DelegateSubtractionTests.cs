@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class DelegateSubtractionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSubtraction()
         {
             Analyze<DelegateSubtractionAnalyzer>(@"
@@ -21,7 +20,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestAssignmentSubtraction()
         {
             Analyze<DelegateSubtractionAnalyzer>(@"
@@ -36,7 +35,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<DelegateSubtractionAnalyzer>(@"
@@ -55,7 +54,7 @@ class Foo
         /// <summary>
         /// Bug 18061 - Incorrect "delegate subtraction has unpredictable result" warning
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug18061()
         {
             Analyze<DelegateSubtractionAnalyzer>(@"
@@ -72,7 +71,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotShowOnResolveError()
         {
             Analyze<DelegateSubtractionAnalyzer>(@"

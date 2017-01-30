@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertStringFormatToInterpolatedStringTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleStringFormat()
         {
             Test<ConvertStringFormatToInterpolatedStringCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexStringFormat()
         {
             Test<ConvertStringFormatToInterpolatedStringCodeRefactoringProvider>(@"
@@ -51,7 +50,7 @@ class TestClass
         /// <summary>
         /// Newline character handling for "To interpolated string" #182
         /// </summary>
-        [Test]
+        [Fact]
         public void TestIssue182()
         {
             Test<ConvertStringFormatToInterpolatedStringCodeRefactoringProvider>(@"
@@ -73,8 +72,7 @@ class TestClass
 }");
         }
 
-        [Ignore("Broken on windows")]
-        [Test]
+        [Fact(Skip="Broken on windows")]
         public void TestVerbatimStringFormat()
         {
             Test<ConvertStringFormatToInterpolatedStringCodeRefactoringProvider>(

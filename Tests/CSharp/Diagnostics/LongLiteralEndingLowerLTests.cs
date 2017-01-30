@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class LongLiteralEndingLowerLTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestNormal()
         {
             Analyze<LongLiteralEndingLowerLAnalyzer>(@"
@@ -20,7 +19,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForUnsignedFirst()
         {
             Analyze<LongLiteralEndingLowerLAnalyzer>(@"
@@ -30,7 +29,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestUnsigned()
         {
             Analyze<LongLiteralEndingLowerLAnalyzer>(@"
@@ -44,7 +43,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForUppercase()
         {
             Analyze<LongLiteralEndingLowerLAnalyzer>(@"
@@ -54,7 +53,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForString()
         {
             Analyze<LongLiteralEndingLowerLAnalyzer>(@"
@@ -64,7 +63,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<LongLiteralEndingLowerLAnalyzer>(@"

@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
@@ -11,7 +9,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert 'if' to 'switch'")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert 'if' to 'switch'")]
     public class ConvertIfStatementToSwitchStatementCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

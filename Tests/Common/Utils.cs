@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace RefactoringEssentials.Tests.Common
 {
-    static class Utils
+	static class Utils
     {
         internal static string HomogenizeEol(string str)
         {

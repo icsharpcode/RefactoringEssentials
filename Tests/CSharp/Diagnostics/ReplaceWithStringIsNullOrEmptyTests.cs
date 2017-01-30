@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ReplaceWithStringIsNullOrEmptyTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestMemberAccessCase()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(
@@ -29,7 +28,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestToStringCase()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(
@@ -52,7 +51,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS1()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -70,7 +69,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS2()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -88,7 +87,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorNegatedStringEmpty()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -106,7 +105,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorStringEmpty()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -124,7 +123,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorStringEmptyAlt()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -142,7 +141,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS3()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -160,7 +159,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS4()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -178,7 +177,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseSN1()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -196,7 +195,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseSN2()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -214,7 +213,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseSN3()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -233,7 +232,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseSN4()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -251,7 +250,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS5()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -269,7 +268,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS6()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -287,7 +286,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS7()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -305,7 +304,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS8()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -323,7 +322,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseSN5()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -341,7 +340,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseSN6()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -359,7 +358,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseSN7()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -377,7 +376,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseSN8()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -395,10 +394,10 @@ class Foo
 }");
         }
 
-        [TestCase("str == null || str.Length == 0")]
-        [TestCase("str == null || 0 == str.Length")]
-        [TestCase("null == str || str.Length == 0")]
-        [TestCase("null == str || 0 == str.Length")]
+        [InlineData("str == null || str.Length == 0")]
+        [InlineData("str == null || 0 == str.Length")]
+        [InlineData("null == str || str.Length == 0")]
+        [InlineData("null == str || 0 == str.Length")]
         public void TestInspectorCaseNL(string expression)
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -416,12 +415,12 @@ class Foo
 }");
         }
 
-        [TestCase("str != null && str.Length != 0")]
-        [TestCase("str != null && 0 != str.Length")]
-        [TestCase("str != null && str.Length > 0")]
-        [TestCase("null != str && str.Length != 0")]
-        [TestCase("null != str && 0 != str.Length")]
-        [TestCase("null != str && str.Length > 0")]
+        [InlineData("str != null && str.Length != 0")]
+        [InlineData("str != null && 0 != str.Length")]
+        [InlineData("str != null && str.Length > 0")]
+        [InlineData("null != str && str.Length != 0")]
+        [InlineData("null != str && 0 != str.Length")]
+        [InlineData("null != str && str.Length > 0")]
         public void TestInspectorCaseLN(string expression)
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -439,7 +438,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArrays()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo
@@ -453,7 +452,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLists()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"
@@ -470,7 +469,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCaseNS1WithParentheses()
         {
             Analyze<ReplaceWithStringIsNullOrEmptyAnalyzer>(@"class Foo

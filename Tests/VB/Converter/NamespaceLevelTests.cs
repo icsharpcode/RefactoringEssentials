@@ -1,12 +1,10 @@
-﻿
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.Converter
 {
-    [TestFixture]
     public class NamespaceLevelTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void TestNamespace()
         {
             TestConversionCSharpToVisualBasic(@"namespace Test
@@ -16,7 +14,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestTopLevelAttribute()
         {
             TestConversionCSharpToVisualBasic(
@@ -24,7 +22,7 @@ End Namespace");
                 @"<Assembly: CLSCompliant(True)>");
         }
 
-        [Test]
+        [Fact]
         public void TestImports()
         {
             TestConversionCSharpToVisualBasic(
@@ -34,7 +32,7 @@ using VB = Microsoft.VisualBasic;",
 Imports VB = Microsoft.VisualBasic");
         }
 
-        [Test]
+        [Fact]
         public void TestClass()
         {
             TestConversionCSharpToVisualBasic(@"namespace Test.@class
@@ -48,7 +46,7 @@ Imports VB = Microsoft.VisualBasic");
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestInternalStaticClass()
         {
             TestConversionCSharpToVisualBasic(@"namespace Test.@class
@@ -69,7 +67,7 @@ End Namespace");
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestAbstractClass()
         {
             TestConversionCSharpToVisualBasic(@"namespace Test.@class
@@ -83,7 +81,7 @@ End Namespace");
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestSealedClass()
         {
             TestConversionCSharpToVisualBasic(@"namespace Test.@class
@@ -97,7 +95,7 @@ End Namespace");
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestInterface()
         {
             TestConversionCSharpToVisualBasic(
@@ -111,7 +109,7 @@ End Namespace");
 End Interface");
         }
 
-        [Test]
+        [Fact]
         public void TestEnum()
         {
             TestConversionCSharpToVisualBasic(
@@ -129,7 +127,7 @@ End Interface");
 End Enum");
         }
 
-        [Test]
+        [Fact]
         public void TestClassInheritanceList()
         {
             TestConversionCSharpToVisualBasic(
@@ -154,7 +152,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestStruct()
         {
             TestConversionCSharpToVisualBasic(
@@ -169,7 +167,7 @@ End Class");
 End Structure");
         }
 
-        [Test]
+        [Fact]
         public void TestDelegate()
         {
             TestConversionCSharpToVisualBasic(
@@ -186,7 +184,7 @@ End Structure");
                 @"Public Delegate Sub Test(ByRef x As Integer)");
         }
 
-        [Test]
+        [Fact]
         public void MoveImportsStatement()
         {
             TestConversionCSharpToVisualBasic("namespace test { using SomeNamespace; }",
@@ -196,7 +194,7 @@ Namespace test
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void ClassImplementsInterface()
         {
             TestConversionCSharpToVisualBasic("using System; class test : IComparable { }",
@@ -205,7 +203,7 @@ End Namespace");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ClassImplementsInterface2()
         {
             TestConversionCSharpToVisualBasic("class test : System.IComparable { }",
@@ -214,7 +212,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ClassInheritsClass()
         {
             TestConversionCSharpToVisualBasic("using System.IO; class test : InvalidDataException { }",
@@ -225,7 +223,7 @@ Class test
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ClassInheritsClass2()
         {
             TestConversionCSharpToVisualBasic("class test : System.IO.InvalidDataException { }",

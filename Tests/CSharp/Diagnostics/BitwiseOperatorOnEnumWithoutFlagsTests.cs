@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class BitwiseOperatorOnEnumWithoutFlagsTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestUnary()
         {
             Analyze<BitwiseOperatorOnEnumWithoutFlagsAnalyzer>(@"
@@ -23,7 +22,12 @@ class TestClass
 }");
         }
 
-        public void TestAssignment(string op, bool bitwise = true)
+		[Theory]
+		[InlineData("|", true)]
+		[InlineData("&", true)]
+		[InlineData("^", true)]
+		[InlineData("+", false)]
+		public void TestAssignment(string op, bool bitwise)
         {
             if (bitwise)
             {
@@ -58,16 +62,13 @@ class TestClass
 }");
             }
         }
-        [Test]
-        public void TestAssignment()
-        {
-            TestAssignment("|");
-            TestAssignment("&");
-            TestAssignment("^");
-            TestAssignment("+", false);
-        }
 
-        public void TestBinary(string op, bool bitwise = true)
+		[Theory]
+		[InlineData("|", true)]
+		[InlineData("&", true)]
+		[InlineData("^", true)]
+		[InlineData("+", false)]
+		public void TestBinary(string op, bool bitwise)
         {
             if (bitwise)
             {
@@ -101,7 +102,7 @@ class TestClass
             }
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<BitwiseOperatorOnEnumWithoutFlagsAnalyzer>(@"
@@ -119,15 +120,6 @@ class TestClass
     }
 }
 ");
-        }
-
-        [Test]
-        public void TestBinary()
-        {
-            TestBinary("&");
-            TestBinary("|");
-            TestBinary("^");
-            TestBinary("+", false);
         }
     }
 }

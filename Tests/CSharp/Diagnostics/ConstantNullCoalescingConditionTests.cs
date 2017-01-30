@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConstantNullCoalescingConditionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestNullRightSide()
         {
             Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
@@ -26,7 +25,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullLeftSide()
         {
             Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
@@ -46,7 +45,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEqualExpressions()
         {
             Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
@@ -66,7 +65,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSmartUsage()
         {
             //Previously, this was a "TestWrongContext".
@@ -89,7 +88,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSmartUsageInParam()
         {
             Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
@@ -102,7 +101,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
@@ -117,7 +116,7 @@ class TestClass
         }
 
         // "RECS0098: Remove redundant right side" reports incorrectly when left side is an equation
-        [Test]
+        [Fact]
         public void TestIssue172()
         {
             Analyze<ConstantNullCoalescingConditionAnalyzer>(@"
@@ -132,7 +131,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullableCreationOnLeftSide()
         {
             Analyze<ConstantNullCoalescingConditionAnalyzer>(@"

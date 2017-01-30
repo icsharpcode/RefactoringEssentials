@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class EmptyStatementTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBasicCase()
         {
             Analyze<EmptyStatementAnalyzer>(@"
@@ -27,7 +26,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<EmptyStatementAnalyzer>(@"
@@ -42,7 +41,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestEmbeddedStatements()
         {
             Analyze<EmptyStatementAnalyzer>(@"
@@ -59,7 +58,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidCase()
         {
             Analyze<EmptyStatementAnalyzer>(@"

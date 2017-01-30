@@ -18,17 +18,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Xml;
-using Microsoft.CodeAnalysis.Text;
 
 namespace RefactoringEssentials.Xml
 {
-    /// <summary>
-    /// Static helper methods for traversing trees.
-    /// </summary>
-    public static class TreeTraversal
+	/// <summary>
+	/// Static helper methods for traversing trees.
+	/// </summary>
+	public static class TreeTraversal
     {
         /// <summary>
         /// Converts a tree data structure into a flat list by traversing it in pre-order.

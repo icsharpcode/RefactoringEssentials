@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeFixes;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
-    [TestFixture]
     public class CS0759RedundantPartialMethodTests : CSharpCodeFixTestBase
     {
-        [Test]
+        [Fact]
         public void TestRedundantModifier()
         {
             var input = @"

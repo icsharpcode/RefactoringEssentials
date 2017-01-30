@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeFixes;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
-    [TestFixture]
     public class CS0108UseNewKeywordIfHidingIntendedTests : CSharpCodeFixTestBase
     {
-        [Test]
+        [Fact]
         public void TestMethod()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -38,7 +37,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodWithComment()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -76,7 +75,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestField()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -100,7 +99,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestProperty()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -124,7 +123,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestType()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -156,7 +155,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexer()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -224,7 +223,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStruct()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -256,7 +255,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEnum()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -290,7 +289,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInterface()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -322,7 +321,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDelegate()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -346,7 +345,7 @@ class Baz : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEvent()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"
@@ -373,7 +372,7 @@ class Baz : Foo
     public new event Test Bar;
 }");
         }
-        [Test]
+        [Fact]
         public void FurtherUpInheritanceTree()
         {
             Test<CS0108UseNewKeywordIfHidingIntendedCodeFixProvider>(@"

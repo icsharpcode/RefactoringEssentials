@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class SimplifyConditionalTernaryExpressionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestFalseTrueCase()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -28,7 +27,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestFalseTrueCase2()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -50,7 +49,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestFalseExprCase()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -72,7 +71,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestTrueExprCase()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -94,7 +93,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestExprFalseCase()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -116,7 +115,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestExprTrueCase()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -138,7 +137,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidCase()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -152,7 +151,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -168,7 +167,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestSkipRedundantCase()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"
@@ -185,7 +184,7 @@ class Foo
         /// <summary>
         /// Bug 26669 - Source analysis "simplify conditional expression" generates invalid C# condition
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug26669()
         {
             Analyze<SimplifyConditionalTernaryExpressionAnalyzer>(@"

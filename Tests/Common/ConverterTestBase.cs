@@ -6,14 +6,11 @@ using Microsoft.CodeAnalysis.VisualBasic;
 using RefactoringEssentials.Tests.CSharp.Diagnostics;
 using RefactoringEssentials.VB.Converter;
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
 using RefactoringEssentials.Tests.Common;
 using Microsoft.CodeAnalysis.Formatting;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.Converter
 {
@@ -140,7 +137,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
                         diff.Append(expectedVisualBasicCode[i]);
                 }
                 Console.WriteLine(diff.ToString());
-				Assert.Fail();
+				Assert.True(false);
 			}
 		}
 

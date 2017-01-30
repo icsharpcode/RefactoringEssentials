@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertSwitchToIfTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Test<ConvertSwitchToIfCodeRefactoringProvider>(@"
@@ -53,7 +52,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithoutDefault()
         {
             Test<ConvertSwitchToIfCodeRefactoringProvider>(@"
@@ -94,7 +93,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestBreak()
         {
             Test<ConvertSwitchToIfCodeRefactoringProvider>(@"
@@ -139,7 +138,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOperatorPriority()
         {
             Test<ConvertSwitchToIfCodeRefactoringProvider>(@"
@@ -177,7 +176,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEmptySwitch()
         {
             TestWrongContext<ConvertSwitchToIfCodeRefactoringProvider>(@"
@@ -192,7 +191,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSwitchWithDefaultOnly()
         {
             TestWrongContext<ConvertSwitchToIfCodeRefactoringProvider>(@"
@@ -210,7 +209,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNonTrailingBreak()
         {
             TestWrongContext<ConvertSwitchToIfCodeRefactoringProvider>(@"

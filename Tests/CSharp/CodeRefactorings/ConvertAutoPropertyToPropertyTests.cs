@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertAutoPropertyToPropertyTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleProperty()
         {
             Test<ConvertAutoPropertyToPropertyCodeRefactoringProvider>(@"class TestClass
@@ -29,8 +28,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Ignore("TODO")]
-        [Test]
+        [Fact(Skip="TODO")]
         public void TestSimplify()
         {
             Test<ConvertAutoPropertyToPropertyCodeRefactoringProvider>(@"

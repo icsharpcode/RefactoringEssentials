@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class FlipEqualsTargetAndArgumentTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Test<FlipEqualsTargetAndArgumentCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleCaseWithComment()
         {
             Test<FlipEqualsTargetAndArgumentCodeRefactoringProvider>(@"
@@ -52,7 +51,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexCase()
         {
             Test<FlipEqualsTargetAndArgumentCodeRefactoringProvider>(@"
@@ -74,7 +73,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveParens()
         {
             Test<FlipEqualsTargetAndArgumentCodeRefactoringProvider>(@"
@@ -96,7 +95,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestUnaryOperatorCase()
         {
             Test<FlipEqualsTargetAndArgumentCodeRefactoringProvider>(@"
@@ -118,7 +117,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullCase()
         {
             TestWrongContext<FlipEqualsTargetAndArgumentCodeRefactoringProvider>(@"
@@ -132,7 +131,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticCase()
         {
             TestWrongContext<FlipEqualsTargetAndArgumentCodeRefactoringProvider>(@"
@@ -148,7 +147,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCaretLocation()
         {
             TestWrongContext<FlipEqualsTargetAndArgumentCodeRefactoringProvider>(@"

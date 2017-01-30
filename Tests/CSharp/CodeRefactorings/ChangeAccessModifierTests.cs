@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ChangeAccessModifierTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestNoEnumMember()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"
@@ -16,7 +15,7 @@ enum Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoInterfaceMember()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"
@@ -26,7 +25,7 @@ interface Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoExplicitInterfaceImplementationMember()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"
@@ -40,7 +39,7 @@ class TestClass : Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoOverrideMember()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"
@@ -54,7 +53,7 @@ class TestClass : Test
 }");
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestType()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -66,7 +65,7 @@ public class Foo
 }");
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestMethodToProtected()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -84,7 +83,7 @@ class Foo
 }");
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestPrivateMethodToProtected()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -102,7 +101,7 @@ class Foo
 }");
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestMethodToProtectedInternal()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -120,7 +119,7 @@ class Foo
 }", 1);
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestAccessor()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -140,7 +139,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStrictAccessor()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"
@@ -153,7 +152,7 @@ class Foo
 }");
         }
 
-        [Test, Ignore("Not implemented!")]
+        [Fact(Skip="Not implemented!")]
         public void TestChangeAccessor()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -173,7 +172,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReturnTypeWrongContext()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"
@@ -183,7 +182,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWrongModiferContext()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"
@@ -193,7 +192,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodImplementingInterface()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"using System;

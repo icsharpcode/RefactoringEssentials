@@ -3,18 +3,16 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials
 {
-    /// <summary>
-    /// Builds a lazy-loaded cache of Roslyn's internal types and members used through reflection.
-    /// </summary>
-    static class RoslynReflection
+	/// <summary>
+	/// Builds a lazy-loaded cache of Roslyn's internal types and members used through reflection.
+	/// </summary>
+	static class RoslynReflection
     {
         // CaseCorrector
         public static CaseCorrectorWrapper CaseCorrector => caseCorrectorWrapper.Value;

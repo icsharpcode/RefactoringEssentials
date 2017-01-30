@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertExpressionBodyToStatementBodyTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestMethodName()
         {
             Test<ConvertExpressionBodyToStatementBodyCodeRefactoringProvider>(@"
@@ -24,7 +23,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestPropertyName()
         {
             Test<ConvertExpressionBodyToStatementBodyCodeRefactoringProvider>(@"

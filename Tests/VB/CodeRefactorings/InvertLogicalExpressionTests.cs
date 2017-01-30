@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class InvertLogicalExpressionTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void ConditionlAnd()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlAndReverse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -50,7 +49,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlAndAlso()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -72,7 +71,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlAndAlsoReverse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -94,7 +93,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlOr()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -116,7 +115,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlOrReverse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -138,7 +137,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlOrElse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -160,7 +159,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlOrElseReverse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -183,7 +182,7 @@ End Class");
         }
 
 
-        [Test]
+        [Fact]
         public void ConditionlAnd2()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -205,7 +204,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlOr2()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -227,7 +226,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void Equals()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -249,7 +248,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void EqualsReverse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -272,7 +271,7 @@ End Class");
         }
 
 
-        [Test]
+        [Fact]
         public void TestNullCoalescing()
         {
             TestWrongContext<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -285,7 +284,7 @@ End Class
         }
 
 
-        [Test]
+        [Fact]
         public void TestUnaryExpression()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"

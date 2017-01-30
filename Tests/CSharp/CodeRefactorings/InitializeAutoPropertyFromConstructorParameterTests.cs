@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class InitializeAutoPropertyFromConstructorParameterTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimple()
         {
             Test<InitializeAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"

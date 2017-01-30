@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceSafeCastWithDirectCastTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             Test<ReplaceSafeCastWithDirectCastCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithComment1()
         {
             Test<ReplaceSafeCastWithDirectCastCodeRefactoringProvider>(@"
@@ -52,7 +51,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithComment2()
         {
             Test<ReplaceSafeCastWithDirectCastCodeRefactoringProvider>(@"
@@ -74,7 +73,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveParentheses()
         {
             string input = @"
@@ -94,7 +93,7 @@ class TestClass {
             Test<ReplaceSafeCastWithDirectCastCodeRefactoringProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestInsertParentheses()
         {
             string input = @"

@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using System.Threading;
 using System.Linq;
 using System.Collections.Generic;
@@ -11,10 +10,11 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
-    public abstract class CSharpCodeFixTestBase : CodeFixTestBase
+	public abstract class CSharpCodeFixTestBase : CodeFixTestBase
     {
         public void Test<T>(string input, string output, int action = 0, bool expectErrors = false, CSharpParseOptions parseOptions = null)
             where T : CodeFixProvider, new()
@@ -34,7 +34,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
                 Console.WriteLine("-----------Got:");
                 Console.WriteLine(result);
             }
-            Assert.AreEqual(output, result);
+            Assert.Equal(output, result);
         }
 
         internal static List<Microsoft.CodeAnalysis.CodeActions.CodeAction> GetActions<T>(string input) where T : CodeFixProvider, new()
@@ -107,7 +107,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
                 {
 
                     if (selectedSpan.Start > 0)
-                        Assert.AreEqual(selectedSpan, d.Location.SourceSpan, "Activation span does not match.");
+                        Assert.True(selectedSpan == d.Location.SourceSpan, "Activation span does not match.");
 
                     var context = new CodeFixContext(doc, d.Location.SourceSpan, diagnostics.Where(d2 => d2.Location.SourceSpan == d.Location.SourceSpan).ToImmutableArray(), (arg1, arg2) => actions.Add(Tuple.Create(arg1, arg2)), default(CancellationToken));
                     action.RegisterCodeFixesAsync(context);
@@ -143,7 +143,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
             Document doc;
             DiagnosticTestBase.TestWorkspace workspace;
             var actions = GetActions(action, input, out workspace, out doc);
-            Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
+            Assert.True(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
         }
     }
 }

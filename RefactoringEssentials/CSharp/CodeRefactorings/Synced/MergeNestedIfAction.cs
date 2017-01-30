@@ -8,12 +8,11 @@ using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
-using Microsoft.CodeAnalysis.Simplification;
 using Microsoft.CodeAnalysis.Text;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Merge nested 'if'")]    
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Merge nested 'if'")]    
     public class MergeNestedIfAction : SpecializedCodeRefactoringProvider<IfStatementSyntax>
     {
         protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, IfStatementSyntax node, CancellationToken cancellationToken)

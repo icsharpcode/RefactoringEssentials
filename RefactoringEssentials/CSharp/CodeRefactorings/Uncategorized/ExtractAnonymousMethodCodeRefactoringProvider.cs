@@ -6,14 +6,13 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Formatting;
 using System.Linq;
-using Microsoft.CodeAnalysis.FindSymbols;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.Simplification;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Extract anonymous method")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Extract anonymous method")]
     public class ExtractAnonymousMethodCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

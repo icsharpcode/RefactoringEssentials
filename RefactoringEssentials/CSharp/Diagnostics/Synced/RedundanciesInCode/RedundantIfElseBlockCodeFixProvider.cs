@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Formatting;
 using System.Collections.Immutable;
 using System.Linq;
@@ -11,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantIfElseBlockCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds

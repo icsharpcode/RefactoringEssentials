@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class LocalVariableNotUsedTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestUnusedVariable()
         {
             var input = @"
@@ -25,8 +24,7 @@ class TestClass {
             Analyze<LocalVariableNotUsedAnalyzer>(input, output);
         }
 
-        [Test]
-        [Ignore("Support for multiple variables not implemented yet. Reactivate when finished.")]
+        [Fact(Skip="Support for multiple variables not implemented yet. Reactivate when finished.")]
         public void TestUnusedVariable2()
         {
             var input2 = @"
@@ -48,7 +46,7 @@ class TestClass {
             Analyze<LocalVariableNotUsedAnalyzer>(input2, output2);
         }
 
-        [Test]
+        [Fact]
         public void TestUsedVariable()
         {
             var input1 = @"
@@ -70,7 +68,7 @@ class TestClass {
             Analyze<LocalVariableNotUsedAnalyzer>(input2);
         }
 
-        [Test]
+        [Fact]
         public void TestUnusedForeachVariable()
         {
             var input = @"
@@ -85,7 +83,7 @@ class TestClass {
             Analyze<LocalVariableNotUsedAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUsedForeachVariable()
         {
             var input = @"

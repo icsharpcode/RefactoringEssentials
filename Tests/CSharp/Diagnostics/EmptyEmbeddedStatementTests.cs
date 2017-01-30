@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class EmptyEmbeddedStatementTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimple()
         {
             Analyze<EmptyEmbeddedStatementAnalyzer>(@"
@@ -28,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestForeach()
         {
             Analyze<EmptyEmbeddedStatementAnalyzer>(@"
@@ -50,7 +49,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<EmptyEmbeddedStatementAnalyzer>(@"

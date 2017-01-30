@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertImplicitToExplicittImplementationTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             Test<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
@@ -32,7 +31,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithXmlDoc()
         {
             Test<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
@@ -64,7 +63,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithInlineComment()
         {
             Test<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
@@ -90,7 +89,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestProperty()
         {
             Test<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
@@ -120,7 +119,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEvent()
         {
             Test<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
@@ -154,7 +153,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexer()
         {
             Test<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
@@ -182,7 +181,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleInterfaces()
         {
             TestWrongContext<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
@@ -202,7 +201,7 @@ class TestClass : ITest, ITest2
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNonImplicitImplementation()
         {
             TestWrongContext<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
@@ -214,7 +213,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInterfaceMethod()
         {
             TestWrongContext<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"

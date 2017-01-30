@@ -1,16 +1,15 @@
 using System;
-using NUnit.Framework;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class CheckIfParameterIsNullTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             string result = RunContextAction(
@@ -25,7 +24,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "using System;" + Environment.NewLine +
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
@@ -38,8 +37,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Ignore("broken")]
-        [Test]
+        [Fact(Skip="Broken.")]
         public void TestWithComment()
         {
             string result = RunContextAction(
@@ -55,7 +53,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "using System;" + Environment.NewLine +
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
@@ -69,7 +67,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Test]
+        [Fact]
         public void TestLambda()
         {
             Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -91,7 +89,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAnonymousMethod()
         {
             Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -113,7 +111,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullCheckAlreadyThere_StringName()
         {
             TestWrongContext<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -128,7 +126,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullCheckAlreadyThere_NameOf()
         {
             TestWrongContext<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -143,7 +141,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestPopupOnlyOnName()
         {
             TestWrongContext<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -155,7 +153,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
 
-        [Test]
+        [Fact]
         public void Test_OldCSharp()
         {
             var parseOptions = new CSharpParseOptions(

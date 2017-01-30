@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class OperatorIsCanBeUsedTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<OperatorIsCanBeUsedAnalyzer>(@"
@@ -44,7 +43,7 @@ namespace Demo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<OperatorIsCanBeUsedAnalyzer>(@"
@@ -82,7 +81,7 @@ namespace Demo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase3()
         {
             Analyze<OperatorIsCanBeUsedAnalyzer>(@"
@@ -120,7 +119,7 @@ namespace Demo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase4()
         {
             Analyze<OperatorIsCanBeUsedAnalyzer>(@"
@@ -164,7 +163,7 @@ namespace Demo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase5()
         {
             Analyze<OperatorIsCanBeUsedAnalyzer>(@"
@@ -190,7 +189,7 @@ namespace Demo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestResharperDisable()
         {
             Analyze<OperatorIsCanBeUsedAnalyzer>(@"using System;

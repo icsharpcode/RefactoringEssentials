@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertDoWhileToWhileLoopTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimple()
         {
             Test<ConvertDoWhileToWhileLoopCodeRefactoringProvider>(@"
@@ -27,7 +26,7 @@ class Foo {
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleWithComment1()
         {
             Test<ConvertDoWhileToWhileLoopCodeRefactoringProvider>(@"
@@ -50,7 +49,7 @@ class Foo {
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleWithComment2()
         {
             Test<ConvertDoWhileToWhileLoopCodeRefactoringProvider>(@"
@@ -71,7 +70,7 @@ class Foo {
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledInContent()
         {
             TestWrongContext<ConvertDoWhileToWhileLoopCodeRefactoringProvider>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture, Ignore("Not implemented!")]
     public class LinqQueryToFluentTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestSimpleQuery()
         {
             string input = @"
@@ -32,10 +31,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestName()
         {
             string input = @"
@@ -67,10 +66,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestPrecedence()
         {
             string input = @"
@@ -96,10 +95,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestWhereQuery()
         {
             string input = @"
@@ -126,10 +125,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestOrderByQuery()
         {
             string input = @"
@@ -156,10 +155,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestDoubleFromWithSelectQuery()
         {
             string input = @"
@@ -188,10 +187,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestDoubleFromWithCastQuery()
         {
             string input = @"
@@ -220,10 +219,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestDoubleFromWithIntermediateQuery()
         {
             string input = @"
@@ -256,10 +255,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestLetQuery()
         {
             string input = @"
@@ -289,10 +288,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestLongChainQuery()
         {
             string input = @"
@@ -326,10 +325,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestCastQuery()
         {
             string input = @"
@@ -355,10 +354,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestJoinQuery()
         {
             string input = @"
@@ -387,10 +386,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestJoinWithIntermediateQuery()
         {
             string input = @"
@@ -423,10 +422,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestJoinWithIntoSelectQuery()
         {
             string input = @"
@@ -456,10 +455,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestJoinWithIntoIntermediateQuery()
         {
             string input = @"
@@ -493,10 +492,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestSimpleGroup()
         {
             string input = @"
@@ -522,10 +521,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestDifferentGroup()
         {
             string input = @"
@@ -551,10 +550,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestInto()
         {
             string input = @"
@@ -581,10 +580,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestDoubleFromWithLet()
         {
             string input = @"
@@ -620,10 +619,10 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestDoubleFromWithMidLet()
         {
             string input = @"
@@ -656,7 +655,7 @@ public class TestClass
 }
 ";
 
-            Assert.AreEqual(output, RunContextAction(new LinqQueryToFluentAction(), input));
+            Assert.Equal(output, RunContextAction(new LinqQueryToFluentAction(), input));
         }
     }
 }

@@ -4,13 +4,11 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantStringToCharArrayCallCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds

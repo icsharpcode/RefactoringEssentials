@@ -10,11 +10,10 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using RefactoringEssentials.VB.CodeRefactorings;
 using RefactoringEssentials.Converter;
 using Microsoft.CodeAnalysis.Text;
-using System.Diagnostics.Contracts;
 
 namespace RefactoringEssentials.VB.Converter
 {
-    public partial class CSharpConverter
+	public partial class CSharpConverter
     {
         enum TokenContext
         {

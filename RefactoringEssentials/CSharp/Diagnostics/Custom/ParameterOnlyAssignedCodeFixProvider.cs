@@ -1,15 +1,13 @@
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
-using Microsoft.CodeAnalysis.CSharp;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
 
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class ParameterOnlyAssignedCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds

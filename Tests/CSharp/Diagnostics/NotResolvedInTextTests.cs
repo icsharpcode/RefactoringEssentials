@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class NotResolvedInTextTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBadExamples()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -23,7 +22,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullExceptionSwap()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -45,7 +44,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentExceptionSwap()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -67,7 +66,7 @@ class A
 }", 0, 0);
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentOutOfRangeExceptionSwap()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -89,7 +88,7 @@ class A
 }", 0);
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentOutOfRangeExceptionSwapCase2()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -111,7 +110,7 @@ class A
 }", 0, 0);
         }
 
-        [Test]
+        [Fact]
         public void TestDuplicateWaitObjectExceptionSwap()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -134,7 +133,7 @@ class A
         }
 
 
-        [Test]
+        [Fact]
         public void TestInvalidArgumentException()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -149,7 +148,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentExceptionGuessing()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -173,7 +172,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentExceptionGuessingCase2()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -197,7 +196,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullGuessing()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -221,7 +220,7 @@ class A
 }", 0, 1);
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullGuessingResolve2()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -246,7 +245,7 @@ class A
         /// <summary>
         /// Source analysis can't resolve 'key' in indexer property setter 
         /// </summary>
-        [Test]
+        [Fact]
         public void TestArgumentNullOnIndexerKey()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -263,7 +262,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullGuessingCase2()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -287,7 +286,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentOutOfRangeExceptionGuessing()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -311,7 +310,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentOutOfRangeExceptionGuessingCase2()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -335,7 +334,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestConstructorValidCase()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -355,7 +354,7 @@ class A
         /// <summary>
         /// Bug 15039 - source analysis can't resolve 'value' in property setter 
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug15039()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -372,7 +371,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestValue()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -400,7 +399,7 @@ class A
 }", 0, 1);
         }
 
-        [Test]
+        [Fact]
         public void TestIssue45()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -417,7 +416,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIssue120_ConversionOperator()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"
@@ -434,7 +433,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOperator()
         {
             Analyze<NotResolvedInTextAnalyzer>(@"

@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
 
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantCommaInArrayInitializerCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds

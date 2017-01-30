@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertAnonymousMethodToLambdaTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void BasicTest()
         {
             Test<ConvertAnonymousMethodToLambdaCodeRefactoringProvider>(@"
@@ -26,7 +25,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void VarDeclaration()
         {
             Test<ConvertAnonymousMethodToLambdaCodeRefactoringProvider>(@"
@@ -46,7 +45,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void ParameterLessDelegate()
         {
             Test<ConvertAnonymousMethodToLambdaCodeRefactoringProvider>(@"

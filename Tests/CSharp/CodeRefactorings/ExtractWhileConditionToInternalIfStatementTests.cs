@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ExtractWhileConditionToInternalIfStatementTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestBasicCase()
         {
             Test<ExtractWhileConditionToInternalIfStatementCodeRefactoringProvider>(@"
@@ -42,7 +41,7 @@ public class Main
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestBasicCaseWithComment()
         {
             Test<ExtractWhileConditionToInternalIfStatementCodeRefactoringProvider>(@"
@@ -80,7 +79,7 @@ public class Main
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestAddBlock()
         {
             Test<ExtractWhileConditionToInternalIfStatementCodeRefactoringProvider>(@"
@@ -112,7 +111,7 @@ public class Main
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveEmptyStatement()
         {
             Test<ExtractWhileConditionToInternalIfStatementCodeRefactoringProvider>(@"

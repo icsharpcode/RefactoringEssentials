@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ComputeConstantValueTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Rational1()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -26,7 +25,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Rational1WithComment()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -48,7 +47,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Rational2()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -67,7 +66,7 @@ class TestClass
 	}
 }");
         }
-        [Test]
+        [Fact]
         public void Rational3()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -86,7 +85,7 @@ class TestClass
 	}
 }");
         }
-        [Test]
+        [Fact]
         public void Rational4()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -105,7 +104,7 @@ class TestClass
 	}
 }");
         }
-        [Test]
+        [Fact]
         public void Rational5()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -124,7 +123,7 @@ class TestClass
 	}
 }");
         }
-        [Test]
+        [Fact]
         public void Rational6()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -144,7 +143,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Bool1()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -164,7 +163,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Bool2()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -184,7 +183,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Bool3()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -204,7 +203,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void String1()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -224,7 +223,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void UseConstant()
         {
             Test<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -247,7 +246,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void Invalid()
         {
             TestWrongContext<ComputeConstantValueCodeRefactoringProvider>(@"
@@ -262,7 +261,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestWrongHotSpot()
         {
             TestWrongContext<ComputeConstantValueCodeRefactoringProvider>(@"

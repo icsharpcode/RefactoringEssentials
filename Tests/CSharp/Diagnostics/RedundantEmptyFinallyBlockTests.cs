@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantEmptyFinallyBlockTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestRedundantTry()
         {
             Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
@@ -37,7 +36,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
@@ -77,7 +76,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalid()
         {
             Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"
@@ -96,7 +95,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<RedundantEmptyFinallyBlockAnalyzer>(@"

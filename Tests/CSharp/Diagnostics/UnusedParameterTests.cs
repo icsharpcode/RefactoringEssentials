@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class UnusedParameterTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestUnusedParameter()
         {
             var input = @"
@@ -18,7 +17,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUnusedParameterMethodGetsCalled()
         {
             var input = @"
@@ -31,7 +30,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestInterfaceImplementation()
         {
             var input = @"
@@ -46,7 +45,7 @@ class TestClass : ITestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestAbstractMethodImplementation()
         {
             var input = @"
@@ -61,7 +60,7 @@ class TestClass : TestBase {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUsedParameter()
         {
             var input = @"
@@ -74,7 +73,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestLambda()
         {
             var input = @"
@@ -88,7 +87,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestAnonymousMethod()
         {
             var input = @"
@@ -103,7 +102,7 @@ class TestClass {
         }
 
 
-        [Test]
+        [Fact]
         public void TestMethodUsedAsDelegateMethod()
         {
             var input = @"using System;
@@ -118,7 +117,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestMethodLooksLikeEventHandlerButNotUsedAsSuch()
         {
             var input = @"using System;
@@ -128,7 +127,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestMethodUsedAsDelegateInOtherPart()
         {
             // This test doesn't add the second part;
@@ -141,7 +140,7 @@ partial class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void UnusedParameterInConstructor()
         {
             var input = @"
@@ -153,7 +152,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUnusedParameterInVirtualMethod()
         {
             var input = @"
@@ -165,7 +164,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUnusedParameterInShadowedMethod()
         {
             var input = @"
@@ -177,7 +176,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUnusedParameterInPartialMethod()
         {
             var input = @"
@@ -189,7 +188,7 @@ partial class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void SerializationConstructor()
         {
             var input = @"using System;
@@ -204,7 +203,7 @@ class TestClass : ISerializable {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestBug_29572()
         {
             // https://bugzilla.xamarin.com/show_bug.cgi?id=29572
@@ -227,8 +226,7 @@ class TestClass : ISerializable {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
-        [Ignore("Support for indexers disabled")]
+        [Fact(Skip="Support for indexers disabled")]
         public void TestUnusedParameterInExpressionBodiedIndexer()
         {
             var input = @"
@@ -238,8 +236,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
-        [Ignore("Support for indexers disabled")]
+        [Fact(Skip="Support for indexers disabled")]
         public void TestUsedParameterInExpressionBodiedIndexer()
         {
             var input = @"
@@ -249,7 +246,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUnusedParameterInExpressionBodiedMethod()
         {
             var input = @"
@@ -259,7 +256,7 @@ class TestClass {
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUsedParameterInExpressionBodiedMethod()
         {
             var input = @"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class EmptyGeneralCatchClauseTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;
@@ -30,7 +29,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;
@@ -54,7 +53,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestCatchWhen()
         {
             Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;
@@ -78,7 +77,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestCatchWhenWithoutDeclaration()
         {
             Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;
@@ -102,7 +101,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestCatchWithReturnStatement()
         {
             Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;
@@ -127,7 +126,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<EmptyGeneralCatchClauseAnalyzer>(@"using System;

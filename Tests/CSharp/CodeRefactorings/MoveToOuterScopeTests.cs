@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture, Ignore("Not implemented!")]
     public class MoveToOuterScopeTests : CSharpCodeRefactoringTestBase
     {
         void TestStatements(string input, string output)
@@ -25,7 +24,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void SimpleCase()
         {
             TestStatements(@"
@@ -39,7 +38,7 @@ class A
 ");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void IgnoresDeclarationsDirectlyInABody()
         {
             TestWrongContext<MoveToOuterScopeAction>(@"
@@ -52,7 +51,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void MovesOnlyTheCurrentVariableInitialization()
         {
             TestStatements(@"
@@ -67,7 +66,7 @@ class A
 ");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void MovesAllInitializersWhenOnType()
         {
             TestStatements(@"
@@ -81,7 +80,7 @@ class A
 ");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void OnlyMovesDeclarationWhenInitializerDependsOnOtherStatements()
         {
             TestStatements(@"
@@ -98,7 +97,7 @@ class A
 ");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void HandlesLambdaDelegate()
         {
             TestStatements(@"
@@ -112,7 +111,7 @@ class A
 ");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void IgnoresDeclarationDirectlyInConstructorBody()
         {
             TestWrongContext<MoveToOuterScopeAction>(@"

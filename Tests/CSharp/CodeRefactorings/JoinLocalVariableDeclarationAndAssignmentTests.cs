@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class JoinLocalVariableDeclarationAndAssignmentTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             Test<JoinLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"
@@ -27,7 +26,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithComment()
         {
             Test<JoinLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"
@@ -50,7 +49,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDeclarationList()
         {
             Test<JoinLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"

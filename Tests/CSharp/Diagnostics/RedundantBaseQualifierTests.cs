@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantBaseQualifierTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<RedundantBaseQualifierAnalyzer>(@"using System;
@@ -68,7 +67,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<RedundantBaseQualifierAnalyzer>(@"using System;
@@ -136,7 +135,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 ");
         }
 
-        [Test]
+        [Fact]
         public void ComplexTests()
         {
             Analyze<RedundantBaseQualifierAnalyzer>(@"
@@ -163,7 +162,7 @@ class Foo : Base
 }");
         }
 
-        [Test]
+        [Fact]
         public void InvalidUseOfBaseInFieldInitializer()
         {
             var input = @"class Foo

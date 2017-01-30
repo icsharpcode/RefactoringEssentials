@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConditionalTernaryEqualBranchTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
@@ -25,7 +24,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         }
 
-        [Test]
+        [Fact]
         public void TestMoreComplexBranch()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
@@ -44,7 +43,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         }
 
-        [Test]
+        [Fact]
         public void TestNotEqualBranches()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
@@ -57,7 +56,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         }
 
-        [Test]
+        [Fact]
         public void TestNotEqualBranchesWithLambdas()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
@@ -71,8 +70,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         }
 
-        [Test]
-        [Ignore("Won't work with Roslyn < 1.1 due to a bug with equivalence checking of interpolated strings. Activate with Roslyn 1.1.")]
+        [Fact(Skip="Won't work with Roslyn < 1.1 due to a bug with equivalence checking of interpolated strings. Activate with Roslyn 1.1.")]
         public void TestNotEqualBranchesWithInterpolatedStrings()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
@@ -85,7 +83,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
@@ -99,7 +97,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         }
 
-        [Test]
+        [Fact]
         public void Test()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"

@@ -1,13 +1,11 @@
-using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class InvertIfTestsTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimple()
         {
             Test<InvertIfCodeRefactoringProvider>(@"
@@ -41,7 +39,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Test<InvertIfCodeRefactoringProvider>(
@@ -66,7 +64,7 @@ class TestClass
             );
         }
 
-        [Test]
+        [Fact]
         public void TestInLoop()
         {
             Test<InvertIfCodeRefactoringProvider>(
@@ -97,7 +95,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void Test2()
         {
             Test<InvertIfCodeRefactoringProvider>(
@@ -128,7 +126,7 @@ class TestClass
             );
         }
 
-        [Test]
+        [Fact]
         public void TestNonVoidMoreComplexMethod()
         {
             Test<InvertIfCodeRefactoringProvider>(
@@ -162,7 +160,7 @@ class TestClass
 
         }
 
-        [Test]
+        [Fact]
         public void TestComplexMethod()
         {
             Test<InvertIfCodeRefactoringProvider>(
@@ -191,7 +189,7 @@ class TestClass
             );
         }
 
-        [Test]
+        [Fact]
         public void TestComment()
         {
             Test<InvertIfCodeRefactoringProvider>(
@@ -227,7 +225,7 @@ class TestClass
         /// <summary>
         /// InvertIfCodeRefactoringProvider: InvalidOperationException on nested "if ... if ... else" #62
         /// </summary>
-        [Test]
+        [Fact]
         public void TestIssue62()
         {
             Test<InvertIfCodeRefactoringProvider>(

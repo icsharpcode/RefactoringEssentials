@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertIfStatementToSwitchStatementTests : CSharpCodeRefactoringTestBase
     {
 
-        [Test]
+        [Fact]
         public void TestBreak()
         {
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -52,7 +51,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestBreakWithComment()
         {
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -99,7 +98,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -136,7 +135,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestConstantExpression()
         {
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -213,7 +212,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedOr()
         {
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -250,7 +249,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexSwitchExpression()
         {
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -284,7 +283,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNonConstantExpression()
         {
             TestWrongContext<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -340,7 +339,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNonEqualityComparison()
         {
             TestWrongContext<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -362,7 +361,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestValidType()
         {
             // enum
@@ -445,7 +444,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidType()
         {
             TestWrongContext<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -463,7 +462,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoElse()
         {
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -497,7 +496,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedIf()
         {
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -534,7 +533,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalid()
         {
             TestWrongContext<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"
@@ -557,7 +556,7 @@ class TestClass
 	}
 }");
         }
-        [Test]
+        [Fact]
         public void TestInvalidCase2()
         {
             TestWrongContext<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"

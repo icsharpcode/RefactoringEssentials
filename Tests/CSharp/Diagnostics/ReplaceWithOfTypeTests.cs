@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ReplaceWithOfTypeTests : CSharpDiagnosticTestBase
     {
-        [Test]
-        [Ignore("Does this even make sense? There's no SelectNotNull method!")]
+        [Fact(Skip="Does this even make sense? There's no SelectNotNull method!")]
         public void TestCaseSelectNotNull()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
@@ -42,8 +40,7 @@ class Test
 }");
         }
 
-        [Test]
-        [Ignore("Does this even make sense? There's no SelectNotNull method!")]
+        [Fact(Skip="Does this even make sense? There's no SelectNotNull method!")]
         public void TestCaseSelectNotNullWithParentheses()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
@@ -79,7 +76,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestCaseSelectWhereCase1()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
@@ -115,7 +112,7 @@ class Test
             //}");
         }
 
-        [Test]
+        [Fact]
         public void TestCaseSelectWhereGarbage()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
@@ -137,7 +134,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestCaseSelectWhereCase2WithParens()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
@@ -176,7 +173,7 @@ class Test
 
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;

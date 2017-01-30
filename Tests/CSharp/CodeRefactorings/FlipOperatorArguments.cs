@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class FlipOperatorArguments : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestEquals()
         {
             Test<FlipOperatorArgumentsCodeRefactoringProvider>(@"
@@ -29,7 +28,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestNotEquals()
         {
             Test<FlipOperatorArgumentsCodeRefactoringProvider>(@"

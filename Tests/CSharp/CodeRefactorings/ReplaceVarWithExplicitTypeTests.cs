@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceVarWithExplicitTypeTests : CSharpCodeRefactoringTestBase
     {
-        [Test()]
+        [Fact]
         public void SimpleVarDeclaration()
         {
             string result = RunContextAction(new ReplaceVarWithExplicitTypeCodeRefactoringProvider(),
@@ -17,7 +16,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 		$var aVar = this;
 	}
 }");
-            Assert.AreEqual(@"class TestClass
+            Assert.Equal(@"class TestClass
 {
 	void Test ()
 	{
@@ -26,7 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }", result);
         }
 
-        [Test()]
+        [Fact]
         public void ForeachDeclaration()
         {
             string result = RunContextAction(new ReplaceVarWithExplicitTypeCodeRefactoringProvider(),
@@ -38,7 +37,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 		}
 	}
 }");
-            Assert.AreEqual(@"class TestClass
+            Assert.Equal(@"class TestClass
 {
 	void Test ()
 	{
@@ -48,7 +47,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }", result);
         }
 
-        [Test()]
+        [Fact]
         public void SimpleAnonymousTypeDeclaration()
         {
             TestWrongContext(new ReplaceVarWithExplicitTypeCodeRefactoringProvider(), @"class TestClass
@@ -60,7 +59,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test()]
+        [Fact]
         public void ForeachAnonymousTypeDeclaration()
         {
             TestWrongContext(new ReplaceVarWithExplicitTypeCodeRefactoringProvider(), @"class TestClass
@@ -74,7 +73,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test()]
+        [Fact]
         public void TestAnonymousArrayType()
         {
             TestWrongContext(new ReplaceVarWithExplicitTypeCodeRefactoringProvider(), @"class TestClass
@@ -88,7 +87,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test()]
+        [Fact]
         public void TestAnonymousGenericType()
         {
             TestWrongContext(new ReplaceVarWithExplicitTypeCodeRefactoringProvider(), @"class TestClass

@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ForStatementConditionIsTrueTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<ForStatementConditionIsTrueAnalyzer>(@"using System;
@@ -37,7 +36,7 @@ namespace resharper_test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<ForStatementConditionIsTrueAnalyzer>(@"using System;
@@ -67,7 +66,7 @@ namespace resharper_test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ForStatementConditionIsTrueAnalyzer>(@"using System;

@@ -2,12 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RefactoringEssentials.Converter
 {
-    public class CodeWithOptions
+	public class CodeWithOptions
     {
         public string Text { get; private set; }
         public string FromLanguage { get; private set; }

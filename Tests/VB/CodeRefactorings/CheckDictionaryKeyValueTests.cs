@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class CheckDictionaryKeyValueTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Test<CheckDictionaryKeyValueCodeRefactoringProvider>(@"
@@ -25,7 +24,7 @@ Class Test
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedCase1()
         {
             Test<CheckDictionaryKeyValueCodeRefactoringProvider>(@"
@@ -52,7 +51,7 @@ Class Test
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedCase2()
         {
             TestWrongContext<CheckDictionaryKeyValueCodeRefactoringProvider>(@"
@@ -66,7 +65,7 @@ Class Test
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNameClash()
         {
             Test<CheckDictionaryKeyValueCodeRefactoringProvider>(@"

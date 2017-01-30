@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class CreateCustomEventImplementationTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             Test<CreateCustomEventImplementationAction>(@"
@@ -31,7 +30,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimplification()
         {
             Test<CreateCustomEventImplementationAction>(@"
@@ -58,7 +57,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleEventDeclaration()
         {
             Test<CreateCustomEventImplementationAction>(@"

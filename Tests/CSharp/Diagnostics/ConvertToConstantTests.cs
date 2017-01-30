@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class ConvertToConstantTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestBasicCase()
         {
             Test<ConvertToConstantAnalyzer>(@"class Test
@@ -28,7 +26,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestWrongLocalType()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -40,7 +38,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingVariableCase1()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -53,7 +51,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingVariableCase2()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -66,7 +64,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingVariableCase3()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -81,7 +79,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingVariableCase4()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -100,7 +98,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingVariableCase5()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -115,7 +113,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingVariableCase6()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -129,7 +127,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -143,7 +141,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestField()
         {
             Test<ConvertToConstantAnalyzer>(@"class Test
@@ -163,7 +161,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestReadonlyField()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -177,7 +175,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestStaticField()
         {
             Test<ConvertToConstantAnalyzer>(@"class Test
@@ -198,7 +196,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingField()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -216,7 +214,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestWrongFieldType()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -229,7 +227,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingFieldCase2()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -242,7 +240,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestChangingFieldCase3()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -255,7 +253,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestShadowedField()
         {
             Test<ConvertToConstantAnalyzer>(@"class Test
@@ -287,7 +285,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestShadowedFieldCase2()
         {
             Test<ConvertToConstantAnalyzer>(@"class Test
@@ -321,7 +319,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNeverSuggestForControlVariable()
         {
             Analyze<ConvertToConstantAnalyzer>(@"class Test
@@ -336,7 +334,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestVarCase()
         {
             Test<ConvertToConstantAnalyzer>(@"class Test
@@ -357,7 +355,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestArbitraryStructCase()
         {
             Analyze<ConvertToConstantAnalyzer>(@"
@@ -375,7 +373,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestArbitraryStructCase2()
         {
             Analyze<ConvertToConstantAnalyzer>(@"
@@ -394,7 +392,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestComplexCase()
         {
             Test<ConvertToConstantAnalyzer>(@"

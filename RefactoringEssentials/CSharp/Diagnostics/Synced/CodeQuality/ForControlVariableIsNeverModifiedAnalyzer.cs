@@ -2,13 +2,12 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
-using System;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class ForControlVariableIsNeverModifiedAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

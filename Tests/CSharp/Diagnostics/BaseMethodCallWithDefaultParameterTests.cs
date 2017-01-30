@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class BaseMethodCallWithDefaultParameterTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBasicCase()
         {
             Analyze<BaseMethodCallWithDefaultParameterAnalyzer>(@"
@@ -28,7 +27,7 @@ public class MyClass : MyBase
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInterfaceCase()
         {
             Analyze<BaseMethodCallWithDefaultParameterAnalyzer>(@"
@@ -53,7 +52,7 @@ public class MyClass : MyBase
 
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotWarnCase()
         {
             Analyze<BaseMethodCallWithDefaultParameterAnalyzer>(@"
@@ -75,7 +74,7 @@ public class MyClass : MyBase
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotWarnInParamsCase()
         {
             Analyze<BaseMethodCallWithDefaultParameterAnalyzer>(@"
@@ -97,7 +96,7 @@ public class MyClass : MyBase
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<BaseMethodCallWithDefaultParameterAnalyzer>(@"

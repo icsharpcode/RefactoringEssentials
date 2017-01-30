@@ -5,11 +5,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using RefactoringEssentials.CSharp.CodeRefactorings;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class ConvertIfStatementToSwitchStatementAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

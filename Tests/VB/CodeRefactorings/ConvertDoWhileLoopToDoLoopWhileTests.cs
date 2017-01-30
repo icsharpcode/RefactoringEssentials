@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertDoWhileLoopToDoLoopWhileTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleWhile()
         {
             Test<ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ Class Foo
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestWhileFromSimpleLoopStatement()
         {
             Test<ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider>(@"
@@ -50,7 +49,7 @@ Class Foo
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleUntil()
         {
             Test<ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider>(@"
@@ -72,7 +71,7 @@ Class Foo
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleWithComment1()
         {
             Test<ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider>(@"
@@ -96,7 +95,7 @@ Class Foo
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleWithComment2()
         {
             Test<ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider>(@"
@@ -118,7 +117,7 @@ Class Foo
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledInContent()
         {
             TestWrongContext<ConvertDoWhileLoopToDoLoopWhileCodeRefactoringProvider>(@"

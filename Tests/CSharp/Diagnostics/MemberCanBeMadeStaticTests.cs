@@ -1,13 +1,13 @@
 /*
 using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class MemberCanBeMadeStaticTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestPrivateMethod()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
@@ -28,7 +28,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             );
         }
 
-        [Test]
+        [Fact]
         public void TestPrivateMethodPublicSkip()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
@@ -42,7 +42,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             );
         }
 
-        [Test]
+        [Fact]
         public void TestPublicMethod()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
@@ -63,7 +63,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             );
         }
 
-        [Test]
+        [Fact]
         public void TestPublicMethodSkip()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
@@ -77,7 +77,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             );
         }
 
-        [Test]
+        [Fact]
         public void MethodThatCallsInstanceMethodOnParameter()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
@@ -98,7 +98,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             );
         }
 
-        [Test]
+        [Fact]
         public void TestWithVirtualFunction()
         {
 
@@ -112,7 +112,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestWithInterfaceImplementation()
         {
             var input = @"interface IBase {
@@ -128,7 +128,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestWithStaticFunction()
         {
 
@@ -142,7 +142,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotWarnOnAttributes()
         {
 
@@ -158,7 +158,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotWarnOnEmptyMethod()
         {
 
@@ -172,7 +172,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotWarnOnInterfaceMethod()
         {
 
@@ -184,7 +184,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotWarnOnNotImplementedMethod()
         {
             var input = @"using System;
@@ -198,7 +198,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestPropertyAccess()
         {
             var input = @"using System;
@@ -213,7 +213,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void DoNotWarnOnMarshalByRefObject()
         {
 
@@ -227,7 +227,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<MemberCanBeMadeStaticAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestProperty()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
@@ -251,7 +251,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact]
         public void TestCustomEvent()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
@@ -282,7 +282,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestCustomEventOnNotImplemented()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(
@@ -300,7 +300,7 @@ class TestClass
                 );
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<MemberCanBeMadeStaticAnalyzer>(

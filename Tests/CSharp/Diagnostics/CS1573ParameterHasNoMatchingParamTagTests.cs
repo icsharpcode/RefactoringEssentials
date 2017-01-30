@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class CS1573ParameterHasNoMatchingParamTagTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestMethodMissesParameter()
         {
             Test<CS1573ParameterHasNoMatchingParamTagAnalyzer>(@"
@@ -32,7 +30,7 @@ class Foo {
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNoParamDocs()
         {
             Analyze<CS1573ParameterHasNoMatchingParamTagAnalyzer>(@"
@@ -45,7 +43,7 @@ class Foo {
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<CS1573ParameterHasNoMatchingParamTagAnalyzer>(@"
@@ -61,7 +59,7 @@ class Foo {
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestPragmaDisable()
         {
             Analyze<CS1573ParameterHasNoMatchingParamTagAnalyzer>(@"

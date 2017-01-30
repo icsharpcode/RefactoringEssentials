@@ -1,17 +1,11 @@
-using NUnit.Framework;
 using System.Text;
 using Microsoft.CodeAnalysis.Text;
 using RefactoringEssentials.Tests.Common;
 
 namespace RefactoringEssentials.Tests
 {
-    public abstract class CodeRefactoringTestBase
+	public abstract class CodeRefactoringTestBase
     {
-        [SetUp]
-        public virtual void SetUp()
-        {
-        }
-
         internal static string HomogenizeEol(string str)
         {
             return Utils.HomogenizeEol(str);

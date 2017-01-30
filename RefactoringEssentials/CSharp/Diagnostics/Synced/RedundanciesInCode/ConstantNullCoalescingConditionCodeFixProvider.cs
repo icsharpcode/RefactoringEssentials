@@ -4,14 +4,13 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Linq.Expressions;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
 
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class ConstantNullCoalescingConditionCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds

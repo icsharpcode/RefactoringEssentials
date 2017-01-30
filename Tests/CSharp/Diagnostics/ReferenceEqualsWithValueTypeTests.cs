@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class ReferenceEqualsWithValueTypeTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestValueTypeCase1()
         {
             Test<ReferenceEqualsWithValueTypeAnalyzer>(@"
@@ -28,7 +26,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestValueTypeCase2()
         {
             Test<ReferenceEqualsWithValueTypeAnalyzer>(@"
@@ -48,7 +46,7 @@ class TestClass
 }", 1);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNoIssue()
         {
             var input = @"
@@ -63,7 +61,7 @@ class TestClass
             Test<ReferenceEqualsWithValueTypeAnalyzer>(input, 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<ReferenceEqualsWithValueTypeAnalyzer>(@"

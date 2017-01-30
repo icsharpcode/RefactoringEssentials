@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConditionIsAlwaysTrueOrFalseTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestComparsionWithNull()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -31,7 +30,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestComparsionWithNullCase2()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -57,7 +56,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestComparisonArgumentWithNull()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -87,7 +86,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestComparison()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -111,7 +110,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestUnary()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -136,7 +135,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -153,7 +152,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void CompareWithNullable()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -169,7 +168,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void UserDefinedOperatorsNoReferences()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -198,7 +197,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void UserDefinedOperators()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -231,7 +230,7 @@ class Bar
         /// <summary>
         /// Bug 15099 - Wrong always true context
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug15099()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"
@@ -274,7 +273,7 @@ class Bar
         /// <summary>
         /// Bug 36336 - Invalid Source Analysis on Pointer types
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug36336()
         {
             Analyze<ConditionIsAlwaysTrueOrFalseAnalyzer>(@"

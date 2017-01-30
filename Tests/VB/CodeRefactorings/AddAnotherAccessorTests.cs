@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class AddAnotherAccessorTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestAddSet()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"
@@ -31,7 +30,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAddSet_ReadOnlyField()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"
@@ -56,7 +55,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAddGet()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"
@@ -81,7 +80,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAddGetWithComment()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ReplaceWithOfTypeFirstOrDefaultTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestCaseBasic()
         {
             Analyze<ReplaceWithOfTypeFirstOrDefaultAnalyzer>(@"using System.Linq;
@@ -26,7 +25,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCaseBasicWithFollowUpExpression()
         {
             Analyze<ReplaceWithOfTypeFirstOrDefaultAnalyzer>(@"using System.Linq;
@@ -46,7 +45,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ReplaceWithOfTypeFirstOrDefaultAnalyzer>(@"using System.Linq;
@@ -60,7 +59,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestJunk()
         {
             Analyze<ReplaceWithOfTypeFirstOrDefaultAnalyzer>(@"using System.Linq;

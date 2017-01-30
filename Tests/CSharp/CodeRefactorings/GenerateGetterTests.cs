@@ -1,14 +1,12 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [Ignore("Needs insertion cursor mode.")]
-    [TestFixture]
-    public class GenerateGetterTests : CSharpCodeRefactoringTestBase
+	public class GenerateGetterTests : CSharpCodeRefactoringTestBase
     {
-        [Test()]
+        [Fact(Skip="Needs insertion cursor mode.")]
         public void Test()
         {
             string result = RunContextAction(
@@ -19,7 +17,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                     "	int $myField;" + Environment.NewLine +
                     "}"
             );
-            Assert.AreEqual(
+            Assert.Equal(
                 "using System;" + Environment.NewLine +
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +

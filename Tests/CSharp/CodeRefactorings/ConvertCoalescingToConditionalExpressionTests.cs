@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertCoalescingToConditionalExpressionTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Test<ConvertCoalescingToConditionalExpressionCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleCaseWithComment()
         {
             Test<ConvertCoalescingToConditionalExpressionCodeRefactoringProvider>(@"
@@ -52,7 +51,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestNullable()
         {
             Test<ConvertCoalescingToConditionalExpressionCodeRefactoringProvider>(@"class Test

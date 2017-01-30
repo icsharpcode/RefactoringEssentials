@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using System.Threading;
 using System.Linq;
 using System.Collections.Generic;
@@ -12,10 +11,11 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Simplification;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    public abstract class CSharpCodeRefactoringTestBase : CodeRefactoringTestBase
+	public abstract class CSharpCodeRefactoringTestBase : CodeRefactoringTestBase
     {
         public void Test<T>(string input, string output, int action = 0, bool expectErrors = false, CSharpParseOptions parseOptions = null)
             where T : CodeRefactoringProvider, new()
@@ -35,7 +35,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 Console.WriteLine("-----------Got:");
                 Console.WriteLine(result);
             }
-            Assert.AreEqual(output, result);
+            Assert.Equal(output, result);
         }
 
         internal static List<Microsoft.CodeAnalysis.CodeActions.CodeAction> GetActions<T>(string input) where T : CodeRefactoringProvider, new()
@@ -107,7 +107,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             {
                 foreach (var nra in actions.OfType<NRefactoryCodeAction>())
                 {
-                    Assert.AreEqual(markedSpan, nra.TextSpan, "Activation span does not match.");
+                    Assert.True(markedSpan == nra.TextSpan, "Activation span does not match.");
                 }
             }
             return actions;
@@ -137,7 +137,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             Document doc;
             RefactoringEssentials.Tests.CSharp.Diagnostics.CSharpDiagnosticTestBase.TestWorkspace workspace;
             var actions = GetActions(action, input, out workspace, out doc);
-            Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
+            Assert.True(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
         }
 
 
@@ -158,7 +158,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         //			var ctx = TestRefactoringContext.Create(input);
         //			ctx.FormattingOptions = formattingOptions;
         //			var actions = provider.GetActions(ctx).ToList();
-        //			Assert.AreEqual(
+        //			Assert.Equal(
         //				expected,
         //				actions.Select(a => a.Description).ToArray());
         //		}

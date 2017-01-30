@@ -2,13 +2,12 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp;
-using System;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class MethodOverloadWithOptionalParameterAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

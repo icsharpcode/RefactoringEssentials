@@ -1,13 +1,12 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class SplitLocalVariableDeclarationAndAssignmentTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleExpression()
         {
             string result = RunContextAction(
@@ -21,7 +20,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
                 "    void Test ()" + Environment.NewLine +
@@ -32,7 +31,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleExpressionWithComment()
         {
             string result = RunContextAction(
@@ -47,7 +46,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
                 "    void Test ()" + Environment.NewLine +
@@ -59,7 +58,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Test]
+        [Fact]
         public void TestVarType()
         {
             string result = RunContextAction(
@@ -72,7 +71,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "    }" + Environment.NewLine +
                                          "}"
                                      );
-            Assert.AreEqual(
+            Assert.Equal(
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
                 "    void Test ()" + Environment.NewLine +
@@ -83,7 +82,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Test]
+        [Fact]
         public void TestForStatement()
         {
             string result = RunContextAction(
@@ -104,10 +103,10 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         for (i = 1; i < 10; i++) {}
     }
 }";
-            Assert.AreEqual(HomogenizeEol(expected), HomogenizeEol(result));
+            Assert.Equal(HomogenizeEol(expected), HomogenizeEol(result));
         }
 
-        [Test]
+        [Fact]
         public void TestPopupAtAssign()
         {
             Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
@@ -126,7 +125,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestPopupAtBeginningOfExpression()
         {
             Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
@@ -145,7 +144,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleInitializers()
         {
             Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
@@ -166,7 +165,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestVarDeclarationWithComment()
         {
             Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
@@ -187,7 +186,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestForStatementWithComment()
         {
             Test<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
@@ -208,7 +207,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestHideInExpression()
         {
             TestWrongContext<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test
@@ -220,7 +219,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLocalConstants()
         {
             TestWrongContext<SplitLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"class Test

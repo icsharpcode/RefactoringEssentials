@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    public class CSharpDiagnosticTestBase : DiagnosticTestBase
+	public class CSharpDiagnosticTestBase : DiagnosticTestBase
     {
         public static CSharpCompilation CreateCompilation(
             IEnumerable<SyntaxTree> trees,

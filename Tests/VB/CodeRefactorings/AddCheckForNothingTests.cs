@@ -1,16 +1,15 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB;
 using RefactoringEssentials.Tests.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB
 {
-    /// <summary>
-    /// Tests for AddCheckForNothingCodeRefactoringProvider.
-    /// </summary>
-    [TestFixture]
+	/// <summary>
+	/// Tests for AddCheckForNothingCodeRefactoringProvider.
+	/// </summary>
     public class AddCheckForNothingTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSingleExpression()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -32,7 +31,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestValueType()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -45,7 +44,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNullableType()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -67,7 +66,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestMemberAccessExpression1()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -99,7 +98,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestMemberAccessExpression2()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -131,7 +130,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestMemberAccessExpression3()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -171,7 +170,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticMemberAccessExpression()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -188,7 +187,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodInvocation()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -222,7 +221,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticMethodInvocation()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -240,7 +239,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexerAccess()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -262,7 +261,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleUsage()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -286,7 +285,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestLocalVariable()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -312,7 +311,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestLocalVariableDeclaration()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -327,7 +326,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestUsageInLocalVariableDeclaration()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -342,7 +341,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestUsageInIfCondition()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -368,7 +367,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestUsageInIfBlock()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -392,7 +391,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestUsageInElseIfBlock()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -420,7 +419,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestUsageInForeachLoop()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -449,7 +448,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestUsageInWhileLoop()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -480,7 +479,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestUsageInLambda1()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -504,7 +503,7 @@ Class TestClass
 End Class");
         }
 
-[Test]
+[Fact]
         public void TestUsageInLambda2()
         {
             Test<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -534,7 +533,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestUsageInReturnStatement()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -549,7 +548,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentIfNotNullCheck1()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -564,7 +563,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentIfNotNullCheck2()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -580,7 +579,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentIfNotNullCheck3()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -596,7 +595,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentIfNotNullCheck4()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -612,7 +611,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentIfNotNullCheck5()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -625,7 +624,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentIfNotNullCheck6()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -642,7 +641,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentNotNullCheckInWhileLoop()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -658,7 +657,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentNullCheckInConditionalTernaryExpression1()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"
@@ -672,7 +671,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyPresentNullCheckInConditionalTernaryExpression2()
         {
             TestWrongContext<AddCheckForNothingCodeRefactoringProvider>(@"

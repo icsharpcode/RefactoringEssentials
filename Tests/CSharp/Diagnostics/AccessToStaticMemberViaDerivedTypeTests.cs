@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class AccessToStaticMemberViaDerivedTypeTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void MemberInvocation()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"
@@ -37,7 +36,7 @@ class C
             );
         }
 
-        [Test]
+        [Fact]
         public void MemberInvocationWithComment()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"
@@ -70,7 +69,7 @@ class C
             );
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"
@@ -89,7 +88,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void PropertyAccess()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"
@@ -120,7 +119,7 @@ class C
             );
         }
 
-        [Test]
+        [Fact]
         public void FieldAccess()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"class A
@@ -149,7 +148,7 @@ class C
             );
         }
 
-        [Test]
+        [Fact]
         public void NestedClass()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"
@@ -186,7 +185,7 @@ class D
             );
         }
 
-        [Test]
+        [Fact]
         public void ExpandsTypeWithNamespaceIfNeccessary()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"namespace First
@@ -227,7 +226,7 @@ namespace Second
             );
         }
 
-        [Test]
+        [Fact]
         public void IgnoresCorrectCalls()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"
@@ -244,7 +243,7 @@ class B
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresNonStaticCalls()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"
@@ -263,7 +262,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresOwnMemberFunctions()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"
@@ -282,7 +281,7 @@ class B : A
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresCuriouslyRecurringTemplatePattern()
         {
             Analyze<AccessToStaticMemberViaDerivedTypeAnalyzer>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ReplaceWithSimpleAssignmentTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestOrCase()
         {
             Analyze<ReplaceWithSimpleAssignmentAnalyzer>(@"
@@ -28,7 +27,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestAndCase()
         {
             Analyze<ReplaceWithSimpleAssignmentAnalyzer>(@"
@@ -50,7 +49,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ReplaceWithSimpleAssignmentAnalyzer>(@"

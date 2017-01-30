@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class LockThisTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLockThisInMethod()
         {
             var input = @"
@@ -34,7 +32,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLockThisInGetter()
         {
             var input = @"
@@ -65,7 +63,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLockThisInSetter()
         {
             var input = @"
@@ -94,7 +92,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLockThisInConstructor()
         {
             var input = @"
@@ -121,7 +119,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLockThisInDelegate()
         {
             var input = @"
@@ -154,7 +152,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLockThisInLambda()
         {
             var input = @"
@@ -187,7 +185,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLockParenthesizedThis()
         {
             var input = @"
@@ -214,7 +212,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestFixMultipleLockThis()
         {
             var input = @"
@@ -252,7 +250,7 @@ class TestClass
 
             Test<LockThisAnalyzer>(input, 2, output, 0);
         }
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestFixMixedLocks()
         {
             var input = @"
@@ -293,7 +291,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLockNonThis()
         {
             var input = @"
@@ -311,7 +309,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNestedTypeLock()
         {
             var input = @"
@@ -344,7 +342,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestMethodSynchronized()
         {
             var input = @"
@@ -374,7 +372,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestMethodWithSynchronizedValue()
         {
             var input = @"
@@ -404,7 +402,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestMethodHasSynchronized()
         {
             var input = @"
@@ -435,7 +433,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestMethodNotSynchronized()
         {
             var input = @"
@@ -452,7 +450,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestAbstractSynchronized()
         {
             var input = @"
@@ -473,7 +471,7 @@ abstract class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDoubleLocking()
         {
             var input = @"
@@ -505,7 +503,7 @@ abstract class TestClass
             Test<LockThisAnalyzer>(input, 2, output, 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDelegateLocking()
         {
             var input = @"
@@ -541,7 +539,7 @@ abstract class TestClass
             Test<LockThisAnalyzer>(input, 2, output, 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestLambdaLocking()
         {
             var input = @"
@@ -577,7 +575,7 @@ abstract class TestClass
             Test<LockThisAnalyzer>(input, 2, output, 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestStaticMethod()
         {
             var input = @"
@@ -607,7 +605,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestStaticProperty()
         {
             var input = @"
@@ -641,7 +639,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestMixedStaticMethod()
         {
             var input = @"
@@ -683,7 +681,7 @@ class TestClass
             Test<LockThisAnalyzer>(input, 2, output, 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNewNameLock()
         {
             var input = @"

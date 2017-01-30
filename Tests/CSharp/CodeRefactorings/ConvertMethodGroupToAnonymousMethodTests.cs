@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertMethodGroupToAnonymousMethodTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestVoidMethod()
         {
             Test<ConvertMethodGroupToAnonymousMethodCodeRefactoringProvider>(@"
@@ -33,7 +32,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestVoidMethodWithComment()
         {
             Test<ConvertMethodGroupToAnonymousMethodCodeRefactoringProvider>(@"
@@ -62,7 +61,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestParameter()
         {
             Test<ConvertMethodGroupToAnonymousMethodCodeRefactoringProvider>(@"
@@ -89,7 +88,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestFunction()
         {
             Test<ConvertMethodGroupToAnonymousMethodCodeRefactoringProvider>(@"
@@ -116,7 +115,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestOverloads()
         {
             Test<ConvertMethodGroupToAnonymousMethodCodeRefactoringProvider>(@"

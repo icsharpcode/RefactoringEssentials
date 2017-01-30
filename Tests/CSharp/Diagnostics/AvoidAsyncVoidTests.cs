@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
 using RefactoringEssentials.CSharp.Diagnostics.Custom;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class AvoidAsyncVoidTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestAsyncMethod()
         {
             var input = @"
@@ -21,7 +20,7 @@ class TestClass
             Analyze<AvoidAsyncVoidAnalyzer>(input );
         }
 
-        [Test]
+        [Fact]
         public void TestAsyncEventHandlerMethod()
         {
             var input = @"
@@ -35,7 +34,7 @@ class TestClass
             Analyze<AvoidAsyncVoidAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             var input = @"
@@ -50,7 +49,7 @@ class TestClass
             Analyze<AvoidAsyncVoidAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestLambda()
         {
             var input = @"

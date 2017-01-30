@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConvertToStaticTypeTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -38,7 +37,7 @@ namespace Demo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase1WithXmlDoc()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -76,7 +75,7 @@ namespace Demo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -96,7 +95,7 @@ namespace Demo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase3()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -116,7 +115,7 @@ namespace Demo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase4()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -138,7 +137,7 @@ namespace Demo
         }
 
 
-        [Test]
+        [Fact]
         public void TestEntryPoint()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -158,7 +157,7 @@ namespace Demo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestAbstract()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -178,7 +177,7 @@ namespace Demo
         }
 
 
-        [Test]
+        [Fact]
         public void TestResharperDisable()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"using System;
@@ -203,7 +202,7 @@ namespace Demo
         /// <summary>
         /// Bug 16844 - Convert class to static 
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug16844()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -220,7 +219,7 @@ class ShouldBeStatic
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestEmptyPublicClass()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"
@@ -230,7 +229,7 @@ public class ShouldNotBeStatic
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestClassImplementingAnotherType()
         {
             Analyze<ConvertToStaticTypeAnalyzer>(@"

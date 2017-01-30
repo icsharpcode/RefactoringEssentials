@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class StaticFieldOrAutoPropertyInGenericTypeTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact]
         public void GenericClass()
         {
             Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
@@ -18,7 +17,7 @@ class Foo<T>
         }
 
 
-        [Test]
+        [Fact]
         public void AutoProperty()
         {
             Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
@@ -28,7 +27,7 @@ class Foo<T>
 }");
         }
 
-        [Test]
+        [Fact]
         public void GenericClassWithGenericField()
         {
             Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
@@ -38,7 +37,7 @@ class Foo<T>
 }");
         }
 
-        [Test]
+        [Fact]
         public void GenericClassWithMultipleGenericFields()
         {
             Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
@@ -48,7 +47,7 @@ class Foo<T1, T2>
 }");
         }
 
-        [Test]
+        [Fact]
         public void NestedGenericClassWithGenericField()
         {
             Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
@@ -61,7 +60,7 @@ class Foo<T1>
 }");
         }
 
-        [Test]
+        [Fact]
         public void NonGenericClass()
         {
             Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
@@ -71,7 +70,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void NonStaticField()
         {
             Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"
@@ -81,8 +80,7 @@ class Foo<T>
 }");
         }
 
-        [Ignore("Not yet supported")]
-        [Test]
+        [Fact(Skip="Not yet supported")]
         public void TestMicrosoftSuppressMessage()
         {
             TestIssue<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"using System.Diagnostics.CodeAnalysis;
@@ -96,8 +94,7 @@ class Foo<T>
 }");
         }
 
-        [Ignore("Not yet supported")]
-        [Test]
+        [Fact(Skip="Not yet supported")]
         public void TestAssemblyMicrosoftSuppressMessage()
         {
             Analyze<StaticFieldOrAutoPropertyInGenericTypeAnalyzer>(@"using System.Diagnostics.CodeAnalysis;
@@ -112,7 +109,7 @@ class Foo<T>
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             var input = @"using System.Diagnostics.CodeAnalysis;
