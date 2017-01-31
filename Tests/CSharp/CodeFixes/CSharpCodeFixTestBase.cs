@@ -96,7 +96,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
             );
             doc = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
             var actions = new List<Tuple<CodeAction, ImmutableArray<Diagnostic>>>();
-            var model = doc.GetSemanticModelAsync().Result;
+            var model = doc.GetSemanticModelAsync().GetAwaiter().GetResult();
             var diagnostics = model.GetDiagnostics();
             if (diagnostics.Length == 0)
                 return new List<CodeAction>();
@@ -126,11 +126,11 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
             if (actions.Count < actionIndex)
                 Console.WriteLine("invalid input is:" + input);
             var a = actions[actionIndex];
-            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).Result)
+            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).GetAwaiter().GetResult())
             {
                 op.Apply(workspace, default(CancellationToken));
             }
-            return workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            return workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().GetAwaiter().GetResult().ToString();
         }
 
         protected void TestWrongContext<T>(string input) where T : CodeFixProvider, new()

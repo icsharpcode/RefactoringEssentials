@@ -121,11 +121,11 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             if (actions.Count < actionIndex)
                 Console.WriteLine("invalid input is:" + input);
             var a = actions[actionIndex];
-            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).Result)
+            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).GetAwaiter().GetResult())
             {
                 op.Apply(workspace, default(CancellationToken));
             }
-            var result = workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            var result = workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().GetAwaiter().GetResult().ToString();
             if (Environment.NewLine != "\r\n")
                 result = result.Replace("\r\n", Environment.NewLine);
             return result;

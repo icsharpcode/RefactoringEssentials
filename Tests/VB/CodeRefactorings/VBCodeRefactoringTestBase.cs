@@ -119,11 +119,11 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
             if (actions.Count < actionIndex)
                 Console.WriteLine("invalid input is:" + input);
             var a = actions[actionIndex];
-            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).Result)
+            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).GetAwaiter().GetResult())
             {
                 op.Apply(workspace, default(CancellationToken));
             }
-            return workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            return workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().GetAwaiter().GetResult().ToString();
         }
 
 

@@ -234,13 +234,13 @@ class Test
 
             var document = workspace.CurrentSolution.GetDocument(documentId);
 
-            var semanticModel = document.GetSemanticModelAsync().Result;
+			var semanticModel = document.GetSemanticModelAsync().GetAwaiter().GetResult();
 
             var diag = semanticModel.GetDiagnostics();
 
             Assert.True(diag.IsEmpty, "No errors reported");
 
-            var symbol = SymbolFinder.FindSymbolAtPosition(semanticModel, position, workspace);
+            var symbol = SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, workspace).GetAwaiter().GetResult();
 
             Assert.True(symbol != null, "Symbol should be found");
             Assert.True(symbol is TSymbol);

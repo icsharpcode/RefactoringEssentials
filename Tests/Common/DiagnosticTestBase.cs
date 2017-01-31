@@ -128,7 +128,7 @@ namespace RefactoringEssentials.Tests
                     Assert.True(false, "Provider has no fix for " + diagnostic.Id + " at " + diagnostic.Location.SourceSpan);
                     return;
                 }
-                foreach (var op in actions[index].GetOperationsAsync(default(CancellationToken)).Result)
+                foreach (var op in actions[index].GetOperationsAsync(default(CancellationToken)).GetAwaiter().GetResult())
                 {
                     op.Apply(workspace, default(CancellationToken));
                 }
@@ -239,7 +239,7 @@ namespace RefactoringEssentials.Tests
             var diagnostics = new List<Diagnostic>();
 
             var compilationWithAnalyzers = compilation.WithAnalyzers(System.Collections.Immutable.ImmutableArray<DiagnosticAnalyzer>.Empty.Add(new T()));
-            var result = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
+            var result = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().GetAwaiter().GetResult();
             diagnostics.AddRange(result);
 
             diagnostics.Sort((d1, d2) => d1.Location.SourceSpan.Start.CompareTo(d2.Location.SourceSpan.Start));
@@ -298,7 +298,7 @@ namespace RefactoringEssentials.Tests
                 RunFix(workspace, projectId, documentId, diagnostics.ElementAt(issueToFix), actionToRun);
             }
 
-            var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
+            var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().GetAwaiter().GetResult().ToString();
             output = Utils.HomogenizeEol(output);
             txt =  Utils.HomogenizeEol(txt);
             if (output != txt)
@@ -358,7 +358,7 @@ namespace RefactoringEssentials.Tests
 
             var diagnostics = new List<Diagnostic>();
             var compilationWithAnalyzers = compilation.WithAnalyzers(System.Collections.Immutable.ImmutableArray<DiagnosticAnalyzer>.Empty.Add(new T()));
-            diagnostics.AddRange(compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result);
+            diagnostics.AddRange(compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().GetAwaiter().GetResult());
 
 
             if (expectedDiagnosics.Count != diagnostics.Count)
@@ -415,16 +415,17 @@ namespace RefactoringEssentials.Tests
                 RunFix(workspace, projectId, documentId, diagnostics.ElementAt(issueToFix), actionToRun);
             }
 
-            var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
+            var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().GetAwaiter().GetResult().ToString();
             txt = Utils.HomogenizeEol(txt);
             output = Utils.HomogenizeEol(output);
             if (output != txt)
             {
-                Console.WriteLine("expected:");
-                Console.WriteLine(output);
-                Console.WriteLine("got:");
-                Console.WriteLine(txt);
-                Assert.True(false);
+				StringBuilder sb = new StringBuilder();
+				sb.AppendLine("expected:");
+				sb.AppendLine(output);
+				sb.AppendLine("got:");
+				sb.AppendLine(txt);
+                Assert.True(false, sb.ToString());
             }
         }
     }

@@ -115,9 +115,9 @@ namespace RefactoringEssentials.Tests.VB.Converter
 			Document inputDocument, outputDocument;
 			CSharpWorkspaceSetup(csharpCode, out csharpWorkspace, out inputDocument, csharpOptions);
 			VBWorkspaceSetup(out vbWorkspace, out outputDocument, vbOptions);
-            var outputNode = Convert((CSharpSyntaxNode)inputDocument.GetSyntaxRootAsync().Result, inputDocument.GetSemanticModelAsync().Result, outputDocument);
+            var outputNode = Convert((CSharpSyntaxNode)inputDocument.GetSyntaxRootAsync().GetAwaiter().GetResult(), inputDocument.GetSemanticModelAsync().GetAwaiter().GetResult(), outputDocument);
 			
-			var txt = outputDocument.WithSyntaxRoot(Formatter.Format(outputNode, vbWorkspace)).GetTextAsync().Result.ToString();
+			var txt = outputDocument.WithSyntaxRoot(Formatter.Format(outputNode, vbWorkspace)).GetTextAsync().GetAwaiter().GetResult().ToString();
 			txt = Utils.HomogenizeEol(txt).TrimEnd();
 			expectedVisualBasicCode = Utils.HomogenizeEol(expectedVisualBasicCode).TrimEnd();
 			if (expectedVisualBasicCode != txt)
