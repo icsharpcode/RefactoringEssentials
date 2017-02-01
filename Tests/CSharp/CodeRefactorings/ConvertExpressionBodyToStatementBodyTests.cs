@@ -43,7 +43,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestVoidMethod()
         {
             Test<ConvertExpressionBodyToStatementBodyCodeRefactoringProvider>(@"
