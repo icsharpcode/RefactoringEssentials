@@ -21,7 +21,7 @@ namespace NUnit.Framework {
 [TestFixture]
 class Tests 
 {
-	[Test]
+	[Fact]
 	void $NonPublicMethod$()
 	{
 	}
@@ -30,7 +30,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-	[Test]
+	[Fact]
 	public void NonPublicMethod()
 	{
 	}
@@ -45,7 +45,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-	[Test]
+	[Fact]
 	private void $NonPublicMethod$()
 	{
 	}
@@ -54,7 +54,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-	[Test]
+	[Fact]
 	public void NonPublicMethod()
 	{
 	}
@@ -69,7 +69,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-	[Test]
+	[Fact]
 	protected void $NonPublicMethod$()
 	{
 	}
@@ -78,7 +78,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-	[Test]
+	[Fact]
 	public void NonPublicMethod()
 	{
 	}
@@ -93,7 +93,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-	[Test]
+	[Fact]
 	internal void $NonPublicMethod$()
 	{
 	}
@@ -102,7 +102,7 @@ class Tests
 [TestFixture]
 class Tests 
 {
-	[Test]
+	[Fact]
 	public void NonPublicMethod()
 	{
 	}
@@ -116,7 +116,7 @@ class Tests
 class Tests 
 {
 #pragma warning disable " + CSharpDiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID + @"
-	[Test]
+	[Fact]
 	void NonPublicMethod()
 	{
 	}

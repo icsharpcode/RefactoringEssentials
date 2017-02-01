@@ -1,12 +1,10 @@
-﻿
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Converter
 {
-    [TestFixture]
-    public class NamespaceLevelTests : ConverterTestBase
+	public class NamespaceLevelTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void TestNamespace()
         {
             TestConversionVisualBasicToCSharp(@"Namespace Test
@@ -16,7 +14,7 @@ End Namespace", @"namespace Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestTopLevelAttribute()
         {
             TestConversionVisualBasicToCSharp(
@@ -24,7 +22,7 @@ End Namespace", @"namespace Test
 				@"[assembly: CLSCompliant(true)]");
         }
 
-        [Test]
+        [Fact]
         public void TestImports()
         {
             TestConversionVisualBasicToCSharp(
@@ -34,7 +32,7 @@ Imports VB = Microsoft.VisualBasic",
 using VB = Microsoft.VisualBasic;");
         }
 
-        [Test]
+        [Fact]
         public void TestClass()
         {
             TestConversionVisualBasicToCSharp(@"Namespace Test.[class]
@@ -48,7 +46,7 @@ End Namespace", @"namespace Test.@class
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInternalStaticClass()
         {
             TestConversionVisualBasicToCSharp(@"Namespace Test.[class]
@@ -69,7 +67,7 @@ End Namespace", @"namespace Test.@class
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAbstractClass()
         {
             TestConversionVisualBasicToCSharp(@"Namespace Test.[class]
@@ -83,7 +81,7 @@ End Namespace", @"namespace Test.@class
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSealedClass()
         {
             TestConversionVisualBasicToCSharp(@"Namespace Test.[class]
@@ -97,7 +95,7 @@ End Namespace", @"namespace Test.@class
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInterface()
         {
             TestConversionVisualBasicToCSharp(
@@ -111,7 +109,7 @@ End Interface", @"interface ITest : System.IDisposable
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEnum()
         {
             TestConversionVisualBasicToCSharp(
@@ -129,7 +127,7 @@ End Enum", @"internal enum ExceptionResource
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestClassInheritanceList()
         {
             TestConversionVisualBasicToCSharp(
@@ -154,7 +152,7 @@ End Class", @"abstract class ClassA : System.EventArgs, System.IDisposable
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStruct()
         {
             TestConversionVisualBasicToCSharp(
@@ -169,7 +167,7 @@ End Structure", @"struct MyType : System.IComparable<MyType>
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDelegate()
         {
             TestConversionVisualBasicToCSharp(
@@ -186,7 +184,7 @@ End Structure", @"struct MyType : System.IComparable<MyType>
 				@"public delegate void Test(ref int x);");
         }
 
-        [Test]
+        [Fact]
         public void MoveImportsStatement()
         {
             TestConversionVisualBasicToCSharp(@"Imports SomeNamespace
@@ -196,7 +194,7 @@ End Namespace",
 				"namespace test { using SomeNamespace; }");
         }
 
-        [Test]
+        [Fact]
         public void ClassImplementsInterface()
         {
             TestConversionVisualBasicToCSharp(@"Class test
@@ -205,7 +203,7 @@ End Class",
 				"using System; class test : IComparable { }");
         }
 
-        [Test]
+        [Fact]
         public void ClassImplementsInterface2()
         {
             TestConversionVisualBasicToCSharp(@"Class test
@@ -214,7 +212,7 @@ End Class",
 				"class test : System.IComparable { }");
         }
 
-        [Test]
+        [Fact]
         public void ClassInheritsClass()
         {
             TestConversionVisualBasicToCSharp(@"Imports System.IO
@@ -225,7 +223,7 @@ End Class",
 				"using System.IO; class test : InvalidDataException { }");
         }
 
-        [Test]
+        [Fact]
         public void ClassInheritsClass2()
         {
             TestConversionVisualBasicToCSharp(@"Class test

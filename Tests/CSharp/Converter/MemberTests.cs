@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Converter
 {
-    [TestFixture]
     public class MemberTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void TestField()
         {
             TestConversionVisualBasicToCSharp(
@@ -26,7 +20,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethod()
         {
             TestConversionVisualBasicToCSharp(
@@ -47,7 +41,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodWithReturnType()
         {
             TestConversionVisualBasicToCSharp(
@@ -64,7 +58,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticMethod()
         {
             TestConversionVisualBasicToCSharp(
@@ -85,7 +79,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAbstractMethod()
         {
             TestConversionVisualBasicToCSharp(
@@ -97,7 +91,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSealedMethod()
         {
             TestConversionVisualBasicToCSharp(
@@ -118,7 +112,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExtensionMethod()
         {
             TestConversionVisualBasicToCSharp(
@@ -136,7 +130,7 @@ End Module", @"static class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExtensionMethodWithExistingImport()
         {
             TestConversionVisualBasicToCSharp(
@@ -156,7 +150,7 @@ static class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestProperty()
         {
             TestConversionVisualBasicToCSharp(
@@ -193,7 +187,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestConstructor()
         {
             TestConversionVisualBasicToCSharp(
@@ -208,7 +202,7 @@ End Class", @"class TestClass<T, T2, T3> where T : class, new where T2 : struct
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDestructor()
         {
             TestConversionVisualBasicToCSharp(
@@ -223,7 +217,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEvent()
         {
             TestConversionVisualBasicToCSharp(
@@ -235,7 +229,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCustomEvent()
         {
             TestConversionVisualBasicToCSharp(
@@ -267,7 +261,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexer()
         {
             TestConversionVisualBasicToCSharp(

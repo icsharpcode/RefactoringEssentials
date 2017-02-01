@@ -11,7 +11,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
             Analyze<RedundantAttributeParenthesesAnalyzer>(@"
 [Test$()$]
 class TestClass { }", @"
-[Test]
+[Fact]
 class TestClass { }");
         }
 
@@ -19,7 +19,7 @@ class TestClass { }");
         public void IgnoreNoParentheses()
         {
             Analyze<RedundantAttributeParenthesesAnalyzer>(@"
-[Test]
+[Fact]
 class TestClass { }");
 
         }

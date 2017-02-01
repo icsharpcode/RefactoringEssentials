@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Converter
 {
-    [TestFixture]
-    public class ExpressionTests : ConverterTestBase
+	public class ExpressionTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void MultilineString()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -29,7 +23,7 @@ World!"";
 }");
         }
 
-        [Test]
+        [Fact]
         public void ConditionalExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -46,7 +40,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void NullCoalescingExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -63,7 +57,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void MemberAccessAndInvocationExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -86,7 +80,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ElvisOperatorExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -109,7 +103,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ObjectInitializerExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class StudentName
@@ -139,7 +133,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ObjectInitializerExpression2()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -159,7 +153,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ThisMemberAccessExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -180,7 +174,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void BaseMemberAccessExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class BaseTestClass
@@ -208,7 +202,7 @@ class TestClass : BaseTestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void DelegateExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -228,7 +222,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void LambdaBodyExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -256,7 +250,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Await()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -284,7 +278,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Linq1()
         {
             TestConversionVisualBasicToCSharp(@"Private Shared Sub SimpleQuery()
@@ -308,7 +302,7 @@ End Sub",
 }");
         }
 
-        [Test]
+        [Fact]
         public void Linq2()
         {
             TestConversionVisualBasicToCSharp(@"Public Shared Sub Linq40()
@@ -343,7 +337,7 @@ End Sub",
     }");
         }
 
-        [Test]
+        [Fact]
         public void Linq3()
         {
             TestConversionVisualBasicToCSharp(@"Class Product
@@ -392,7 +386,7 @@ class Test {
 }");
         }
 
-        [Test]
+        [Fact]
         public void Linq4()
         {
             TestConversionVisualBasicToCSharp(@"Public Sub Linq103()

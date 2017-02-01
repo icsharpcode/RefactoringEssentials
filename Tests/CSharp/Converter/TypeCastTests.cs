@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Converter
 {
-    [TestFixture]
     public class TypeCastTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void CastObjectToInteger()
         {
             TestConversionVisualBasicToCSharp(
@@ -26,7 +20,7 @@ End Sub
 ");
         }
 
-        [Test]
+        [Fact]
         public void CastObjectToString()
         {
             TestConversionVisualBasicToCSharp(
@@ -42,7 +36,7 @@ End Sub
 ");
         }
 
-        [Test]
+        [Fact]
         public void CastObjectToGenericList()
         {
             TestConversionVisualBasicToCSharp(
@@ -58,7 +52,7 @@ End Sub
 ");
         }
 
-        [Test]
+        [Fact]
         public void TryCastObjectToInteger()
         {
             TestConversionVisualBasicToCSharp(
@@ -74,7 +68,7 @@ End Sub
 ");
         }
 
-        [Test]
+        [Fact]
         public void TryCastObjectToGenericList()
         {
             TestConversionVisualBasicToCSharp(
@@ -90,7 +84,7 @@ End Sub
 ");
         }
 
-        [Test]
+        [Fact]
         public void CastConstantNumberToLong()
         {
             TestConversionVisualBasicToCSharp(
@@ -104,7 +98,7 @@ End Sub
 ");
         }
 
-        [Test]
+        [Fact]
         public void CastConstantNumberToFloat()
         {
             TestConversionVisualBasicToCSharp(
@@ -118,7 +112,7 @@ End Sub
 ");
         }
 
-        [Test]
+        [Fact]
         public void CastConstantNumberToDecimal()
         {
             TestConversionVisualBasicToCSharp(

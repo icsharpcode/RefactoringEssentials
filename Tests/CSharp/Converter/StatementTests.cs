@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Converter
 {
-    [TestFixture]
     public class StatementTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void EmptyStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -40,7 +34,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AssignmentStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -59,7 +53,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AssignmentStatementInDeclaration()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -76,7 +70,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AssignmentStatementInVarDeclaration()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -93,7 +87,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ObjectInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -112,7 +106,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ObjectInitializationStatementInDeclaration()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -129,7 +123,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ObjectInitializationStatementInVarDeclaration()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -146,7 +140,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ArrayDeclarationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -163,7 +157,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -180,7 +174,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ArrayInitializationStatementInVarDeclaration()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -197,7 +191,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ArrayInitializationStatementWithType()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -214,7 +208,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ArrayInitializationStatementWithLength()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -231,7 +225,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void MultidimensionalArrayDeclarationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -248,7 +242,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void MultidimensionalArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -265,7 +259,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void MultidimensionalArrayInitializationStatementWithType()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -282,7 +276,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void MultidimensionalArrayInitializationStatementWithLengths()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -299,7 +293,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void JaggedArrayDeclarationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -316,7 +310,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void JaggedArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -333,7 +327,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void JaggedArrayInitializationStatementWithType()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -350,7 +344,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void JaggedArrayInitializationStatementWithLength()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -367,7 +361,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void DeclarationStatements()
         {
             TestConversionVisualBasicToCSharp(
@@ -391,7 +385,7 @@ the_beginning:
 }");
         }
 
-        [Test]
+        [Fact]
         public void IfStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -427,7 +421,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void WhileStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -460,7 +454,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void DoWhileStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -494,7 +488,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForEachStatementWithExplicitType()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -520,7 +514,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForEachStatementWithVar()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -546,7 +540,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void SyncLockStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -571,7 +565,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForWithUnknownConditionAndSingleStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -594,7 +588,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForWithUnknownConditionAndBlock()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -618,7 +612,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForWithSingleStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -637,7 +631,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForWithBlock()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -658,7 +652,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void LabeledAndForStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class GotoTest1
@@ -741,7 +735,7 @@ class GotoTest1
     }");
         }
 
-        [Test]
+        [Fact]
         public void ThrowStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -759,7 +753,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AddRemoveHandler()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -802,7 +796,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void SelectCase1()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -852,7 +846,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TryCatch()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -922,7 +916,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Yield()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass

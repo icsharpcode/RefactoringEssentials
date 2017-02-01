@@ -248,22 +248,21 @@ namespace RefactoringEssentials.Tests
 			expectedCsharpCode = Utils.HomogenizeEol(expectedCsharpCode).TrimEnd();
 			if (expectedCsharpCode != txt)
 			{
-				Console.WriteLine("expected:");
-				Console.WriteLine(expectedCsharpCode);
-				Console.WriteLine("got:");
-				Console.WriteLine(txt);
-				Console.WriteLine("diff:");
-				int l = Math.Max(expectedCsharpCode.Length, txt.Length);
-				StringBuilder diff = new StringBuilder(l);
+				int l = Math.Max(expectedCsharpCode.Length, txt.Length) * 3;
+				StringBuilder sb = new StringBuilder(l);
+				sb.AppendLine("expected:");
+				sb.AppendLine(expectedCsharpCode);
+				sb.AppendLine("got:");
+				sb.AppendLine(txt);
+				sb.AppendLine("diff:");
 				for (int i = 0; i < l; i++)
 				{
 					if (i >= expectedCsharpCode.Length || i >= txt.Length || expectedCsharpCode[i] != txt[i])
-						diff.Append('x');
+						sb.Append('x');
 					else
-						diff.Append(expectedCsharpCode[i]);
+						sb.Append(expectedCsharpCode[i]);
 				}
-				Console.WriteLine(diff.ToString());
-				Assert.Fail();
+				Assert.True(false, sb.ToString());
 			}
 		}
 

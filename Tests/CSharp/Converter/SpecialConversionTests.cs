@@ -1,16 +1,10 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Converter
 {
-    [TestFixture]
-    public class SpecialConversionTests : ConverterTestBase
+	public class SpecialConversionTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleInlineAssign()
         {
             TestConversionVisualBasicToCSharp(
@@ -35,7 +29,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimplePostIncrementAssign()
         {
             TestConversionVisualBasicToCSharp(
@@ -54,7 +48,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void RaiseEvent()
         {
             TestConversionVisualBasicToCSharp(
@@ -135,7 +129,7 @@ End Class", @"class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IfStatementSimilarToRaiseEvent()
         {
             TestConversionVisualBasicToCSharp(
