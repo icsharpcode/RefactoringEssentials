@@ -85,7 +85,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         var newRoot = root.ReplaceNode((SyntaxNode)
                             method,
                             method
-                            .WithBody(SyntaxFactory.Block(methodBody))
+                            .WithBody(methodBody)
                             .WithExpressionBody(null)
                             .WithSemicolonToken(SyntaxFactory.MissingToken(SyntaxKind.SemicolonToken))
                             .WithAdditionalAnnotations(Formatter.Annotation)
