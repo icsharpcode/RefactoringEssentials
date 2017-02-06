@@ -49,8 +49,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (modifiers.Any(m => m.IsKind(SyntaxKind.OverrideKeyword)))
                 return;
 
-            var declarationParent = declaration.Parent as TypeDeclarationSyntax;
-            if (declarationParent == null)
+            TypeDeclarationSyntax enclosingTypeDeclaration = declaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+            if (enclosingTypeDeclaration == null || enclosingTypeDeclaration is InterfaceDeclarationSyntax)
                 return;
 
             var explicitInterface = declaration.GetExplicitInterfaceSpecifierSyntax();
@@ -73,7 +73,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             //			if (!node.GetChildByRole(EntityDeclaration.PrivateImplementationTypeRole).IsNull)
             //				yield break;
             //
-            if (declarationParent.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))
+            if (enclosingTypeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))
             {
                 if (modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))
                 {
@@ -138,7 +138,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     )
                     );
                 }
-                else if (!declarationParent.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
+                else if (!enclosingTypeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
                 {
                     context.RegisterRefactoring(CodeActionFactory.Create(
                         token.Span,
