@@ -1,5 +1,5 @@
-﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
+﻿<Project ToolsVersion="15.0" Sdk="Microsoft.NET.SDK" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--<Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />-->
   <PropertyGroup Label="Configuration" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\bin\Debug</OutputPath>
     <DefineConstants>TRACE;DEBUG;RE2017</DefineConstants>
@@ -1675,18 +1675,12 @@
     <Compile Include="..\RefactoringEssentials\Xml\TreeTraversal.cs">
       <Link>Xml\TreeTraversal.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\AssemblyInfoBase.cs">
-      <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Util\ReflectionNamespaces.cs" />
+    <!--<Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\ReflectionNamespaces.cs" />-->
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AssemblyInfoBase.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -1705,13 +1699,13 @@
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces">
       <Version>2.0.0-rc</Version>
     </PackageReference>
-    <PackageReference Include="NETStandard.Library">
+    <!--<PackageReference Include="NETStandard.Library">
       <Version>1.6</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Sdk">
       <Version>1.0.0-alpha-20161104-2</Version>
       <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
+    </PackageReference>-->
     <PackageReference Include="System.Collections.Immutable">
       <Version>1.3.0</Version>
     </PackageReference>
@@ -1762,19 +1756,13 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>RefactoringEssentials.Library.nuspec</LastGenOutput>
     </None>
-    <None Include="RefactoringEssentials.nuspec">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RefactoringEssentials.tt</DependentUpon>
-    </None>
     <None Include="RefactoringEssentials.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
     </None>
     <None Include="RefactoringEssentials.version" />
     <None Include="Versioning.t4.template" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!--<Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />-->
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
