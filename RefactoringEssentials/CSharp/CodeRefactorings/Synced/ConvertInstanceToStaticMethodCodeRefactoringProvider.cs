@@ -26,7 +26,7 @@ namespace RefactoringEssentials.CSharp
                 yield break;
 
             TypeDeclarationSyntax enclosingTypeDeclaration = methodDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-            if (enclosingTypeDeclaration == null)
+            if (enclosingTypeDeclaration == null || enclosingTypeDeclaration is InterfaceDeclarationSyntax)
                 yield break;
             if (methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
                 yield break;
