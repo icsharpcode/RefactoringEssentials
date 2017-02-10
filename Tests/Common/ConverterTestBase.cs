@@ -248,8 +248,8 @@ namespace RefactoringEssentials.Tests
 			expectedCsharpCode = Utils.HomogenizeEol(expectedCsharpCode).TrimEnd();
 			if (expectedCsharpCode != txt)
 			{
-				int l = Math.Max(expectedCsharpCode.Length, txt.Length) * 3;
-				StringBuilder sb = new StringBuilder(l);
+				int l = Math.Max(expectedCsharpCode.Length, txt.Length);
+				StringBuilder sb = new StringBuilder(l * 4);
 				sb.AppendLine("expected:");
 				sb.AppendLine(expectedCsharpCode);
 				sb.AppendLine("got:");

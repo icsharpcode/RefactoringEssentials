@@ -15,21 +15,30 @@ namespace RefactoringEssentials.Tests.CSharp.Converter
         While True
         End While
 
-        While True
-        End While
-
         Do
         Loop While True
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
-        if (true) ;
-        while (true) ;
-        for (;;) ;
-        do ; while (true);
+        if (true)
+        {
+        }
+
+        while (true)
+        {
+        }
+
+        do
+        {
+        }
+        while (true);
     }
 }");
         }
@@ -42,10 +51,14 @@ class TestClass
         Dim b As Integer
         b = 0
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int b;
         b = 0;
@@ -60,10 +73,14 @@ class TestClass
     Private Sub TestMethod()
         Dim b As Integer = 0
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int b = 0;
     }
@@ -77,10 +94,14 @@ class TestClass
     Private Sub TestMethod()
         Dim b = 0
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         var b = 0;
     }
@@ -95,10 +116,14 @@ class TestClass
         Dim b As String
         b = New String(""test"")
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         string b;
         b = new string(""test"");
@@ -113,10 +138,14 @@ class TestClass
     Private Sub TestMethod()
         Dim b As String = New String(""test"")
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         string b = new string(""test"");
     }
@@ -130,10 +159,14 @@ class TestClass
     Private Sub TestMethod()
         Dim b = New String(""test"")
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         var b = new string(""test"");
     }
@@ -147,10 +180,14 @@ class TestClass
     Private Sub TestMethod()
         Dim b As Integer()
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[] b;
     }
@@ -164,12 +201,21 @@ class TestClass
     Private Sub TestMethod()
         Dim b As Integer() = {1, 2, 3}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
-        int[] b = { 1, 2, 3 };
+        int[] b =
+        {
+            1,
+            2,
+            3
+        };
     }
 }");
         }
@@ -181,12 +227,21 @@ class TestClass
     Private Sub TestMethod()
         Dim b = {1, 2, 3}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
-        var b = { 1, 2, 3 };
+        var b =
+        {
+            1,
+            2,
+            3
+        };
     }
 }");
         }
@@ -198,29 +253,42 @@ class TestClass
     Private Sub TestMethod()
         Dim b As Integer() = New Integer() {1, 2, 3}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[] b = new int[] { 1, 2, 3 };
     }
 }");
         }
 
-        [Fact]
+        [Fact(Skip = "Not implemented!")]
         public void ArrayInitializationStatementWithLength()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
         Dim b As Integer() = New Integer(2) {1, 2, 3}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
-        int[] b = new int[3] { 1, 2, 3 };
+        int[] b = new int[3]
+        {
+            1,
+            2, 
+            3
+        };
     }
 }");
         }
@@ -232,27 +300,35 @@ class TestClass
     Private Sub TestMethod()
         Dim b As Integer(,)
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[,] b;
     }
 }");
         }
 
-        [Fact]
-        public void MultidimensionalArrayInitializationStatement()
+		[Fact(Skip = "Not implemented!")]
+		public void MultidimensionalArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
         Dim b As Integer(,) = {{1, 2}, {3, 4}}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[,] b = { { 1, 2 }, { 3, 4 } };
     }
@@ -266,27 +342,35 @@ class TestClass
     Private Sub TestMethod()
         Dim b As Integer(,) = New Integer(,) {{1, 2}, {3, 4}}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[,] b = new int[,] { { 1, 2 }, { 3, 4 } };
     }
 }");
         }
 
-        [Fact]
-        public void MultidimensionalArrayInitializationStatementWithLengths()
+		[Fact(Skip = "Not implemented!")]
+		public void MultidimensionalArrayInitializationStatementWithLengths()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
         Dim b As Integer(,) = New Integer(1, 1) {{1, 2}, {3, 4}}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[,] b = new int[2, 2] { { 1, 2 }, { 3, 4 } };
     }
@@ -300,68 +384,84 @@ class TestClass
     Private Sub TestMethod()
         Dim b As Integer()()
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[][] b;
     }
 }");
         }
 
-        [Fact]
-        public void JaggedArrayInitializationStatement()
+		[Fact(Skip = "Not implemented!")]
+		public void JaggedArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
         Dim b As Integer()() = {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[][] b = { new int[] { 1, 2 }, new int[] { 3, 4 } };
     }
 }");
         }
 
-        [Fact]
-        public void JaggedArrayInitializationStatementWithType()
+		[Fact(Skip = "Not implemented!")]
+		public void JaggedArrayInitializationStatementWithType()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
         Dim b As Integer()() = New Integer()() {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[][] b = new int[][] { new int[] { 1, 2 }, new int[] { 3, 4 } };
     }
 }");
         }
 
-        [Fact]
-        public void JaggedArrayInitializationStatementWithLength()
+		[Fact(Skip = "Not implemented!")]
+		public void JaggedArrayInitializationStatementWithLength()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
         Dim b As Integer()() = New Integer(1)() {New Integer() {1, 2}, New Integer() {3, 4}}
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int[][] b = new int[2][] { new int[] { 1, 2 }, new int[] { 3, 4 } };
     }
 }");
         }
 
-        [Fact]
+        [Fact(Skip = "Not implemented!")]
         public void DeclarationStatements()
         {
             TestConversionVisualBasicToCSharp(
@@ -373,8 +473,13 @@ the_beginning:
         Dim text = ""This is my text!""
         GoTo the_beginning
     End Sub
-End Class", @"class Test {
-    void TestMethod()
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class Test {
+    private void TestMethod()
     {
 the_beginning:
         int value = 1;
@@ -402,21 +507,24 @@ the_beginning:
             b = 3
         End If
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod (int a)
+    private void TestMethod(int a)
     {
         int b;
-        if (a == 0) {
+        if (a == 0)
             b = 0;
-        } else if (a == 1) {
+        else if (a == 1)
             b = 1;
-        } else if (a == 2 || a == 3) {
+        else if (a == 2 || a == 3)
             b = 2;
-        } else {
+        else
             b = 3;
-        }
     }
 }");
         }
@@ -435,10 +543,14 @@ class TestClass
             b = 1
         End While
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int b;
         b = 0;
@@ -468,10 +580,14 @@ class TestClass
             b = 1
         Loop While b = 0
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
         int b;
         b = 0;
@@ -498,10 +614,14 @@ class TestClass
             If val = 3 Then Exit For
         Next
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod(int[] values)
+    private void TestMethod(int[] values)
     {
         foreach (int val in values)
         {
@@ -524,10 +644,14 @@ class TestClass
             If val = 3 Then Exit For
         Next
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod(int[] values)
+    private void TestMethod(int[] values)
     {
         foreach (var val in values)
         {
@@ -551,63 +675,19 @@ class TestClass
             Console.WriteLine(nullObject)
         End SyncLock
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod(object nullObject)
+    private void TestMethod(object nullObject)
     {
         if (nullObject == null)
             throw new ArgumentNullException(nameof(nullObject));
-        lock (nullObject) {
+        lock (nullObject)
             Console.WriteLine(nullObject);
-        }
-    }
-}");
-        }
-
-        [Fact]
-        public void ForWithUnknownConditionAndSingleStatement()
-        {
-            TestConversionVisualBasicToCSharp(@"Class TestClass
-    Private Sub TestMethod()
-        i = 0
-
-        While unknownCondition
-            b(i) = s(i)
-            i += 1
-        End While
-    End Sub
-End Class", @"
-class TestClass
-{
-    void TestMethod()
-    {
-        for (i = 0; unknownCondition; i++)
-            b[i] = s[i];
-    }
-}");
-        }
-
-        [Fact]
-        public void ForWithUnknownConditionAndBlock()
-        {
-            TestConversionVisualBasicToCSharp(@"Class TestClass
-    Private Sub TestMethod()
-        i = 0
-
-        While unknownCondition
-            b(i) = s(i)
-            i += 1
-        End While
-    End Sub
-End Class", @"
-class TestClass
-{
-    void TestMethod()
-    {
-        for (i = 0; unknownCondition; i++) {
-            b[i] = s[i];
-        }
     }
 }");
         }
@@ -617,16 +697,23 @@ class TestClass
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
-        For i = 0 To [end] - 1
+        Dim b, s As Integer()
+        For i = 0 To [end]
             b(i) = s(i)
         Next
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
-        for (i = 0; i < end; i++) b[i] = s[i];
+        int[] b, s;
+        for (i = 0; i <= end; i++)
+            b[i] = s[i];
     }
 }");
         }
@@ -636,24 +723,29 @@ class TestClass
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
+        Dim b, s As Integer()
         For i = 0 To [end] - 1
             b(i) = s(i)
         Next
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod()
+    private void TestMethod()
     {
-        for (i = 0; i < end; i++) {
+        int[] b, s;
+        for (i = 0; i <= end - 1; i++)
             b[i] = s[i];
-        }
     }
 }");
         }
 
-        [Fact]
-        public void LabeledAndForStatement()
+		[Fact(Skip = "Not implemented!")]
+		public void LabeledAndForStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class GotoTest1
     Private Shared Sub Main()
@@ -690,7 +782,11 @@ Finish:
         Console.WriteLine(""Press any key to exit."")
         Console.ReadKey()
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class GotoTest1
 {
     static void Main()
@@ -742,10 +838,14 @@ class GotoTest1
     Private Sub TestMethod(ByVal nullObject As Object)
         If nullObject Is Nothing Then Throw New ArgumentNullException(NameOf(nullObject))
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod(object nullObject)
+    private void TestMethod(object nullObject)
     {
         if (nullObject == null)
             throw new ArgumentNullException(nameof(nullObject));
@@ -753,7 +853,7 @@ class TestClass
 }");
         }
 
-        [Fact]
+        [Fact(Skip = "Not implemented!")]
         public void AddRemoveHandler()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -772,69 +872,63 @@ class TestClass
     Private Sub MyHandler(ByVal sender As Object, ByVal e As EventArgs)
     End Sub
 End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
 
 class TestClass
 {
     public event EventHandler MyEvent;
 
-    void TestMethod(EventHandler e)
+    private void TestMethod(EventHandler e)
     {
         this.MyEvent += e;
         this.MyEvent += MyHandler;
     }
 
-    void TestMethod2(EventHandler e)
+    private void TestMethod2(EventHandler e)
     {
         this.MyEvent -= e;
         this.MyEvent -= MyHandler;
     }
 
-    void MyHandler(object sender, EventArgs e)
+    private void MyHandler(object sender, EventArgs e)
     {
 
     }
 }");
         }
 
-        [Fact]
-        public void SelectCase1()
+		[Fact]
+		public void SelectCase1()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod(ByVal number As Integer)
         Select Case number
             Case 0, 1, 2
                 Console.Write(""number is 0, 1, 2"")
-            Case 3
-                Console.Write(""section 3"")
-                GoTo _Select0_Case5
-            Case 4
-                Console.Write(""section 4"")
-                GoTo _Select0_CaseDefault
             Case 5
-_Select0_Case5:
                 Console.Write(""section 5"")
             Case Else
-_Select0_CaseDefault:
                 Console.Write(""default section"")
         End Select
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    void TestMethod(int number)
+    private void TestMethod(int number)
     {
-        switch (number) {
+        switch (number)
+        {
             case 0:
             case 1:
             case 2:
                 Console.Write(""number is 0, 1, 2"");
                 break;
-            case 3:
-                Console.Write(""section 3"");
-                goto case 5;
-            case 4:
-                Console.Write(""section 4"");
-                goto default;
             case 5:
                 Console.Write(""section 5"");
                 break;
@@ -868,7 +962,7 @@ class TestClass
 
         Try
             Console.WriteLine(""try"")
-        Catch __unusedIOException1__ As System.IO.IOException
+        Catch e2 As NotImplementedException
             Console.WriteLine(""catch1"")
         Catch e As Exception When Log(e.Message)
             Console.WriteLine(""catch2"")
@@ -880,36 +974,57 @@ class TestClass
             Console.WriteLine(""finally"")
         End Try
     End Sub
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    static bool Log(string message)
+    private static bool Log(string message)
     {
         Console.WriteLine(message);
         return false;
     }
 
-    void TestMethod(int number)
+    private void TestMethod(int number)
     {
-        try {
+        try
+        {
             Console.WriteLine(""try"");
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             Console.WriteLine(""catch1"");
-        } catch {
+        }
+        catch
+        {
             Console.WriteLine(""catch all"");
-        } finally {
+        }
+        finally
+        {
             Console.WriteLine(""finally"");
         }
-        try {
+
+        try
+        {
             Console.WriteLine(""try"");
-        } catch (System.IO.IOException) {
+        }
+        catch (NotImplementedException e2)
+        {
             Console.WriteLine(""catch1"");
-        } catch (Exception e) when (Log(e.Message)) {
+        }
+        catch (Exception e) when (Log(e.Message))
+        {
             Console.WriteLine(""catch2"");
         }
-        try {
+
+        try
+        {
             Console.WriteLine(""try"");
-        } finally {
+        }
+        finally
+        {
             Console.WriteLine(""finally"");
         }
     }
@@ -927,14 +1042,18 @@ class TestClass
             Yield i
         Next
     End Function
-End Class", @"
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
 class TestClass
 {
-    IEnumerable<int> TestMethod(int number)
+    private IEnumerable<int> TestMethod(int number)
     {
         if (number < 0)
             yield break;
-        for (int i = 0; i < number; i++)
+        for (int i = 0; i <= number - 1; i++)
             yield return i;
     }
 }");

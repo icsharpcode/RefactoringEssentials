@@ -12,10 +12,15 @@ namespace RefactoringEssentials.Tests.CSharp.Converter
     Const answer As Integer = 42
     Private value As Integer = 10
     ReadOnly v As Integer = 15
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
     const int answer = 42;
-    int value = 10;
+    private int value = 10;
     readonly int v = 15;
 }");
         }
@@ -30,9 +35,16 @@ End Class", @"class TestClass
         argument2 = Nothing
         argument3 = Nothing
     End Sub
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
-    public void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class, new where T2 : struct
+    public void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3)
+        where T : class, new()
+        where T2 : struct
     {
         argument = null;
         argument2 = default(T2);
@@ -49,9 +61,16 @@ End Class", @"class TestClass
     Public Function TestMethod(Of T As {Class, New}, T2 As Structure, T3)(<Out> ByRef argument As T, ByRef argument2 As T2, ByVal argument3 As T3) As Integer
         Return 0
     End Function
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
-    public int TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class, new where T2 : struct
+    public int TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3)
+        where T : class, new()
+        where T2 : struct
     {
         return 0;
     }
@@ -68,9 +87,16 @@ End Class", @"class TestClass
         argument2 = Nothing
         argument3 = Nothing
     End Sub
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
-    public static void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class, new where T2 : struct
+    public static void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3)
+        where T : class, new()
+        where T2 : struct
     {
         argument = null;
         argument2 = default(T2);
@@ -85,7 +111,12 @@ End Class", @"class TestClass
             TestConversionVisualBasicToCSharp(
 @"Class TestClass
     Public MustOverride Sub TestMethod()
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
     public abstract void TestMethod();
 }");
@@ -101,9 +132,16 @@ End Class", @"class TestClass
         argument2 = Nothing
         argument3 = Nothing
     End Sub
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
-    public sealed void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3) where T : class, new where T2 : struct
+    public sealed void TestMethod<T, T2, T3>(out T argument, ref T2 argument2, T3 argument3)
+        where T : class, new()
+        where T2 : struct
     {
         argument = null;
         argument2 = default(T2);
@@ -112,8 +150,8 @@ End Class", @"class TestClass
 }");
         }
 
-        [Fact]
-        public void TestExtensionMethod()
+		[Fact(Skip = "Not implemented!")]
+		public void TestExtensionMethod()
         {
             TestConversionVisualBasicToCSharp(
 @"Imports System.Runtime.CompilerServices
@@ -122,7 +160,12 @@ Module TestClass
     <Extension()>
     Sub TestMethod(ByVal str As String)
     End Sub
-End Module", @"static class TestClass
+End Module", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+static class TestClass
 {
     public static void TestMethod(this String str)
     {
@@ -130,8 +173,8 @@ End Module", @"static class TestClass
 }");
         }
 
-        [Fact]
-        public void TestExtensionMethodWithExistingImport()
+		[Fact(Skip = "Not implemented!")]
+		public void TestExtensionMethodWithExistingImport()
         {
             TestConversionVisualBasicToCSharp(
 @"Imports System.Runtime.CompilerServices
@@ -140,7 +183,11 @@ Module TestClass
     <Extension()>
     Sub TestMethod(ByVal str As String)
     End Sub
-End Module", @"using System.Runtime.CompilerServices;
+End Module", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+using System.Runtime.CompilerServices;
 
 static class TestClass
 {
@@ -173,16 +220,36 @@ static class TestClass
             Me.m_test3 = value
         End Set
     End Property
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
     public int Test { get; set; }
-    public int Test2 {
-        get { return 0; }
+
+    public int Test2
+    {
+        get
+        {
+            return 0;
+        }
     }
-    int m_test3;
-    public int Test3 {
-        get { return this.m_test3; }
-        set { this.m_test3 = value; }
+
+    private int m_test3;
+
+    public int Test3
+    {
+        get
+        {
+            return this.m_test3;
+        }
+
+        set
+        {
+            this.m_test3 = value;
+        }
     }
 }");
         }
@@ -194,7 +261,14 @@ End Class", @"class TestClass
 @"Class TestClass(Of T As {Class, New}, T2 As Structure, T3)
     Public Sub New(<Out> ByRef argument As T, ByRef argument2 As T2, ByVal argument3 As T3)
     End Sub
-End Class", @"class TestClass<T, T2, T3> where T : class, new where T2 : struct
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass<T, T2, T3>
+    where T : class, new()
+    where T2 : struct
 {
     public TestClass(out T argument, ref T2 argument2, T3 argument3)
     {
@@ -202,14 +276,19 @@ End Class", @"class TestClass<T, T2, T3> where T : class, new where T2 : struct
 }");
         }
 
-        [Fact]
+		[Fact]
         public void TestDestructor()
         {
             TestConversionVisualBasicToCSharp(
 @"Class TestClass
     Protected Overrides Sub Finalize()
     End Sub
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
     ~TestClass()
     {
@@ -223,14 +302,19 @@ End Class", @"class TestClass
             TestConversionVisualBasicToCSharp(
 @"Class TestClass
     Public Event MyEvent As EventHandler
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
     public event EventHandler MyEvent;
 }");
         }
 
-        [Fact]
-        public void TestCustomEvent()
+		[Fact(Skip = "Not implemented!")]
+		public void TestCustomEvent()
         {
             TestConversionVisualBasicToCSharp(
 @"Class TestClass
@@ -245,6 +329,9 @@ End Class", @"class TestClass
         End RemoveHandler
     End Event
 End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
 
 class TestClass
 {
@@ -261,8 +348,8 @@ class TestClass
 }");
         }
 
-        [Fact]
-        public void TestIndexer()
+		[Fact(Skip = "Not implemented!")]
+		public void TestIndexer()
         {
             TestConversionVisualBasicToCSharp(
 @"Class TestClass
@@ -284,7 +371,12 @@ class TestClass
             Me.m_test3 = value
         End Set
     End Property
-End Class", @"class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
 {
     public int this[int index] { get; set; }
     public int this[string index] {

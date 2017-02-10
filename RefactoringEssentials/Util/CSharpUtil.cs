@@ -226,5 +226,18 @@ namespace RefactoringEssentials
                 return false;
             return cond1.SkipParens().IsEquivalentTo(cond2.SkipParens(), true);
         }
+
+        public static T WithBody<T>(this T method, BlockSyntax body) where T : BaseMethodDeclarationSyntax
+        {
+            if (method == null)
+                throw new ArgumentNullException(nameof(method));
+            var m = method as MethodDeclarationSyntax;
+            if (m != null)
+                return (T)((BaseMethodDeclarationSyntax)m.WithBody(body));
+            var d = method as DestructorDeclarationSyntax;
+            if (d != null)
+                return (T)((BaseMethodDeclarationSyntax)d.WithBody(body));
+            throw new NotSupportedException();
+        }
     }
 }

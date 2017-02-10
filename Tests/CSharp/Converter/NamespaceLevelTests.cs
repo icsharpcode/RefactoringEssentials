@@ -8,9 +8,13 @@ namespace RefactoringEssentials.Tests.CSharp.Converter
         public void TestNamespace()
         {
             TestConversionVisualBasicToCSharp(@"Namespace Test
-End Namespace", @"namespace Test
+End Namespace", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+namespace Test
 {
-    
 }");
         }
 
@@ -19,7 +23,12 @@ End Namespace", @"namespace Test
         {
             TestConversionVisualBasicToCSharp(
 				@"<Assembly: CLSCompliant(True)>",
-				@"[assembly: CLSCompliant(true)]");
+				@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+[assembly: CLSCompliant(true)]");
         }
 
         [Fact]
@@ -28,7 +37,11 @@ End Namespace", @"namespace Test
             TestConversionVisualBasicToCSharp(
 				@"Imports SomeNamespace
 Imports VB = Microsoft.VisualBasic",
-				@"using SomeNamespace;
+				@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+using SomeNamespace;
 using VB = Microsoft.VisualBasic;");
         }
 
@@ -38,7 +51,12 @@ using VB = Microsoft.VisualBasic;");
             TestConversionVisualBasicToCSharp(@"Namespace Test.[class]
     Class TestClass(Of T)
     End Class
-End Namespace", @"namespace Test.@class
+End Namespace", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+namespace Test.@class
 {
     class TestClass<T>
     {
@@ -57,12 +75,22 @@ End Namespace", @"namespace Test.@class
         Private Sub Test2()
         End Sub
     End Module
-End Namespace", @"namespace Test.@class
+End Namespace", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+namespace Test.@class
 {
     internal static class TestClass
     {
-        public static void Test() {}
-        static void Test2() {}
+        public static void Test()
+        {
+        }
+
+        private static void Test2()
+        {
+        }
     }
 }");
         }
@@ -73,7 +101,12 @@ End Namespace", @"namespace Test.@class
             TestConversionVisualBasicToCSharp(@"Namespace Test.[class]
     MustInherit Class TestClass
     End Class
-End Namespace", @"namespace Test.@class
+End Namespace", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+namespace Test.@class
 {
     abstract class TestClass
     {
@@ -87,7 +120,12 @@ End Namespace", @"namespace Test.@class
             TestConversionVisualBasicToCSharp(@"Namespace Test.[class]
     NotInheritable Class TestClass
     End Class
-End Namespace", @"namespace Test.@class
+End Namespace", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+namespace Test.@class
 {
     sealed class TestClass
     {
@@ -103,9 +141,14 @@ End Namespace", @"namespace Test.@class
     Inherits System.IDisposable
 
     Sub Test()
-End Interface", @"interface ITest : System.IDisposable
+End Interface", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+interface ITest : System.IDisposable
 {
-    void Test ();
+    private void Test();
 }");
         }
 
@@ -118,7 +161,12 @@ End Interface", @"interface ITest : System.IDisposable
     ArgumentOutOfRange_NeedNonNegNum
     ArgumentOutOfRange_NeedNonNegNumRequired
     Arg_ArrayPlusOffTooSmall
-End Enum", @"internal enum ExceptionResource
+End Enum", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+internal enum ExceptionResource
 {
     Argument_ImplementIComparable,
     ArgumentOutOfRange_NeedNonNegNum,
@@ -135,7 +183,12 @@ End Enum", @"internal enum ExceptionResource
     Implements System.IDisposable
 
     Protected MustOverride Sub Test()
-End Class", @"abstract class ClassA : System.IDisposable
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+abstract class ClassA : System.IDisposable
 {
     protected abstract void Test();
 }");
@@ -146,7 +199,12 @@ End Class", @"abstract class ClassA : System.IDisposable
     Implements System.IDisposable
 
     Protected MustOverride Sub Test()
-End Class", @"abstract class ClassA : System.EventArgs, System.IDisposable
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+abstract class ClassA : System.EventArgs, System.IDisposable
 {
     protected abstract void Test();
 }");
@@ -161,37 +219,41 @@ End Class", @"abstract class ClassA : System.EventArgs, System.IDisposable
 
     Private Sub Test()
     End Sub
-End Structure", @"struct MyType : System.IComparable<MyType>
+End Structure", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+struct MyType : System.IComparable<MyType>
 {
-    void Test() {}
+    private void Test()
+    {
+    }
 }");
         }
 
         [Fact]
         public void TestDelegate()
         {
+			const string usings = @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+";
+
             TestConversionVisualBasicToCSharp(
 				@"Public Delegate Sub Test()",
-				@"public delegate void Test();");
+				usings + @"public delegate void Test();");
             TestConversionVisualBasicToCSharp(
 				@"Public Delegate Function Test() As Integer",
-				@"public delegate int Test();");
+				usings + @"public delegate int Test();");
             TestConversionVisualBasicToCSharp(
 				@"Public Delegate Sub Test(ByVal x As Integer)",
-				@"public delegate void Test(int x);");
+				usings + @"public delegate void Test(int x);");
             TestConversionVisualBasicToCSharp(
 				@"Public Delegate Sub Test(ByRef x As Integer)",
-				@"public delegate void Test(ref int x);");
-        }
-
-        [Fact]
-        public void MoveImportsStatement()
-        {
-            TestConversionVisualBasicToCSharp(@"Imports SomeNamespace
-
-Namespace test
-End Namespace",
-				"namespace test { using SomeNamespace; }");
+				usings + @"public delegate void Test(ref int x);");
         }
 
         [Fact]
@@ -200,7 +262,14 @@ End Namespace",
             TestConversionVisualBasicToCSharp(@"Class test
     Implements IComparable
 End Class",
-				"using System; class test : IComparable { }");
+				@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class test : IComparable
+{
+}");
         }
 
         [Fact]
@@ -209,7 +278,14 @@ End Class",
             TestConversionVisualBasicToCSharp(@"Class test
     Implements System.IComparable
 End Class",
-				"class test : System.IComparable { }");
+				@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class test : System.IComparable
+{
+}");
         }
 
         [Fact]
@@ -220,7 +296,15 @@ End Class",
 Class test
     Inherits InvalidDataException
 End Class",
-				"using System.IO; class test : InvalidDataException { }");
+				@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+using System.IO;
+
+class test : InvalidDataException
+{
+}");
         }
 
         [Fact]
@@ -229,7 +313,14 @@ End Class",
             TestConversionVisualBasicToCSharp(@"Class test
     Inherits System.IO.InvalidDataException
 End Class",
-				"class test : System.IO.InvalidDataException { }");
+				@"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class test : System.IO.InvalidDataException
+{
+}");
         }
     }
 }
