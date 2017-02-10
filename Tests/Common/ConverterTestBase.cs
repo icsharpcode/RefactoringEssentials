@@ -10,12 +10,63 @@ using System.Collections.Immutable;
 using System.Text;
 using RefactoringEssentials.Tests.Common;
 using Microsoft.CodeAnalysis.Formatting;
+using RefactoringEssentials.CSharp.Converter;
 using Xunit;
 
-namespace RefactoringEssentials.Tests.VB.Converter
+namespace RefactoringEssentials.Tests
 {
 	public class ConverterTestBase
 	{
+		void CSharpWorkspaceSetup(out CSharpDiagnosticTestBase.TestWorkspace workspace, out Document doc, CSharpParseOptions parseOptions = null)
+		{
+			workspace = new CSharpDiagnosticTestBase.TestWorkspace();
+			var projectId = ProjectId.CreateNewId();
+			var documentId = DocumentId.CreateNewId(projectId);
+			if (parseOptions == null)
+			{
+				parseOptions = new CSharpParseOptions(
+					Microsoft.CodeAnalysis.CSharp.LanguageVersion.CSharp6,
+					DocumentationMode.Diagnose | DocumentationMode.Parse,
+					SourceCodeKind.Regular,
+					ImmutableArray.Create("DEBUG", "TEST")
+				);
+			}
+			workspace.Options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, false);
+			workspace.Open(ProjectInfo.Create(
+				projectId,
+				VersionStamp.Create(),
+				"TestProject",
+				"TestProject",
+				LanguageNames.CSharp,
+				null,
+				null,
+				new CSharpCompilationOptions(
+					OutputKind.DynamicallyLinkedLibrary,
+					false,
+					"",
+					"",
+					"Script",
+					new[] { "System", "System.Collections.Generic", "System.Linq" },
+					OptimizationLevel.Debug,
+					false,
+					true
+				),
+				parseOptions,
+				new[] {
+					DocumentInfo.Create(
+						documentId,
+						"a.cs",
+						null,
+						SourceCodeKind.Regular
+					)
+				},
+				null,
+				DiagnosticTestBase.DefaultMetadataReferences
+			)
+			);
+			doc = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
+		}
+
 		void CSharpWorkspaceSetup(string text, out CSharpDiagnosticTestBase.TestWorkspace workspace, out Document doc, CSharpParseOptions parseOptions = null)
 		{
 			workspace = new CSharpDiagnosticTestBase.TestWorkspace();
@@ -109,6 +160,49 @@ namespace RefactoringEssentials.Tests.VB.Converter
 			doc = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
 		}
 
+		void VBWorkspaceSetup(string text, out CSharpDiagnosticTestBase.TestWorkspace workspace, out Document doc, VisualBasicParseOptions parseOptions = null)
+		{
+			workspace = new CSharpDiagnosticTestBase.TestWorkspace();
+			var projectId = ProjectId.CreateNewId();
+			var documentId = DocumentId.CreateNewId(projectId);
+			if (parseOptions == null)
+			{
+				parseOptions = new VisualBasicParseOptions(
+					Microsoft.CodeAnalysis.VisualBasic.LanguageVersion.VisualBasic14,
+					DocumentationMode.Diagnose | DocumentationMode.Parse,
+					SourceCodeKind.Regular
+				);
+			}
+			workspace.Options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, false);
+			var compilationOptions = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+				.WithRootNamespace("TestProject")
+				.WithGlobalImports(GlobalImport.Parse("System", "System.Collections.Generic", "System.Linq", "Microsoft.VisualBasic"));
+			workspace.Open(ProjectInfo.Create(
+				projectId,
+				VersionStamp.Create(),
+				"TestProject",
+				"TestProject",
+				LanguageNames.VisualBasic,
+				null,
+				null,
+				compilationOptions,
+				parseOptions,
+				new[] {
+					DocumentInfo.Create(
+						documentId,
+						"a.vb",
+						null,
+						SourceCodeKind.Regular,
+						TextLoader.From(TextAndVersion.Create(SourceText.From(text), VersionStamp.Create()))
+					)
+				},
+				null,
+				DiagnosticTestBase.DefaultMetadataReferences
+			)
+			);
+			doc = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
+		}
+
 		public void TestConversionCSharpToVisualBasic(string csharpCode, string expectedVisualBasicCode, CSharpParseOptions csharpOptions = null, VisualBasicParseOptions vbOptions = null)
 		{
 			DiagnosticTestBase.TestWorkspace csharpWorkspace, vbWorkspace;
@@ -141,9 +235,45 @@ namespace RefactoringEssentials.Tests.VB.Converter
 			}
 		}
 
-        VisualBasicSyntaxNode Convert(CSharpSyntaxNode input, SemanticModel semanticModel, Document targetDocument)
+		public void TestConversionVisualBasicToCSharp(string visualBasicCode, string expectedCsharpCode, CSharpParseOptions csharpOptions = null, VisualBasicParseOptions vbOptions = null)
+		{
+			DiagnosticTestBase.TestWorkspace csharpWorkspace, vbWorkspace;
+			Document inputDocument, outputDocument;
+			VBWorkspaceSetup(visualBasicCode, out vbWorkspace, out inputDocument, vbOptions);
+			CSharpWorkspaceSetup(out csharpWorkspace, out outputDocument, csharpOptions);
+			var outputNode = Convert((VisualBasicSyntaxNode)inputDocument.GetSyntaxRootAsync().Result, inputDocument.GetSemanticModelAsync().Result, outputDocument);
+
+			var txt = outputDocument.WithSyntaxRoot(Formatter.Format(outputNode, vbWorkspace)).GetTextAsync().Result.ToString();
+			txt = Utils.HomogenizeEol(txt).TrimEnd();
+			expectedCsharpCode = Utils.HomogenizeEol(expectedCsharpCode).TrimEnd();
+			if (expectedCsharpCode != txt)
+			{
+				int l = Math.Max(expectedCsharpCode.Length, txt.Length);
+				StringBuilder sb = new StringBuilder(l * 4);
+				sb.AppendLine("expected:");
+				sb.AppendLine(expectedCsharpCode);
+				sb.AppendLine("got:");
+				sb.AppendLine(txt);
+				sb.AppendLine("diff:");
+				for (int i = 0; i < l; i++)
+				{
+					if (i >= expectedCsharpCode.Length || i >= txt.Length || expectedCsharpCode[i] != txt[i])
+						sb.Append('x');
+					else
+						sb.Append(expectedCsharpCode[i]);
+				}
+				Assert.True(false, sb.ToString());
+			}
+		}
+
+		VisualBasicSyntaxNode Convert(CSharpSyntaxNode input, SemanticModel semanticModel, Document targetDocument)
 		{
 			return CSharpConverter.Convert(input, semanticModel, targetDocument);
+		}
+
+		CSharpSyntaxNode Convert(VisualBasicSyntaxNode input, SemanticModel semanticModel, Document targetDocument)
+		{
+			return VisualBasicConverter.Convert(input, semanticModel, targetDocument);
 		}
 	}
 }

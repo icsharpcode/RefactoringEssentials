@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Simplification;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert implict to explicit implementation")]
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert implicit to explicit implementation")]
     public class ConvertImplicitToExplicitImplementationCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
@@ -27,7 +27,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
             var node = root.FindNode(span);
-            while (node != null && !(node is MemberDeclarationSyntax))
+			while (node != null && !(node is MemberDeclarationSyntax))
                 node = node.Parent;
             if (node == null)
                 return;

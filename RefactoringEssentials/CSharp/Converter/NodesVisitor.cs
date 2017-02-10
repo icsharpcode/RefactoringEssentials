@@ -201,7 +201,7 @@ namespace RefactoringEssentials.CSharp.Converter
 			public override CSharpSyntaxNode VisitEnumBlock(VBSyntax.EnumBlockSyntax node)
 			{
 				var stmt = node.EnumStatement;
-				// we can cast to SimpleAsClause because other type make no sense as enum-type.
+				// we can cast to SimpleAsClause because other types make no sense as enum-type.
 				var asClause = (VBSyntax.SimpleAsClauseSyntax)stmt.UnderlyingType;
 				var attributes = stmt.AttributeLists.SelectMany(ConvertAttribute);
 				BaseListSyntax baseList = null;
@@ -304,19 +304,39 @@ namespace RefactoringEssentials.CSharp.Converter
 				return key;
 			}
 
-			public override CSharpSyntaxNode VisitPropertyBlock(VBSyntax.PropertyBlockSyntax node)
+			public override CSharpSyntaxNode VisitPropertyStatement(VBSyntax.PropertyStatementSyntax node)
 			{
-				var block = node.PropertyStatement;
-				var attributes = block.AttributeLists.SelectMany(ConvertAttribute);
-				var modifiers = ConvertModifiers(block.Modifiers, TokenContext.Member);
+				bool hasBody = node.Parent is VBSyntax.PropertyBlockSyntax;
+				var attributes = node.AttributeLists.SelectMany(ConvertAttribute);
+				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
 
-				var isIndexer = block.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.DefaultKeyword)) && block.Identifier.ValueText.Equals("Items", StringComparison.OrdinalIgnoreCase);
+				var isIndexer = node.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.DefaultKeyword)) && node.Identifier.ValueText.Equals("Items", StringComparison.OrdinalIgnoreCase);
 
-				var rawType = (TypeSyntax)block.AsClause?.TypeSwitch(
+				var rawType = (TypeSyntax)node.AsClause?.TypeSwitch(
 					(VBSyntax.SimpleAsClauseSyntax c) => c.Type,
 					(VBSyntax.AsNewClauseSyntax c) => VBasic.SyntaxExtensions.Type(c.NewExpression),
 					_ => { throw new NotImplementedException($"{_.GetType().FullName} not implemented!"); }
 				)?.Accept(this) ?? SyntaxFactory.ParseTypeName("var");
+
+				AccessorListSyntax accessors = null;
+
+				if (!hasBody)
+				{
+					accessors = SyntaxFactory.AccessorList(
+						SyntaxFactory.List(new[] {
+							SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
+							SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
+                        })
+					);
+				}
+				else
+				{
+					accessors = SyntaxFactory.AccessorList(
+						SyntaxFactory.List(
+							((VBSyntax.PropertyBlockSyntax)node.Parent).Accessors.Select(a => (AccessorDeclarationSyntax)a.Accept(this))
+						)
+					);
+				}
 
 				if (isIndexer)
 					return SyntaxFactory.IndexerDeclaration(
@@ -324,8 +344,8 @@ namespace RefactoringEssentials.CSharp.Converter
 						modifiers,
 						rawType,
 						null,
-						SyntaxFactory.BracketedParameterList(SyntaxFactory.SeparatedList(block.ParameterList.Parameters.Select(p => (ParameterSyntax)p.Accept(this)))),
-						SyntaxFactory.AccessorList(SyntaxFactory.List(node.Accessors.Select(a => (AccessorDeclarationSyntax)a.Accept(this))))
+						SyntaxFactory.BracketedParameterList(SyntaxFactory.SeparatedList(node.ParameterList.Parameters.Select(p => (ParameterSyntax)p.Accept(this)))),
+						accessors
 					);
 				else
 					return SyntaxFactory.PropertyDeclaration(
@@ -333,18 +353,23 @@ namespace RefactoringEssentials.CSharp.Converter
 						modifiers,
 						rawType,
 						null,
-						ConvertIdentifier(block.Identifier, semanticModel),
-						SyntaxFactory.AccessorList(SyntaxFactory.List(node.Accessors.Select(a => (AccessorDeclarationSyntax)a.Accept(this)))),
+						ConvertIdentifier(node.Identifier, semanticModel), accessors,
 						null,
 						null);
+			}
+
+			public override CSharpSyntaxNode VisitPropertyBlock(VBSyntax.PropertyBlockSyntax node)
+			{
+				return node.PropertyStatement.Accept(this);
 			}
 
 			public override CSharpSyntaxNode VisitAccessorBlock(VBSyntax.AccessorBlockSyntax node)
 			{
 				SyntaxKind blockKind;
-				var body = SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))));
+				bool isIterator = node.GetModifiers().Any(m => m.IsKind(VBasic.SyntaxKind.IteratorKeyword));
+				var body = SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this) { IsIterator = isIterator })));
 				var attributes = SyntaxFactory.List(node.AccessorStatement.AttributeLists.Select(a => (AttributeListSyntax)a.Accept(this)));
-				var modifiers = ConvertModifiers(node.AccessorStatement.Modifiers, TokenContext.Member);
+				var modifiers = ConvertModifiers(node.AccessorStatement.Modifiers, TokenContext.Local);
 
 				switch (node.Kind())
 				{
@@ -368,33 +393,49 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitMethodBlock(VBSyntax.MethodBlockSyntax node)
 			{
-				var block = node.SubOrFunctionStatement;
-				var attributes = block.AttributeLists.SelectMany(ConvertAttribute);
+				BaseMethodDeclarationSyntax block = (BaseMethodDeclarationSyntax)node.SubOrFunctionStatement.Accept(this);
+				bool isIterator = node.SubOrFunctionStatement.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.IteratorKeyword));
 
-				if ("Finalize".Equals(block.Identifier.ValueText, StringComparison.OrdinalIgnoreCase)
-					&& block.Modifiers.Any(m => VBasic.VisualBasicExtensions.Kind(m) == VBasic.SyntaxKind.OverridesKeyword)) {
-					return SyntaxFactory.DestructorDeclaration(
-						SyntaxFactory.List(attributes),
-						SyntaxFactory.TokenList(),
-						ConvertIdentifier(node.GetAncestor<VBSyntax.TypeBlockSyntax>().BlockStatement.Identifier, semanticModel),
-						SyntaxFactory.ParameterList(),
-						SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))))
-					);
-				} else {
-					var modifiers = ConvertModifiers(block.Modifiers, TokenContext.Member);
+				return block.WithBody(SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this) { IsIterator = isIterator }))));
+			}
 
-					return SyntaxFactory.MethodDeclaration(
+			public override CSharpSyntaxNode VisitMethodStatement(VBSyntax.MethodStatementSyntax node)
+			{
+				var attributes = node.AttributeLists.SelectMany(ConvertAttribute);
+				bool hasBody = node.Parent is VBSyntax.MethodBlockBaseSyntax;
+
+				if ("Finalize".Equals(node.Identifier.ValueText, StringComparison.OrdinalIgnoreCase)
+					&& node.Modifiers.Any(m => VBasic.VisualBasicExtensions.Kind(m) == VBasic.SyntaxKind.OverridesKeyword))
+				{
+					var decl = SyntaxFactory.DestructorDeclaration(
+						ConvertIdentifier(node.GetAncestor<VBSyntax.TypeBlockSyntax>().BlockStatement.Identifier, semanticModel)
+					).WithAttributeLists(SyntaxFactory.List(attributes));
+					if (hasBody) return decl;
+					return decl.WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+				}
+				else
+				{
+					var parentType = semanticModel.GetDeclaredSymbol(node).ContainingType;
+					var modifiers = ConvertModifiers(node.Modifiers, parentType.TypeKind == TypeKind.Module ? TokenContext.MemberInModule : TokenContext.Member);
+
+					TypeParameterListSyntax typeParameters;
+					SyntaxList<TypeParameterConstraintClauseSyntax> constraints;
+					SplitTypeParameters(node.TypeParameterList, out typeParameters, out constraints);
+
+					var decl = SyntaxFactory.MethodDeclaration(
 						SyntaxFactory.List(attributes),
 						modifiers,
-						(TypeSyntax)block.AsClause?.Type.Accept(this) ?? SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.VoidKeyword)),
+						(TypeSyntax)node.AsClause?.Type.Accept(this) ?? SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.VoidKeyword)),
 						null,
-						ConvertIdentifier(block.Identifier, semanticModel),
+						ConvertIdentifier(node.Identifier, semanticModel),
+						typeParameters,
+						(ParameterListSyntax)node.ParameterList.Accept(this),
+						constraints,
 						null,
-						(ParameterListSyntax)block.ParameterList.Accept(this),
-						SyntaxFactory.List<TypeParameterConstraintClauseSyntax>(),
-						SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this)))),
 						null
 					);
+					if (hasBody) return decl;
+					return decl.WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
 				}
 			}
 
@@ -488,16 +529,23 @@ namespace RefactoringEssentials.CSharp.Converter
 
 				IEnumerable<VBSyntax.StatementSyntax> statements;
 				ConstructorInitializerSyntax ctorCall;
-				if (ctorExpression == null || !ctorExpression.Name.Identifier.IsKindOrHasMatchingText(VBasic.SyntaxKind.NewKeyword)) {
+				if (ctorExpression == null || !ctorExpression.Name.Identifier.IsKindOrHasMatchingText(VBasic.SyntaxKind.NewKeyword))
+				{
 					statements = node.Statements;
 					ctorCall = null;
-				} else if (ctorExpression.Expression is VBSyntax.MyBaseExpressionSyntax) {
+				}
+				else if (ctorExpression.Expression is VBSyntax.MyBaseExpressionSyntax)
+				{
 					statements = node.Statements.Skip(1);
 					ctorCall = SyntaxFactory.ConstructorInitializer(SyntaxKind.BaseConstructorInitializer, ctorArgs ?? SyntaxFactory.ArgumentList());
-				} else if (ctorExpression.Expression is VBSyntax.MeExpressionSyntax || ctorExpression.Expression is VBSyntax.MyClassExpressionSyntax) {
+				}
+				else if (ctorExpression.Expression is VBSyntax.MeExpressionSyntax || ctorExpression.Expression is VBSyntax.MyClassExpressionSyntax)
+				{
 					statements = node.Statements.Skip(1);
 					ctorCall = SyntaxFactory.ConstructorInitializer(SyntaxKind.ThisConstructorInitializer, ctorArgs ?? SyntaxFactory.ArgumentList());
-				} else {
+				}
+				else
+				{
 					statements = node.Statements;
 					ctorCall = null;
 				}
@@ -509,6 +557,13 @@ namespace RefactoringEssentials.CSharp.Converter
 					(ParameterListSyntax)block.ParameterList.Accept(this),
 					ctorCall,
 					SyntaxFactory.Block(statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this))))
+				);
+			}
+
+			public override CSharpSyntaxNode VisitTypeParameterList(VBSyntax.TypeParameterListSyntax node)
+			{
+				return SyntaxFactory.TypeParameterList(
+					SyntaxFactory.SeparatedList(node.Parameters.Select(p => (TypeParameterSyntax)p.Accept(this)))
 				);
 			}
 
@@ -545,7 +600,8 @@ namespace RefactoringEssentials.CSharp.Converter
 				var attributes = node.AttributeLists.SelectMany(ConvertAttribute).ToList();
 				int outAttributeIndex = attributes.FindIndex(a => a.Attributes.Single().Name.ToString() == "Out");
 				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Local);
-				if (outAttributeIndex > -1) {
+				if (outAttributeIndex > -1)
+				{
 					attributes.RemoveAt(outAttributeIndex);
 					modifiers = modifiers.Replace(SyntaxFactory.Token(SyntaxKind.RefKeyword), SyntaxFactory.Token(SyntaxKind.OutKeyword));
 				}
@@ -561,6 +617,11 @@ namespace RefactoringEssentials.CSharp.Converter
 			#endregion
 
 			#region Expressions
+
+			public override CSharpSyntaxNode VisitAwaitExpression(VBSyntax.AwaitExpressionSyntax node)
+			{
+				return SyntaxFactory.AwaitExpression((ExpressionSyntax)node.Expression.Accept(this));
+			}
 
 			public override CSharpSyntaxNode VisitCatchBlock(VBSyntax.CatchBlockSyntax node)
 			{
@@ -630,6 +691,11 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitLiteralExpression(VBSyntax.LiteralExpressionSyntax node)
 			{
+				if (node.Token.Value == null)
+				{
+					var type = semanticModel.GetTypeInfo(node).ConvertedType;
+					return !type.IsReferenceType ? SyntaxFactory.DefaultExpression(SyntaxFactory.ParseTypeName(type.ToMinimalDisplayString(semanticModel, node.SpanStart))) : Literal(null);
+				}
 				return Literal(node.Token.Value);
 			}
 
@@ -698,14 +764,15 @@ namespace RefactoringEssentials.CSharp.Converter
 				if (invocation is VBSyntax.ArrayCreationExpressionSyntax)
 					return node.Expression.Accept(this);
 				var symbol = invocation.TypeSwitch(
-					(VBSyntax.InvocationExpressionSyntax e) => ExtractMatch(semanticModel.GetSymbolInfo(e)) as IMethodSymbol,
-					(VBSyntax.ObjectCreationExpressionSyntax e) => ExtractMatch(semanticModel.GetSymbolInfo(e)) as IMethodSymbol,
+					(VBSyntax.InvocationExpressionSyntax e) => ExtractMatch(semanticModel.GetSymbolInfo(e)),
+					(VBSyntax.ObjectCreationExpressionSyntax e) => ExtractMatch(semanticModel.GetSymbolInfo(e)),
+                    (VBSyntax.RaiseEventStatementSyntax e) => ExtractMatch(semanticModel.GetSymbolInfo(e.Name)),
 					_ => { throw new NotSupportedException(); }
 				);
 				SyntaxToken token = default(SyntaxToken);
 				if (symbol != null)
 				{
-					var p = symbol.Parameters[argID];
+                    var p = symbol.GetParameters()[argID];
 					switch (p.RefKind)
 					{
 						case RefKind.None:
@@ -783,7 +850,7 @@ namespace RefactoringEssentials.CSharp.Converter
 					arguments = node.ArrayBounds.Arguments.Select(a => IncreaseArrayUpperBoundExpression(((VBSyntax.SimpleArgumentSyntax)a).Expression));
 				else
 					arguments = Enumerable.Empty<ExpressionSyntax>();
-				var bounds = SyntaxFactory.SingletonList(SyntaxFactory.ArrayRankSpecifier(SyntaxFactory.SeparatedList(arguments)));
+				var bounds = SyntaxFactory.List(node.RankSpecifiers.Select(r => (ArrayRankSpecifierSyntax)r.Accept(this)));
 				return SyntaxFactory.ArrayCreationExpression(
 					SyntaxFactory.ArrayType((TypeSyntax)node.Type.Accept(this), bounds),
 					(InitializerExpressionSyntax)node.Initializer?.Accept(this)
@@ -897,6 +964,14 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitInvocationExpression(VBSyntax.InvocationExpressionSyntax node)
 			{
+				var invocationSymbol = semanticModel.GetSymbolInfo(node).Symbol;
+				var symbol = semanticModel.GetSymbolInfo(node.Expression).Symbol;
+				if (invocationSymbol?.IsIndexer() == true || symbol?.GetReturnType()?.IsArrayType() == true)
+				{
+					return SyntaxFactory.ElementAccessExpression(
+						(ExpressionSyntax)node.Expression.Accept(this),
+						SyntaxFactory.BracketedArgumentList(SyntaxFactory.SeparatedList(node.ArgumentList.Arguments.Select(a => (ArgumentSyntax)a.Accept(this)))));
+				}
 				return SyntaxFactory.InvocationExpression(
 					(ExpressionSyntax)node.Expression.Accept(this),
 					(ArgumentListSyntax)node.ArgumentList.Accept(this)
@@ -969,7 +1044,9 @@ namespace RefactoringEssentials.CSharp.Converter
 				{
 					var tp = (TypeParameterSyntax)p.Accept(this);
 					paramList.Add(tp);
-					constraintList.Add((TypeParameterConstraintClauseSyntax)p.TypeParameterConstraintClause.Accept(this));
+					var constraint = (TypeParameterConstraintClauseSyntax)p.TypeParameterConstraintClause?.Accept(this);
+					if (constraint != null)
+						constraintList.Add(constraint);
 				}
 				parameters = SyntaxFactory.TypeParameterList(SyntaxFactory.SeparatedList(paramList));
 				constraints = SyntaxFactory.List(constraintList);
@@ -1015,7 +1092,7 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitIdentifierName(VBSyntax.IdentifierNameSyntax node)
 			{
-				return SyntaxFactory.IdentifierName(ConvertIdentifier(node.Identifier, semanticModel, node.Parent is VBSyntax.AsClauseSyntax));
+				return SyntaxFactory.IdentifierName(ConvertIdentifier(node.Identifier, semanticModel, node.Parent is VBSyntax.AttributeSyntax));
 			}
 
 			public override CSharpSyntaxNode VisitQualifiedName(VBSyntax.QualifiedNameSyntax node)

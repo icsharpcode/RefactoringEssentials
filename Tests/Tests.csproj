@@ -198,6 +198,12 @@
     <Compile Include="CSharp\CodeRefactorings\UseStringFormatTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\UseSystemEnvironmentNewLineTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\UseSystemStringEmptyTests.cs" />
+    <Compile Include="CSharp\Converter\ExpressionTests.cs" />
+    <Compile Include="CSharp\Converter\MemberTests.cs" />
+    <Compile Include="CSharp\Converter\NamespaceLevelTests.cs" />
+    <Compile Include="CSharp\Converter\SpecialConversionTests.cs" />
+    <Compile Include="CSharp\Converter\StatementTests.cs" />
+    <Compile Include="CSharp\Converter\TypeCastTests.cs" />
     <Compile Include="CSharp\Diagnostics\AccessToStaticMemberViaDerivedTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\AdditionalOfTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\ArrayCreationCanBeReplacedWithArrayInitializerTests.cs" />

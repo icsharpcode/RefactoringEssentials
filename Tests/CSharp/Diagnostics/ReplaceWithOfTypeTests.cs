@@ -5,77 +5,6 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
     public class ReplaceWithOfTypeTests : CSharpDiagnosticTestBase
     {
-        [Fact(Skip="Does this even make sense? There's no SelectNotNull method!")]
-        public void TestCaseSelectNotNull()
-        {
-            Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.SelectNotNull((object o) => o as Test);
-    }
-}", @"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.OfType<Test> ();
-    }
-}");
-            Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.SelectNotNull(o => o as Test);
-    }
-}", @"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.OfType<Test> ();
-    }
-}");
-        }
-
-        [Fact(Skip="Does this even make sense? There's no SelectNotNull method!")]
-        public void TestCaseSelectNotNullWithParentheses()
-        {
-            Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.SelectNotNull(o => ((o as Test)));
-    }
-}", @"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.OfType<Test> ();
-    }
-}");
-            Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.SelectNotNull(o => o as Test);
-    }
-}", @"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.OfType<Test> ();
-    }
-}");
-        }
-
-
         [Fact]
         public void TestCaseSelectWhereCase1()
         {
@@ -94,22 +23,6 @@ class Test
         obj.OfType<Test>();
     }
 }");
-            //There's no SelectNotNull!
-            //			Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-            //class Test
-            //{
-            //    public void Foo(object[] obj)
-            //    {
-            //        obj.SelectNotNull(o => o as Test);
-            //    }
-            //}", @"using System.Linq;
-            //class Test
-            //{
-            //    public void Foo(object[] obj)
-            //    {
-            //        obj.OfType<Test> ();
-            //    }
-            //}");
         }
 
         [Fact]
