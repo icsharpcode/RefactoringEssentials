@@ -10,6 +10,12 @@
     <Copyright>Copyright 2010-2017 AlphaSierraPapa and Xamarin Inc.</Copyright>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_3;RE2017</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD1_3;RE2017</DefineConstants>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\RefactoringEssentials\Common\CodeContractsCodeRefactoringProvider.cs">
       <Link>Common\CodeContractsCodeRefactoringProvider.cs</Link>
