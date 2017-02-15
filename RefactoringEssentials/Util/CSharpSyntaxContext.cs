@@ -414,13 +414,17 @@ namespace RefactoringEssentials
             inferTypesMethod = baseTypeInfo.GetMethod("InferTypes", new[] {
                 typeof(SemanticModel),
                 typeof(int),
+#if RE2017
                 typeof(string),
+#endif
                 typeof(CancellationToken)
             });
             inferTypes2Method = baseTypeInfo.GetMethod("InferTypes", new[] {
                 typeof(SemanticModel),
                 typeof(SyntaxNode),
+#if RE2017
                 typeof(string),
+#endif
                 typeof(CancellationToken)
             });
         }
@@ -437,7 +441,9 @@ namespace RefactoringEssentials
                 return (IEnumerable<ITypeSymbol>)inferTypesMethod.Invoke(instance, new object[] {
                     semanticModel,
                     position,
+#if RE2017
                     nameOpt,
+#endif
                     cancellationToken
                 });
             }
@@ -455,7 +461,9 @@ namespace RefactoringEssentials
                 return (IEnumerable<ITypeSymbol>)inferTypes2Method.Invoke(instance, new object[] {
                     semanticModel,
                     expression,
+#if RE2017
                     nameOpt,
+#endif
                     cancellationToken
                 });
             }
