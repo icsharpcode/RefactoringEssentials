@@ -242,7 +242,7 @@ class TestClass
 End Class");
         }
 
-        [Fact]
+        [Fact(Skip = "Not implemented!")]
         public void MultidimensionalArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -259,7 +259,7 @@ class TestClass
 End Class");
         }
 
-        [Fact]
+        [Fact(Skip = "Not implemented!")]
         public void MultidimensionalArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -276,7 +276,7 @@ class TestClass
 End Class");
         }
 
-        [Fact]
+        [Fact(Skip = "Not implemented!")]
         public void MultidimensionalArrayInitializationStatementWithLengths()
         {
             TestConversionCSharpToVisualBasic(@"
