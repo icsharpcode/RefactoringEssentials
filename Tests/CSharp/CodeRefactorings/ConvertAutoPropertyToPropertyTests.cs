@@ -28,7 +28,16 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Fact(Skip="TODO")]
+        [Fact]
+        public void TestExpressionBodyNoCrash()
+        {
+            TestWrongContext<ConvertAutoPropertyToPropertyCodeRefactoringProvider>(@"class TestClass
+{
+	string $Test => ""Hello World!"";
+}");
+        }
+
+        [Fact(Skip = "Simplifier.Annotation not working! (bug in Roslyn)")]
         public void TestSimplify()
         {
             Test<ConvertAutoPropertyToPropertyCodeRefactoringProvider>(@"

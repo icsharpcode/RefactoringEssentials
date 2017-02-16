@@ -264,8 +264,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         static bool CheckBody(MemberDeclarationSyntax node)
         {
             var property = node as BasePropertyDeclarationSyntax;
-            if (property != null && property.AccessorList.Accessors.Any(acc => !IsValidBody(acc.Body)))
-                return false;
+            if (property != null) {
+                if (property.AccessorList == null || property.AccessorList.Accessors.Any(acc => !IsValidBody(acc.Body)))
+                    return false;
+            }
 
             var m = node as MethodDeclarationSyntax;
             if (m != null && !IsValidBody(m.Body))

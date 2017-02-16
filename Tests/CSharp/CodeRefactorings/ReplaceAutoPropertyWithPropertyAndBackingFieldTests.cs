@@ -83,6 +83,20 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
+        [Fact]
+        public void TestAlreadyExpressionBody()
+        {
+            TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
+{
+	public string Test => string.Empty;
+}");
+
+            TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
+{
+	string FooBar.Test => string.Empty;
+}");
+        }
+
 
         [Fact]
         public void TestUnimplementedComputedProperty()

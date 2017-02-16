@@ -91,6 +91,15 @@ class TestClass
 }");
         }
 
+        [Fact]
+        public void TestMethodWithExpressionBody()
+        {
+            TestWrongContext<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int TestMethod(int i) => i << 8;
+}");
+        }
 
         [Fact]
         public void TestPropertyName()
@@ -158,6 +167,16 @@ class TestClass
         }
 		set {} 
     }
+}");
+        }
+
+        [Fact]
+        public void TestPropertyWithExpressionBody()
+        {
+            TestWrongContext<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int $TestProperty => 5;
 }");
         }
 
