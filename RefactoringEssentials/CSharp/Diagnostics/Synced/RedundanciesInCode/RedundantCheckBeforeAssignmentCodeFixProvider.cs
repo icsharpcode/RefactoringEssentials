@@ -29,7 +29,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 			var document = context.Document;
 			var cancellationToken = context.CancellationToken;
 			var diagnostics = context.Diagnostics;
-			var root = await document.GetSyntaxRootAsync(cancellationToken);
+			var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 			var diagnostic = diagnostics.First();
 			var node = root.FindNode(context.Span) as BinaryExpressionSyntax;
 			if (node == null)

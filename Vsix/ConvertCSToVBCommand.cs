@@ -144,7 +144,7 @@ namespace RefactoringEssentials.VsExtension
             {
                 using (StreamReader reader = new StreamReader(itemPath))
                 {
-                    string csCode = await reader.ReadToEndAsync();
+                    string csCode = await reader.ReadToEndAsync().ConfigureAwait(false);
                     CodeConversion.PerformCSToVBConversion(ServiceProvider, csCode);
                 }
             }

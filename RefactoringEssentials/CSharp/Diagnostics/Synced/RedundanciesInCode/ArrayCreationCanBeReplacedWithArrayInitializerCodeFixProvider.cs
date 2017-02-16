@@ -28,7 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var text = await document.GetTextAsync(cancellationToken);
+            var text = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
             var diagnostic = diagnostics.First();
             var sourceSpan = context.Span;
             context.RegisterCodeFix(CodeActionFactory.Create(sourceSpan, diagnostic.Severity, "Use array initializer", document.WithText(text.Replace(sourceSpan, ""))), diagnostic);

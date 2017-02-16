@@ -20,7 +20,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         #region ICodeActionProvider implementation
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            var codeContractsContext = await CodeContractsContext(context);
+            var codeContractsContext = await CodeContractsContext(context).ConfigureAwait(false);
             if (codeContractsContext == null)
                 return;
 

@@ -30,7 +30,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var diagnostic = diagnostics.First();
             var objectCreation = root.FindNode(context.Span, getInnermostNodeForTie: true) as ObjectCreationExpressionSyntax;
             var argumentListArgument = objectCreation.ArgumentList.Arguments.FirstOrDefault();

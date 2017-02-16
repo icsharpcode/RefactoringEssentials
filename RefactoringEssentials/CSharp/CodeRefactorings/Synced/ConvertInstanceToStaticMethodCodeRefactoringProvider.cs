@@ -68,7 +68,7 @@ namespace RefactoringEssentials.CSharp
         {
             // Collect all invocations of changed method
             var methodReferencesVisitor = new MethodReferencesVisitor(document.Project.Solution, methodSymbol, methodDeclaration, cancellationToken);
-            await methodReferencesVisitor.Collect();
+            await methodReferencesVisitor.Collect().ConfigureAwait(false);
 
             // Collect all references to type members and "this" expressions inside of changed method
             var memberReferencesVisitor = new MemberReferencesVisitor(model, declaringTypeSymbol.GetMembers().Where(m => m != methodSymbol), cancellationToken);
@@ -98,7 +98,7 @@ namespace RefactoringEssentials.CSharp
                 }
                 else
                 {
-                    thisDocRoot = await invocationsInDocument.Document.GetSyntaxRootAsync();
+                    thisDocRoot = await invocationsInDocument.Document.GetSyntaxRootAsync().ConfigureAwait(false);
                     if (thisDocRoot == null)
                         continue;
                     thisDocRoot = thisDocRoot.TrackNodes(invocationsInDocument.References.Select(r => r.InvocationExpression));
@@ -231,7 +231,7 @@ namespace RefactoringEssentials.CSharp
 
             public async Task Collect()
             {
-                var invocations = await SymbolFinder.FindCallersAsync(methodSymbol, solution);
+                var invocations = await SymbolFinder.FindCallersAsync(methodSymbol, solution).ConfigureAwait(false);
                 var invocationsPerDocument = from invocation in invocations
                                              from location in invocation.Locations
                                              where location.SourceTree != null
@@ -244,7 +244,7 @@ namespace RefactoringEssentials.CSharp
                     if (document == null)
                         continue;
 
-                    var root = await document.GetSyntaxRootAsync(cancellationToken);
+                    var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
                     if (root == null)
                         continue;
 

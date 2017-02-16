@@ -40,7 +40,7 @@ namespace RefactoringEssentials.Samples.CSharp
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
             // This is an instance of Diagnostic instance created by corresponding analyzer
             var diagnostic = diagnostics.First();
