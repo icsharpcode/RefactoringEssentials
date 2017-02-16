@@ -214,6 +214,20 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     }
 }");
 		}
+
+        [Fact]
+        public void TestIssue264()
+        {
+            Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"using System.Collections.Generic;
+
+class Test
+{
+    void TestCase(Test[] tests)
+    {
+      var output = tests == null ? new List<Test>() : new List<Test>(tests);
+    }
+}");
+        }
     }
 }
 
