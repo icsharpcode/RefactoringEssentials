@@ -56,16 +56,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     token.Span,
                     DiagnosticSeverity.Info,
                     GettextCatalog.GetString("To explicit type"),
-                    t2 => Task.FromResult(PerformAction(document, root, typeSyntax, GetExplicitTypeSyntax(model, type, typeSyntax)))
+                    t2 => Task.FromResult(PerformAction(document, root, typeSyntax, PutInsideUsingAction.GetExplicitTypeSyntax(model, type, typeSyntax)))
                 )
             );
-        }
-
-        public static TypeSyntax GetExplicitTypeSyntax(SemanticModel model, ISymbol type, TypeSyntax typeSyntax)
-        {
-            return SyntaxFactory.ParseTypeName(type.ToMinimalDisplayString(model, typeSyntax.SpanStart))
-                .WithLeadingTrivia(typeSyntax.GetLeadingTrivia())
-                .WithTrailingTrivia(typeSyntax.GetTrailingTrivia());
         }
 
         static Document PerformAction(Document document, SyntaxNode root, TypeSyntax typeSyntax, TypeSyntax replacementType)
