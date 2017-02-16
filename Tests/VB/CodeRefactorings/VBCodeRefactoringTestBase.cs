@@ -100,7 +100,7 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
             doc = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
             var actions = new List<CodeAction>();
             var context = new CodeRefactoringContext(doc, selectedSpan, actions.Add, default(CancellationToken));
-            action.ComputeRefactoringsAsync(context).Wait();
+            action.ComputeRefactoringsAsync(context).GetAwaiter().GetResult();
             if (markedSpan.Start > 0)
             {
                 foreach (var nra in actions.OfType<NRefactoryCodeAction>())

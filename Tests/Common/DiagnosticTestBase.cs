@@ -122,7 +122,7 @@ namespace RefactoringEssentials.Tests
                 var document = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
                 var actions = new List<CodeAction>();
                 var context = new CodeFixContext(document, diagnostic, (fix, diags) => actions.Add(fix), default(CancellationToken));
-                provider.RegisterCodeFixesAsync(context).Wait();
+                provider.RegisterCodeFixesAsync(context).GetAwaiter().GetResult();
                 if (!actions.Any())
                 {
                     Assert.True(false, "Provider has no fix for " + diagnostic.Id + " at " + diagnostic.Location.SourceSpan);
