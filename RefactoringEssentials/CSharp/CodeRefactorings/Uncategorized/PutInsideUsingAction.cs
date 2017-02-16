@@ -154,7 +154,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                 if (localDeclarationTypeSyntax.IsVar)
                 {
-                    localDeclarationTypeSyntax = GetExplicitTypeSyntax(semanticModel, semanticModel.GetSymbolInfo(localDeclarationTypeSyntax).Symbol, localDeclarationTypeSyntax);
+                    var localDeclarationType = (ITypeSymbol)semanticModel.GetSymbolInfo(localDeclarationTypeSyntax).Symbol;
+                    localDeclarationTypeSyntax = localDeclarationType.ToSyntax(semanticModel, localDeclarationTypeSyntax);
                 }
 
                 beforeUsing.Add(SyntaxFactory.LocalDeclarationStatement(
@@ -166,13 +167,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     .WithAdditionalAnnotations(Formatter.Annotation)
                     );
             }
-        }
-
-        public static TypeSyntax GetExplicitTypeSyntax(SemanticModel model, ISymbol type, TypeSyntax typeSyntax)
-        {
-            return SyntaxFactory.ParseTypeName(type.ToMinimalDisplayString(model, typeSyntax.SpanStart))
-                .WithLeadingTrivia(typeSyntax.GetLeadingTrivia())
-                .WithTrailingTrivia(typeSyntax.GetTrailingTrivia());
         }
 
         private static bool IsEndingWithDispose(SemanticModel semanticModel, List<StatementSyntax> insideUsing, ILocalSymbol disposableLocal)

@@ -56,7 +56,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     token.Span,
                     DiagnosticSeverity.Info,
                     GettextCatalog.GetString("To explicit type"),
-                    t2 => Task.FromResult(PerformAction(document, root, typeSyntax, PutInsideUsingAction.GetExplicitTypeSyntax(model, type, typeSyntax)))
+                    t2 => Task.FromResult(PerformAction(document, root, typeSyntax, type.ToSyntax(model, typeSyntax)))
                 )
             );
         }
