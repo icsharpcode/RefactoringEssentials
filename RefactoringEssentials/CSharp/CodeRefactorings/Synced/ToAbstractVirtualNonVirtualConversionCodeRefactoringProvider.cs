@@ -42,11 +42,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (declaration == null
                 || declaration is BaseTypeDeclarationSyntax
                 || declaration is ConstructorDeclarationSyntax
-                || declaration is DestructorDeclarationSyntax
-                || declaration.GetBodies().IsEmpty())
+                || declaration is DestructorDeclarationSyntax)
                 return;
             var modifiers = declaration.GetModifiers();
-            if (modifiers.Any(m => m.IsKind(SyntaxKind.OverrideKeyword)))
+            if (modifiers.Any(m => m.IsKind(SyntaxKind.OverrideKeyword, SyntaxKind.ExternKeyword)))
                 return;
 
             TypeDeclarationSyntax enclosingTypeDeclaration = declaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
@@ -55,24 +54,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
             var explicitInterface = declaration.GetExplicitInterfaceSpecifierSyntax();
             if (explicitInterface != null)
-            {
                 return;
-            }
 
-            //			if (selectedNode != node.NameToken) {
-            //				if ((node is EventDeclaration && node is CustomEventDeclaration || selectedNode.Role != Roles.Identifier) && 
-            //					selectedNode.Role != IndexerDeclaration.ThisKeywordRole) {
-            //					var modToken = selectedNode as CSharpModifierToken;
-            //					if (modToken == null || (modToken.Modifier & (Modifiers.Abstract | Modifiers.Virtual)) == 0)
-            //						yield break;
-            //				} else {
-            //					if (!(node is EventDeclaration || node is CustomEventDeclaration) && selectedNode.Parent != node)
-            //						yield break;
-            //				}
-            //			}
-            //			if (!node.GetChildByRole(EntityDeclaration.PrivateImplementationTypeRole).IsNull)
-            //				yield break;
-            //
             if (enclosingTypeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))
             {
                 if (modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))

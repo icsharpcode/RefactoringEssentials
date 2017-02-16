@@ -101,7 +101,7 @@ class Test : IDisposable
 }");
         }
 
-		[Fact(Skip = "broken")]
+		[Fact]
 		public void AbstractToNonAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -117,7 +117,7 @@ class Test : IDisposable
 }");
         }
 
-		[Fact(Skip = "broken")]
+		[Fact]
 		public void AbstractToVirtualTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -133,7 +133,7 @@ class Test : IDisposable
 }", 1);
         }
 
-		[Fact(Skip = "broken")]
+		[Fact]
 		public void AbstractPropertyToNonAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -161,7 +161,7 @@ class Test : IDisposable
 }");
         }
 
-        [Fact(Skip="broken")]
+        [Fact]
         public void AbstractEventToNonAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -176,7 +176,7 @@ abstract class Test
 }");
         }
 
-		[Fact(Skip = "broken")]
+		[Fact]
 		public void NonAbstractToAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -192,7 +192,7 @@ abstract class Test
 }");
         }
 
-		[Fact(Skip = "broken")]
+		[Fact]
 		public void NonAbstractEventToAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -250,6 +250,20 @@ class Test
     public override string $ToString()
     {
     }
+}");
+        }
+
+        [Fact]
+        public void ExternMethodTest()
+        {
+            TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
+                @"using System;
+using System.Runtime.InteropServices;
+
+class Test
+{
+    [DllImport(""user32.dll"")]
+    static extern bool $CloseWindow(IntPtr hWnd);
 }");
         }
 
