@@ -150,9 +150,17 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     insideUsing.Insert(i + 1, needAssignment.Declarator.InitializerAsAssignment());
                 }
 
+                var localDeclarationTypeSyntax = localDeclarationStmt.Declaration.Type;
+
+                if (localDeclarationTypeSyntax.IsVar)
+                {
+                    localDeclarationTypeSyntax = ReplaceVarWithExplicitTypeCodeRefactoringProvider.GetExplicitTypeSyntax(
+                        semanticModel, semanticModel.GetSymbolInfo(localDeclarationTypeSyntax).Symbol, localDeclarationTypeSyntax);
+                }
+
                 beforeUsing.Add(SyntaxFactory.LocalDeclarationStatement(
                         SyntaxFactory.VariableDeclaration(
-                            localDeclarationStmt.Declaration.Type,
+                            localDeclarationTypeSyntax,
                             SyntaxFactory.SeparatedList(variablesToMove.Select(x => x.Declarator.WithInitializer(null)))
                             )
                     )
