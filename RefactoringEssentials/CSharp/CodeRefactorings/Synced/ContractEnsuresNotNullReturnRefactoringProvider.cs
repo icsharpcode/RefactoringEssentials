@@ -103,14 +103,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         {
             var workspace = new AdhocWorkspace();
 
+            var rhsEnsures = $"Contract.Ensures(Contract.Result<{returnType}>() != null);";
+            var lhsEnsures = $"Contract.Ensures(null != Contract.Result<{returnType}>());";
             foreach (var expression in bodyStatement.DescendantNodes().OfType<ExpressionStatementSyntax>())
             {
                 var formatted = Formatter.Format(expression, workspace).ToString();
 
-                if (formatted == $"Contract.Ensures(Contract.Result<{returnType}>() != null);")
-                    return true;
-
-                if (formatted == $"Contract.Ensures(null != Contract.Result<{returnType}>());")
+                if (formatted == rhsEnsures || formatted == lhsEnsures)
                     return true;
             }
             return false;
