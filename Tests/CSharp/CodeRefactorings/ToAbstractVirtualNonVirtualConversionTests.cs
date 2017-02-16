@@ -294,5 +294,19 @@ abstract class Test
 }
 ");
         }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
+                @"interface Test
+{
+                void $Test2();
+                int $Test { get; set; }
+    event EventHandler $TestEvent;
+    }
+"
+            );
+        }
     }
 }

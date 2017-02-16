@@ -273,6 +273,14 @@ class Foo2
     }
 }");
         }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<ConvertInstanceToStaticMethodCodeRefactoringProvider>(
+                "interface Test { void $TestMethod(); }"
+            );
+        }
     }
 }
 

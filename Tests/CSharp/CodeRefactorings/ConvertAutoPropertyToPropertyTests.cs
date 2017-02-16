@@ -37,6 +37,15 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<ConvertAutoPropertyToPropertyCodeRefactoringProvider>(
+                "interface Test { string $Test2 { get; set; } }");
+            TestWrongContext<ConvertAutoPropertyToPropertyCodeRefactoringProvider>(
+                "interface Test { string $Test2 { get; } }");
+        }
+
         [Fact(Skip = "Simplifier.Annotation not working! (bug in Roslyn)")]
         public void TestSimplify()
         {

@@ -251,6 +251,14 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     }
 }");
         }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(
+                "interface Test { int $Test2 { get; set; } }"
+            );
+        }
     }
 }
 

@@ -85,5 +85,13 @@ class TestClass
     }
 }");
         }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<CreateCustomEventImplementationAction>(
+                @"interface Test { event EventHandler $TestEvent; }"
+            );
+        }
     }
 }

@@ -159,6 +159,14 @@ class TestClass
     public event UnusualEventHandler Tested;
 }");
         }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<CreateEventInvocatorCodeRefactoringProvider>(
+                "using System; interface Test { event EventHandler $TestEvent; }"
+            );
+        }
     }
 }
 
