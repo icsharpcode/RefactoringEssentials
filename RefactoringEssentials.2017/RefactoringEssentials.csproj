@@ -65,9 +65,6 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider.cs</Link>
     </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\AddBracesCodeRefactoringProvider.cs">
-      <Link>CSharp\CodeRefactorings\Custom\AddBracesCodeRefactoringProvider.cs</Link>
-    </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs</Link>
     </Compile>

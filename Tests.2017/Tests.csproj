@@ -19,7 +19,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug.2017\</OutputPath>
     <DefineConstants>DEBUG;RE2017;UNIMPLEMENTED_CONVERTER_FEATURE_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,7 +29,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release.2017\</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -38,14 +38,14 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Debug|AnyCPU' ">
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug_Mono</OutputPath>
+    <OutputPath>bin\Debug_Mono.2017</OutputPath>
     <WarningLevel>4</WarningLevel>
     <AssemblyName>Tests</AssemblyName>
     <DefineConstants>RE2017</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Mono_Release|AnyCPU' ">
     <Optimize>false</Optimize>
-    <OutputPath>bin\Mono_Release</OutputPath>
+    <OutputPath>bin\Mono_Release.2017</OutputPath>
     <WarningLevel>4</WarningLevel>
     <AssemblyName>Tests</AssemblyName>
     <DefineConstants>RE2017</DefineConstants>
@@ -241,9 +241,6 @@
     </Compile>
     <Compile Include="..\Tests\CSharp\CodeRefactorings\AddArgumentNameTests.cs">
       <Link>CSharp\CodeRefactorings\AddArgumentNameTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Tests\CSharp\CodeRefactorings\AddBracesTests.cs">
-      <Link>CSharp\CodeRefactorings\AddBracesTests.cs</Link>
     </Compile>
     <Compile Include="..\Tests\CSharp\CodeRefactorings\AddCatchExceptionTests.cs">
       <Link>CSharp\CodeRefactorings\AddCatchExceptionTests.cs</Link>
