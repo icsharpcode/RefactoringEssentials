@@ -152,15 +152,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                 var localDeclarationTypeSyntax = localDeclarationStmt.Declaration.Type;
 
-                if(localDeclarationTypeSyntax.IsVar)
+                if (localDeclarationTypeSyntax.IsVar)
                 {
-                    var localDeclarationTypeSymbol = semanticModel.GetSymbolInfo(localDeclarationTypeSyntax).Symbol;
-
-                    var localDeclarationTypeName = localDeclarationTypeSymbol.ToMinimalDisplayString(semanticModel, localDeclarationTypeSyntax.SpanStart);
-
-                    localDeclarationTypeSyntax = SyntaxFactory.ParseTypeName(localDeclarationTypeName)
-                        .WithLeadingTrivia(localDeclarationTypeSyntax.GetLeadingTrivia())
-                        .WithTrailingTrivia(localDeclarationTypeSyntax.GetTrailingTrivia());
+                    localDeclarationTypeSyntax = ReplaceVarWithExplicitTypeCodeRefactoringProvider.GetExplicitTypeSyntax(
+                        semanticModel, semanticModel.GetSymbolInfo(localDeclarationTypeSyntax).Symbol, localDeclarationTypeSyntax);
                 }
 
                 beforeUsing.Add(SyntaxFactory.LocalDeclarationStatement(
