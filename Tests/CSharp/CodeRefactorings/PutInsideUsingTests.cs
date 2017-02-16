@@ -392,6 +392,34 @@ class TestClass
     }
 }");
         }
+
+        [Fact]
+        public void TestChangeVarDeclarationToExplicit()
+        {
+            Test<PutInsideUsingAction>(@"
+class TestClass
+{
+    void TestMethod ()
+    {
+        System.IDisposable obj $= null;
+        var a = obj.GetHashCode();        
+        return a;
+    }
+}", @"
+class TestClass
+{
+    void TestMethod ()
+    {
+        int a;
+        using (System.IDisposable obj = null)
+        {
+            a = obj.GetHashCode();
+        }
+
+        return a;
+    }
+}");
+        }
     }
 
    
