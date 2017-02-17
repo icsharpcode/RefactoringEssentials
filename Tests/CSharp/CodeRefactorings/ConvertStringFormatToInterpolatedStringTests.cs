@@ -1,3 +1,4 @@
+using System;
 using RefactoringEssentials.CSharp.CodeRefactorings;
 using Xunit;
 
@@ -72,12 +73,27 @@ class TestClass
 }");
         }
 
-        [Fact(Skip="Broken on windows")]
+        [Fact]
         public void TestVerbatimStringFormat()
         {
             Test<ConvertStringFormatToInterpolatedStringCodeRefactoringProvider>(
-                "class TestClass\n{\n    void Foo ()\n    {\n        var world = \"World\";\n        var str = $string.Format (@\"Hello \"\" {0}\n!\", world);\n    }\n}", 
-                "class TestClass\n{\n    void Foo ()\n    {\n        var world = \"World\";\n        var str = $\"Hello \\\" {world}\\n!\";\n    }\n}");
+               @"class TestClass
+{
+    void Foo ()
+    {
+        var world = ""World"";
+        var str = $string.Format (@""Hello """" {0}
+!"", world);
+    }
+}", 
+                @"class TestClass
+{
+    void Foo ()
+    {
+        var world = ""World"";
+        var str = $""Hello \"" {world}" + Environment.NewLine.Replace("\r", "\\r").Replace("\n", "\\n") +  @"!"";
+    }
+}");
         }
     }
 }
