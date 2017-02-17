@@ -12,59 +12,47 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         [Fact]
         public void Test()
         {
-            string result = RunContextAction(
-                                         new CheckIfParameterIsNullCodeRefactoringProvider(),
-                                         "using System;" + Environment.NewLine +
-                                         "class TestClass" + Environment.NewLine +
-                                         "{" + Environment.NewLine +
-                                         "    void Test (string $param)" + Environment.NewLine +
-                                         "    {" + Environment.NewLine +
-                                         "        Console.WriteLine (param);" + Environment.NewLine +
-                                         "    }" + Environment.NewLine +
-                                         "}"
-                                     );
-
-            Assert.Equal(
-                "using System;" + Environment.NewLine +
-                "class TestClass" + Environment.NewLine +
-                "{" + Environment.NewLine +
-                "    void Test (string param)" + Environment.NewLine +
-                "    {" + Environment.NewLine +
-                "        if (param == null)" + Environment.NewLine +
-                "            throw new ArgumentNullException(nameof(param));" + Environment.NewLine +
-                "        Console.WriteLine (param);" + Environment.NewLine +
-                "    }" + Environment.NewLine +
-                "}", result);
+            Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"using System;
+class TestClass
+{
+    void Test (string $param)
+    {
+        Console.WriteLine (param);
+    }
+}", @"using System;
+class TestClass
+{
+    void Test (string param)
+    {
+        if (param == null)
+            throw new ArgumentNullException(nameof(param));
+        Console.WriteLine (param);
+    }
+}");
         }
 
-        [Fact(Skip="Broken.")]
+        [Fact]
         public void TestWithComment()
         {
-            string result = RunContextAction(
-                                         new CheckIfParameterIsNullCodeRefactoringProvider(),
-                                         "using System;" + Environment.NewLine +
-                                         "class TestClass" + Environment.NewLine +
-                                         "{" + Environment.NewLine +
-                                         "    void Test (string $param)" + Environment.NewLine +
-                                         "    {" + Environment.NewLine +
-                                         "        // Some comment" + Environment.NewLine +
-                                         "        Console.WriteLine (param);" + Environment.NewLine +
-                                         "    }" + Environment.NewLine +
-                                         "}"
-                                     );
-
-            Assert.Equal(
-                "using System;" + Environment.NewLine +
-                "class TestClass" + Environment.NewLine +
-                "{" + Environment.NewLine +
-                "    void Test (string param)" + Environment.NewLine +
-                "    {" + Environment.NewLine +
-                "        if (param == null)" + Environment.NewLine +
-                "            throw new ArgumentNullException(\"param\");" + Environment.NewLine +
-                "        // Some comment" + Environment.NewLine +
-                "        Console.WriteLine (param);" + Environment.NewLine +
-                "    }" + Environment.NewLine +
-                "}", result);
+            Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"using System;
+class TestClass
+{
+    void Test (string $param)
+    {
+        // Some comment
+        Console.WriteLine(param);
+    }
+}", @"using System;
+class TestClass
+{
+    void Test (string param)
+    {
+        if (param == null)
+            throw new ArgumentNullException(nameof(param));
+        // Some comment
+        Console.WriteLine(param);
+    }
+}");
         }
 
         [Fact]
