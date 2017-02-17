@@ -15,75 +15,75 @@ class Bar
 	public void Foo (string[] args)
 	{
 		if (" + expr + @")
-			Console.WriteLine ();
+			Console.WriteLine();
 	}
 }
 ";
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestAnyNotEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () != 0"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() != 0$"), ConstructExpression("args.Any()"));
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestAnyGreater()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () > 0"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() > 0$"), ConstructExpression("args.Any()"));
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestAnyLower()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("0 < args.Count ()"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$0 < args.Count()$"), ConstructExpression("args.Any()"));
         }
 
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestAnyGreaterEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () >= 1"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() >= 1$"), ConstructExpression("args.Any()"));
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestAnyLessEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("1 <= args.Count ()"), ConstructExpression("args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$1 <= args.Count()$"), ConstructExpression("args.Any()"));
         }
 
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestNotAnyEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () == 0"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() == 0$"), ConstructExpression("!args.Any()"));
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestNotAnyLess()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () < 1"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() < 1$"), ConstructExpression("!args.Any()"));
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestNotAnyGreater()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("1 > args.Count ()"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$1 > args.Count()$"), ConstructExpression("!args.Any()"));
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestNotAnyLessEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("args.Count () <= 0"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$args.Count() <= 0$"), ConstructExpression("!args.Any()"));
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestNotAnyGreaterEqual()
         {
-            Test<UseMethodAnyAnalyzer>(ConstructExpression("0 >= args.Count ()"), ConstructExpression("!args.Any ()"));
+            Analyze<UseMethodAnyAnalyzer>(ConstructExpression("$0 >= args.Count()$"), ConstructExpression("!args.Any()"));
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestDisable()
         {
             Analyze<UseMethodAnyAnalyzer>(@"
@@ -93,15 +93,15 @@ class Bar
 {
 	public void Foo (string[] args)
 	{
-		// ReSharper disable once UseMethodAny
-		if (args.Count () > 0)
+		#pragma warning disable RECS0116
+		if (args.Count() > 0)
 			Console.WriteLine();
 	}
 }
 ");
         }
 
-        [Fact(Skip="TODO: Issue not ported yet")]
+        [Fact]
         public void TestWrongMethod()
         {
             Analyze<UseMethodAnyAnalyzer>(@"
@@ -109,11 +109,11 @@ using System;
 using System.Linq;
 class Bar
 {
-	public int Count () { return 5; }
+	public int Count() { return 5; }
 
 	public void Foo (Bar args)
 	{
-		if (args.Count () > 0)
+		if (args.Count() > 0)
 			Console.WriteLine();
 	}
 }
