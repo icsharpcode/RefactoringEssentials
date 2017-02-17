@@ -25,21 +25,25 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
             var token = root.FindToken(span.Start);
 
-            if (!token.IsKind(SyntaxKind.IdentifierToken) &&
-                !token.IsKind(SyntaxKind.AbstractKeyword) &&
-                !token.IsKind(SyntaxKind.VirtualKeyword) &&
-                !token.IsKind(SyntaxKind.ThisKeyword))
+            if (!token.IsKind(SyntaxKind.IdentifierToken, SyntaxKind.AbstractKeyword, SyntaxKind.VirtualKeyword, SyntaxKind.ThisKeyword))
                 return;
-            var declaration = token.Parent as MemberDeclarationSyntax;
-            if (token.IsKind(SyntaxKind.IdentifierToken))
-            {
-                if (token.Parent.Parent.IsKind(SyntaxKind.VariableDeclaration) &&
-                    token.Parent.Parent.Parent.IsKind(SyntaxKind.EventFieldDeclaration))
-                {
-                    declaration = token.Parent.Parent.Parent as MemberDeclarationSyntax;
+            MemberDeclarationSyntax declaration;
+            ISymbol symbol = null;
+            if (token.IsKind(SyntaxKind.IdentifierToken)) {
+                if (token.Parent?.Parent?.IsKind(SyntaxKind.VariableDeclaration) == true) {
+                    declaration = token.Parent?.Parent?.Parent as MemberDeclarationSyntax;
+                    symbol = model.GetDeclaredSymbol(token.Parent);
+                } else {
+                    declaration = token.Parent as MemberDeclarationSyntax;
+                    if (declaration != null)
+                        symbol = model.GetDeclaredSymbol(declaration);
                 }
+            } else {
+                declaration = token.Parent as MemberDeclarationSyntax;
+                if (declaration != null)
+                    symbol = model.GetDeclaredSymbol(declaration);
             }
-            if (declaration == null
+            if (declaration == null || symbol == null
                 || declaration is BaseTypeDeclarationSyntax
                 || declaration is ConstructorDeclarationSyntax
                 || declaration is DestructorDeclarationSyntax)
@@ -48,15 +52,15 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (modifiers.Any(m => m.IsKind(SyntaxKind.OverrideKeyword, SyntaxKind.ExternKeyword)))
                 return;
 
-            TypeDeclarationSyntax enclosingTypeDeclaration = declaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-            if (enclosingTypeDeclaration == null || enclosingTypeDeclaration is InterfaceDeclarationSyntax)
+            var containingType = symbol.ContainingType;
+            if (symbol.DeclaredAccessibility == Accessibility.Private || containingType.IsInterfaceType())
                 return;
 
             var explicitInterface = declaration.GetExplicitInterfaceSpecifierSyntax();
             if (explicitInterface != null)
                 return;
 
-            if (enclosingTypeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))
+            if (containingType.IsAbstract)
             {
                 if (modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))
                 {
@@ -121,7 +125,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     )
                     );
                 }
-                else if (!enclosingTypeDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
+                else if (!containingType.IsStatic)
                 {
                     context.RegisterRefactoring(CodeActionFactory.Create(
                         token.Span,

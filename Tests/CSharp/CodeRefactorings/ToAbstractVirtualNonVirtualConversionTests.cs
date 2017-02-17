@@ -89,6 +89,13 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
         [Fact]
+        public void DoNotSuggestOnPrivateMethod()
+        {
+            TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
+                "class Test { void $Foo() { } }");
+        }
+
+        [Fact]
         public void InvalidPrivateImplementationTypeTest()
         {
             TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
