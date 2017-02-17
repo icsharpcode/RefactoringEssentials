@@ -70,7 +70,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         }
 
-        [Fact(Skip="Won't work with Roslyn < 1.1 due to a bug with equivalence checking of interpolated strings. Activate with Roslyn 1.1.")]
+        [Fact]
         public void TestNotEqualBranchesWithInterpolatedStrings()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"class Foo
