@@ -227,11 +227,8 @@ namespace RefactoringEssentials
                 return (T)((BaseMethodDeclarationSyntax)d.WithBody(body));
             throw new NotSupportedException();
         }
-    }
 
-    static class WorkaroundForDumbVS2015ReflectionBug
-    {
-        internal static TypeSyntax ToSyntax(this ITypeSymbol type, SemanticModel model, TypeSyntax typeSyntax)
+        public static TypeSyntax ToSyntax(this ITypeSymbol type, SemanticModel model, TypeSyntax typeSyntax)
         {
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
