@@ -215,6 +215,17 @@ namespace RefactoringEssentials
             return cond1.SkipParens().IsEquivalentTo(cond2.SkipParens(), true);
         }
 
+        public static ExpressionSyntax ExtractUnaryOperand(this ExpressionSyntax expr)
+        {
+            if (expr == null)
+                throw new ArgumentNullException(nameof(expr));
+            if (expr is PostfixUnaryExpressionSyntax)
+                return ((PostfixUnaryExpressionSyntax)expr).Operand;
+            if (expr is PrefixUnaryExpressionSyntax)
+                return ((PrefixUnaryExpressionSyntax)expr).Operand;
+            return null;
+        }
+
         public static T WithBody<T>(this T method, BlockSyntax body) where T : BaseMethodDeclarationSyntax
         {
             if (method == null)
