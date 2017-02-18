@@ -67,7 +67,7 @@ class Test
 }");
         }
 
-        [Fact(Skip="Broken.")]
+        [Fact]
         public void TestSimpleForWithComment2()
         {
             Test<ConvertForToWhileCodeRefactoringProvider>(@"

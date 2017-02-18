@@ -25,7 +25,7 @@ class Test
 }");
         }
 
-        [Fact(Skip="broken")]
+        [Fact]
         public void TestAddWithComment()
         {
             Test<ReplacePostfixExpressionWithAssignmentCodeRefactoringProvider>(@"
