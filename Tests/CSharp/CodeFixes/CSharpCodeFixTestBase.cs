@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Xunit;
+using System.Text;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
@@ -29,12 +30,13 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
             bool passed = result == output;
             if (!passed)
             {
-                Console.WriteLine("-----------Expected:");
-                Console.WriteLine(output);
-                Console.WriteLine("-----------Got:");
-                Console.WriteLine(result);
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("-----------Expected:");
+                sb.AppendLine(output);
+                sb.AppendLine("-----------Got:");
+                sb.AppendLine(result);
+                Assert.True(passed, sb.ToString());
             }
-            Assert.Equal(output, result);
         }
 
         internal static List<Microsoft.CodeAnalysis.CodeActions.CodeAction> GetActions<T>(string input) where T : CodeFixProvider, new()
