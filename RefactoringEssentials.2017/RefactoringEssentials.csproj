@@ -41,6 +41,7 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0108UseNewKeywordIfHidingIntendedCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\CS0108UseNewKeywordIfHidingIntendedCodeFixProvider.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0132StaticConstructorParameterCodeFixProvider.cs" Link="CSharp\CodeFixes\Custom\CS0132StaticConstructorParameterCodeFixProvider.cs" />
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0152DuplicateCaseLabelValueCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\CS0152DuplicateCaseLabelValueCodeFixProvider.cs</Link>
     </Compile>
@@ -50,6 +51,7 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0164LabelHasNotBeenReferencedCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\CS0164LabelHasNotBeenReferencedCodeFixProvider.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0168LocalVariableNotUsedCodeFixProvider.cs" Link="CSharp\CodeFixes\Custom\CS0168LocalVariableNotUsedCodeFixProvider.cs" />
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0759RedundantPartialMethodCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\CS0759RedundantPartialMethodCodeFixProvider.cs</Link>
     </Compile>
@@ -1267,12 +1269,6 @@
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntCodeFixProvider.cs">
       <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntCodeFixProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedAnalyzer.cs">
-      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedAnalyzer.cs</Link>
-    </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedCodeFixProvider.cs">
-      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedCodeFixProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartAnalyzer.cs">
       <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartAnalyzer.cs</Link>

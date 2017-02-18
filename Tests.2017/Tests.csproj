@@ -209,11 +209,17 @@
     <Compile Include="..\Tests\CSharp\CodeFixes\CS0108UseNewKeywordIfHidingIntendedTests.cs">
       <Link>CSharp\CodeFixes\CS0108UseNewKeywordIfHidingIntendedTests.cs</Link>
     </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CS0132StaticConstructorParameterTests.cs">
+      <Link>CSharp\CodeFixes\CS0132StaticConstructorParameterTests.cs</Link>
+    </Compile>
     <Compile Include="..\Tests\CSharp\CodeFixes\CS0152DuplicateCaseLabelValueTests.cs">
       <Link>CSharp\CodeFixes\CS0152DuplicateCaseLabelValueTests.cs</Link>
     </Compile>
     <Compile Include="..\Tests\CSharp\CodeFixes\CS0164LabelHasNotBeenReferencedTests.cs">
       <Link>CSharp\CodeFixes\CS0164LabelHasNotBeenReferencedTests.cs</Link>
+    </Compile>
+    <Compile Include="..\Tests\CSharp\CodeFixes\CS0168LocalVariableNotUsedCodeFixProviderTests.cs">
+      <Link>CSharp\CodeFixes\CS0168LocalVariableNotUsedCodeFixProviderTests.cs</Link>
     </Compile>
     <Compile Include="..\Tests\CSharp\CodeFixes\CS0759RedundantPartialMethodTests.cs">
       <Link>CSharp\CodeFixes\CS0759RedundantPartialMethodTests.cs</Link>
@@ -707,9 +713,6 @@
     <Compile Include="..\Tests\CSharp\Diagnostics\LocalVariableHidesMemberTests.cs">
       <Link>CSharp\Diagnostics\LocalVariableHidesMemberTests.cs</Link>
     </Compile>
-    <Compile Include="..\Tests\CSharp\Diagnostics\LocalVariableNotUsedIssueTests.cs">
-      <Link>CSharp\Diagnostics\LocalVariableNotUsedIssueTests.cs</Link>
-    </Compile>
     <Compile Include="..\Tests\CSharp\Diagnostics\LockThisTests.cs">
       <Link>CSharp\Diagnostics\LockThisTests.cs</Link>
     </Compile>
@@ -973,9 +976,6 @@
     </Compile>
     <Compile Include="..\Tests\CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs">
       <Link>CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs</Link>
-    </Compile>
-    <Compile Include="..\Tests\CSharp\Diagnostics\StaticConstructorParameterTests.cs">
-      <Link>CSharp\Diagnostics\StaticConstructorParameterTests.cs</Link>
     </Compile>
     <Compile Include="..\Tests\CSharp\Diagnostics\StaticEventSubscriptionTests.cs">
       <Link>CSharp\Diagnostics\StaticEventSubscriptionTests.cs</Link>
