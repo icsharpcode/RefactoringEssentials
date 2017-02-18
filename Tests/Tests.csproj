@@ -252,7 +252,7 @@
     <Compile Include="CSharp\Diagnostics\FunctionNeverReturnsTests.cs" />
     <Compile Include="CSharp\Diagnostics\CSharpDiagnosticTestBase.cs" />
     <Compile Include="CSharp\Diagnostics\LocalVariableHidesMemberTests.cs" />
-    <Compile Include="CSharp\Diagnostics\LocalVariableNotUsedIssueTests.cs" />
+    <Compile Include="CSharp\CodeFixes\CS0168LocalVariableNotUsedCodeFixProviderTests.cs" />
     <Compile Include="CSharp\Diagnostics\LockThisTests.cs" />
     <Compile Include="CSharp\Diagnostics\LongLiteralEndingLowerLTests.cs" />
     <Compile Include="CSharp\Diagnostics\MemberCanBeMadeStaticTests.cs" />

@@ -105,7 +105,6 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
             {
                 if (action.FixableDiagnosticIds.Contains(d.Id))
                 {
-
                     if (selectedSpan.Start > 0)
                         Assert.True(selectedSpan == d.Location.SourceSpan, "Activation span does not match.");
 

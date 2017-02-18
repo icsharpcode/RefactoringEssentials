@@ -5,18 +5,14 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RefactoringEssentials.CSharp.Diagnostics
+namespace RefactoringEssentials.CSharp.CodeFixes
 {
     [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
-    public class LocalVariableNotUsedCodeFixProvider : CodeFixProvider
+    public class CS0168LocalVariableNotUsedCodeFixProvider : CodeFixProvider
     {
-        public override ImmutableArray<string> FixableDiagnosticIds
-        {
-            get
-            {
-                return ImmutableArray.Create(CSharpDiagnosticIDs.LocalVariableNotUsedAnalyzerID);
-            }
-        }
+        public const string CS0168 = "CS0168"; // The variable 'var' is declared but never used
+
+        public override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CS0168);
 
         public override FixAllProvider GetFixAllProvider()
         {
@@ -38,17 +34,17 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (variableDeclarationSyntax == null)
                 return;
             // This is a workaround to avoid working with implausible syntax tree on syntax errors
-            var block = variableDeclarationSyntax.Parent.Parent as BlockSyntax;
+            var block = variableDeclarationSyntax.Parent?.Parent as BlockSyntax;
             if (block == null)
                 return;
-
-            if (variableDeclarationSyntax.Variables.Count == 1)
-            {
-                var newRoot = root.RemoveNode(node.Parent.Parent, SyntaxRemoveOptions.KeepNoTrivia);
-                context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove unused local variable", document.WithSyntaxRoot(newRoot)), diagnostic);
+            SyntaxNode nodeToRemove;
+            if (variableDeclarationSyntax.Variables.Count == 1) {
+                nodeToRemove = node.Parent.Parent;
+            } else {
+                nodeToRemove = node;
             }
-
-            // TODO Support declarations with multiple variables.
+            var newRoot = root.RemoveNode(nodeToRemove, SyntaxRemoveOptions.KeepNoTrivia);
+            context.RegisterCodeFix(CodeActionFactory.Create(node.Span, diagnostic.Severity, "Remove unused local variable", document.WithSyntaxRoot(newRoot)), diagnostic);
         }
     }
 }
