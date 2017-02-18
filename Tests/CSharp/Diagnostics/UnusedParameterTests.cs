@@ -10,9 +10,9 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         {
             var input = @"
 class TestClass {
-	void TestMethod (int $i$)
-	{
-	}
+    void TestMethod (int $i$)
+    {
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -22,10 +22,10 @@ class TestClass {
         {
             var input = @"
 class TestClass {
-	void TestMethod (int $i$)
-	{
-		TestMethod(0);
-	}
+    void TestMethod (int $i$)
+    {
+        TestMethod(0);
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -35,12 +35,12 @@ class TestClass {
         {
             var input = @"
 interface ITestClass {
-	void TestMethod (int i);
+    void TestMethod (int i);
 }
 class TestClass : ITestClass {
-	public void TestMethod (int i)
-	{
-	}
+    public void TestMethod (int i)
+    {
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -50,12 +50,12 @@ class TestClass : ITestClass {
         {
             var input = @"
 abstract class TestBase {
-	public abstract void TestMethod (int i);
+    public abstract void TestMethod (int i);
 }
 class TestClass : TestBase {
-	public override void TestMethod (int i)
-	{
-	}
+    public override void TestMethod (int i)
+    {
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -65,10 +65,10 @@ class TestClass : TestBase {
         {
             var input = @"
 class TestClass {
-	void TestMethod (int i)
-	{
-		i = 1;
-	}
+    void TestMethod (int i)
+    {
+        i = 1;
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -78,11 +78,11 @@ class TestClass {
         {
             var input = @"
 class TestClass {
-	void TestMethod ()
-	{
-		System.Action<int> a = i => {
-		};
-	}
+    void TestMethod ()
+    {
+        System.Action<int> a = i => {
+        };
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -92,11 +92,11 @@ class TestClass {
         {
             var input = @"
 class TestClass {
-	void TestMethod ()
-	{
-		System.Action<int> a = delegate (int $i$) {
-		};
-	}
+    void TestMethod ()
+    {
+        System.Action<int> a = delegate (int $i$) {
+        };
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -107,12 +107,12 @@ class TestClass {
         {
             var input = @"using System;
 class TestClass {
-	public event EventHandler FooEvt;
-	void TestMethod ()
-	{
-		FooEvt += FooBar;
-	}
-	void FooBar (object sender, EventArgs e) {}
+    public event EventHandler FooEvt;
+    void TestMethod ()
+    {
+        FooEvt += FooBar;
+    }
+    void FooBar (object sender, EventArgs e) {}
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -122,7 +122,7 @@ class TestClass {
         {
             var input = @"using System;
 class TestClass {
-	void FooBar (object $sender$, EventArgs $e$) {}
+    void FooBar (object $sender$, EventArgs $e$) {}
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -135,7 +135,7 @@ class TestClass {
             // we just rely on heuristics if the class is partial
             var input = @"using System;
 partial class TestClass {
-	void FooBar (object sender, EventArgs e) {}
+    void FooBar (object sender, EventArgs e) {}
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -145,9 +145,9 @@ partial class TestClass {
         {
             var input = @"
 class TestClass {
-	public TestClass(int $i$)
-	{
-	}
+    public TestClass(int $i$)
+    {
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -157,9 +157,9 @@ class TestClass {
         {
             var input = @"
 class TestClass {
-	public virtual void TestMethod (int i)
-	{
-	}
+    public virtual void TestMethod (int i)
+    {
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -169,9 +169,9 @@ class TestClass {
         {
             var input = @"
 class TestClass {
-	public new void TestMethod (int i)
-	{
-	}
+    public new void TestMethod (int i)
+    {
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -181,9 +181,9 @@ class TestClass {
         {
             var input = @"
 partial class TestClass {
-	partial void TestMethod (int i)
-	{
-	}
+    partial void TestMethod (int i)
+    {
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -194,11 +194,11 @@ partial class TestClass {
             var input = @"using System;
 using System.Runtime.Serialization;
 class TestClass : ISerializable {
-	string text;
-	protected TestClass(SerializationInfo info, StreamingContext context)
-	{
-		this.text = info.GetString(""Text"");
-	}
+    string text;
+    protected TestClass(SerializationInfo info, StreamingContext context)
+    {
+        this.text = info.GetString(""Text"");
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -216,32 +216,32 @@ namespace Foundation {
 }
 
 class TestClass : ISerializable {
-	
-	[Export (""run:"")]
-	public void Run (NSObject dummy)
-	{
-	    // something
-	}
+    
+    [Export (""run:"")]
+    public void Run (NSObject dummy)
+    {
+        // something
+    }
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Fact(Skip="Support for indexers disabled")]
+        [Fact]
         public void TestUnusedParameterInExpressionBodiedIndexer()
         {
             var input = @"
 class TestClass {
-	public string this[int $i$] => "";
+    public string this[int $i$] => "";
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
 
-        [Fact(Skip="Support for indexers disabled")]
+        [Fact]
         public void TestUsedParameterInExpressionBodiedIndexer()
         {
             var input = @"
 class TestClass {
-	public string this[int i] => i.ToString();
+    public string this[int i] => i.ToString();
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -251,7 +251,7 @@ class TestClass {
         {
             var input = @"
 class TestClass {
-	public string TestMethod(int $i$) => "";
+    public string TestMethod(int $i$) => "";
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
@@ -261,7 +261,7 @@ class TestClass {
         {
             var input = @"
 class TestClass {
-	public string TestMethod(int i) => i.ToString();
+    public string TestMethod(int i) => i.ToString();
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
