@@ -12,6 +12,7 @@ using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Simplification;
 using Xunit;
+using System.Text;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
@@ -30,17 +31,18 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             bool passed = result == output;
             if (!passed)
             {
-                Console.WriteLine("-----------Expected:");
-                Console.WriteLine(output);
-                Console.WriteLine("-----------Got:");
-                Console.WriteLine(result);
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("-----------Expected:");
+                sb.AppendLine(output);
+                sb.AppendLine("-----------Got:");
+                sb.AppendLine(result);
+                Assert.True(passed, sb.ToString());
             }
-            Assert.Equal(output, result);
         }
 
-        internal static List<Microsoft.CodeAnalysis.CodeActions.CodeAction> GetActions<T>(string input) where T : CodeRefactoringProvider, new()
+        internal static List<CodeAction> GetActions<T>(string input) where T : CodeRefactoringProvider, new()
         {
-            CSharpDiagnosticTestBase.TestWorkspace workspace;
+            DiagnosticTestBase.TestWorkspace workspace;
             Document doc;
             return GetActions(new T(), input, out workspace, out doc);
         }
@@ -135,32 +137,14 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         protected void TestWrongContext(CodeRefactoringProvider action, string input)
         {
             Document doc;
-            RefactoringEssentials.Tests.CSharp.Diagnostics.CSharpDiagnosticTestBase.TestWorkspace workspace;
+            CSharpDiagnosticTestBase.TestWorkspace workspace;
             var actions = GetActions(action, input, out workspace, out doc);
             Assert.True(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
         }
-
 
         protected void TestWrongContext<T>(string input) where T : CodeRefactoringProvider, new()
         {
             TestWrongContext(new T(), input);
         }
-
-        //		protected List<CodeAction> GetActions<T> (string input) where T : CodeActionProvider, new ()
-        //		{
-        //			var ctx = TestRefactoringContext.Create(input);
-        //			ctx.FormattingOptions = formattingOptions;
-        //			return new T().GetActions(ctx).ToList();
-        //		}
-        //
-        //		protected void TestActionDescriptions (CodeActionProvider provider, string input, params string[] expected)
-        //		{
-        //			var ctx = TestRefactoringContext.Create(input);
-        //			ctx.FormattingOptions = formattingOptions;
-        //			var actions = provider.GetActions(ctx).ToList();
-        //			Assert.Equal(
-        //				expected,
-        //				actions.Select(a => a.Description).ToArray());
-        //		}
     }
 }
