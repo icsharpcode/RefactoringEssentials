@@ -265,5 +265,22 @@ class TestClass {
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
+
+        [Fact]
+        public void TestMultipleUsedParameters()
+        {
+            var input = @"
+class TestClass {
+    int b;
+
+    void TestMethod (int a, int b, int c)
+    {
+        Console.WriteLine(a);
+        Console.WriteLine(b);
+        Console.WriteLine(c);
+    }
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
     }
 }

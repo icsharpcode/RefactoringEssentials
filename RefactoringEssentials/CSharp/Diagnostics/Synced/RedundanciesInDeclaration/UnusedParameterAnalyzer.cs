@@ -241,10 +241,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         if (identifierNameSyntax == null) continue;
                         var sym = model.GetSymbolInfo(identifierNameSyntax).Symbol as IParameterSymbol;
                         if (sym == null || sym.Ordinal < 0) continue;
-                        var p = parameters[sym.Ordinal];
-                        if (sym.GetContainingMemberOrThis() == p.GetContainingMemberOrThis()) {
-                            parameters.RemoveAt(p.Ordinal);
-                            parameterNodes.RemoveAt(p.Ordinal);
+                        int idx = parameters.IndexOf(param => param.Ordinal == sym.Ordinal);
+                        if (idx < 0) continue;
+                        if (sym.GetContainingMemberOrThis() == parameters[idx].GetContainingMemberOrThis()) {
+                            parameters.RemoveAt(idx);
+                            parameterNodes.RemoveAt(idx);
                             if (parameters.Count == 0)
                                 return;
                         }
