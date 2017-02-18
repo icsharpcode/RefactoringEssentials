@@ -57,6 +57,7 @@
     <Compile Include="Converter\CodeConverter.cs" />
     <Compile Include="Converter\CodeWithOptions.cs" />
     <Compile Include="Converter\ConversionResult.cs" />
+    <Compile Include="CSharp\CodeFixes\Custom\CS0132StaticConstructorParameterCodeFixProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs" />

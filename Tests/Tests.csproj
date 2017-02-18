@@ -231,6 +231,7 @@
     <Compile Include="CSharp\Diagnostics\ConvertToConstantTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertToLambdaExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertToStaticTypeTests.cs" />
+    <Compile Include="CSharp\CodeFixes\CS0132StaticConstructorParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\CS1573ParameterHasNoMatchingParamTagTests.cs" />
     <Compile Include="CSharp\Diagnostics\DelegateSubtractionTests.cs" />
     <Compile Include="CSharp\Diagnostics\DoNotCallOverridableMethodsInConstructorTests.cs" />
@@ -340,7 +341,6 @@
     <Compile Include="CSharp\Diagnostics\ReplaceWithStringIsNullOrEmptyTests.cs" />
     <Compile Include="CSharp\Diagnostics\SealedMemberInSealedClassTests.cs" />
     <Compile Include="CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs" />
-    <Compile Include="CSharp\Diagnostics\StaticConstructorParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticEventSubscriptionTests.cs" />
     <Compile Include="CSharp\Diagnostics\RoslynUsageTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticMethodInvocationToExtensionMethodInvocationTests.cs" />
