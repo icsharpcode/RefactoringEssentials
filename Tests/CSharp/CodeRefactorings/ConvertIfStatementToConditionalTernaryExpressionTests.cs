@@ -195,7 +195,7 @@ class TestClass
 }");
         }
 
-        [Fact(Skip="Are there any cases where this is needed ?")]
+        [Fact]
         public void TestInsertNecessaryParentheses()
         {
             Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
