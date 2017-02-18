@@ -7,7 +7,6 @@
 
 * ChangeAccessModifierAction
 * CreateIndexerAction
-* GenerateGetterAction
 * IntroduceConstantAction
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
