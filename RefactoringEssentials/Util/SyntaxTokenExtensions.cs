@@ -1131,5 +1131,24 @@ namespace RefactoringEssentials
             }
         }
 
+        public static bool IsIdentifierOrAccessorOrAccessibilityModifier(this SyntaxToken token)
+        {
+            switch (token.Kind())
+            {
+                case SyntaxKind.IdentifierName:
+                case SyntaxKind.IdentifierToken:
+                case SyntaxKind.GetKeyword:
+                case SyntaxKind.SetKeyword:
+                case SyntaxKind.PrivateKeyword:
+                case SyntaxKind.ProtectedKeyword:
+                case SyntaxKind.InternalKeyword:
+                case SyntaxKind.PublicKeyword:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
     }
 }

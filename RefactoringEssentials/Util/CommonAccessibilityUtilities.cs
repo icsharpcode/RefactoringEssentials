@@ -36,6 +36,39 @@ namespace RefactoringEssentials
 
             return Accessibility.Public;
         }
+
+        public static bool AccessibilityChangeable(this ISymbol member)
+        {
+            if (member == null ||
+                member.IsOverride ||
+                member.IsUserDefinedOperator() ||
+                member.IsDestructor() ||
+                member.IsEventAccessor() ||
+                (member.ContainingType?.IsInterfaceType() ?? false) ||
+                member.ExplicitInterfaceImplementations().Length > 0 ||
+                IsInterfaceImplementation(member))
+                return false;
+            return true;
+        }
+
+        static bool IsInterfaceImplementation(ISymbol member)
+        {
+            var containingType = member.ContainingType;
+            if (containingType == null)
+                return false;
+
+            foreach (var iface in containingType.AllInterfaces)
+            {
+                foreach (var imember in iface.GetMembers())
+                {
+                    var implementation = containingType.FindImplementationForInterfaceMember(imember);
+                    if (implementation == member)
+                        return true;
+                }
+            }
+
+            return false;
+        }
     }
 
 }

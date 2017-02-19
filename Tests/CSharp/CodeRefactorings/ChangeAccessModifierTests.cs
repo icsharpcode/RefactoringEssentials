@@ -26,6 +26,18 @@ interface Test
         }
 
         [Fact]
+        public void TestType()
+        {
+            Test<ChangeAccessModifierAction>(@"
+class $Foo
+{
+}", @"
+public class Foo
+{
+}");
+        }
+
+        [Fact]
         public void TestNoExplicitInterfaceImplementationMember()
         {
             TestWrongContext<ChangeAccessModifierAction>(@"
@@ -53,19 +65,7 @@ class TestClass : Test
 }");
         }
 
-        [Fact(Skip="Not implemented!")]
-        public void TestType()
-        {
-            Test<ChangeAccessModifierAction>(@"
-class $Foo
-{
-}", @"
-public class Foo
-{
-}");
-        }
-
-        [Fact(Skip="Not implemented!")]
+        [Fact]
         public void TestMethodToProtected()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -83,7 +83,7 @@ class Foo
 }");
         }
 
-        [Fact(Skip="Not implemented!")]
+        [Fact]
         public void TestPrivateMethodToProtected()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -101,7 +101,7 @@ class Foo
 }");
         }
 
-        [Fact(Skip="Not implemented!")]
+        [Fact]
         public void TestMethodToProtectedInternal()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -116,10 +116,10 @@ class Foo
 	protected internal void Bar ()
 	{
 	}
-}", 1);
+}", 2);
         }
 
-        [Fact(Skip="Not implemented!")]
+        [Fact]
         public void TestAccessor()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -152,7 +152,7 @@ class Foo
 }");
         }
 
-        [Fact(Skip="Not implemented!")]
+        [Fact]
         public void TestChangeAccessor()
         {
             Test<ChangeAccessModifierAction>(@"
@@ -205,7 +205,22 @@ class BaseClass : IDisposable
 }");
         }
 
+        [Fact]
+        public void TestChangeField()
+        {
+            Test<ChangeAccessModifierAction>(@"
+class Foo
+{
+	$public int f;
+}", @"
+class Foo
+{
+	private int f;
+}");
+        }
 
     }
+
+        
 }
 
