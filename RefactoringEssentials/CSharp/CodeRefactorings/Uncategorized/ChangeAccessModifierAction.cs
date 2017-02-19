@@ -1,161 +1,155 @@
-using Microsoft.CodeAnalysis.CodeRefactorings;
-using Microsoft.CodeAnalysis;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeRefactorings;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Change the access level of an entity declaration")]
-    [NotPortedYet]
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Change access level")]
     /// <summary>
     /// Changes the access level of an entity declaration
     /// </summary>
     public class ChangeAccessModifierAction : CodeRefactoringProvider
     {
-        //		Dictionary<string, Modifiers> accessibilityLevels = new Dictionary<string, Modifiers> {
-        //			{ "private", Modifiers.Private },
-        //			{ "protected", Modifiers.Protected },
-        //			{ "protected internal", Modifiers.Protected | Modifiers.Internal },
-        //			{ "internal", Modifiers.Internal },
-        //			{ "public", Modifiers.Public }
-        //		};
-
-        public override Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            //var document = context.Document;
-            //var span = context.Span;
-            //var cancellationToken = context.CancellationToken;
-            //var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            //if (model.IsFromGeneratedCode(cancellationToken))
-            //	return;
-            //var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            return Task.FromResult(0);
+            var document = context.Document;
+            if (document.Project.Solution.Workspace.Kind == WorkspaceKind.MiscellaneousFiles)
+                return;
+            var span = context.Span;
+            if (!span.IsEmpty)
+                return;
+            var cancellationToken = context.CancellationToken;
+            if (cancellationToken.IsCancellationRequested)
+                return;
+            var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            if (model.IsFromGeneratedCode(cancellationToken))
+                return;
+            var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+            var token = root.FindToken(span.Start);
+            if (!token.IsIdentifierOrAccessorOrAccessibilityModifier())
+                return;
+            var node = token.Parent;
+            while (node != null && !(node is MemberDeclarationSyntax || node is AccessorDeclarationSyntax))
+                node = node.Parent;
+            if (node == null || node.IsKind(SyntaxKind.InterfaceDeclaration, SyntaxKind.EnumMemberDeclaration))
+                return;
+            
+            ISymbol symbol = null;
+            switch(node)
+            {
+                case FieldDeclarationSyntax field:
+                    symbol = model.GetDeclaredSymbol(field.Declaration.Variables.First(), cancellationToken);
+                    break;
+
+                case MemberDeclarationSyntax member:
+                    symbol = model.GetDeclaredSymbol(member, cancellationToken);
+                    break;
+
+                case AccessorDeclarationSyntax accessor:
+                    symbol = model.GetDeclaredSymbol(accessor, cancellationToken);
+                    break;
+            }
+
+            if (!symbol.AccessibilityChangeable())
+                return;
+            
+            foreach (var accessibility in GetPossibleAccessibilities(model, symbol, node, cancellationToken))
+            {
+                var modifiers = GetAccessibilityModifiers(accessibility);
+                context.RegisterRefactoring(CodeActionFactory.Create(
+                    token.Span,
+                    DiagnosticSeverity.Info,
+                    GettextCatalog.GetString("To " + String.Join(" ", modifiers)),
+                    t =>
+                    {
+                        var newRoot = root.ReplaceNode(
+                            node,
+                            node.WithoutLeadingTrivia().WithModifiers(modifiers).WithLeadingTrivia(node.GetLeadingTrivia()));
+
+                        return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                    }));
+            }
         }
 
-        //		public async Task ComputeRefactoringsAsync(Document document, TextSpan span, CancellationToken cancellationToken)
-        //		{
-        //			var node = context.GetNode<EntityDeclaration>();
-        //			if (node == null)
-        //				yield break;
-        //
-        //			var selectedNode = node.GetNodeAt(context.Location);
-        //			if (selectedNode == null)
-        //				yield break;
-        //
-        //			if (selectedNode.Role != PropertyDeclaration.SetKeywordRole && 
-        //			    selectedNode.Role != PropertyDeclaration.GetKeywordRole && 
-        //			    selectedNode != node.NameToken) {
-        //				if (selectedNode.Role == EntityDeclaration.ModifierRole) {
-        //					var mod = (CSharpModifierToken)selectedNode;
-        //					if ((mod.Modifier & Modifiers.VisibilityMask) == 0)
-        //						yield break;
-        //				} else {
-        //					yield break;
-        //				}
-        //			}
-        //
-        //			if (node is EnumMemberDeclaration) {
-        //				yield break;
-        //			}
-        //
-        //			if (node.HasModifier(Modifiers.Override))
-        //				yield break;
-        //
-        //			var parentTypeDeclaration = node.GetParent<TypeDeclaration>();
-        //			if (parentTypeDeclaration != null && parentTypeDeclaration.ClassType == ClassType.Interface) {
-        //				//Interface members have no access modifiers
-        //				yield break;
-        //			}
-        //
-        //			var resolveResult = context.Resolve(node) as MemberResolveResult;
-        //			if (resolveResult != null) {
-        //				if (resolveResult.Member.ImplementedInterfaceMembers.Any())
-        //					yield break;
-        //			}
-        //
-        //			foreach (var accessName in accessibilityLevels.Keys) {
-        //				var access = accessibilityLevels [accessName];
-        //
-        //				if (parentTypeDeclaration == null && ((access & (Modifiers.Private | Modifiers.Protected)) != 0)) {
-        //					//Top-level declarations can only be public or internal
-        //					continue;
-        //				}
-        //
-        //				var accessor = node as Accessor;
-        //				if (accessor != null) {
-        //					//Allow only converting to modifiers stricter than the parent entity
-        //
-        //					var actualParentAccess = GetActualAccess(parentTypeDeclaration, accessor.GetParent<EntityDeclaration>());
-        //					if (access != actualParentAccess && !IsStricterThan (access, actualParentAccess)) {
-        //						continue;
-        //					}
-        //				}
-        //
-        //				if (GetActualAccess(parentTypeDeclaration, node) != access) {
-        //					yield return GetActionForLevel(context, accessName, access, node, selectedNode);
-        //				}
-        //			}
-        //		}
-        //
-        //		static bool IsStricterThan(Modifiers access1, Modifiers access2)
-        //		{
-        //			//First cover the basic cases
-        //			if (access1 == access2) {
-        //				return false;
-        //			}
-        //
-        //			if (access1 == Modifiers.Private) {
-        //				return true;
-        //			}
-        //			if (access2 == Modifiers.Private) {
-        //				return false;
-        //			}
-        //
-        //			if (access1 == Modifiers.Public) {
-        //				return false;
-        //			}
-        //			if (access2 == Modifiers.Public) {
-        //				return true;
-        //			}
-        //
-        //			return access2 == (Modifiers.Protected | Modifiers.Internal);
-        //		}
-        //
-        //		static Modifiers GetActualAccess(AstNode parentTypeDeclaration, EntityDeclaration node)
-        //		{
-        //			Modifiers nodeAccess = node.Modifiers & Modifiers.VisibilityMask;
-        //			if (nodeAccess == Modifiers.None && node is Accessor) {
-        //				EntityDeclaration parent = node.GetParent<EntityDeclaration>();
-        //
-        //				nodeAccess = parent.Modifiers & Modifiers.VisibilityMask;
-        //			}
-        //
-        //			if (nodeAccess == Modifiers.None) {
-        //				if (parentTypeDeclaration == null) {
-        //					return Modifiers.Internal;
-        //				}
-        //				return Modifiers.Private;
-        //			}
-        //
-        //			return nodeAccess & Modifiers.VisibilityMask;
-        //		}
-        //
-        //		CodeAction GetActionForLevel(SemanticModel context, string accessName, Modifiers access, EntityDeclaration node, AstNode selectedNode)
-        //		{
-        //			return new CodeAction(context.TranslateString("To " + accessName), script => {
-        //
-        //				Modifiers newModifiers = node.Modifiers;
-        //				newModifiers &= ~Modifiers.VisibilityMask;
-        //				
-        //				if (!(node is Accessor) || access != (node.GetParent<EntityDeclaration>().Modifiers & Modifiers.VisibilityMask)) {
-        //					//Do not add access modifier for accessors if the new access level is the same as the parent
-        //					//That is, in public int X { $private get; } if access == public, then the result should not have the modifier
-        //					newModifiers |= access;
-        //				}
-        //
-        //				script.ChangeModifier(node, newModifiers);
-        //
-        //			}, selectedNode);
-        //		}
+        static IEnumerable<Accessibility> GetPossibleAccessibilities(SemanticModel model, ISymbol member, SyntaxNode declaration, CancellationToken cancellationToken)
+        {
+            IEnumerable<Accessibility> result = null;
+            var containingType = member.ContainingType;
+            if (containingType == null)
+            {
+                if (member.IsPublic())
+                    result = new [] { Accessibility.Internal };
+
+                result = new [] { Accessibility.Public };
+            }
+            else if (containingType.IsValueType)
+            {
+                result = new []
+                {
+                    Accessibility.Private,
+                    Accessibility.Internal,
+                    Accessibility.Public
+                };
+            }
+            else
+            {
+                result = new[]
+                {
+                    Accessibility.Private,
+                    Accessibility.Protected,
+                    Accessibility.Internal,
+                    Accessibility.ProtectedOrInternal,
+                    Accessibility.Public
+                };
+                if (member.IsAccessorMethod())
+                {
+                    var propertyDeclaration = declaration.Ancestors().OfType<PropertyDeclarationSyntax>().FirstOrDefault();
+                    if (propertyDeclaration != null)
+                    {
+                        var property = model.GetDeclaredSymbol(propertyDeclaration, cancellationToken);
+                        result = result.Where(a => a < property.DeclaredAccessibility);
+                    }
+
+                }
+            }
+            
+            return result.Where(a => a != member.DeclaredAccessibility);
+        }
+
+        public static SyntaxTokenList GetAccessibilityModifiers(Accessibility accessibility)
+        {
+            var tokenList = new List<SyntaxToken>();
+            switch (accessibility)
+            {
+                case Accessibility.Private:
+                    tokenList.Add(SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
+                    break;
+
+                case Accessibility.Protected:
+                    tokenList.Add(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword));
+                    break;
+
+                case Accessibility.Internal:
+                    tokenList.Add(SyntaxFactory.Token(SyntaxKind.InternalKeyword));
+                    break;
+
+                case Accessibility.ProtectedOrInternal:
+                    tokenList.Add(SyntaxFactory.Token(SyntaxKind.ProtectedKeyword));
+                    tokenList.Add(SyntaxFactory.Token(SyntaxKind.InternalKeyword));
+                    break;
+
+                case Accessibility.Public:
+                    tokenList.Add(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+                    break;
+            }
+            return SyntaxFactory.TokenList(tokenList.Select(t => t.WithTrailingTrivia(SyntaxFactory.SyntaxTrivia(SyntaxKind.WhitespaceTrivia, " "))));
+        }
     }
 }
 
