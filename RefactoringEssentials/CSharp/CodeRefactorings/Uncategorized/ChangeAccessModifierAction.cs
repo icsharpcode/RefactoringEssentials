@@ -41,21 +41,21 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
             
             ISymbol symbol = null;
-            switch(node)
+            var field = node as FieldDeclarationSyntax;
+            if(field != null)
+                symbol = model.GetDeclaredSymbol(field.Declaration.Variables.First(), cancellationToken);
+            else
             {
-                case FieldDeclarationSyntax field:
-                    symbol = model.GetDeclaredSymbol(field.Declaration.Variables.First(), cancellationToken);
-                    break;
-
-                case MemberDeclarationSyntax member:
+                var member = node as MemberDeclarationSyntax;
+                if(member != null)
                     symbol = model.GetDeclaredSymbol(member, cancellationToken);
-                    break;
-
-                case AccessorDeclarationSyntax accessor:
-                    symbol = model.GetDeclaredSymbol(accessor, cancellationToken);
-                    break;
+                else
+                {
+                    var accessor = node as AccessorDeclarationSyntax;
+                    if(accessor != null)
+                        symbol = model.GetDeclaredSymbol(accessor, cancellationToken);
+                }
             }
-
             if (!symbol.AccessibilityChangeable())
                 return;
             
