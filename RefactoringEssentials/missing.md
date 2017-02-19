@@ -5,7 +5,6 @@
 
 **C#**
 
-* ChangeAccessModifierAction
 * CreateIndexerAction
 * IntroduceConstantAction
 * LinqFluentToQueryAction
