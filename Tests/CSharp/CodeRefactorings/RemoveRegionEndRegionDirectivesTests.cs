@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class RemoveRegionEndRegionDirectivesTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleRegion()
         {
             Test<RemoveRegionEndRegionDirectivesCodeRefactoringProvider>(@"class TestClass{
@@ -22,7 +21,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedRegion()
         {
             Test<RemoveRegionEndRegionDirectivesCodeRefactoringProvider>(@"class TestClass
@@ -47,7 +46,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
 
-        [Test]
+        [Fact]
         public void TestEndRegion()
         {
             Test<RemoveRegionEndRegionDirectivesCodeRefactoringProvider>(@"class TestClass{

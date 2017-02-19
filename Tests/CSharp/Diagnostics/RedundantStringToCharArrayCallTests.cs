@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantStringToCharArrayCallTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleForeachCase()
         {
             Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
@@ -34,7 +33,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestForeachEachWichParametrizedCharToArray()
         {
             Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
@@ -51,7 +50,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestVarForeachCase()
         {
             Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
@@ -79,7 +78,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexerCase()
         {
             Analyze<RedundantStringToCharArrayCallAnalyzer>(@"
@@ -104,7 +103,7 @@ class FooBar
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<RedundantStringToCharArrayCallAnalyzer>(@"

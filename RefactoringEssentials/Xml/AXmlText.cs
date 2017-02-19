@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Globalization;
 
 namespace RefactoringEssentials.Xml
@@ -42,8 +41,8 @@ namespace RefactoringEssentials.Xml
 		}
 		
 		/// <summary> True if the text contains only whitespace characters </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "Whitespace",
-		                                                 Justification = "System.Xml also uses 'Whitespace'")]
+		//[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "Whitespace",
+		//                                                 Justification = "System.Xml also uses 'Whitespace'")]
 		public bool ContainsOnlyWhitespace {
 			get { return ((InternalText)internalObject).ContainsOnlyWhitespace; }
 		}

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class PossibleMistakenCallToGetTypeTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestGetTypeCase()
         {
             Analyze<PossibleMistakenCallToGetTypeAnalyzer>(@"
@@ -32,7 +31,7 @@ public class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticCall()
         {
             Analyze<PossibleMistakenCallToGetTypeAnalyzer>(@"
@@ -49,7 +48,7 @@ public class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<PossibleMistakenCallToGetTypeAnalyzer>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class IterateViaForeachTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void HandlesNonGenericCase()
         {
             Test<IterateViaForeachAction>(@"
@@ -31,7 +30,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesExpressionStatement()
         {
             Test<IterateViaForeachAction>(@"
@@ -65,7 +64,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesAssignmentExpressionStatement()
         {
             Test<IterateViaForeachAction>(@"
@@ -102,7 +101,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesStringPropertyAssignmentExpressionStatement()
         {
             Test<IterateViaForeachAction>(@"
@@ -139,7 +138,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesAsExpressionStatement()
         {
             Test<IterateViaForeachAction>(@"
@@ -165,7 +164,7 @@ class TestClass
 }", 0, false);
         }
 
-        [Test]
+        [Fact]
         public void NonKnownTypeNamingTest()
         {
             Test<IterateViaForeachAction>(@"
@@ -190,7 +189,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesAsExpression()
         {
             Test<IterateViaForeachAction>(@"
@@ -216,7 +215,7 @@ class TestClass
 }", 0, true);
         }
 
-        [Test]
+        [Fact]
         public void HandlesLinqExpressionAssignment()
         {
             Test<IterateViaForeachAction>(@"
@@ -257,7 +256,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresExpressionsInForeachStatement()
         {
             TestWrongContext<IterateViaForeachAction>(@"
@@ -277,7 +276,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresInitializersInForStatement()
         {
             TestWrongContext<IterateViaForeachAction>(@"
@@ -291,7 +290,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AddsForToBodyOfUsingStatement()
         {
             Test<IterateViaForeachAction>(@"
@@ -321,7 +320,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AddsBlockStatementToUsingStatement()
         {
             Test<IterateViaForeachAction>(@"
@@ -346,7 +345,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ConvertsSingleStatementInUsingToBlock()
         {
             Test<IterateViaForeachAction>(@"
@@ -374,7 +373,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresFieldDeclarations()
         {
             TestWrongContext<IterateViaForeachAction>(@"
@@ -385,7 +384,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesLocalDeclarationWithObjectCreation()
         {
             Test<IterateViaForeachAction>(@"

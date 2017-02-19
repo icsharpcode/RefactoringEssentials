@@ -18,7 +18,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 
 namespace RefactoringEssentials.Xml
 {
@@ -53,7 +52,7 @@ namespace RefactoringEssentials.Xml
 	/// Exception used for internal errors in XML parser.
 	/// This exception indicates a bug in NRefactory.
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1064:ExceptionsShouldBePublic", Justification = "This exception is not public because it is not supposed to be caught by user code - it indicates a bug in AvalonEdit.")]
+	//[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1064:ExceptionsShouldBePublic", Justification = "This exception is not public because it is not supposed to be caught by user code - it indicates a bug in AvalonEdit.")]
 	class InternalException : Exception
 	{
 		/// <summary>

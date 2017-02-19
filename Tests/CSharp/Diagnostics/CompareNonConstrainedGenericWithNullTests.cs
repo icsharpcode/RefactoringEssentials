@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class CompareNonConstrainedGenericWithNullTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestLocal()
         {
             Analyze<CompareNonConstrainedGenericWithNullAnalyzer>(@"public class Bar
@@ -27,7 +26,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }"*/);
         }
 
-        [Test]
+        [Fact]
         public void TestField()
         {
             Analyze<CompareNonConstrainedGenericWithNullAnalyzer>(@"public class Bar<T>
@@ -50,7 +49,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }"*/);
         }
 
-        [Test]
+        [Fact]
         public void TestInvalid()
         {
             Analyze<CompareNonConstrainedGenericWithNullAnalyzer>(@"public class Bar
@@ -63,7 +62,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<CompareNonConstrainedGenericWithNullAnalyzer>(@"public class Bar

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ArrayCreationCanBeReplacedWithArrayInitializerTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestVariableDeclarationCase1()
         {
             Analyze<ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer>(@"
@@ -26,7 +25,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFieldCase1()
         {
             Analyze<ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer>(@"
@@ -41,7 +40,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestVariableDeclarationCase2()
         {
             Analyze<ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer>(@"
@@ -61,7 +60,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFieldCase2()
         {
             Analyze<ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer>(@"
@@ -75,7 +74,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoProblem1()
         {
             Analyze<ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer>(@"
@@ -88,7 +87,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoProblem2()
         {
             Analyze<ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer>(@"
@@ -101,7 +100,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoProblem3()
         {
             Analyze<ArrayCreationCanBeReplacedWithArrayInitializerAnalyzer>(@"

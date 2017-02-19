@@ -1,19 +1,19 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class UseStringFormatTests : CSharpCodeRefactoringTestBase
     {
-        [TestCase(@"if (…str != null && str != """") {}")]
-        [TestCase(@"if (str …!= null && str != """") {}")]
-        [TestCase(@"if (str != …null && str != """") {}")]
-        [TestCase(@"if (str != null …&& str != """") {}")]
-        [TestCase(@"if (str != null && …str != """") {}")]
-        [TestCase(@"if (str != null && str …!= """") {}")]
-        [TestCase(@"if (str != null && str != …"""") {}")]
-        [Description(@"Do not suggest action for binary expressions with assignment operators. https://github.com/icsharpcode/RefactoringEssentials/issues/137")]
+		[Theory]
+        [InlineData(@"if (…str != null && str != """") {}")]
+        [InlineData(@"if (str …!= null && str != """") {}")]
+        [InlineData(@"if (str != …null && str != """") {}")]
+        [InlineData(@"if (str != null …&& str != """") {}")]
+        [InlineData(@"if (str != null && …str != """") {}")]
+        [InlineData(@"if (str != null && str …!= """") {}")]
+        [InlineData(@"if (str != null && str != …"""") {}")]
+        // Do not suggest action for binary expressions with assignment operators. https://github.com/icsharpcode/RefactoringEssentials/issues/137"
         public void Issue137_Case1(string expression)
         {
             TestWrongContext<UseStringFormatAction>(
@@ -28,8 +28,8 @@ class TestClass
 ");
         }
 
-        [Test]
-        [Description(@"Do not suggest action for binary expressions with assignment operators. https://github.com/icsharpcode/RefactoringEssentials/issues/137")]
+        [Fact]
+        // Do not suggest action for binary expressions with assignment operators. https://github.com/icsharpcode/RefactoringEssentials/issues/137
         public void Issue137_Case2()
         {
             TestWrongContext<UseStringFormatAction>(
@@ -50,10 +50,11 @@ class TestClass
 
         }
 
-        [TestCase(@"Assert.IsTrue(actions == null || actions.Count == 0, …action.GetType() + "" shouldn't be valid there."");")]
-        [TestCase(@"Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() …+ "" shouldn't be valid there."");")]
-        [TestCase(@"Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() + …"" shouldn't be valid there."");")]
-        [Description(@"Ensure proper handling across complication cases. https://github.com/icsharpcode/RefactoringEssentials/issues/137")]
+		[Theory]
+        [InlineData(@"Assert.IsTrue(actions == null || actions.Count == 0, …action.GetType() + "" shouldn't be valid there."");")]
+        [InlineData(@"Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() …+ "" shouldn't be valid there."");")]
+        [InlineData(@"Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() + …"" shouldn't be valid there."");")]
+        // Ensure proper handling across complication cases. https://github.com/icsharpcode/RefactoringEssentials/issues/137
         public void Issue137_Case3(string expression)
         {
             Test<UseStringFormatAction>(
@@ -74,18 +75,19 @@ class TestClass
 }");
         }
 
-        [TestCase(@"var x = …(option1 && option2 ? ""Hello "" : string.Empty) + ""World"";")]
-        [TestCase(@"var x = (…option1 && option2 ? ""Hello "" : string.Empty) + ""World"";")]
-        [TestCase(@"var x = (option1 …&& option2 ? ""Hello "" : string.Empty) + ""World"";")]
-        [TestCase(@"var x = (option1 && …option2 ? ""Hello "" : string.Empty) + ""World"";")]
-        [TestCase(@"var x = (option1 && option2 …? ""Hello "" : string.Empty) + ""World"";")]
-        [TestCase(@"var x = (option1 && option2 ? …""Hello "" : string.Empty) + ""World"";")]
-        [TestCase(@"var x = (option1 && option2 ? ""Hello "" …: string.Empty) + ""World"";")]
-        [TestCase(@"var x = (option1 && option2 ? ""Hello "" : …string.Empty) + ""World"";")]
-        [TestCase(@"var x = (option1 && option2 ? ""Hello "" : string.Empty…) + ""World"";")]
-        [TestCase(@"var x = (option1 && option2 ? ""Hello "" : string.Empty) …+ ""World"";")]
-        [TestCase(@"var x = (option1 && option2 ? ""Hello "" : string.Empty) + …""World"";")]
-        [Description(@"Ensure proper handling across complication cases. https://github.com/icsharpcode/RefactoringEssentials/issues/137")]
+		[Theory]
+        [InlineData(@"var x = …(option1 && option2 ? ""Hello "" : string.Empty) + ""World"";")]
+        [InlineData(@"var x = (…option1 && option2 ? ""Hello "" : string.Empty) + ""World"";")]
+        [InlineData(@"var x = (option1 …&& option2 ? ""Hello "" : string.Empty) + ""World"";")]
+        [InlineData(@"var x = (option1 && …option2 ? ""Hello "" : string.Empty) + ""World"";")]
+        [InlineData(@"var x = (option1 && option2 …? ""Hello "" : string.Empty) + ""World"";")]
+        [InlineData(@"var x = (option1 && option2 ? …""Hello "" : string.Empty) + ""World"";")]
+        [InlineData(@"var x = (option1 && option2 ? ""Hello "" …: string.Empty) + ""World"";")]
+        [InlineData(@"var x = (option1 && option2 ? ""Hello "" : …string.Empty) + ""World"";")]
+        [InlineData(@"var x = (option1 && option2 ? ""Hello "" : string.Empty…) + ""World"";")]
+        [InlineData(@"var x = (option1 && option2 ? ""Hello "" : string.Empty) …+ ""World"";")]
+        [InlineData(@"var x = (option1 && option2 ? ""Hello "" : string.Empty) + …""World"";")]
+        // Ensure proper handling across complication cases. https://github.com/icsharpcode/RefactoringEssentials/issues/137
         public void Issue137_Case4(string expression)
         {
             Test<UseStringFormatAction>(
@@ -106,10 +108,11 @@ class TestClass
 }");
         }
 
-        [TestCase(@"var s = …""Hello"" + ""World!"";", @"var s = ""HelloWorld!"";")]
-        [TestCase(@"var s = ""Hello"" …+ ""World!"";", @"var s = ""HelloWorld!"";")]
-        [TestCase(@"var s = ""Hello"" + …""World!"";", @"var s = ""HelloWorld!"";")]
-        [Description("String concatenation alone should not be replaced by concatenated string.")]
+		[Theory]
+        [InlineData(@"var s = …""Hello"" + ""World!"";", @"var s = ""HelloWorld!"";")]
+        [InlineData(@"var s = ""Hello"" …+ ""World!"";", @"var s = ""HelloWorld!"";")]
+        [InlineData(@"var s = ""Hello"" + …""World!"";", @"var s = ""HelloWorld!"";")]
+        // String concatenation alone should not be replaced by concatenated string.
         public void TestSimpleStringConcatenation(string expression, string expectation)
         {
             Test<UseStringFormatAction>(
@@ -117,10 +120,10 @@ class TestClass
                 expectation);
         }
 
-        [TestCase(@"var s = …@""Hello"" + @""World!"";", @"var s = @""HelloWorld!"";")]
-        [TestCase(@"var s = @""Hello"" …+ @""World!"";", @"var s = @""HelloWorld!"";")]
-        [TestCase(@"var s = @""Hello"" + …@""World!"";", @"var s = @""HelloWorld!"";")]
-        [Description("String concatenation alone should not be replaced by concatenated string.")]
+        [InlineData(@"var s = …@""Hello"" + @""World!"";", @"var s = @""HelloWorld!"";")]
+        [InlineData(@"var s = @""Hello"" …+ @""World!"";", @"var s = @""HelloWorld!"";")]
+        [InlineData(@"var s = @""Hello"" + …@""World!"";", @"var s = @""HelloWorld!"";")]
+        // String concatenation alone should not be replaced by concatenated string.
         public void TestSimpleVerbatimStringConcatenation(string expression, string expectation)
         {
             Test<UseStringFormatAction>(
@@ -128,36 +131,37 @@ class TestClass
                 expectation);
         }
 
-        [Test]
-        [Description("Concatenation between verbatim and non-verbatim strings is messy, so leave it alone.")]
+        [Fact]
+        // Concatenation between verbatim and non-verbatim strings is messy, so leave it alone.
         public void TestWrongContextForVerbatimAndNonVerbatimStrings()
         {
             TestWrongContext<UseStringFormatAction>(@"var s = @""Hello"" + …""World!"";");
         }
 
-        [Test]
-        [Description("Ensure action is not applied to addition syntax without string literals.")]
+        [Fact]
+        // Ensure action is not applied to addition syntax without string literals.
         public void TestWrongContextForAddition()
         {
             TestWrongContext<UseStringFormatAction>(@"var s = 1 + …2;");
         }
 
-        [TestCase(@"string str = …""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""…Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello …\x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 …"" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" …+ a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + …a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.F…oo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(…""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""…asdf"") + "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") …+ "" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + …"" world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" …world! "" + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! ""… + a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + …a.Bar(""jkl;"");")]
-        [TestCase(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(…""jkl;"");")]
-        [Description("Concatenation with member access to identifiers should be modified to use string.Format()")]
+		[Theory]
+        [InlineData(@"string str = …""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""…Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello …\x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 …"" + a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" …+ a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + …a.Foo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.F…oo(""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.Foo(…""asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.Foo(""…asdf"") + "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") …+ "" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + …"" world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" …world! "" + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! ""… + a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + …a.Bar(""jkl;"");")]
+        [InlineData(@"string str = ""Hello \x143 "" + a.Foo(""asdf"") + "" world! "" + a.Bar(…""jkl;"");")]
+        // Concatenation with member access to identifiers should be modified to use string.Format()
         public void TestIdentifiersWithMemberAccess(string expression)
         {
             Test<UseStringFormatAction>(
@@ -178,8 +182,8 @@ class TestClass
         }
 
 
-        [Test]
-        [Description("Concatenation between verbatim strings and expressions is replaced with string.Format()")]
+        [Fact]
+        // Concatenation between verbatim strings and expressions is replaced with string.Format()
         public void TestVerbatimStringConcatenation()
         {
             Test<UseStringFormatAction>(
@@ -203,17 +207,18 @@ class TestClass
                 }");
         }
 
-        [TestCase(@"string str = …1 + 2 + ""test"" + 1 + ""test"" + 1.1;")]
-        [TestCase(@"string str = 1 …+ 2 + ""test"" + 1 + ""test"" + 1.1;")]
-        [TestCase(@"string str = 1 + …2 + ""test"" + 1 + ""test"" + 1.1;")]
-        [TestCase(@"string str = 1 + 2 …+ ""test"" + 1 + ""test"" + 1.1;")]
-        [TestCase(@"string str = 1 + 2 + …""test"" + 1 + ""test"" + 1.1;")]
-        [TestCase(@"string str = 1 + 2 + ""test"" …+ 1 + ""test"" + 1.1;")]
-        [TestCase(@"string str = 1 + 2 + ""test"" + …1 + ""test"" + 1.1;")]
-        [TestCase(@"string str = 1 + 2 + ""test"" + 1 …+ ""test"" + 1.1;")]
-        [TestCase(@"string str = 1 + 2 + ""test"" + 1 + …""test"" + 1.1;")]
-        [TestCase(@"string str = 1 + 2 + ""test"" + 1 + ""test"" …+ 1.1;")]
-        [TestCase(@"string str = 1 + 2 + ""test"" + 1 + ""test"" + …1.1;")]
+		[Theory]
+        [InlineData(@"string str = …1 + 2 + ""test"" + 1 + ""test"" + 1.1;")]
+        [InlineData(@"string str = 1 …+ 2 + ""test"" + 1 + ""test"" + 1.1;")]
+        [InlineData(@"string str = 1 + …2 + ""test"" + 1 + ""test"" + 1.1;")]
+        [InlineData(@"string str = 1 + 2 …+ ""test"" + 1 + ""test"" + 1.1;")]
+        [InlineData(@"string str = 1 + 2 + …""test"" + 1 + ""test"" + 1.1;")]
+        [InlineData(@"string str = 1 + 2 + ""test"" …+ 1 + ""test"" + 1.1;")]
+        [InlineData(@"string str = 1 + 2 + ""test"" + …1 + ""test"" + 1.1;")]
+        [InlineData(@"string str = 1 + 2 + ""test"" + 1 …+ ""test"" + 1.1;")]
+        [InlineData(@"string str = 1 + 2 + ""test"" + 1 + …""test"" + 1.1;")]
+        [InlineData(@"string str = 1 + 2 + ""test"" + 1 + ""test"" …+ 1.1;")]
+        [InlineData(@"string str = 1 + 2 + ""test"" + 1 + ""test"" + …1.1;")]
         public void Test(string expression)
         {
             Test<UseStringFormatAction>(@"
@@ -233,7 +238,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestVerbatim()
         {
             Test<UseStringFormatAction>(@"
@@ -255,7 +260,7 @@ test {0}"", 1);
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRepeatedObject()
         {
             Test<UseStringFormatAction>(@"
@@ -277,7 +282,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFormatString()
         {
             Test<UseStringFormatAction>(@"
@@ -299,7 +304,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexFormatString()
         {
             Test<UseStringFormatAction>(@"
@@ -321,7 +326,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFormatBracesRegular()
         {
             Test<UseStringFormatAction>(@"
@@ -344,7 +349,7 @@ class TestClass
         }
 
         /*
-        [Test]
+        [Fact]
         public void TestFormatBracesWithFormat()
         {
             Test<UseStringFormatAction>(@"
@@ -367,7 +372,7 @@ class TestClass
         }
          */
 
-        [Test]
+        [Fact]
         public void TestUnnecessaryStringFormat()
         {
             Test<UseStringFormatAction>(@"
@@ -387,7 +392,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestUnnecessaryToString()
         {
             Test<UseStringFormatAction>(@"
@@ -409,7 +414,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void EscapeBraces()
         {
             Test<UseStringFormatAction>(@"
@@ -438,7 +443,7 @@ class TestClass
         Looking at the original UseStringFormatAction, this complication does not seem to be accounted for and would have resulted in
         escaped sequences being rendered.
 
-        [Test]
+        [Fact]
         public void QuotesMixedVerbatim()
         {
             Test<UseStringFormatAction>(@"

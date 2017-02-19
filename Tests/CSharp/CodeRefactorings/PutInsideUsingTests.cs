@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class PutInsideUsingTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             Test<PutInsideUsingAction>(@"
@@ -47,7 +46,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIDisposable()
         {
             Test<PutInsideUsingAction>(@"
@@ -71,7 +70,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestTypeParameter()
         {
 
@@ -98,7 +97,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleVariablesDeclaration()
         {
             Test<PutInsideUsingAction>(@"
@@ -123,7 +122,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullInitializer()
         {
             TestWrongContext<PutInsideUsingAction>(@"
@@ -137,7 +136,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMoveVariableDeclaration()
         {
             Test<PutInsideUsingAction>(@"
@@ -169,7 +168,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMoveVariableDeclarationAndConvertInitializationToAssignment()
         {
             Test<PutInsideUsingAction>(@"
@@ -200,7 +199,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveDisposeInvocation()
         {
             Test<PutInsideUsingAction>(@"
@@ -225,7 +224,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNotAvailableOnNonDisposableVariable()
         {
             TestWrongContext<PutInsideUsingAction>(@"
@@ -240,7 +239,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAllDeclaredVariablesAreUsedInsideUsingBlock()
         {
             Test<PutInsideUsingAction>(@"
@@ -270,7 +269,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEmptyUsingBlock()
         {
             Test<PutInsideUsingAction>(@"
@@ -302,7 +301,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestVariableWithComment()
         {
             Test<PutInsideUsingAction>(@"
@@ -336,7 +335,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLastCallInBlockIsStatic()
         {
             Test<PutInsideUsingAction>(@"
@@ -369,7 +368,7 @@ class TestClass
         /// <summary>
         /// Bug 39041 - NOP refactoring option for using
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug39041()
         {
             TestWrongContext<PutInsideUsingAction>(@"
@@ -390,6 +389,34 @@ class TestClass
         }
 
         a = 0;
+    }
+}");
+        }
+
+        [Fact]
+        public void TestChangeVarDeclarationToExplicit()
+        {
+            Test<PutInsideUsingAction>(@"
+class TestClass
+{
+    void TestMethod ()
+    {
+        System.IDisposable obj $= null;
+        var a = obj.GetHashCode();        
+        return a;
+    }
+}", @"
+class TestClass
+{
+    void TestMethod ()
+    {
+        int a;
+        using (System.IDisposable obj = null)
+        {
+            a = obj.GetHashCode();
+        }
+
+        return a;
     }
 }");
         }

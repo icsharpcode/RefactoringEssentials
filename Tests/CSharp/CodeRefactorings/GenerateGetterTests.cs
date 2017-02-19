@@ -1,35 +1,118 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [Ignore("Needs insertion cursor mode.")]
-    [TestFixture]
     public class GenerateGetterTests : CSharpCodeRefactoringTestBase
     {
-        [Test()]
+        [Fact]
         public void Test()
         {
-            string result = RunContextAction(
-                new GenerateGetterAction(),
-                "using System;" + Environment.NewLine +
-                    "class TestClass" + Environment.NewLine +
-                    "{" + Environment.NewLine +
-                    "	int $myField;" + Environment.NewLine +
-                    "}"
-            );
-            Assert.AreEqual(
-                "using System;" + Environment.NewLine +
-                "class TestClass" + Environment.NewLine +
-                "{" + Environment.NewLine +
-                "	public int MyField {" + Environment.NewLine +
-                "		get {" + Environment.NewLine +
-                "			return myField;" + Environment.NewLine +
-                "		}" + Environment.NewLine +
-                "	}" + Environment.NewLine +
-                "	int myField;" + Environment.NewLine +
-                "}", result);
+            Test<GenerateGetterAction>(@"using System;
+class TestClass
+{
+    int $myField;
+}", @"using System;
+class TestClass
+{
+    int myField;
+
+    public int MyField
+    {
+        get
+        {
+            return myField;
+        }
+    }
+}");
+
+            Test<GenerateGetterAction>(@"using System;
+class TestClass
+{
+    static int $myField;
+}", @"using System;
+class TestClass
+{
+    static int myField;
+
+    public static int MyField
+    {
+        get
+        {
+            return myField;
+        }
+    }
+}");
+        }
+
+        [Fact]
+        public void TestSimilarPropertyExists()
+        {
+            Test<GenerateGetterAction>(@"using System;
+class TestClass
+{
+    int $myField;
+
+    public int Test => 5;
+}", @"using System;
+class TestClass
+{
+    int myField;
+
+    public int MyField
+    {
+        get
+        {
+            return myField;
+        }
+    }
+
+    public int Test => 5;
+}");
+        }
+
+        [Fact]
+        public void TestAlreadyImplemented()
+        {
+            TestWrongContext<GenerateGetterAction>(@"using System;
+class TestClass
+{
+    int $myField;
+
+    public int MyField { get { return myField; } }
+}");
+
+            TestWrongContext<GenerateGetterAction>(@"using System;
+class TestClass
+{
+    int $myField;
+
+    public int MyField { get { return this.myField; } }
+}");
+
+            TestWrongContext<GenerateGetterAction>(@"using System;
+class TestClass
+{
+    int $myField;
+
+    public int MyField => myField;
+}");
+            TestWrongContext<GenerateGetterAction>(@"using System;
+class TestClass
+{
+    int $myField;
+
+    public int MyField => this.myField;
+}");
+
+            TestWrongContext<GenerateGetterAction>(@"using System;
+class TestClass
+{
+    int $myField;
+
+    public int MyField { get { return myField; } set { myField = value; } };
+}");
         }
     }
 }

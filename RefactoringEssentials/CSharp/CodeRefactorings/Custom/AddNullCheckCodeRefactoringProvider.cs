@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Formatting;
-using System.Collections.Generic;
 
 namespace RefactoringEssentials.CSharp
 {
-    /// <summary>
-    /// Surround usage of a variable with a null check or add a null check to surrounding if block.
-    /// </summary>
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add null check")]
+	/// <summary>
+	/// Surround usage of a variable with a null check or add a null check to surrounding if block.
+	/// </summary>
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add null check")]
     public class AddNullCheckCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

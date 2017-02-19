@@ -3,11 +3,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.CodeAnalysis.Text;
 
 namespace RefactoringEssentials
 {
-    static class NameGenerator
+	static class NameGenerator
     {
         public static IList<string> EnsureUniqueness(
             IList<string> names,

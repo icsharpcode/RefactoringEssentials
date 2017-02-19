@@ -1,20 +1,16 @@
 ﻿// (c) by Matt Warren. Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 // From https://github.com/mattwar/nullaby
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Diagnostics;
 using RefactoringEssentials;
 
 namespace Nullaby
 {
-    internal enum NullState
+	internal enum NullState
     {
         Unknown,
         Null,

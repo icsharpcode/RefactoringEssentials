@@ -1,13 +1,12 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class RemoveBracesTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleBraces()
         {
             string result = RunContextAction(
@@ -23,7 +22,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
                 "    void Test()" + Environment.NewLine +
@@ -33,7 +32,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleBracesWithComment()
         {
             string result = RunContextAction(
@@ -50,7 +49,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
                 "    void Test()" + Environment.NewLine +
@@ -61,7 +60,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Test]
+        [Fact]
         public void TestTryCatch()
         {
             TestWrongContext<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -73,7 +72,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestTryCatchCatch()
         {
             TestWrongContext<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -85,7 +84,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestTryCatchFinally()
         {
             TestWrongContext<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -98,7 +97,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
 
-        [Test]
+        [Fact]
         public void TestSwitchCatch()
         {
             TestWrongContext<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -110,7 +109,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodDeclaration()
         {
             TestWrongContext<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -122,7 +121,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveBracesFromIf()
         {
             Test<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -142,7 +141,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveBracesFromElse()
         {
             Test<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -167,7 +166,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveBracesFromDoWhile()
         {
             Test<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -188,7 +187,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveBracesFromForeach()
         {
             Test<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -208,7 +207,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveBracesFromFor()
         {
             Test<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -228,7 +227,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveBracesFromLock()
         {
             Test<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -248,7 +247,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveBracesFromUsing()
         {
             Test<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -268,7 +267,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveBracesFromWhile()
         {
             Test<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -288,7 +287,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotRemoveBracesFromBlockWithVariable()
         {
             TestWrongContext<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -302,7 +301,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDoNotRemoveBracesFromBlockWithLabel()
         {
             TestWrongContext<RemoveBracesCodeRefactoringProvider>(@"class TestClass
@@ -316,7 +315,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullNode()
         {
             TestWrongContext<RemoveBracesCodeRefactoringProvider>(@"class TestClass

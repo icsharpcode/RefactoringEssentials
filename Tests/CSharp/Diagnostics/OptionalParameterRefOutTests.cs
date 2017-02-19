@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class OptionalParameterRefOutTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestRef()
         {
             Analyze<OptionalParameterRefOutAnalyzer>(@"
@@ -19,7 +18,7 @@ class Bar
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOut()
         {
             Analyze<OptionalParameterRefOutAnalyzer>(@"
@@ -33,7 +32,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<OptionalParameterRefOutAnalyzer>(@"

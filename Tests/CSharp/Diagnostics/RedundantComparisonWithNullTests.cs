@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantComparisonWithNullTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInspectorCase1()
         {
             Test<RedundantComparisonWithNullAnalyzer>(@"using System;class Test {public void test(){int a = 0;if(a is int && a != null){a = 1;}}}", @"using System;class Test {public void test(){int a = 0;
@@ -16,7 +14,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 		}}}");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestResharperDisable()
         {
             Analyze<RedundantComparisonWithNullAnalyzer>(@"using System;
@@ -31,7 +29,7 @@ class Test {
 	}");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInspectorCase2()
         {
             Test<RedundantComparisonWithNullAnalyzer>(@"using System;class Test {public void test(){int a = 0;while(a != null && a is int){a = 1;}}}", @"using System;class Test {public void test(){int a = 0;
@@ -40,7 +38,7 @@ class Test {
 		}}}");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestCaseWithFullParens()
         {
             Test<RedundantComparisonWithNullAnalyzer>(@"using System;
@@ -62,7 +60,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<RedundantComparisonWithNullAnalyzer>(
@@ -79,8 +77,7 @@ class TestClass
         }
 
 
-        [Ignore("Extended version")]
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNegatedCase()
         {
             Test<RedundantComparisonWithNullAnalyzer>(@"using System;

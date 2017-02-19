@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConvertConditionalTernaryToNullCoalescingTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -25,7 +24,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -43,7 +42,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase3()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -61,7 +60,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase4()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -79,7 +78,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -92,7 +91,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCastCase()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -110,7 +109,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCastCase2()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -128,7 +127,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGenericCastCase()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -140,7 +139,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGenericCastCaseWithRefTypeConstraint()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -158,7 +157,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGenericCastCaseAsNullable()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Foo
@@ -176,7 +175,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullableValueCase()
         {
             Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Test
@@ -196,7 +195,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-		[Test]
+		[Fact]
 		public void TestNestedExpressions()
 		{
 			Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"class Test
@@ -215,6 +214,20 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     }
 }");
 		}
+
+        [Fact]
+        public void TestIssue264()
+        {
+            Analyze<ConvertConditionalTernaryToNullCoalescingAnalyzer>(@"using System.Collections.Generic;
+
+class Test
+{
+    void TestCase(Test[] tests)
+    {
+      var output = tests == null ? new List<Test>() : new List<Test>(tests);
+    }
+}");
+        }
     }
 }
 

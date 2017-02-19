@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeFixes;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
-    [TestFixture]
     public class CS0162UnreachableCodeDetectedTests : CSharpCodeFixTestBase
     {
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -27,7 +26,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestBreak()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -52,8 +51,7 @@ class TestClass
 }");
         }
 
-        [Ignore("Not supported")]
-        [Test]
+        [Fact(Skip="Not supported")]
         public void TestRedundantGoto()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -74,8 +72,7 @@ class TestClass
 }");
         }
 
-        [Ignore("Not supported")]
-        [Test]
+        [Fact(Skip="Not supported")]
         public void TestGotoUnreachableBlock()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -106,7 +103,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestContinue()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -132,7 +129,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestFor()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -156,7 +153,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestConstantCondition()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -181,9 +178,8 @@ class TestClass
 }");
         }
 
-        [Ignore("Not supported.")]
-        [Test]
-        public void TestConditionalExpression()
+		[Fact(Skip = "Not supported")]
+		public void TestConditionalExpression()
         {
             var output = @"
 class TestClass
@@ -203,7 +199,7 @@ class TestClass
 }", output);
         }
 
-        [Test]
+        [Fact]
         public void TestInsideLambda()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -228,7 +224,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInsideAnonymousMethod()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -253,7 +249,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreLambdaBody()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -280,7 +276,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreAnonymousMethodBody()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -307,7 +303,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGroupMultipleStatements()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -330,7 +326,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRemoveCode()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -351,8 +347,7 @@ class TestClass
 }", 0);
         }
 
-        [Ignore("Got broken due ast new line nodes")]
-        [Test]
+        [Fact(Skip="Got broken due ast new line nodes")]
         public void TestCommentCode()
         {
             var input = @"
@@ -380,8 +375,7 @@ class TestClass
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(input, output, 1);
         }
 
-        [Ignore("Broken.")]
-        [Test]
+        [Fact(Skip="Broken.")]
         public void TestIfTrueBranch()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"
@@ -407,8 +401,7 @@ class TestClass
 }");
         }
 
-        [Ignore("Broken.")]
-        [Test]
+        [Fact(Skip="Broken.")]
         public void TestIfFalseBranch()
         {
             Test<CS0162UnreachableCodeDetectedCodeFixProvider>(@"

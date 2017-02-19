@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertStatementBodyToExpressionBodyTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestMethodName()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -23,7 +22,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodReturn()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -40,7 +39,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestVoidMethodNameWithExpression()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -61,7 +60,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodNameWithCommentInBody()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -78,7 +77,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidMethod()
         {
             TestWrongContext<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -92,8 +91,17 @@ class TestClass
 }");
         }
 
+        [Fact]
+        public void TestMethodWithExpressionBody()
+        {
+            TestWrongContext<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int TestMethod(int i) => i << 8;
+}");
+        }
 
-        [Test]
+        [Fact]
         public void TestPropertyName()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -111,7 +119,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestPropertyReturn()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -129,7 +137,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestPropertyNameWithCommentInBody()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -147,7 +155,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidProperty()
         {
             TestWrongContext<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -162,7 +170,17 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
+        public void TestPropertyWithExpressionBody()
+        {
+            TestWrongContext<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
+class TestClass
+{
+    int $TestProperty => 5;
+}");
+        }
+
+        [Fact]
         public void TestIndexerName()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -180,7 +198,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexerReturn()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -198,7 +216,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexerNameWithCommentInBody()
         {
             Test<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"
@@ -216,7 +234,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidIndexer()
         {
             TestWrongContext<ConvertStatementBodyToExpressionBodyCodeRefactoringProvider>(@"

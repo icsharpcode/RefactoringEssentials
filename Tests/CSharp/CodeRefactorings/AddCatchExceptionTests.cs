@@ -1,12 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    public class AddCatchExceptionTests : CSharpCodeRefactoringTestBase
+	public class AddCatchExceptionTests : CSharpCodeRefactoringTestBase
     {
 
-        [Test]
+        [Fact]
         public void HandlesBasicCase()
         {
             Test<AddCatchExceptionCodeRefactoringProvider>(@"
@@ -33,7 +33,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesBasicCaseWithBraceOnOwnLine()
         {
             Test<AddCatchExceptionCodeRefactoringProvider>(@"
@@ -63,7 +63,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void PreservesWhitespaceInBody()
         {
             Test<AddCatchExceptionCodeRefactoringProvider>(@"
@@ -92,7 +92,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void DoesNotUseRedundantNamespace()
         {
             Test<AddCatchExceptionCodeRefactoringProvider>(@"
@@ -121,7 +121,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void DoesNotMatchCatchesWithType()
         {
             TestWrongContext<AddCatchExceptionCodeRefactoringProvider>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeFixes;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
-    [TestFixture]
     public class InvalidConversionTests : CSharpCodeFixTestBase
     {
-        [Test]
+        [Fact]
         public void TestConversion()
         {
             var input = @"
@@ -32,7 +31,7 @@ enum Enum{ };
             Test<InvalidConversionCodeFixProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestConversionInInitializer()
         {
             var input = @"
@@ -56,7 +55,7 @@ enum Enum{ };
             Test<InvalidConversionCodeFixProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestConversionDoubleFloat()
         {
             var input = @"
@@ -81,7 +80,7 @@ class Foo
             Test<InvalidConversionCodeFixProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestConversionEnumToInt()
         {
             var input = @"
@@ -108,7 +107,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void AssignCustomClassToString()
         {
             Test<InvalidConversionCodeFixProvider>(@"
@@ -128,7 +127,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReturnInMethod()
         {
             var input = @"
@@ -152,7 +151,7 @@ class TestClass
             Test<InvalidConversionCodeFixProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestReturnInMethodChangeReturnType()
         {
             var input = @"
@@ -175,7 +174,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestReturnInAnonymousMethod()
         {
             var input = @"using System;
@@ -206,7 +205,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestReturnInProperty()
         {
             var input = @"
@@ -232,7 +231,7 @@ class TestClass
             Test<InvalidConversionCodeFixProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestCall()
         {
             var input = @"
@@ -260,7 +259,7 @@ class TestClass
 
 
 
-        [Test]
+        [Fact]
         public void TestArrayInitializer()
         {
             var input = @"
@@ -286,7 +285,7 @@ class TestClass
 
 
 
-        [Test]
+        [Fact]
         public void TestBinaryOperator()
         {
             var input = @"
@@ -312,7 +311,7 @@ enum Enum{ };
             Test<InvalidConversionCodeFixProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestDeclarationFix()
         {
             Test<InvalidConversionCodeFixProvider>(@"
@@ -328,7 +327,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLocalDeclarationFix()
         {
             Test<InvalidConversionCodeFixProvider>(@"

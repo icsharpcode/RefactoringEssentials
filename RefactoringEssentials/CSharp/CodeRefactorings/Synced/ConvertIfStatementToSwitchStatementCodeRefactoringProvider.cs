@@ -1,5 +1,3 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
@@ -11,7 +9,7 @@ using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert 'if' to 'switch'")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert 'if' to 'switch'")]
     public class ConvertIfStatementToSwitchStatementCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
@@ -25,7 +23,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var cancellationToken = context.CancellationToken;
             if (cancellationToken.IsCancellationRequested)
                 return;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             if (model.IsFromGeneratedCode(cancellationToken))
                 return;

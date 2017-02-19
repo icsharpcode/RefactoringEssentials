@@ -21,7 +21,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var cancellationToken = context.CancellationToken;
             if (cancellationToken.IsCancellationRequested)
                 return;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             if (model.IsFromGeneratedCode(cancellationToken))
                 return;

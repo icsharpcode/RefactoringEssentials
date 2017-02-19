@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using Microsoft.CodeAnalysis.Text;
@@ -29,7 +28,7 @@ namespace RefactoringEssentials.Xml
 	public class AXmlTag : AXmlObject
 	{
 		/// <summary> These identify the start of DTD elements </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification="ReadOnlyCollection is immutable")]
+		//[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification="ReadOnlyCollection is immutable")]
 		public static readonly ReadOnlyCollection<string> DtdNames = new ReadOnlyCollection<string>(
 			new string[] {"<!DOCTYPE", "<!NOTATION", "<!ELEMENT", "<!ATTLIST", "<!ENTITY" } );
 		

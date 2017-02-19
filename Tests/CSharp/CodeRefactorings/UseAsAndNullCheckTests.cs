@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class UseAsAndNullCheckTests : CSharpCodeRefactoringTestBase
     {
 
-        [Test]
+        [Fact]
         public void EmptyCase()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -35,7 +34,7 @@ class Bar
         }
 
 
-        [Test]
+        [Fact]
         public void SimpleCase()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -66,7 +65,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void SimpleCaseWithKeywordVarNames()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -97,7 +96,7 @@ class Int
 ");
         }
 
-        [Test]
+        [Fact]
         public void NegatedCase()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -127,7 +126,7 @@ class Bar
         }
 
 
-        [Test]
+        [Fact]
         public void NegatedEmbeddedCase()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -163,7 +162,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void ComplexCase()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -200,7 +199,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void IfElseCase()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -235,7 +234,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void NestedIf()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -274,7 +273,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestNegatedCaseWithReturn()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -303,7 +302,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestNegatedCaseWithBreak()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -336,7 +335,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestCaseWithContinue()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -376,7 +375,7 @@ class Bar
         }
 
 
-        [Test]
+        [Fact]
         public void ConditionalCase()
         {
             Test<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -405,7 +404,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void InvalidCase()
         {
             TestWrongContext<UseAsAndNullCheckCodeRefactoringProvider>(@"
@@ -423,7 +422,7 @@ class Bar
 ");
         }
 
-        [Test]
+        [Fact]
         public void InvalidCase2()
         {
             TestWrongContext<UseAsAndNullCheckCodeRefactoringProvider>(@"

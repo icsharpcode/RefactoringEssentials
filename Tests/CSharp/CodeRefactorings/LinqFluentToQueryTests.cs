@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture, Ignore("Not implemented!")]
     public class LinqFluentToQueryTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestBasicCase()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -31,7 +30,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestAddedParenthesis()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -56,7 +55,7 @@ select t) + 1;
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestCast()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -81,7 +80,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestLet()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -107,7 +106,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestLet2()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -133,7 +132,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestLongLetChain()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -166,7 +165,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestLongLetChain2()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -199,7 +198,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestSelectMany()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -225,7 +224,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestSelectManyLet()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -253,7 +252,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestSelectManyLet2()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -285,7 +284,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestCastSelect()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -310,7 +309,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestSelectWhere()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -336,7 +335,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestSorting()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -362,7 +361,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestDegenerateWhere()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -388,7 +387,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestChain()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -416,7 +415,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestJoin()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -442,7 +441,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestGroupJoin()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -468,7 +467,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestNonRecursive()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -493,7 +492,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestNonRecursiveCombineQueries()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -519,7 +518,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestGroupBy()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -544,7 +543,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void Test_1AlreadyUsed()
         {
             Test<LinqFluentToQueryAction>(@"
@@ -571,7 +570,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="Not implemented!")]
         public void TestDoubleCasts()
         {
             Test<LinqFluentToQueryAction>(@"

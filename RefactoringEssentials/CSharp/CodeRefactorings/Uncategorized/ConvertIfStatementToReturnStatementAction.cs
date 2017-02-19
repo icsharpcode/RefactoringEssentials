@@ -5,11 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Formatting;
-using System;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert 'if' to 'return'")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert 'if' to 'return'")]
     public class ConvertIfStatementToReturnStatementAction : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

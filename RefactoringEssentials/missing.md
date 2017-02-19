@@ -5,10 +5,8 @@
 
 **C#**
 
-* AutoLinqSumAction
 * ChangeAccessModifierAction
 * CreateIndexerAction
-* GenerateGetterAction
 * IntroduceConstantAction
 * LinqFluentToQueryAction
 * LinqQueryToFluentAction
@@ -52,6 +50,5 @@
 * UnusedAnonymousMethodSignatureAnalyzer
 * UseArrayCreationExpressionAnalyzer
 * UseIsOperatorAnalyzer
-* UseMethodAnyAnalyzer
 * UseMethodIsInstanceOfTypeAnalyzer
 

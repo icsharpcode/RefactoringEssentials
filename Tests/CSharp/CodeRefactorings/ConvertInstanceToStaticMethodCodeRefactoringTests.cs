@@ -1,16 +1,15 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp;
 using RefactoringEssentials.Tests.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp
 {
-    /// <summary>
-    /// Tests for ConvertInstanceToStaticMethodCodeRefactoringProvider.
-    /// </summary>
-    [TestFixture]
+	/// <summary>
+	/// Tests for ConvertInstanceToStaticMethodCodeRefactoringProvider.
+	/// </summary>
     public class ConvertInstanceToStaticMethodCodeRefactoringTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void MethodWithoutParameters1()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -30,7 +29,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodWithoutParameters2()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -50,7 +49,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodWithParameters()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -70,7 +69,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void AlreadyStaticMethod()
         {
             TestWrongContext<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -83,7 +82,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodUsingInstanceMember()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -119,7 +118,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodUsingInstanceMemberWithThis()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -155,7 +154,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void RecursiveMethodCall()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -181,7 +180,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void RecursiveMethodCallWithThis()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -207,7 +206,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodWithInternalReference()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -239,7 +238,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodWithExternalReference()
         {
             Test<ConvertInstanceToStaticMethodCodeRefactoringProvider>(@"
@@ -273,6 +272,14 @@ class Foo2
         Foo.Test(foo);
     }
 }");
+        }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<ConvertInstanceToStaticMethodCodeRefactoringProvider>(
+                "interface Test { void $TestMethod(); }"
+            );
         }
     }
 }

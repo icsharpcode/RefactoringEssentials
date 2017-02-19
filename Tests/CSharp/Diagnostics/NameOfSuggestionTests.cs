@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class NameOfSuggestionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestArgumentNullException()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -28,7 +27,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentException()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -52,7 +51,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentOutOfRangeExceptionSwap()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"

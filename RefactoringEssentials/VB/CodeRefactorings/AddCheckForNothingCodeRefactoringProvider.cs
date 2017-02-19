@@ -5,15 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.CodeAnalysis.VisualBasic;
 using Microsoft.CodeAnalysis.Formatting;
-using System.Collections.Generic;
 using RefactoringEssentials.Util;
 
 namespace RefactoringEssentials.VB
 {
-    /// <summary>
-    /// Surround usage of a variable with an "IsNot Nothing" check or adds it to surrounding If block.
-    /// </summary>
-    [ExportCodeRefactoringProvider(LanguageNames.VisualBasic, Name = "Add check for Nothing")]
+	/// <summary>
+	/// Surround usage of a variable with an "IsNot Nothing" check or adds it to surrounding If block.
+	/// </summary>
+	[ExportCodeRefactoringProvider(LanguageNames.VisualBasic, Name = "Add check for Nothing")]
     public class AddCheckForNothingCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

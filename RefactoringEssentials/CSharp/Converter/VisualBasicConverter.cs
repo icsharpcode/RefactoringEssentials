@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -22,7 +20,8 @@ namespace RefactoringEssentials.CSharp.Converter
 			InterfaceOrModule,
 			Member,
 			VariableOrConst,
-			Local
+			Local,
+			MemberInModule
 		}
 
 		public static CSharpSyntaxNode Convert(VBasic.VisualBasicSyntaxNode input, SemanticModel semanticModel, Document targetDocument)
@@ -89,15 +88,27 @@ namespace RefactoringEssentials.CSharp.Converter
 
 		static ExpressionSyntax Literal(object o) => CodeRefactorings.ComputeConstantValueCodeRefactoringProvider.GetLiteralExpression(o);
 
-		static SyntaxToken ConvertIdentifier(SyntaxToken id, SemanticModel semanticModel, bool isInTypeContext = false)
+		static SyntaxToken ConvertIdentifier(SyntaxToken id, SemanticModel semanticModel, bool isAttribute = false)
 		{
 			var keywordKind = SyntaxFacts.GetKeywordKind(id.ValueText);
 			if (keywordKind != SyntaxKind.None && !SyntaxFacts.IsPredefinedType(keywordKind))
 				return SyntaxFactory.Identifier("@" + id.ValueText);
-			var symbol = semanticModel.GetSymbolInfo(id.Parent).Symbol;
 			string text = id.ValueText;
-			if (symbol != null && !string.IsNullOrWhiteSpace(symbol.Name))
-				text = symbol.Name;
+			if (id.SyntaxTree == semanticModel.SyntaxTree)
+			{
+				var symbol = semanticModel.GetSymbolInfo(id.Parent).Symbol;
+                if (symbol != null && !string.IsNullOrWhiteSpace(symbol.Name))
+                {
+                    if (symbol.IsConstructor() && isAttribute)
+                    {
+                        text = symbol.ContainingType.Name;
+                        if (text.EndsWith("Attribute", StringComparison.Ordinal))
+                            text = text.Remove(text.Length - "Attribute".Length);
+                    }
+                    else
+                        text = symbol.Name;
+                }
+			}
 			return SyntaxFactory.Identifier(text);
 		}
 
@@ -130,7 +141,7 @@ namespace RefactoringEssentials.CSharp.Converter
 						break;
 					}
 				}
-				if (!visibility && context == TokenContext.Member)
+				if (!visibility && (context == TokenContext.MemberInModule || context == TokenContext.Member))
 					yield return VisualBasicDefaultVisibility(context);
 			}
 			foreach (var token in modifiers.Where(m => !IgnoreInContext(m, context)))
@@ -138,6 +149,8 @@ namespace RefactoringEssentials.CSharp.Converter
 				var m = ConvertModifier(token, context);
 				if (m.HasValue) yield return m.Value;
 			}
+			if (context == TokenContext.MemberInModule)
+				yield return SyntaxFactory.Token(SyntaxKind.StaticKeyword);
 		}
 
 		static bool IgnoreInContext(SyntaxToken m, TokenContext context)
@@ -173,6 +186,8 @@ namespace RefactoringEssentials.CSharp.Converter
 				case TokenContext.VariableOrConst:
 				case TokenContext.Member:
 					return SyntaxFactory.Token(SyntaxKind.PrivateKeyword);
+				case TokenContext.MemberInModule:
+					return SyntaxFactory.Token(SyntaxKind.PublicKeyword);
 			}
 			throw new ArgumentOutOfRangeException(nameof(context));
 		}
@@ -253,6 +268,13 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.ConstKeyword;
 				case VBasic.SyntaxKind.PartialKeyword:
 					return SyntaxKind.PartialKeyword;
+				case VBasic.SyntaxKind.MustInheritKeyword:
+					return SyntaxKind.AbstractKeyword;
+				case VBasic.SyntaxKind.MustOverrideKeyword:
+					return SyntaxKind.AbstractKeyword;
+                case VBasic.SyntaxKind.NotOverridableKeyword:
+                case VBasic.SyntaxKind.NotInheritableKeyword:
+					return SyntaxKind.SealedKeyword;
 				// unary operators
 				case VBasic.SyntaxKind.UnaryMinusExpression:
 					return SyntaxKind.UnaryMinusExpression;
@@ -270,6 +292,8 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.MultiplyExpression;
 				case VBasic.SyntaxKind.DivideExpression:
 					return SyntaxKind.DivideExpression;
+				case VBasic.SyntaxKind.ModuloExpression:
+					return SyntaxKind.ModuloExpression;
 				case VBasic.SyntaxKind.AndAlsoExpression:
 					return SyntaxKind.LogicalAndExpression;
 				case VBasic.SyntaxKind.OrElseExpression:
@@ -337,6 +361,8 @@ namespace RefactoringEssentials.CSharp.Converter
 				//
 				case VBasic.SyntaxKind.AssemblyKeyword:
 					return SyntaxKind.AssemblyKeyword;
+				case VBasic.SyntaxKind.AsyncKeyword:
+					return SyntaxKind.AsyncKeyword;
 			}
 			throw new NotSupportedException(t + " not supported!");
 		}

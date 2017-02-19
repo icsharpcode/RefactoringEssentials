@@ -33,13 +33,13 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var diagnostic = diagnostics.First();
             var parameter = root.FindNode(context.Span);
             if (!parameter.IsKind(SyntaxKind.Parameter))
                 return;
             var newName = diagnostic.Descriptor.CustomTags.First();
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var parameterSymbol = semanticModel.GetDeclaredSymbol(parameter, cancellationToken);
             var solution = document.Project.Solution;
 

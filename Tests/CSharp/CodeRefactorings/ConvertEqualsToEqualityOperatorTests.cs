@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertEqualsToEqualityOperatorTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestEquality()
         {
             Test<ConvertEqualsToEqualityOperatorCodeRefactoringProvider>(@"class FooBar
@@ -26,7 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInequality()
         {
             Test<ConvertEqualsToEqualityOperatorCodeRefactoringProvider>(@"class FooBar
@@ -46,7 +45,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEqualsFallback()
         {
             Test<ConvertEqualsToEqualityOperatorCodeRefactoringProvider>(@"class FooBar
@@ -74,7 +73,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMemberReferencEquals()
         {
             Test<ConvertEqualsToEqualityOperatorCodeRefactoringProvider>(@"class FooBar
@@ -94,7 +93,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNegatedMemberReferenceEquals()
         {
             Test<ConvertEqualsToEqualityOperatorCodeRefactoringProvider>(@"class FooBar

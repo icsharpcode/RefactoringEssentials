@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class CopyCommentsFromBaseTest : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestCopyMethodMultiString()
         {
 
@@ -45,7 +44,7 @@ Namespace TestNS
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestCopyMethodSingleString()
         {
 
@@ -81,7 +80,7 @@ Namespace TestNS
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestCopyMethodAbstractClassString()
         {
 
@@ -116,7 +115,7 @@ Namespace TestNS
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestCopyProperty()
         {
 
@@ -174,7 +173,7 @@ Namespace TestNS
 End Namespace");
         }
 
-        [Test]
+        [Fact]
         public void TestCopyType()
         {
 
@@ -202,7 +201,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestSkipExisting()
         {
             TestWrongContext<CopyCommentsFromBaseCodeRefactoringProvider>(@"
@@ -221,7 +220,7 @@ End Class
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestSkipEmpty()
         {
             TestWrongContext<CopyCommentsFromBaseCodeRefactoringProvider>(@"
@@ -234,7 +233,7 @@ End Class
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInterfaceSimpleCase()
         {
             Test<CopyCommentsFromBaseCodeRefactoringProvider>(@"
@@ -261,7 +260,7 @@ Class DerivedClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestInterfaceMultiCase()
         {
             Test<CopyCommentsFromBaseCodeRefactoringProvider>(@"
@@ -291,8 +290,7 @@ Class DerivedClass
 End Class");
         }
 
-        //[Ignore]
-        [Test]
+        [Fact]
         public void TestInterfaceNoProblem()
         {
             TestWrongContext<CopyCommentsFromBaseCodeRefactoringProvider>(@"

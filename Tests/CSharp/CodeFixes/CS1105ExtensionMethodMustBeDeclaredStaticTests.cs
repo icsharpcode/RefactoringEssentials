@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeFixes;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
-    [TestFixture]
     public class CS1105ExtensionMethodMustBeDeclaredStaticTests : CSharpCodeFixTestBase
     {
-        [Test]
+        [Fact]
         public void TestMethod()
         {
             Test<CS1105ExtensionMethodMustBeDeclaredStaticCodeFixProvider>(@"

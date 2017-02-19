@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class StringIndexOfIsCultureSpecificTests : CSharpDiagnosticTestBase
     {
         const string stringIndexOfStringCalls = @"
@@ -29,19 +28,19 @@ class Test {
     }
 }";
 
-        [Test]
+        [Fact]
         public void IndexOfStringCalls()
         {
             Analyze<StringIndexOfIsCultureSpecificAnalyzer>(stringIndexOfStringCalls, stringIndexOfStringCallsWithComparison);
         }
 
-        [Test]
+        [Fact]
         public void IndexOfStringCallsAlreadyWithComparison()
         {
             Analyze<StringIndexOfIsCultureSpecificAnalyzer>(stringIndexOfStringCallsWithComparison);
         }
 
-        [Test]
+        [Fact]
         public void StringIndexOfChar()
         {
             string program = @"using System;
@@ -53,7 +52,7 @@ class Test {
             Analyze<StringIndexOfIsCultureSpecificAnalyzer>(program);
         }
 
-        [Test]
+        [Fact]
         public void ListIndexOf()
         {
             string program = @"using System.Collections.Generic;
@@ -66,7 +65,7 @@ class Test {
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<StringIndexOfIsCultureSpecificAnalyzer>(@"using System;

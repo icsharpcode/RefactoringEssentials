@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
-using System;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantExplicitNullableCreationTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestVariableCreation()
         {
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
@@ -29,7 +27,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestLongForm()
         {
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
@@ -51,7 +49,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestCreationInArgument()
         {
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
@@ -81,7 +79,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalid()
         {
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
@@ -98,7 +96,7 @@ class FooBar
         /// <summary>
         /// RECS0138 fix produces bad code when one of expressions is an explicit nullable type creation #185
         /// </summary>
-        [Test]
+        [Fact]
         public void TestIssue185()
         {
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"
@@ -116,7 +114,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<RedundantExplicitNullableCreationAnalyzer>(@"

@@ -30,7 +30,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
             if (node == null)
@@ -39,7 +39,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var method = parameter != null ? parameter.AncestorsAndSelf().OfType<MethodDeclarationSyntax>().FirstOrDefault() : null;
             if (method == null)
                 return;
-            var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
+            var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var symbol = semanticModel.GetDeclaredSymbol(method) as IMethodSymbol;
 
             var idx = method.ParameterList.Parameters.IndexOf(parameter);

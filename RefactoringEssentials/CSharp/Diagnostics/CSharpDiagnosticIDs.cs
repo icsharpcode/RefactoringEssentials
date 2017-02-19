@@ -157,7 +157,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         public const string ConvertToConstantAnalyzerID = "RECS0153";
         public const string UnusedParameterAnalyzerID = "RECS0154";
         public const string FormatStringProblemAnalyzerID = "RECS0155";
-        public const string LocalVariableNotUsedAnalyzerID = "RECS0156";
+//        public const string LocalVariableNotUsedAnalyzerID = "RECS0156";
         public const string ThreadStaticAtInstanceFieldAnalyzerID = "RECS0157";
         public const string RedundantUnsafeContextAnalyzerID = "RECS0158";
         public const string RedundantOverriddenMemberAnalyzerID = "RECS0159";

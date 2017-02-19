@@ -1,20 +1,17 @@
 using System.Linq;
-using System.Threading;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Simplification;
 using Microsoft.CodeAnalysis.Formatting;
-using System.Diagnostics.Contracts;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the return value must not be null")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the return value must not be null")]
     /// <summary>
     /// Creates a 'Contract.Ensures(return != null);' contract for a method return value.
     /// </summary>
@@ -23,7 +20,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         #region ICodeActionProvider implementation
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            var codeContractsContext = await CodeContractsContext(context);
+            var codeContractsContext = await CodeContractsContext(context).ConfigureAwait(false);
             if (codeContractsContext == null)
                 return;
 
@@ -106,14 +103,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         {
             var workspace = new AdhocWorkspace();
 
+            var rhsEnsures = $"Contract.Ensures(Contract.Result<{returnType}>() != null);";
+            var lhsEnsures = $"Contract.Ensures(null != Contract.Result<{returnType}>());";
             foreach (var expression in bodyStatement.DescendantNodes().OfType<ExpressionStatementSyntax>())
             {
                 var formatted = Formatter.Format(expression, workspace).ToString();
 
-                if (formatted == $"Contract.Ensures(Contract.Result<{returnType}>() != null);")
-                    return true;
-
-                if (formatted == $"Contract.Ensures(null != Contract.Result<{returnType}>());")
+                if (formatted == rhsEnsures || formatted == lhsEnsures)
                     return true;
             }
             return false;

@@ -10,14 +10,13 @@ using Roslyn.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Threading.Tasks;
-using System.Reflection;
 
 namespace RefactoringEssentials
 {
 #if NR6
     public
 #endif
-    static partial class SyntaxNodeExtensions
+	static partial class SyntaxNodeExtensions
     {
         //public static IEnumerable<SyntaxNodeOrToken> DepthFirstTraversal(this SyntaxNode node)
         //{

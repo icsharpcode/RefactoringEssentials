@@ -1,15 +1,14 @@
-using NUnit.Framework;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class CreateEventInvocatorTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Test<CreateEventInvocatorCodeRefactoringProvider>(@"using System;
@@ -28,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Test_CSharp5_SimpleCase()
         {
             var parseOptions = new CSharpParseOptions(
@@ -55,7 +54,7 @@ class TestClass
 }", parseOptions: parseOptions);
         }
 
-        [Test]
+        [Fact]
         public void Test_CSharp5_NameClash()
         {
             var parseOptions = new CSharpParseOptions(
@@ -82,7 +81,7 @@ class TestClass
 }", parseOptions: parseOptions);
         }
 
-        [Test]
+        [Fact]
         public void TestNameClash()
         {
             Test<CreateEventInvocatorCodeRefactoringProvider>(@"using System;
@@ -101,7 +100,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticEvent()
         {
             Test<CreateEventInvocatorCodeRefactoringProvider>(@"using System;
@@ -121,7 +120,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestStaticNameClash()
         {
             Test<CreateEventInvocatorCodeRefactoringProvider>(@"using System;
@@ -140,7 +139,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestUnusualEventHandler()
         {
             Test<CreateEventInvocatorCodeRefactoringProvider>(@"using System;
@@ -159,6 +158,14 @@ class TestClass
 
     public event UnusualEventHandler Tested;
 }");
+        }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<CreateEventInvocatorCodeRefactoringProvider>(
+                "using System; interface Test { event EventHandler $TestEvent; }"
+            );
         }
     }
 }

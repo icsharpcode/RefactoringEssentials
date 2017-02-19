@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantIfElseBlockTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             var input = @"
@@ -33,7 +32,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             var input = @"
@@ -51,7 +50,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestBreakLoop()
         {
             var input = @"
@@ -84,7 +83,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestContinueLoop()
         {
             var input = @"
@@ -117,7 +116,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestBlockStatement()
         {
             var input = @"
@@ -149,7 +148,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestEmptyFalseBlock()
         {
             var input = @"
@@ -176,7 +175,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestNecessaryElse()
         {
 
@@ -195,7 +194,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNecessaryElseCase2()
         {
 
@@ -220,7 +219,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
 
         public void TestNecessaryElseBecauseOfVarDeclaration()
         {
@@ -242,7 +241,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNecessaryElseBecauseOfVarDeclarationInDifferentStatement()
         {
             var input = @"
@@ -264,7 +263,7 @@ class TestClass
             Analyze<RedundantIfElseBlockAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestReturn2()
         {
             var input = @"

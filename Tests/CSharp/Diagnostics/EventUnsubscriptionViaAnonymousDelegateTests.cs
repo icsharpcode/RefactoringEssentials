@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class EventUnsubscriptionViaAnonymousDelegateTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestDelegateCase()
         {
             Analyze<EventUnsubscriptionViaAnonymousDelegateAnalyzer>(@"using System;
@@ -22,7 +21,7 @@ class Bar
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLambdaCase()
         {
             Analyze<EventUnsubscriptionViaAnonymousDelegateAnalyzer>(@"using System;
@@ -38,7 +37,7 @@ class Bar
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<EventUnsubscriptionViaAnonymousDelegateAnalyzer>(@"using System;

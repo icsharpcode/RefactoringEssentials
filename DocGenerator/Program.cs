@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 using System.Xml.Linq;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -13,7 +11,7 @@ using Microsoft.CodeAnalysis.CodeFixes;
 
 namespace RefactoringEssentials.DocGenerator
 {
-    class Program
+	class Program
     {
         static void Main(string[] args)
         {

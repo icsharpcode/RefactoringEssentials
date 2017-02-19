@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeFixes;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
-    [TestFixture]
     public class CS0152DuplicateCaseLabelValueTests : CSharpCodeFixTestBase
     {
-        [Test]
+        [Fact]
         public void TestDuplicateSections()
         {
             Test<CS0152DuplicateCaseLabelValueCodeFixProvider>(@"
@@ -43,7 +42,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoDuplicate()
         {
             TestWrongContext<CS0152DuplicateCaseLabelValueCodeFixProvider>(@"
@@ -67,7 +66,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestDuplicateLabels()
         {
             Test<CS0152DuplicateCaseLabelValueCodeFixProvider>(@"

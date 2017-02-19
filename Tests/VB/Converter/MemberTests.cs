@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.Converter
 {
-    [TestFixture]
     public class MemberTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void TestField()
         {
             TestConversionCSharpToVisualBasic(
@@ -26,7 +20,7 @@ namespace RefactoringEssentials.Tests.VB.Converter
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -47,7 +41,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodWithReturnType()
         {
             TestConversionCSharpToVisualBasic(
@@ -64,7 +58,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -85,7 +79,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestAbstractMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -97,7 +91,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestSealedMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -118,7 +112,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestExtensionMethod()
         {
             TestConversionCSharpToVisualBasic(
@@ -136,7 +130,7 @@ Module TestClass
 End Module");
         }
 
-        [Test]
+        [Fact]
         public void TestExtensionMethodWithExistingImport()
         {
             TestConversionCSharpToVisualBasic(
@@ -156,7 +150,7 @@ Module TestClass
 End Module");
         }
 
-        [Test]
+        [Fact]
         public void TestProperty()
         {
             TestConversionCSharpToVisualBasic(
@@ -193,7 +187,7 @@ End Module");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestConstructor()
         {
             TestConversionCSharpToVisualBasic(
@@ -208,7 +202,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestDestructor()
         {
             TestConversionCSharpToVisualBasic(
@@ -223,7 +217,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestEvent()
         {
             TestConversionCSharpToVisualBasic(
@@ -235,7 +229,7 @@ End Class");
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestCustomEvent()
         {
             TestConversionCSharpToVisualBasic(
@@ -267,7 +261,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexer()
         {
             TestConversionCSharpToVisualBasic(

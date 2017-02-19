@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class PartialTypeWithSinglePartTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestRedundantModifier()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>(
@@ -17,7 +16,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNecessaryModifier()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>((string)@"
@@ -29,7 +28,7 @@ partial class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>(@"
@@ -39,7 +38,7 @@ partial class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantNestedPartial()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>(@"
@@ -63,7 +62,7 @@ partial class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantNestedPartialInNonPartialOuterClass()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>(@"
@@ -81,7 +80,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantNestedPartialDisable()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>(@"
@@ -106,7 +105,7 @@ partial class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestNeededNestedPartial()
         {
             Analyze<PartialTypeWithSinglePartAnalyzer>(@"

@@ -7,11 +7,10 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.CSharp;
-using System;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Invert if")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Invert if")]
     public class InvertIfCodeRefactoringProvider : CodeRefactoringProvider
     {
         static readonly string invertIfFixMessage = GettextCatalog.GetString("Invert 'if'");

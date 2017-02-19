@@ -25,54 +25,42 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
             var token = root.FindToken(span.Start);
 
-            if (!token.IsKind(SyntaxKind.IdentifierToken) &&
-                !token.IsKind(SyntaxKind.AbstractKeyword) &&
-                !token.IsKind(SyntaxKind.VirtualKeyword) &&
-                !token.IsKind(SyntaxKind.ThisKeyword))
+            if (!token.IsKind(SyntaxKind.IdentifierToken, SyntaxKind.AbstractKeyword, SyntaxKind.VirtualKeyword, SyntaxKind.ThisKeyword))
                 return;
-            var declaration = token.Parent as MemberDeclarationSyntax;
-            if (token.IsKind(SyntaxKind.IdentifierToken))
-            {
-                if (token.Parent.Parent.IsKind(SyntaxKind.VariableDeclaration) &&
-                    token.Parent.Parent.Parent.IsKind(SyntaxKind.EventFieldDeclaration))
-                {
-                    declaration = token.Parent.Parent.Parent as MemberDeclarationSyntax;
+            MemberDeclarationSyntax declaration;
+            ISymbol symbol = null;
+            if (token.IsKind(SyntaxKind.IdentifierToken)) {
+                if (token.Parent?.Parent?.IsKind(SyntaxKind.VariableDeclaration) == true) {
+                    declaration = token.Parent?.Parent?.Parent as MemberDeclarationSyntax;
+                    symbol = model.GetDeclaredSymbol(token.Parent);
+                } else {
+                    declaration = token.Parent as MemberDeclarationSyntax;
+                    if (declaration != null)
+                        symbol = model.GetDeclaredSymbol(declaration);
                 }
+            } else {
+                declaration = token.Parent as MemberDeclarationSyntax;
+                if (declaration != null)
+                    symbol = model.GetDeclaredSymbol(declaration);
             }
-            if (declaration == null
+            if (declaration == null || symbol == null
                 || declaration is BaseTypeDeclarationSyntax
                 || declaration is ConstructorDeclarationSyntax
                 || declaration is DestructorDeclarationSyntax)
                 return;
             var modifiers = declaration.GetModifiers();
-            if (modifiers.Any(m => m.IsKind(SyntaxKind.OverrideKeyword)))
+            if (modifiers.Any(m => m.IsKind(SyntaxKind.OverrideKeyword, SyntaxKind.ExternKeyword)))
                 return;
 
-            var declarationParent = declaration.Parent as TypeDeclarationSyntax;
-            if (declarationParent == null)
+            var containingType = symbol.ContainingType;
+            if (symbol.DeclaredAccessibility == Accessibility.Private || containingType.IsInterfaceType())
                 return;
 
             var explicitInterface = declaration.GetExplicitInterfaceSpecifierSyntax();
             if (explicitInterface != null)
-            {
                 return;
-            }
 
-            //			if (selectedNode != node.NameToken) {
-            //				if ((node is EventDeclaration && node is CustomEventDeclaration || selectedNode.Role != Roles.Identifier) && 
-            //					selectedNode.Role != IndexerDeclaration.ThisKeywordRole) {
-            //					var modToken = selectedNode as CSharpModifierToken;
-            //					if (modToken == null || (modToken.Modifier & (Modifiers.Abstract | Modifiers.Virtual)) == 0)
-            //						yield break;
-            //				} else {
-            //					if (!(node is EventDeclaration || node is CustomEventDeclaration) && selectedNode.Parent != node)
-            //						yield break;
-            //				}
-            //			}
-            //			if (!node.GetChildByRole(EntityDeclaration.PrivateImplementationTypeRole).IsNull)
-            //				yield break;
-            //
-            if (declarationParent.Modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))
+            if (containingType.IsAbstract)
             {
                 if (modifiers.Any(m => m.IsKind(SyntaxKind.AbstractKeyword)))
                 {
@@ -137,7 +125,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     )
                     );
                 }
-                else if (!declarationParent.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
+                else if (!containingType.IsStatic)
                 {
                     context.RegisterRefactoring(CodeActionFactory.Create(
                         token.Span,
@@ -263,8 +251,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         static bool CheckBody(MemberDeclarationSyntax node)
         {
             var property = node as BasePropertyDeclarationSyntax;
-            if (property != null && property.AccessorList.Accessors.Any(acc => !IsValidBody(acc.Body)))
-                return false;
+            if (property != null) {
+                if (property.AccessorList == null || property.AccessorList.Accessors.Any(acc => !IsValidBody(acc.Body)))
+                    return false;
+            }
 
             var m = node as MethodDeclarationSyntax;
             if (m != null && !IsValidBody(m.Body))
@@ -315,7 +305,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 var accessors = new List<AccessorDeclarationSyntax>();
                 foreach (var accessor in property.AccessorList.Accessors)
                 {
-                    accessors.Add(SyntaxFactory.AccessorDeclaration(accessor.Kind(), accessor.AttributeLists, accessor.Modifiers, accessor.Keyword, null, SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+                    accessors.Add(SyntaxFactory.AccessorDeclaration(accessor.Kind(), accessor.AttributeLists, accessor.Modifiers, accessor.Keyword, (BlockSyntax) null, SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
                 }
                 return SyntaxFactory.PropertyDeclaration(
                     property.AttributeLists,
@@ -334,7 +324,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 var accessors = new List<AccessorDeclarationSyntax>();
                 foreach (var accessor in indexer.AccessorList.Accessors)
                 {
-                    accessors.Add(SyntaxFactory.AccessorDeclaration(accessor.Kind(), accessor.AttributeLists, accessor.Modifiers, accessor.Keyword, null, SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+                    accessors.Add(SyntaxFactory.AccessorDeclaration(accessor.Kind(), accessor.AttributeLists, accessor.Modifiers, accessor.Keyword, (BlockSyntax) null, SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
                 }
                 return SyntaxFactory.IndexerDeclaration(
                     indexer.AttributeLists,

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantPrivateInspectorTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<RedundantPrivateAnalyzer>(@"class Foo
@@ -25,7 +24,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact]
         public void TestNestedClass()
         {
             Analyze<RedundantPrivateAnalyzer>(@"class Foo
@@ -41,7 +40,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoModifiers()
         {
             Analyze<RedundantPrivateAnalyzer>(@"class Foo

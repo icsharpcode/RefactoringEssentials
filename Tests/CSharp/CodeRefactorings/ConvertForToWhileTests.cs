@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertForToWhileTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleFor()
         {
             Test<ConvertForToWhileCodeRefactoringProvider>(@"
@@ -36,7 +35,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleForWithComment1()
         {
             Test<ConvertForToWhileCodeRefactoringProvider>(@"
@@ -68,8 +67,7 @@ class Test
 }");
         }
 
-        [Ignore("broken")]
-        [Test]
+        [Fact]
         public void TestSimpleForWithComment2()
         {
             Test<ConvertForToWhileCodeRefactoringProvider>(@"
@@ -101,7 +99,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMissingInitializer()
         {
             Test<ConvertForToWhileCodeRefactoringProvider>(@"
@@ -130,7 +128,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMissingCondition()
         {
             Test<ConvertForToWhileCodeRefactoringProvider>(@"
@@ -160,7 +158,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInfiniteLoop()
         {
             Test<ConvertForToWhileCodeRefactoringProvider>(@"
@@ -188,7 +186,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleInitializersAndIterators()
         {
             Test<ConvertForToWhileCodeRefactoringProvider>(@"

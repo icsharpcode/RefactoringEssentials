@@ -1,10 +1,9 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.Diagnostics
 {
-    [TestFixture]
-    public class NonPublicMethodWithTestAttributeTests : VBDiagnosticTestBase
+	public class NonPublicMethodWithTestAttributeTests : VBDiagnosticTestBase
     {
         const string NUnitClasses = @"Imports System
 Imports NUnit.Framework
@@ -18,7 +17,7 @@ Namespace NUnit.Framework
     End Class
 End Namespace";
 
-        [Test]
+        [Fact]
         public void TestImplicitPrivate()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses +
@@ -38,7 +37,7 @@ Class Tests
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestExplicitPrivate()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses +
@@ -58,7 +57,7 @@ Class Tests
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestExplicitProtected()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses +
@@ -78,7 +77,7 @@ Class Tests
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestExplicitInternal()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses +
@@ -98,7 +97,7 @@ Class Tests
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses + @"

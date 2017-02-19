@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class MergeNestedIfTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestOuterIf()
         {
             Test<MergeNestedIfAction>(@"
@@ -29,7 +28,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOuterIfWithBlock()
         {
             Test<MergeNestedIfAction>(@"
@@ -57,7 +56,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInnerIf()
         {
             Test<MergeNestedIfAction>(@"
@@ -80,7 +79,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInnerIfWithBlock()
         {
             Test<MergeNestedIfAction>(@"
@@ -108,7 +107,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOuterIfElse()
         {
             TestWrongContext<MergeNestedIfAction>(@"
@@ -137,7 +136,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInnerIfElse()
         {
             TestWrongContext<MergeNestedIfAction>(@"
@@ -167,7 +166,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleTrueStatements()
         {
             TestWrongContext<MergeNestedIfAction>(@"
@@ -196,7 +195,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInnerIfWithComplexCondition()
         {
             Test<MergeNestedIfAction>(@"
@@ -224,7 +223,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOuterIfWithComplexCondition()
         {
             Test<MergeNestedIfAction>(@"

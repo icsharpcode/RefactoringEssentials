@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertExplicitToImplicitImplementationTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestMethod()
         {
             Test<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -32,7 +31,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodWithXmlDoc()
         {
             Test<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -64,7 +63,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodWithInlineComment()
         {
             Test<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -90,7 +89,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExistingMethod()
         {
             TestWrongContext<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -109,7 +108,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestProperty()
         {
             Test<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -139,7 +138,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExistingProperty()
         {
             TestWrongContext<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -162,7 +161,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEvent()
         {
             Test<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -196,7 +195,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExistingEvent()
         {
             TestWrongContext<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -217,7 +216,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexer()
         {
             Test<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -245,7 +244,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExistingIndexer()
         {
             TestWrongContext<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"
@@ -267,7 +266,7 @@ class TestClass : ITest
         }
 
 
-        [Test]
+        [Fact]
         public void TestNonExplitiImplementation()
         {
             TestWrongContext<ConvertExplicitToImplicitImplementationCodeRefactoringProvider>(@"

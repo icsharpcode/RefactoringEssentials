@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class AddAnotherAccessorTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestAddSet()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"
@@ -39,7 +38,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAddSet_ReadOnlyField()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"
@@ -72,7 +71,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAddGet()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"
@@ -104,7 +103,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAddGetWithComment()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"
@@ -137,7 +136,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAutoProperty()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"
@@ -157,7 +156,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAutoPropertyWithComment()
         {
             Test<AddAnotherAccessorCodeRefactoringProvider>(@"

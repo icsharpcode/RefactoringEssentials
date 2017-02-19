@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class FunctionNeverReturnsTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestEnd()
         {
             var input = @"
@@ -20,7 +19,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             var input = @"
@@ -34,7 +33,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestThrow()
         {
             var input = @"
@@ -48,7 +47,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNeverReturns()
         {
             var input = @"
@@ -62,7 +61,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestIfWithoutElse()
         {
             var input = @"
@@ -77,7 +76,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestRecursive()
         {
             var input = @"
@@ -91,7 +90,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestRecursiveWithThis()
         {
             var input = @"
@@ -105,7 +104,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNonRecursive()
         {
             var input = @"
@@ -122,7 +121,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestVirtualNonRecursive()
         {
             var input = @"
@@ -136,7 +135,7 @@ class Base
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestOverrideNonRecursive()
         {
             var input = @"
@@ -150,7 +149,7 @@ class Base
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNonRecursiveProperty()
         {
             var input = @"
@@ -170,7 +169,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNonRecursivePropertyWithPassingPropertyName()
         {
             var input = @"
@@ -196,7 +195,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestGetterNeverReturns()
         {
             var input = @"
@@ -212,7 +211,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestRecursiveGetter()
         {
             var input = @"
@@ -228,7 +227,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestRecursiveSetter()
         {
             var input = @"
@@ -244,7 +243,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestAutoProperty()
         {
             var input = @"
@@ -259,7 +258,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestMethodGroupNeverReturns()
         {
             var input = @"
@@ -277,7 +276,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestIncrementProperty()
         {
             var input = @"
@@ -292,7 +291,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestLambdaNeverReturns()
         {
             var input = @"
@@ -306,7 +305,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestDelegateNeverReturns()
         {
             var input = @"
@@ -321,7 +320,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void YieldBreak()
         {
             var input = @"
@@ -335,7 +334,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             var input = @"
@@ -350,7 +349,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestBug254()
         {
             //https://github.com/icsharpcode/NRefactory/issues/254
@@ -375,7 +374,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestSwitch()
         {
             //https://github.com/icsharpcode/NRefactory/issues/254
@@ -393,7 +392,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestSwitchWithDefault()
         {
             //https://github.com/icsharpcode/NRefactory/issues/254
@@ -412,7 +411,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestSwitchValue()
         {
             //https://github.com/icsharpcode/NRefactory/issues/254
@@ -431,7 +430,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestSwitchDefault_CaseReturns()
         {
             var input = @"
@@ -451,7 +450,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestLinqFrom()
         {
             //https://github.com/icsharpcode/NRefactory/issues/254
@@ -468,7 +467,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestWrongLinqContexts()
         {
             //https://github.com/icsharpcode/NRefactory/issues/254
@@ -487,7 +486,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestForeach()
         {
             //https://bugzilla.xamarin.com/show_bug.cgi?id=14732
@@ -504,7 +503,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNoExecutionFor()
         {
             var input = @"
@@ -520,7 +519,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNullCoalescing()
         {
             //https://bugzilla.xamarin.com/show_bug.cgi?id=14732
@@ -538,7 +537,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestPropertyGetterInSetter()
         {
             Analyze<FunctionNeverReturnsAnalyzer>(@"using System;
@@ -552,7 +551,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRecursiveFunctionBug()
         {
             Analyze<FunctionNeverReturnsAnalyzer>(@"using System;
@@ -568,7 +567,7 @@ class TestClass
         /// <summary>
         /// Bug 17769 - Incorrect "method never returns" warning
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug17769()
         {
             Analyze<FunctionNeverReturnsAnalyzer>(@"
@@ -585,7 +584,7 @@ class A
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestSelfUnregisteringEvent()
         {
             var input = @"
@@ -602,7 +601,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestConditionalExpression()
         {
             var input = @"
@@ -619,7 +618,7 @@ class TestClass
             Analyze<FunctionNeverReturnsAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestConditionalAccessExpression()
         {
             var input = @"

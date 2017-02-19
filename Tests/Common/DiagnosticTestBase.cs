@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using NUnit.Framework;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis;
@@ -11,10 +10,11 @@ using System.Text;
 using Microsoft.CodeAnalysis.Host;
 using Microsoft.CodeAnalysis.CodeActions;
 using RefactoringEssentials.Tests.Common;
+using Xunit;
 
 namespace RefactoringEssentials.Tests
 {
-    public abstract class DiagnosticTestBase
+	public abstract class DiagnosticTestBase
     {
         static MetadataReference mscorlib;
         static MetadataReference systemAssembly;
@@ -118,52 +118,52 @@ namespace RefactoringEssentials.Tests
             CodeFixProvider provider;
             if (providers.TryGetValue(diagnostic.Id, out provider))
             {
-                Assert.IsNotNull(provider, "null provider for : " + diagnostic.Id);
+                Assert.True(provider != null, "null provider for : " + diagnostic.Id);
                 var document = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
                 var actions = new List<CodeAction>();
                 var context = new CodeFixContext(document, diagnostic, (fix, diags) => actions.Add(fix), default(CancellationToken));
-                provider.RegisterCodeFixesAsync(context).Wait();
+                provider.RegisterCodeFixesAsync(context).GetAwaiter().GetResult();
                 if (!actions.Any())
                 {
-                    Assert.Fail("Provider has no fix for " + diagnostic.Id + " at " + diagnostic.Location.SourceSpan);
+                    Assert.True(false, "Provider has no fix for " + diagnostic.Id + " at " + diagnostic.Location.SourceSpan);
                     return;
                 }
-                foreach (var op in actions[index].GetOperationsAsync(default(CancellationToken)).Result)
+                foreach (var op in actions[index].GetOperationsAsync(default(CancellationToken)).GetAwaiter().GetResult())
                 {
                     op.Apply(workspace, default(CancellationToken));
                 }
             }
             else
             {
-                Assert.Fail("No code fix provider found for :" + diagnostic.Id);
+                Assert.True(false, "No code fix provider found for :" + diagnostic.Id);
             }
         }
 
         protected static void Test<T>(string input, int expectedDiagnostics = 1, string output = null, int issueToFix = -1, int actionToRun = 0) where T : DiagnosticAnalyzer, new()
         {
-            Assert.Fail("Use Analyze");
+            Assert.True(false, "Use Analyze");
         }
 
         protected static void Test<T>(string input, string output, int fixIndex = 0)
             where T : DiagnosticAnalyzer, new()
         {
-            Assert.Fail("Use Analyze");
+            Assert.True(false, "Use Analyze");
         }
 
         protected static void TestIssue<T>(string input, int issueCount = 1)
             where T : DiagnosticAnalyzer, new()
         {
-            Assert.Fail("Use Analyze");
+            Assert.True(false, "Use Analyze");
         }
 
         protected static void TestWrongContextWithSubIssue<T>(string input, string id) where T : DiagnosticAnalyzer, new()
         {
-            Assert.Fail("Use AnalyzeWithRule");
+            Assert.True(false, "Use AnalyzeWithRule");
         }
 
         protected static void TestWithSubIssue<T>(string input, string output, string subIssue, int fixIndex = 0) where T : DiagnosticAnalyzer, new()
         {
-            Assert.Fail("Use AnalyzeWithRule");
+            Assert.True(false, "Use AnalyzeWithRule");
         }
 
         class TestDiagnosticAnalyzer<T> : DiagnosticAnalyzer
@@ -239,7 +239,7 @@ namespace RefactoringEssentials.Tests
             var diagnostics = new List<Diagnostic>();
 
             var compilationWithAnalyzers = compilation.WithAnalyzers(System.Collections.Immutable.ImmutableArray<DiagnosticAnalyzer>.Empty.Add(new T()));
-            var result = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result;
+            var result = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().GetAwaiter().GetResult();
             diagnostics.AddRange(result);
 
             diagnostics.Sort((d1, d2) => d1.Location.SourceSpan.Start.CompareTo(d2.Location.SourceSpan.Start));
@@ -251,7 +251,7 @@ namespace RefactoringEssentials.Tests
                 {
                     Console.WriteLine(diag.Id + "/" + diag.GetMessage() + "/" + diag.Location.SourceSpan);
                 }
-                Assert.Fail("Diagnostic count mismatch expected: " + expectedDiagnosics.Count + " was " + diagnostics.Count);
+                Assert.True(false, "Diagnostic count mismatch expected: " + expectedDiagnosics.Count + " was " + diagnostics.Count);
             }
 
             for (int i = 0; i < expectedDiagnosics.Count; i++)
@@ -260,7 +260,7 @@ namespace RefactoringEssentials.Tests
                 var wholeSpan = GetWholeSpan(d);
                 if (wholeSpan != expectedDiagnosics[i])
                 {
-                    Assert.Fail("Diagnostic " + i + " span mismatch expected: " + expectedDiagnosics[i] + " but was " + wholeSpan);
+                    Assert.True(false, "Diagnostic " + i + " span mismatch expected: " + expectedDiagnosics[i] + " but was " + wholeSpan);
                 }
                 if (diagnosticCheck != null)
                     diagnosticCheck(i, d);
@@ -298,31 +298,32 @@ namespace RefactoringEssentials.Tests
                 RunFix(workspace, projectId, documentId, diagnostics.ElementAt(issueToFix), actionToRun);
             }
 
-            var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
+            var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().GetAwaiter().GetResult().ToString();
             output = Utils.HomogenizeEol(output);
             txt =  Utils.HomogenizeEol(txt);
             if (output != txt)
             {
-                Console.WriteLine("expected:");
-                Console.WriteLine(output);
-                Console.WriteLine("got:");
-                Console.WriteLine(txt);
-                Console.WriteLine("-----Mismatch:");
+				StringBuilder sb = new StringBuilder();
+                sb.AppendLine("expected:");
+				sb.AppendLine(output);
+				sb.AppendLine("got:");
+				sb.AppendLine(txt);
+				sb.AppendLine("-----Mismatch:");
                 for (int i = 0; i < txt.Length; i++)
                 {
                     if (i >= output.Length)
                     {
-                        Console.Write("#");
+                        sb.Append("#");
                         continue;
                     }
                     if (txt[i] != output[i])
                     {
-                        Console.Write("#");
+						sb.Append("#");
                         continue;
                     }
-                    Console.Write(txt[i]);
+					sb.Append(txt[i]);
                 }
-                Assert.Fail();
+                Assert.True(false, sb.ToString());
             }
         }
 
@@ -357,7 +358,7 @@ namespace RefactoringEssentials.Tests
 
             var diagnostics = new List<Diagnostic>();
             var compilationWithAnalyzers = compilation.WithAnalyzers(System.Collections.Immutable.ImmutableArray<DiagnosticAnalyzer>.Empty.Add(new T()));
-            diagnostics.AddRange(compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().Result);
+            diagnostics.AddRange(compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync().GetAwaiter().GetResult());
 
 
             if (expectedDiagnosics.Count != diagnostics.Count)
@@ -367,7 +368,7 @@ namespace RefactoringEssentials.Tests
                 {
                     Console.WriteLine(diag.Id + "/" + diag.GetMessage());
                 }
-                Assert.Fail("Diagnostic count mismatch expected: " + expectedDiagnosics.Count + " but was:" + diagnostics.Count);
+                Assert.True(false, "Diagnostic count mismatch expected: " + expectedDiagnosics.Count + " but was:" + diagnostics.Count);
             }
 
             for (int i = 0; i < expectedDiagnosics.Count; i++)
@@ -376,7 +377,7 @@ namespace RefactoringEssentials.Tests
                 var wholeSpan = GetWholeSpan(d);
                 if (wholeSpan != expectedDiagnosics[i])
                 {
-                    Assert.Fail("Diagnostic " + i + " span mismatch expected: " + expectedDiagnosics[i] + " but was " + wholeSpan);
+                    Assert.True(false, "Diagnostic " + i + " span mismatch expected: " + expectedDiagnosics[i] + " but was " + wholeSpan);
                 }
                 if (diagnosticCheck != null)
                     diagnosticCheck(i, d);
@@ -414,16 +415,17 @@ namespace RefactoringEssentials.Tests
                 RunFix(workspace, projectId, documentId, diagnostics.ElementAt(issueToFix), actionToRun);
             }
 
-            var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().Result.ToString();
+            var txt = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId).GetTextAsync().GetAwaiter().GetResult().ToString();
             txt = Utils.HomogenizeEol(txt);
             output = Utils.HomogenizeEol(output);
             if (output != txt)
             {
-                Console.WriteLine("expected:");
-                Console.WriteLine(output);
-                Console.WriteLine("got:");
-                Console.WriteLine(txt);
-                Assert.Fail();
+				StringBuilder sb = new StringBuilder();
+				sb.AppendLine("expected:");
+				sb.AppendLine(output);
+				sb.AppendLine("got:");
+				sb.AppendLine(txt);
+                Assert.True(false, sb.ToString());
             }
         }
     }

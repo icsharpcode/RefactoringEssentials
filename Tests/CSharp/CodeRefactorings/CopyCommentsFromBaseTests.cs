@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class CopyCommentsFromBaseTest : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestCopyMethodMultiString()
         {
 
@@ -53,7 +52,7 @@ namespace TestNS
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCopyMethodSingleString()
         {
 
@@ -97,7 +96,7 @@ namespace TestNS
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCopyMethodAbstractClassString()
         {
 
@@ -139,7 +138,7 @@ namespace TestNS
         }
 
 
-        [Test]
+        [Fact]
         public void TestCopyProperty()
         {
 
@@ -177,7 +176,7 @@ namespace TestNS
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCopyType()
         {
 
@@ -210,7 +209,7 @@ class TestClass : Base
         }
 
 
-        [Test]
+        [Fact]
         public void TestSkipExisting()
         {
             TestWrongContext<CopyCommentsFromBaseCodeRefactoringProvider>(@"
@@ -230,7 +229,7 @@ class $TestClass : Base
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestSkipEmpty()
         {
             TestWrongContext<CopyCommentsFromBaseCodeRefactoringProvider>(@"
@@ -246,7 +245,7 @@ class $TestClass : Base
 
 
 
-        [Test]
+        [Fact]
         public void TestInterfaceSimpleCase()
         {
             Test<CopyCommentsFromBaseCodeRefactoringProvider>(@"
@@ -275,7 +274,7 @@ class TestClass : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInterfaceMultiCase()
         {
             Test<CopyCommentsFromBaseCodeRefactoringProvider>(@"
@@ -307,7 +306,7 @@ class TestClass : ITest
 }");
         }
 
-        [Ignore("TODO")]
+        [Fact(Skip="TODO")]
         public void TestInterfaceNoProblem()
         {
             Test<CopyCommentsFromBaseCodeRefactoringProvider>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertBitwiseFlagComparisonToHasFlagsTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestComparisonWithNullInEqual()
         {
             Test<ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider>(@"
@@ -40,7 +39,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestComparisonWithNullEqual()
         {
             Test<ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider>(@"
@@ -74,7 +73,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestComparisonWithFlagInEqual()
         {
             Test<ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider>(@"
@@ -108,7 +107,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestComparisonWithFlagEqual()
         {
             Test<ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider>(@"
@@ -142,7 +141,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleFlags()
         {
             Test<ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider>(@"
@@ -176,7 +175,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleFlagsCase2()
         {
             TestWrongContext<ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider>(@"
@@ -196,7 +195,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalid()
         {
             TestWrongContext<ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider>(@"

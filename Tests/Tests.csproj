@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" />
   <Import Project="..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props" Condition="Exists('..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -111,8 +112,21 @@
     <Reference Include="System.Composition.TypedParts">
       <HintPath>..\packages\Microsoft.Composition.1.0.27\lib\portable-net45+win8+wp8+wpa81\System.Composition.TypedParts.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.0.1\lib\net45\nunit.framework.dll</HintPath>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.assert, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.assert.2.1.0\lib\dotnet\xunit.assert.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.core, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.core.2.1.0\lib\dotnet\xunit.core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="xunit.execution.desktop, Version=2.1.0.3179, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.extensibility.execution.2.1.0\lib\net45\xunit.execution.desktop.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +198,12 @@
     <Compile Include="CSharp\CodeRefactorings\UseStringFormatTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\UseSystemEnvironmentNewLineTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\UseSystemStringEmptyTests.cs" />
+    <Compile Include="CSharp\Converter\ExpressionTests.cs" />
+    <Compile Include="CSharp\Converter\MemberTests.cs" />
+    <Compile Include="CSharp\Converter\NamespaceLevelTests.cs" />
+    <Compile Include="CSharp\Converter\SpecialConversionTests.cs" />
+    <Compile Include="CSharp\Converter\StatementTests.cs" />
+    <Compile Include="CSharp\Converter\TypeCastTests.cs" />
     <Compile Include="CSharp\Diagnostics\AccessToStaticMemberViaDerivedTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\AdditionalOfTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\ArrayCreationCanBeReplacedWithArrayInitializerTests.cs" />
@@ -211,6 +231,7 @@
     <Compile Include="CSharp\Diagnostics\ConvertToConstantTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertToLambdaExpressionTests.cs" />
     <Compile Include="CSharp\Diagnostics\ConvertToStaticTypeTests.cs" />
+    <Compile Include="CSharp\CodeFixes\CS0132StaticConstructorParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\CS1573ParameterHasNoMatchingParamTagTests.cs" />
     <Compile Include="CSharp\Diagnostics\DelegateSubtractionTests.cs" />
     <Compile Include="CSharp\Diagnostics\DoNotCallOverridableMethodsInConstructorTests.cs" />
@@ -232,7 +253,7 @@
     <Compile Include="CSharp\Diagnostics\FunctionNeverReturnsTests.cs" />
     <Compile Include="CSharp\Diagnostics\CSharpDiagnosticTestBase.cs" />
     <Compile Include="CSharp\Diagnostics\LocalVariableHidesMemberTests.cs" />
-    <Compile Include="CSharp\Diagnostics\LocalVariableNotUsedIssueTests.cs" />
+    <Compile Include="CSharp\CodeFixes\CS0168LocalVariableNotUsedCodeFixProviderTests.cs" />
     <Compile Include="CSharp\Diagnostics\LockThisTests.cs" />
     <Compile Include="CSharp\Diagnostics\LongLiteralEndingLowerLTests.cs" />
     <Compile Include="CSharp\Diagnostics\MemberCanBeMadeStaticTests.cs" />
@@ -320,7 +341,6 @@
     <Compile Include="CSharp\Diagnostics\ReplaceWithStringIsNullOrEmptyTests.cs" />
     <Compile Include="CSharp\Diagnostics\SealedMemberInSealedClassTests.cs" />
     <Compile Include="CSharp\Diagnostics\SimplifyConditionalTernaryExpressionTests.cs" />
-    <Compile Include="CSharp\Diagnostics\StaticConstructorParameterTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticEventSubscriptionTests.cs" />
     <Compile Include="CSharp\Diagnostics\RoslynUsageTests.cs" />
     <Compile Include="CSharp\Diagnostics\StaticMethodInvocationToExtensionMethodInvocationTests.cs" />
@@ -474,6 +494,7 @@
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.DiaSymReader.Native.1.3.3\build\Microsoft.DiaSymReader.Native.props'))" />
+    <Error Condition="!Exists('..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\xunit.runner.visualstudio.2.1.0\build\net20\xunit.runner.visualstudio.props'))" />
   </Target>
   <ProjectExtensions>
     <MonoDevelop>

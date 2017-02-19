@@ -1,14 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
-using System;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 
-    [TestFixture]
     public class FieldCanBeMadeReadOnlyTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInitializedField()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -28,7 +26,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFieldAssignedInConstructor()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -56,7 +54,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInitializedFieldAssignedInAnotherClassPart()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"partial class Test
@@ -77,7 +75,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInitializedStaticField()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -97,7 +95,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInitializedStaticFieldUsedInInstanceMember()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -117,7 +115,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticFieldAssignedInStaticConstructor()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -137,7 +135,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticFieldAlsoAssignedInInstanceConstructor()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -154,7 +152,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -169,7 +167,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestFactoryMethod()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -185,7 +183,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFactoryMethodCase2()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -201,7 +199,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestUninitializedValueTypeField()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -221,7 +219,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInitalizedValueTypeField()
         {
             // Is handled by the 'to const' issue.
@@ -236,7 +234,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestSpecializedFieldBug()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"
@@ -252,7 +250,7 @@ class Test<T> where T : IDisposable
         }
 
 
-        [Test]
+        [Fact]
         public void TestFieldAssignedInConstructorLambda()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"
@@ -269,7 +267,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void MutableStruct()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -289,7 +287,7 @@ struct MutableStruct {
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestUnassignedField()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -298,7 +296,7 @@ struct MutableStruct {
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultiple()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
@@ -322,7 +320,7 @@ struct MutableStruct {
         /// <summary>
         /// Bug 19832 - Source Analysis should probably not suggest making a serialized field readonly
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug19832()
         {
             Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"
@@ -338,6 +336,29 @@ class Test
 }
 ");
         }
+
+        [Fact(Skip="broken")]
+        public void TestComments()
+        {
+            Analyze<FieldCanBeMadeReadOnlyAnalyzer>(@"class Test
+{
+    /// <summary>test</summary> 
+    object $fooBar$ = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}", @"class Test
+{
+    /// <summary>test</summary>
+    readonly object fooBar = new object();
+    public static void Main(string[] args)
+    {
+        Console.WriteLine(fooBar);
+    }
+}");
+        }
+
     }
 }
 

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
@@ -11,7 +10,7 @@ using RefactoringEssentials.Util;
 
 namespace RefactoringEssentials.VB.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.VisualBasic, Name = "Convert 'If' to 'Select Case'")]
+	[ExportCodeRefactoringProvider(LanguageNames.VisualBasic, Name = "Convert 'If' to 'Select Case'")]
     public class ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
@@ -25,7 +24,7 @@ namespace RefactoringEssentials.VB.CodeRefactorings
             var cancellationToken = context.CancellationToken;
             if (cancellationToken.IsCancellationRequested)
                 return;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             if (model.IsFromGeneratedCode(cancellationToken))
                 return;

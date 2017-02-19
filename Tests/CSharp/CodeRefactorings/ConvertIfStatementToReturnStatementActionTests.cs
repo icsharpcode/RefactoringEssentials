@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertIfStatementToReturnStatementActionTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Test<ConvertIfStatementToReturnStatementAction>(@"
@@ -30,7 +29,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestReturnWithComment1()
         {
             Test<ConvertIfStatementToReturnStatementAction>(@"
@@ -56,7 +55,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestReturnWithComment2()
         {
             Test<ConvertIfStatementToReturnStatementAction>(@"
@@ -80,7 +79,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestReturnWithComment3()
         {
             Test<ConvertIfStatementToReturnStatementAction>(@"
@@ -104,7 +103,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIfElseWithBlocks()
         {
             Test<ConvertIfStatementToReturnStatementAction>(@"class Foo
@@ -126,7 +125,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestImplicitElse()
         {
 
@@ -152,7 +151,7 @@ class TestClass
         /// <summary>
         /// Bug 'ConvertIfStatementToReturnStatementAction crashes on "if" without "else" #63'
         /// </summary>
-        [Test]
+        [Fact]
         public void TestIssue63()
         {
             var actions = GetActions<ConvertIfStatementToReturnStatementAction>(@"
@@ -169,7 +168,7 @@ class TestClass
         return 0;
     }
 }");
-            Assert.AreEqual(0, actions.Count);
+            Assert.Equal(0, actions.Count);
         }
     }
 }

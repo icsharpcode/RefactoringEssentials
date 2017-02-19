@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantTernaryExpressionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestTrueFalseCase()
         {
             Analyze<RedundantTernaryExpressionAnalyzer>(@"
@@ -28,7 +27,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<RedundantTernaryExpressionAnalyzer>(@"
@@ -43,7 +42,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestExceptionCastNotValid()
         {
             Analyze<RedundantTernaryExpressionAnalyzer>(@"namespace Test

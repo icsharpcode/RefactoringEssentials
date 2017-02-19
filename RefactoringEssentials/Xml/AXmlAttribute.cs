@@ -16,7 +16,6 @@
 // OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-using System;
 using System.Globalization;
 using Microsoft.CodeAnalysis.Text;
 
@@ -25,7 +24,7 @@ namespace RefactoringEssentials.Xml
 	/// <summary>
 	/// Name-value pair in a tag
 	/// </summary>
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
+	//[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1711:IdentifiersShouldNotHaveIncorrectSuffix")]
 	public class AXmlAttribute : AXmlObject
 	{
 		internal AXmlAttribute(AXmlObject parent, int startOffset, InternalAttribute internalObject)

@@ -1,17 +1,11 @@
-using NUnit.Framework;
 using System.Text;
 using Microsoft.CodeAnalysis.Text;
 using RefactoringEssentials.Tests.Common;
 
 namespace RefactoringEssentials.Tests
 {
-    public abstract class CodeFixTestBase
+	public abstract class CodeFixTestBase
     {
-        [SetUp]
-        public virtual void SetUp()
-        {
-        }
-
         internal static string HomogenizeEol(string str)
         {
             return Utils.HomogenizeEol(str);
@@ -61,7 +55,7 @@ namespace RefactoringEssentials.Tests
         //			var ctx = TestRefactoringContext.Create(input);
         //			ctx.FormattingOptions = formattingOptions;
         //			var actions = provider.GetActions(ctx).ToList();
-        //			Assert.AreEqual(
+        //			Assert.Equal(
         //				expected,
         //				actions.Select(a => a.Description).ToArray());
         //		}

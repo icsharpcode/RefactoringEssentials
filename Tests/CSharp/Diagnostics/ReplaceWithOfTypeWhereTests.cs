@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ReplaceWithOfTypeWhereTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestCaseBasicWithFollowUpExpresison()
         {
             Analyze<ReplaceWithOfTypeWhereAnalyzer>(@"using System.Linq;
@@ -26,7 +25,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ReplaceWithOfTypeWhereAnalyzer>(@"using System.Linq;
@@ -40,7 +39,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestJunk()
         {
             Analyze<ReplaceWithOfTypeWhereAnalyzer>(@"using System.Linq;

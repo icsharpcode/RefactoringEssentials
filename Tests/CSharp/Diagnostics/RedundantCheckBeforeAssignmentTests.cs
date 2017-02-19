@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantCheckBeforeAssignmentTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestResharperDisableRestore()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -29,7 +28,7 @@ public class RedundantCheckBeforeAssignmentTests
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestFix()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -70,7 +69,7 @@ class RedundantCheckBeforeAssignmentTests
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestFixWithElse()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -113,7 +112,7 @@ class RedundantCheckBeforeAssignmentTests
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestQualifiedField()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -136,7 +135,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFlippedOperands()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -159,7 +158,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestConstantExpr()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -174,7 +173,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestConstantExprFlipped()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -189,7 +188,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestBlock()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -214,7 +213,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreMultipleStatementsBlock()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -242,11 +241,11 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [TestCase("==")]
-        [TestCase("<")]
-        [TestCase(">")]
-        [TestCase(">=")]
-        [TestCase("<=")]
+        [InlineData("==")]
+        [InlineData("<")]
+        [InlineData(">")]
+        [InlineData(">=")]
+        [InlineData("<=")]
         public void TestIgnoreOtherComparisonOperators(string op)
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -263,7 +262,7 @@ public class RE_Issue104
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreComplexExpression()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -284,7 +283,7 @@ public class RedundantCheckBeforeAssignmentTests
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreREIssue_104()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -301,7 +300,7 @@ public class RedundantCheckBeforeAssignmentTests
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreWithElseBlock()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -331,7 +330,7 @@ class RedundantCheckBeforeAssignmentTests
         }
 
 
-        [Test]
+        [Fact]
         public void TestIgnoreWithElseIfBlock()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -360,7 +359,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithEmptyElseBlock()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -386,7 +385,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoreWithElseStmt()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -411,7 +410,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithEmptyStmt()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;
@@ -437,7 +436,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStringEmptyComparison()
         {
             Analyze<RedundantCheckBeforeAssignmentAnalyzer>(@"using System;

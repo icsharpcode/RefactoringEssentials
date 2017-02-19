@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class FlipRelationalOperatorArgumentsTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestLessThan()
         {
             Test<FlipRelationalOperatorArgumentsCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLessThanOrEquals()
         {
             Test<FlipRelationalOperatorArgumentsCodeRefactoringProvider>(@"
@@ -50,7 +49,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGreaterThan()
         {
             Test<FlipRelationalOperatorArgumentsCodeRefactoringProvider>(@"
@@ -72,7 +71,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGreaterThanOrEquals()
         {
             Test<FlipRelationalOperatorArgumentsCodeRefactoringProvider>(@"

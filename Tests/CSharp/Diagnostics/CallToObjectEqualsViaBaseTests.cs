@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class CallToObjectEqualsViaBaseTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void SimpleCase()
         {
             Analyze<CallToObjectEqualsViaBaseAnalyzer>(@"
@@ -26,7 +25,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void NonObjectBase()
         {
             Analyze<CallToObjectEqualsViaBaseAnalyzer>(@"
@@ -52,7 +51,7 @@ class Bar : Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresCallsToOtherObjects()
         {
             Analyze<CallToObjectEqualsViaBaseAnalyzer>(@"

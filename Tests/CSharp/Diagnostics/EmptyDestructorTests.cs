@@ -1,11 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    public class EmptyDestructorTests : CSharpDiagnosticTestBase
+	public class EmptyDestructorTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBasicCase()
         {
             Analyze<EmptyDestructorAnalyzer>(@"
@@ -20,7 +20,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCaseWithNesting()
         {
             Analyze<EmptyDestructorAnalyzer>(@"
@@ -38,7 +38,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForNonEmpty()
         {
             Analyze<EmptyDestructorAnalyzer>(@"
@@ -51,7 +51,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<EmptyDestructorAnalyzer>(@"

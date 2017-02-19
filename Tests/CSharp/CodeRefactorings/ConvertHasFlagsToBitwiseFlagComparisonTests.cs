@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertHasFlagsToBitwiseFlagComparisonTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleHasFlag()
         {
             Test<ConvertHasFlagsToBitwiseFlagComparisonCodeRefactoringProvider>(@"
@@ -40,7 +39,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestNegatedSimpleHasFlag()
         {
             Test<ConvertHasFlagsToBitwiseFlagComparisonCodeRefactoringProvider>(@"
@@ -75,7 +74,7 @@ class FooBar
         }
 
 
-        [Test]
+        [Fact]
         public void TestMultipleFlagsCase2()
         {
             Test<ConvertHasFlagsToBitwiseFlagComparisonCodeRefactoringProvider>(@"

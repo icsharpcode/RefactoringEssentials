@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class SealedMemberInSealedClassTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBasicCase()
         {
             Analyze<SealedMemberInSealedClassAnalyzer>(@"
@@ -28,7 +27,7 @@ sealed class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestFieldDeclaration()
         {
             Analyze<SealedMemberInSealedClassAnalyzer>(@"
@@ -39,7 +38,7 @@ public sealed class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestValid()
         {
             Analyze<SealedMemberInSealedClassAnalyzer>(@"
@@ -54,7 +53,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<SealedMemberInSealedClassAnalyzer>(@"

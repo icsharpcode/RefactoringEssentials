@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class NegateLogicalExpressionTests : CSharpCodeRefactoringTestBase
     {
         public void Test(string op, string negatedOp)
@@ -25,43 +24,43 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEquality()
         {
             Test("==", "!=");
         }
 
-        [Test]
+        [Fact]
         public void TestInEquality()
         {
             Test("!=", "==");
         }
 
-        [Test]
+        [Fact]
         public void TestGreaterThan()
         {
             Test(">", "<=");
         }
 
-        [Test]
+        [Fact]
         public void TestGreaterThanOrEqual()
         {
             Test(">=", "<");
         }
 
-        [Test]
+        [Fact]
         public void TestLessThan()
         {
             Test("<", ">=");
         }
 
-        [Test]
+        [Fact]
         public void TestLessThanOrEqual()
         {
             Test("<=", ">");
         }
 
-        [Test]
+        [Fact]
         public void TestUnaryOperator()
         {
             Test<NegateLogicalExpressionCodeRefactoringProvider>(

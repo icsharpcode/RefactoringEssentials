@@ -36,18 +36,18 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     directive.Span,
                     DiagnosticSeverity.Info,
                     GettextCatalog.GetString("Remove region/endregion directives"),
-                    t2 =>
+                    async t2 =>
                     {
                         var structure = directive.GetStructure();
                         // var prev = directive.GetPreviousTrivia (model.SyntaxTree, cancellationToken, true);
                         var end = structure as DirectiveTriviaSyntax;
-                        SourceText text = document.GetTextAsync(cancellationToken).Result;
+                        SourceText text = await document.GetTextAsync(cancellationToken).ConfigureAwait(false);
                         foreach (var e in end.GetRelatedDirectives().OrderByDescending(e => e.SpanStart))
                         {
                             var line = text.Lines.GetLineFromPosition(e.FullSpan.Start);
                             text = text.Replace(line.SpanIncludingLineBreak, "");
                         }
-                        return Task.FromResult(document.WithText(text));
+                        return document.WithText(text);
                     }
                 )
             );

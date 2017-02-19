@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RefactoringEssentials
 {
-    /// <summary>
-    /// Defines contexts where usage of reflection is allowed.
-    /// </summary>
-    [Flags]
+	/// <summary>
+	/// Defines contexts where usage of reflection is allowed.
+	/// </summary>
+	[Flags]
     enum RoslynReflectionAllowedContext
     {
         None = 0,

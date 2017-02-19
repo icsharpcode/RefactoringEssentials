@@ -32,8 +32,11 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var property = root.FindNode(span) as PropertyDeclarationSyntax;
             if (property == null || !property.Identifier.Span.Contains(span))
                 return;
-
-            if (property.AccessorList.Accessors.Any(b => b.Body != null)) //ignore properties with >=1 accessor body
+            var enclosingTypeDeclaration = property.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+            if (enclosingTypeDeclaration == null || enclosingTypeDeclaration is InterfaceDeclarationSyntax)
+                return;
+            // ignore properties with >=1 accessor body
+            if (property.AccessorList?.Accessors.Any(b => b.Body != null) != false)
                 return;
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
@@ -42,13 +45,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     GettextCatalog.GetString("To computed property"),
                     t2 =>
                     {
-                        //string name = GetNameProposal(property.Identifier.ValueText, model, root);
-
-                        //create our new property
-                        //var fieldExpression = name == "value" ? 
-                        //	(ExpressionSyntax)SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, SyntaxFactory.ThisExpression(), SyntaxFactory.IdentifierName("value")) : 
-                        //	SyntaxFactory.IdentifierName(name);
-
                         var getBody = SyntaxFactory.Block(
                             SyntaxFactory.ThrowStatement(
                                 SyntaxFactory.ObjectCreationExpression(
@@ -63,7 +59,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                         var getter = SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration, getBody);
                         var setter = SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration, getBody);
 
-                        //var newPropAnno = new SyntaxAnnotation();
                         var newProperty = property.WithAccessorList(SyntaxFactory.AccessorList(new SyntaxList<AccessorDeclarationSyntax>().Add(getter).Add(setter)));
                         newProperty = newProperty.WithAdditionalAnnotations(Formatter.Annotation);
                         var newRoot = root.ReplaceNode((SyntaxNode)property, newProperty);

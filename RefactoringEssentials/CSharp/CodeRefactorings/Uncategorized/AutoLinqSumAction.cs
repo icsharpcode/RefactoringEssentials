@@ -1,418 +1,321 @@
-using Microsoft.CodeAnalysis.CodeRefactorings;
-using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeRefactorings;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert loop to Linq expression")]
-    [NotPortedYet]
     public class AutoLinqSumAction : CodeRefactoringProvider
     {
-        // Disabled for nullables, since int? x = 3; x += null; has result x = null,
-        // but LINQ Sum behaves differently : nulls are treated as zero
-        //static readonly IEnumerable<string> LinqSummableTypes = new string[] {
-        //	"System.UInt16",
-        //	"System.Int16",
-        //	"System.UInt32",
-        //	"System.Int32",
-        //	"System.UInt64",
-        //	"System.Int64",
-        //	"System.Single",
-        //	"System.Double",
-        //	"System.Decimal"
-        //};
-
-        public override Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            //var document = context.Document;
-            //var span = context.Span;
-            //var cancellationToken = context.CancellationToken;
-            //var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            //if (model.IsFromGeneratedCode(cancellationToken))
-            //	return;
-            //var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            return Task.FromResult(0);
+            var document = context.Document;
+            if (document.Project.Solution.Workspace.Kind == WorkspaceKind.MiscellaneousFiles)
+                return;
+            var span = context.Span;
+            if (!span.IsEmpty)
+                return;
+            var cancellationToken = context.CancellationToken;
+            if (cancellationToken.IsCancellationRequested)
+                return;
+            var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            if (model.IsFromGeneratedCode(cancellationToken))
+                return;
+            var symbolInfo = model.GetSpeculativeSymbolInfo(span.Start, SyntaxFactory.ParseTypeName("Enumerable"), SpeculativeBindingOption.BindAsTypeOrNamespace);
+            if (symbolInfo.Symbol == null || symbolInfo.Symbol.ContainingNamespace.ToDisplayString() != "System.Linq")
+                return;
+            var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+            var token = root.FindToken(span.Start);
+            var foreachStmt = token.Parent as ForEachStatementSyntax;
+            if (foreachStmt == null)
+                return;
+            var outputStatement = GetTransformedAssignmentExpression(model, foreachStmt);
+            if (outputStatement == null)
+                return;
+            context.RegisterRefactoring(
+                CodeActionFactory.Create(
+                    token.Span,
+                    DiagnosticSeverity.Info,
+                    GettextCatalog.GetString("Convert foreach loop to LINQ expression"),
+                    t2 => {
+                        int indexOfSelf = foreachStmt.Parent.ChildNodes().IndexOf(n => foreachStmt == n);
+                        var prevSibling = foreachStmt.Parent.ChildNodes().ElementAtOrDefault(indexOfSelf - 1) as StatementSyntax;
+
+                        ExpressionSyntax leftSide = outputStatement.Left;
+                        ExpressionSyntax rightSide = outputStatement.Right;
+                        ExpressionSyntax expressionToReplace = GetExpressionToReplace(prevSibling, leftSide);
+
+                        SyntaxNode newRoot;
+                        if (expressionToReplace == null) {
+                            newRoot = root.ReplaceNode(foreachStmt, SyntaxFactory.ExpressionStatement(outputStatement).WithAdditionalAnnotations(Formatter.Annotation));
+                        } else {
+                            ExpressionSyntax replacementExpression = rightSide;
+                            if (!IsZeroPrimitive(expressionToReplace)) {
+                                replacementExpression = SyntaxFactory.BinaryExpression(
+                                    SyntaxKind.AddExpression,
+                                    CSharpUtil.AddParensIfRequired(expressionToReplace),
+                                    replacementExpression
+                                ).WithAdditionalAnnotations(Formatter.Annotation);
+                            }
+                            newRoot = root.TrackNodes(foreachStmt, expressionToReplace);
+                            newRoot = newRoot.ReplaceNode(newRoot.GetCurrentNode(expressionToReplace), replacementExpression);
+                            newRoot = newRoot.RemoveNode(newRoot.GetCurrentNode(foreachStmt), SyntaxRemoveOptions.KeepNoTrivia);
+                        }
+                        return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                    }
+                ));
         }
 
-        //		public async Task ComputeRefactoringsAsync(Document document, TextSpan span, CancellationToken cancellationToken)
-        //		{
-        //			var loop = GetForeachStatement (context);
-        //			if (loop == null) {
-        //				yield break;
-        //			}
-        //
-        //			if (context.GetResolverStateBefore(loop)
-        //			    .LookupSimpleNameOrTypeName("Enumerable", new List<IType>(), NameLookupMode.Type)
-        //			    .Type.FullName != "System.Linq.Enumerable") {
-        //
-        //				yield break;
-        //			}
-        //
-        //			var outputStatement = GetTransformedAssignmentExpression (context, loop);
-        //			if (outputStatement == null) {
-        //				yield break;
-        //			}
-        //
-        //			yield return new CodeAction(context.TranslateString("Convert foreach loop to LINQ expression"), script => {
-        //
-        //				var prevSibling = loop.GetPrevSibling(node => node is Statement);
-        //
-        //				Expression leftSide = outputStatement.Left;
-        //				Expression rightSide = outputStatement.Right;
-        //
-        //				Expression expressionToReplace = GetExpressionToReplace(prevSibling, leftSide);
-        //
-        //				if (expressionToReplace != null) {
-        //					Expression replacementExpression = rightSide.Clone();
-        //					if (!IsZeroPrimitive(expressionToReplace)) {
-        //						replacementExpression = new BinaryOperatorExpression(ParenthesizeIfNeeded(expressionToReplace).Clone(),
-        //						                                                     BinaryOperatorType.Add,
-        //						                                                     replacementExpression);
-        //					}
-        //
-        //					script.Replace(expressionToReplace, replacementExpression);
-        //					script.Remove(loop);
-        //				}
-        //				else {
-        //					script.Replace(loop, new ExpressionStatement(outputStatement));
-        //				}
-        //
-        //			}, loop);
-        //		}
-        //
-        //		bool IsZeroPrimitive(Expression expr)
-        //		{
-        //			//We want a very simple check -- no looking at constants, no constant folding, etc.
-        //			//So 1+1 should return false, but (0) should return true
-        //
-        //			var parenthesizedExpression = expr as ParenthesizedExpression;
-        //			if (parenthesizedExpression != null) {
-        //				return IsZeroPrimitive(parenthesizedExpression.Expression);
-        //			}
-        //
-        //			var zeroLiteralInteger = new PrimitiveExpression(0);
-        //			var zeroLiteralFloat = new PrimitiveExpression(0.0f);
-        //			var zeroLiteralDouble = new PrimitiveExpression(0.0);
-        //			var zeroLiteralDecimal = new PrimitiveExpression(0.0m);
-        //
-        //			return SameNode(zeroLiteralInteger, expr) ||
-        //				SameNode(zeroLiteralFloat, expr) ||
-        //				SameNode(zeroLiteralDouble, expr) ||
-        //				SameNode(zeroLiteralDecimal, expr);
-        //		}
-        //
-        //		Expression GetExpressionToReplace(AstNode prevSibling, Expression requiredLeftSide)
-        //		{
-        //			if (prevSibling == null) {
-        //				return null;
-        //			}
-        //
-        //			var declarationStatement = prevSibling as VariableDeclarationStatement;
-        //			if (declarationStatement != null)
-        //			{
-        //				if (declarationStatement.Variables.Count != 1) {
-        //					return null;
-        //				}
-        //
-        //				var identifierExpr = requiredLeftSide as IdentifierExpression;
-        //				if (identifierExpr == null) {
-        //					return null;
-        //				}
-        //
-        //				var variableDecl = declarationStatement.Variables.First();
-        //
-        //				if (!SameNode(identifierExpr.IdentifierToken, variableDecl.NameToken)) {
-        //					return null;
-        //				}
-        //
-        //				return variableDecl.Initializer;
-        //			}
-        //
-        //			var exprStatement = prevSibling as ExpressionStatement;
-        //			if (exprStatement != null) {
-        //				var assignment = exprStatement.Expression as AssignmentExpression;
-        //				if (assignment != null) {
-        //					if (assignment.Operator != AssignmentOperatorType.Assign &&
-        //						assignment.Operator != AssignmentOperatorType.Add) {
-        //
-        //						return null;
-        //					}
-        //
-        //					if (!SameNode(requiredLeftSide, assignment.Left)) {
-        //						return null;
-        //					}
-        //
-        //					return assignment.Right;
-        //				}
-        //			}
-        //
-        //			return null;
-        //		}
-        //
-        //		bool IsUnaryModifierExpression(UnaryOperatorExpression expr)
-        //		{
-        //			return expr.Operator == UnaryOperatorType.Increment || expr.Operator == UnaryOperatorType.PostIncrement || expr.Operator == UnaryOperatorType.Decrement || expr.Operator == UnaryOperatorType.PostDecrement;
-        //		}
-        //
-        //		AssignmentExpression GetTransformedAssignmentExpression (SemanticModel context, ForeachStatement foreachStatement)
-        //		{
-        //			var enumerableToIterate = foreachStatement.InExpression.Clone();
-        //
-        //			Statement statement = foreachStatement.EmbeddedStatement;
-        //
-        //			Expression leftExpression, rightExpression;
-        //			if (!ExtractExpression(statement, out leftExpression, out rightExpression)) {
-        //				return null;
-        //			}
-        //			if (leftExpression == null || rightExpression == null) {
-        //				return null;
-        //			}
-        //
-        //			var type = context.Resolve(leftExpression).Type;
-        //			if (!IsLinqSummableType(type)) {
-        //				return null;
-        //			}
-        //
-        //			if (rightExpression.DescendantsAndSelf.OfType<AssignmentExpression>().Any()) {
-        //				// Reject loops such as
-        //				// int k = 0;
-        //				// foreach (var x in y) { k += (z = 2); }
-        //
-        //				return null;
-        //			}
-        //
-        //			if (rightExpression.DescendantsAndSelf.OfType<UnaryOperatorExpression>().Any(IsUnaryModifierExpression)) {
-        //				// int k = 0;
-        //				// foreach (var x in y) { k += (z++); }
-        //
-        //				return null;
-        //			}
-        //
-        //			var zeroLiteral = new PrimitiveExpression(0);
-        //
-        //			Expression baseExpression = enumerableToIterate;
-        //			for (;;) {
-        //				ConditionalExpression condition = rightExpression as ConditionalExpression;
-        //				if (condition == null) {
-        //					break;
-        //				}
-        //
-        //				if (SameNode(zeroLiteral, condition.TrueExpression)) {
-        //					baseExpression = new InvocationExpression(new MemberReferenceExpression(baseExpression.Clone(), "Where"),
-        //					                                          BuildLambda(foreachStatement.VariableName, CSharpUtil.InvertCondition(condition.Condition)));
-        //					rightExpression = condition.FalseExpression.Clone();
-        //
-        //					continue;
-        //				}
-        //
-        //				if (SameNode(zeroLiteral, condition.FalseExpression)) {
-        //					baseExpression = new InvocationExpression(new MemberReferenceExpression(baseExpression.Clone(), "Where"),
-        //					                                          BuildLambda(foreachStatement.VariableName, condition.Condition.Clone()));
-        //					rightExpression = condition.TrueExpression.Clone();
-        //
-        //					continue;
-        //				}
-        //
-        //				break;
-        //			}
-        //
-        //			var primitiveOne = new PrimitiveExpression(1);
-        //			bool isPrimitiveOne = SameNode(primitiveOne, rightExpression);
-        //
-        //			var arguments = new List<Expression>();
-        //
-        //			string method = isPrimitiveOne ? "Count" : "Sum";
-        //
-        //			if (!isPrimitiveOne && !IsIdentifier(rightExpression, foreachStatement.VariableName)) {
-        //				var lambda = BuildLambda(foreachStatement.VariableName, rightExpression);
-        //
-        //				arguments.Add(lambda);
-        //			}
-        //
-        //			var rightSide = new InvocationExpression(new MemberReferenceExpression(baseExpression, method), arguments);
-        //
-        //			return new AssignmentExpression(leftExpression.Clone(), AssignmentOperatorType.Add, rightSide);
-        //		}
-        //
-        //		static LambdaExpression BuildLambda(string variableName, Expression expression)
-        //		{
-        //			var lambda = new LambdaExpression();
-        //			lambda.Parameters.Add(new ParameterDeclaration() {
-        //				Name = variableName
-        //			});
-        //			lambda.Body = expression.Clone();
-        //			return lambda;
-        //		}
-        //
-        //		bool IsIdentifier(Expression expr, string variableName)
-        //		{
-        //			var identifierExpr = expr as IdentifierExpression;
-        //			if (identifierExpr != null) {
-        //				return identifierExpr.Identifier == variableName;
-        //			}
-        //
-        //			var parenthesizedExpr = expr as ParenthesizedExpression;
-        //			if (parenthesizedExpr != null) {
-        //				return IsIdentifier(parenthesizedExpr.Expression, variableName);
-        //			}
-        //
-        //			return false;
-        //		}
-        //
-        //		bool IsLinqSummableType(IType type) {
-        //			return LinqSummableTypes.Contains(type.FullName);
-        //		}
-        //
-        //		bool ExtractExpression (Statement statement, out Expression leftSide, out Expression rightSide) {
-        //			ExpressionStatement expression = statement as ExpressionStatement;
-        //			if (expression != null) {
-        //				AssignmentExpression assignment = expression.Expression as AssignmentExpression;
-        //				if (assignment != null) {
-        //					if (assignment.Operator == AssignmentOperatorType.Add) {
-        //						leftSide = assignment.Left;
-        //						rightSide = assignment.Right;
-        //						return true;
-        //					}
-        //					if (assignment.Operator == AssignmentOperatorType.Subtract) {
-        //						leftSide = assignment.Left;
-        //						rightSide = new UnaryOperatorExpression(UnaryOperatorType.Minus, assignment.Right.Clone());
-        //						return true;
-        //					}
-        //
-        //					leftSide = null;
-        //					rightSide = null;
-        //					return false;
-        //				}
-        //
-        //				UnaryOperatorExpression unary = expression.Expression as UnaryOperatorExpression;
-        //				if (unary != null) {
-        //					leftSide = unary.Expression;
-        //					if (unary.Operator == UnaryOperatorType.Increment || unary.Operator == UnaryOperatorType.PostIncrement) {
-        //						rightSide = new PrimitiveExpression(1);
-        //						return true;
-        //					} else if (unary.Operator == UnaryOperatorType.Decrement || unary.Operator == UnaryOperatorType.PostDecrement) {
-        //						rightSide = new PrimitiveExpression(-1);
-        //						return true;
-        //					} else {
-        //						leftSide = null;
-        //						rightSide = null;
-        //						return false;
-        //					}
-        //				}
-        //			}
-        //
-        //			if (statement is EmptyStatement || statement.IsNull) {
-        //				leftSide = null;
-        //				rightSide = null;
-        //				return true;
-        //			}
-        //
-        //			BlockStatement block = statement as BlockStatement;
-        //			if (block != null) {
-        //				leftSide = null;
-        //				rightSide = null;
-        //
-        //				foreach (Statement child in block.Statements) {
-        //					Expression newLeft, newRight;
-        //					if (!ExtractExpression(child, out newLeft, out newRight)) {
-        //						leftSide = null;
-        //						rightSide = null;
-        //						return false;
-        //					}
-        //
-        //					if (newLeft == null) {
-        //						continue;
-        //					}
-        //
-        //					if (leftSide == null) {
-        //						leftSide = newLeft;
-        //						rightSide = newRight;
-        //					} else if (SameNode(leftSide, newLeft)) {
-        //						rightSide = new BinaryOperatorExpression(ParenthesizeIfNeeded(rightSide).Clone(),
-        //						                                         BinaryOperatorType.Add,
-        //						                                         ParenthesizeIfNeeded(newRight).Clone());
-        //					} else {
-        //						return false;
-        //					}
-        //				}
-        //
-        //				return true;
-        //			}
-        //
-        //			IfElseStatement condition = statement as IfElseStatement;
-        //			if (condition != null) {
-        //				Expression ifLeft, ifRight;
-        //				if (!ExtractExpression(condition.TrueStatement, out ifLeft, out ifRight)) {
-        //					leftSide = null;
-        //					rightSide = null;
-        //					return false;
-        //				}
-        //
-        //				Expression elseLeft, elseRight;
-        //				if (!ExtractExpression(condition.FalseStatement, out elseLeft, out elseRight)) {
-        //					leftSide = null;
-        //					rightSide = null;
-        //					return false;
-        //				}
-        //
-        //				if (ifLeft == null && elseLeft == null) {
-        //					leftSide = null;
-        //					rightSide = null;
-        //					return true;
-        //				}
-        //
-        //				if (ifLeft != null && elseLeft != null && !SameNode(ifLeft, elseLeft)) {
-        //					leftSide = null;
-        //					rightSide = null;
-        //					return false;
-        //				}
-        //
-        //				ifRight = ifRight ?? new PrimitiveExpression(0);
-        //				elseRight = elseRight ?? new PrimitiveExpression(0);
-        //
-        //				leftSide = ifLeft ?? elseLeft;
-        //				rightSide = new ConditionalExpression(condition.Condition.Clone(), ifRight.Clone(), elseRight.Clone());
-        //				return true;
-        //			}
-        //
-        //			leftSide = null;
-        //			rightSide = null;
-        //			return false;
-        //		}
-        //
-        //		Expression ParenthesizeIfNeeded(Expression expr)
-        //		{
-        //			if (expr is ConditionalExpression) {
-        //				return new ParenthesizedExpression(expr.Clone());
-        //			}
-        //
-        //			var binaryExpression = expr as BinaryOperatorExpression;
-        //			if (binaryExpression != null) {
-        //				if (binaryExpression.Operator != BinaryOperatorType.Multiply &&
-        //					binaryExpression.Operator != BinaryOperatorType.Divide &&
-        //					binaryExpression.Operator != BinaryOperatorType.Modulus) {
-        //
-        //					return new ParenthesizedExpression(expr.Clone());
-        //				}
-        //			}
-        //
-        //			return expr;
-        //		}
-        //
-        //		bool SameNode(INode expr1, INode expr2)
-        //		{
-        //			Match m = expr1.Match(expr2);
-        //			return m.Success;
-        //		}
-        //
-        //		static ForeachStatement GetForeachStatement (SemanticModel context)
-        //		{
-        //			var foreachStatement = context.GetNode<ForeachStatement>();
-        //			if (foreachStatement == null || !foreachStatement.ForeachToken.Contains(context.Location))
-        //				return null;
-        //
-        //			return foreachStatement;
-        //		}
+        AssignmentExpressionSyntax GetTransformedAssignmentExpression(SemanticModel context, ForEachStatementSyntax foreachStatement)
+        {
+            ExpressionSyntax leftExpression, rightExpression;
+            if (!ExtractExpression(foreachStatement.Statement, out leftExpression, out rightExpression))
+                return null;
+            if (leftExpression == null || rightExpression == null)
+                return null;
+
+            if (!IsLinqSummableType(context.GetTypeInfo(leftExpression).Type))
+                return null;
+
+            if (rightExpression.DescendantNodesAndSelf().OfType<ExpressionSyntax>().Any(n => ExpressionNotAllowed(n))) {
+                // Reject loops such as
+                // int k = 0;
+                // foreach (var x in y) { k += (z = 2); }
+                // or
+                // int k = 0;
+                // foreach (var x in y) { k += (z++); }
+                return null;
+            }
+
+            ExpressionSyntax baseExpression = foreachStatement.Expression;
+            for (;;) {
+                ConditionalExpressionSyntax condition = rightExpression as ConditionalExpressionSyntax;
+                if (condition == null) break;
+
+                if (EqualsLiteral(condition.WhenTrue, 0)) {
+                    baseExpression = SyntaxFactory.InvocationExpression(
+                        SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, baseExpression, (SimpleNameSyntax)SyntaxFactory.ParseName("Where")),
+                        SyntaxFactory.ArgumentList(SyntaxFactory.SingletonSeparatedList(SyntaxFactory.Argument(BuildLambda(foreachStatement.Identifier, CSharpUtil.InvertCondition(condition.Condition)))))
+                    );
+                    rightExpression = condition.WhenFalse;
+                    continue;
+                }
+
+                if (EqualsLiteral(condition.WhenFalse, 0)) {
+                    baseExpression = SyntaxFactory.InvocationExpression(
+                        SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, baseExpression, (SimpleNameSyntax)SyntaxFactory.ParseName("Where")),
+                        SyntaxFactory.ArgumentList(SyntaxFactory.SingletonSeparatedList(SyntaxFactory.Argument(BuildLambda(foreachStatement.Identifier, condition.Condition))))
+                    );
+                    rightExpression = condition.WhenTrue;
+                    continue;
+                }
+                break;
+            }
+
+            SimpleNameSyntax method;
+            var arguments = new List<ArgumentSyntax>();
+            if (EqualsLiteral(rightExpression, 1)) {
+                method = (SimpleNameSyntax)SyntaxFactory.ParseName("Count");
+            } else {
+                method = (SimpleNameSyntax)SyntaxFactory.ParseName("Sum");
+                if (rightExpression.SkipParens().ToString() != foreachStatement.Identifier.ToString()) {
+                    var lambda = BuildLambda(foreachStatement.Identifier, rightExpression);
+                    arguments.Add(SyntaxFactory.Argument(lambda));
+                }
+            }
+
+            var rightSide = SyntaxFactory.InvocationExpression(
+                SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, baseExpression, method),
+                SyntaxFactory.ArgumentList(SyntaxFactory.SeparatedList(arguments))
+            );
+
+            return SyntaxFactory.AssignmentExpression(SyntaxKind.AddAssignmentExpression, leftExpression, rightSide);
+        }
+
+        bool EqualsLiteral<T>(ExpressionSyntax expr, T literal)
+        {
+            return object.Equals(literal, (expr as LiteralExpressionSyntax)?.Token.Value);
+        }
+
+        bool ExpressionNotAllowed(ExpressionSyntax expr)
+        {
+            switch (expr.Kind()) {
+                case SyntaxKind.AddAssignmentExpression:
+                case SyntaxKind.AndAssignmentExpression:
+                case SyntaxKind.DivideAssignmentExpression:
+                case SyntaxKind.ExclusiveOrAssignmentExpression:
+                case SyntaxKind.LeftShiftAssignmentExpression:
+                case SyntaxKind.ModuloAssignmentExpression:
+                case SyntaxKind.MultiplyAssignmentExpression:
+                case SyntaxKind.OrAssignmentExpression:
+                case SyntaxKind.RightShiftAssignmentExpression:
+                case SyntaxKind.SimpleAssignmentExpression:
+                case SyntaxKind.SubtractAssignmentExpression:
+                case SyntaxKind.PostIncrementExpression:
+                case SyntaxKind.PreIncrementExpression:
+                case SyntaxKind.PostDecrementExpression:
+                case SyntaxKind.PreDecrementExpression:
+                    return true;
+            }
+            return false;
+        }
+
+        bool IsZeroPrimitive(ExpressionSyntax expr)
+        {
+            //We want a very simple check -- no looking at constants, no constant folding, etc.
+            //So 1+1 should return false, but (0) should return true
+            expr = expr.SkipParens();
+            return EqualsLiteral(expr, 0)
+                || EqualsLiteral(expr, 0f)
+                || EqualsLiteral(expr, 0d)
+                || EqualsLiteral(expr, 0m);
+        }
+
+        ExpressionSyntax GetExpressionToReplace(SyntaxNode prevSibling, ExpressionSyntax requiredLeftSide)
+        {
+            if (prevSibling == null)
+                return null;
+
+            var declarationStatement = prevSibling as LocalDeclarationStatementSyntax;
+            if (declarationStatement != null) {
+                if (declarationStatement.Declaration?.Variables.Count != 1)
+                    return null;
+
+                var identifierExpr = requiredLeftSide as IdentifierNameSyntax;
+                if (identifierExpr == null)
+                    return null;
+
+                var variableDecl = declarationStatement.Declaration.Variables.First();
+                if (identifierExpr.Identifier.Text != variableDecl.Identifier.Text)
+                    return null;
+
+                return variableDecl.Initializer.Value;
+            }
+
+            var exprStatement = prevSibling as ExpressionStatementSyntax;
+            if (exprStatement != null) {
+                if (!exprStatement.Expression.IsKind(SyntaxKind.SimpleAssignmentExpression, SyntaxKind.AddAssignmentExpression))
+                    return null;
+                if (((AssignmentExpressionSyntax)exprStatement.Expression).Left.ToString() != requiredLeftSide.ToString())
+                    return null;
+                return ((AssignmentExpressionSyntax)exprStatement.Expression).Right;
+            }
+
+            return null;
+        }
+
+        static LambdaExpressionSyntax BuildLambda(SyntaxToken variableName, ExpressionSyntax expression)
+        {
+            return SyntaxFactory.SimpleLambdaExpression(
+                SyntaxFactory.Parameter(variableName),
+                expression
+            );
+        }
+
+        bool IsLinqSummableType(ITypeSymbol type)
+        {
+            // Disabled for nullables, since int? x = 3; x += null; has result x = null,
+            // but LINQ Sum behaves differently : nulls are treated as zero
+            switch (type.SpecialType) {
+                case SpecialType.System_UInt16:
+                case SpecialType.System_Int16:
+                case SpecialType.System_UInt32:
+                case SpecialType.System_Int32:
+                case SpecialType.System_UInt64:
+                case SpecialType.System_Int64:
+                case SpecialType.System_Single:
+                case SpecialType.System_Double:
+                case SpecialType.System_Decimal:
+                    return true;
+            }
+            return false;
+        }
+
+        bool ExtractExpression(StatementSyntax statement, out ExpressionSyntax leftSide, out ExpressionSyntax rightSide)
+        {
+            leftSide = null;
+            rightSide = null;
+
+            if (statement == null || statement is EmptyStatementSyntax)
+                return true;
+
+            switch (statement.Kind()) {
+                case SyntaxKind.ExpressionStatement:
+                    var expression = ((ExpressionStatementSyntax)statement).Expression;
+                    switch (expression?.Kind()) {
+                        case SyntaxKind.AddAssignmentExpression:
+                            leftSide = ((AssignmentExpressionSyntax)expression).Left;
+                            rightSide = ((AssignmentExpressionSyntax)expression).Right;
+                            return true;
+                        case SyntaxKind.SubtractAssignmentExpression:
+                            leftSide = ((AssignmentExpressionSyntax)expression).Left;
+                            rightSide = SyntaxFactory.PrefixUnaryExpression(SyntaxKind.UnaryMinusExpression, ((AssignmentExpressionSyntax)expression).Right);
+                            return true;
+                        case SyntaxKind.PostDecrementExpression:
+                        case SyntaxKind.PreDecrementExpression:
+                            leftSide = expression.ExtractUnaryOperand();
+                            rightSide = ComputeConstantValueCodeRefactoringProvider.GetLiteralExpression(-1);
+                            return true;
+                        case SyntaxKind.PostIncrementExpression:
+                        case SyntaxKind.PreIncrementExpression:
+                            leftSide = expression.ExtractUnaryOperand();
+                            rightSide = ComputeConstantValueCodeRefactoringProvider.GetLiteralExpression(1);
+                            return true;
+                    }
+                    return false;
+                case SyntaxKind.Block:
+                    var block = (BlockSyntax)statement;
+                    foreach (StatementSyntax child in block.Statements) {
+                        ExpressionSyntax newLeft, newRight;
+                        if (!ExtractExpression(child, out newLeft, out newRight))
+                            return false;
+
+                        if (newLeft == null)
+                            continue;
+
+                        if (leftSide == null) {
+                            leftSide = newLeft;
+                            rightSide = newRight;
+                        } else if (leftSide.IsEquivalentTo(newLeft)) {
+                            rightSide = SyntaxFactory.BinaryExpression(
+                                SyntaxKind.AddExpression,
+                                CSharpUtil.AddParensIfRequired(rightSide),
+                                CSharpUtil.AddParensIfRequired(newRight)
+                            );
+                        } else {
+                            return false;
+                        }
+                    }
+                    return true;
+                case SyntaxKind.IfStatement:
+                    var condition = (IfStatementSyntax)statement;
+                    ExpressionSyntax ifLeft, ifRight;
+                    if (!ExtractExpression(condition.Statement, out ifLeft, out ifRight))
+                        return false;
+
+                    ExpressionSyntax elseLeft, elseRight;
+                    if (!ExtractExpression(condition.Else?.Statement, out elseLeft, out elseRight))
+                        return false;
+
+                    if (ifLeft == null && elseLeft == null)
+                        return true;
+                    if (ifLeft != null && elseLeft != null && !ifLeft.IsEquivalentTo(elseLeft))
+                        return false;
+
+                    ifRight = ifRight ?? ComputeConstantValueCodeRefactoringProvider.GetLiteralExpression(0);
+                    elseRight = elseRight ?? ComputeConstantValueCodeRefactoringProvider.GetLiteralExpression(0);
+
+                    leftSide = ifLeft ?? elseLeft;
+                    rightSide = SyntaxFactory.ConditionalExpression(condition.Condition, ifRight, elseRight);
+                    return true;
+            }
+            return false;
+        }
     }
 }
 

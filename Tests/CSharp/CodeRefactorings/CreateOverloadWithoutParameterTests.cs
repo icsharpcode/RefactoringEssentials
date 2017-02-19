@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class CreateOverloadWithoutParameterTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithReturnValue()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
@@ -52,7 +51,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithXmlDoc()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
@@ -80,7 +79,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestByRefParameter()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(
@@ -103,7 +102,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOutParameter()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(
@@ -126,7 +125,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDefaultValue()
         {
             TestDefaultValue("object", null, "null");
@@ -182,7 +181,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOptionalParameter()
         {
             TestWrongContext<CreateOverloadWithoutParameterCodeRefactoringProvider>(
@@ -194,7 +193,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExistingMethod()
         {
             TestWrongContext<CreateOverloadWithoutParameterCodeRefactoringProvider>(
@@ -219,7 +218,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInterface()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
@@ -234,7 +233,7 @@ interface ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExplicitImpl()
         {
             TestWrongContext<CreateOverloadWithoutParameterCodeRefactoringProvider>(
@@ -251,7 +250,7 @@ class Test : ITest
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGenereatedCall()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(

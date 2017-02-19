@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class UseIsOperatorTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestTypeOfIsAssignableFrom()
         {
             Test<UseIsOperatorAnalyzer>(@"using System;
@@ -31,7 +29,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestTypeOfIsInstanceOfType()
         {
             Test<UseIsOperatorAnalyzer>(@"using System;
@@ -55,7 +53,7 @@ class FooBar
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<UseIsOperatorAnalyzer>(@"using System;

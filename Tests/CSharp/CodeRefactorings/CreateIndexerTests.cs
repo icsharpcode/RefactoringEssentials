@@ -1,11 +1,9 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [Ignore("Needs insertion cursor mode.")]
-    [TestFixture]
     public class CreateIndexerTests : CSharpCodeRefactoringTestBase
     {
         public void TestCreateIndexer(string input, string output)
@@ -20,11 +18,11 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 Console.WriteLine("-----------Got:");
                 Console.WriteLine(result);
             }
-            Assert.AreEqual(output, result);
+            Assert.Equal(output, result);
         }
 
 
-        [Test()]
+        [Fact(Skip="Needs insertion cursor mode.")]
         public void TestIndexer()
         {
             TestCreateIndexer(
@@ -54,7 +52,7 @@ class TestClass
 }
 ");
         }
-        [Test()]
+        [Fact(Skip="Needs insertion cursor mode.")]
         public void TestInterfaceIndexer()
         {
             TestCreateIndexer(
@@ -91,7 +89,7 @@ class TestClass
 ");
         }
 
-        [Test()]
+        [Fact(Skip="Needs insertion cursor mode.")]
         public void TestExternIndexer()
         {
             TestCreateIndexer(
@@ -132,7 +130,7 @@ class TestClass
 ");
         }
 
-        [Test()]
+        [Fact(Skip="Needs insertion cursor mode.")]
         public void TestindexerInFrameworkClass()
         {
             TestWrongContext<CreateIndexerAction>(
@@ -146,7 +144,7 @@ class TestClass
 ");
         }
 
-        [Test]
+        [Fact(Skip="Needs insertion cursor mode.")]
         public void TestEnumCase()
         {
             TestWrongContext<CreateIndexerAction>(@"

@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Threading;
 using System.Collections.Generic;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
@@ -13,7 +12,7 @@ using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the parameter must not be null")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the parameter must not be null")]
     /// <summary>
     /// Creates a 'Contract.Requires(param != null);' contract for a parameter.
     /// </summary>
@@ -22,7 +21,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
         #region ICodeActionProvider implementation
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            var codeContractsContext = await CodeContractsContext(context);
+            var codeContractsContext = await CodeContractsContext(context).ConfigureAwait(false);
             if (codeContractsContext == null)
                 return;
 

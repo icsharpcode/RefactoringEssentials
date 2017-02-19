@@ -6,6 +6,7 @@ obj
 /lib/*.dll
 _ReSharper*/*
 .vs
+Backup*/*
 
 # User-specific folders
 *.sln.ide/

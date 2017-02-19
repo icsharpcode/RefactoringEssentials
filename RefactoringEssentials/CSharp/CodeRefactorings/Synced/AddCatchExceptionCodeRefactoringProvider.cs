@@ -27,7 +27,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 return;
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
 
-            var exceptionType = document.Project.GetCompilationAsync().Result.GetTypeByMetadataName("System.Exception");
+            var exceptionType = (await document.Project.GetCompilationAsync().ConfigureAwait(false)).GetTypeByMetadataName("System.Exception");
 
             var catchClause = root.FindNode(span) as CatchClauseSyntax;
             if (catchClause == null || catchClause.Declaration != null)

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ParameterOnlyAssignedTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestUnusedValue()
         {
             Analyze<ParameterOnlyAssignedAnalyzer>(@"
@@ -25,7 +24,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestUsedValue()
         {
             Analyze<ParameterOnlyAssignedAnalyzer>(@"
@@ -39,7 +38,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOutParameter()
         {
             Analyze<ParameterOnlyAssignedAnalyzer>(@"
@@ -52,7 +51,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestRefParameter()
         {
             Analyze<ParameterOnlyAssignedAnalyzer>(@"
@@ -65,7 +64,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleParameters()
         {
             Analyze<ParameterOnlyAssignedAnalyzer>(@"

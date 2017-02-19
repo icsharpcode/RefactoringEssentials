@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ForControlVariableIsNeverModifiedTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBinaryOpConditionNotModified()
         {
             var input = @"
@@ -22,7 +21,7 @@ class TestClass
             Analyze<ForControlVariableIsNeverModifiedAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestBinaryOpConditionModified()
         {
             var input = @"
@@ -38,7 +37,7 @@ class TestClass
             Analyze<ForControlVariableIsNeverModifiedAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUnaryOpConditionNotModified()
         {
             var input = @"
@@ -54,7 +53,7 @@ class TestClass
             Analyze<ForControlVariableIsNeverModifiedAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUnaryOpConditionModified()
         {
             var input = @"
@@ -71,7 +70,7 @@ class TestClass
             Analyze<ForControlVariableIsNeverModifiedAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestIdentifierConditionNotModified()
         {
             var input = @"
@@ -87,7 +86,7 @@ class TestClass
             Analyze<ForControlVariableIsNeverModifiedAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestIdentifierConditionModified()
         {
             var input = @"

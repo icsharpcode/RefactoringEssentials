@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class EqualExpressionComparisonTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestEquality()
         {
             Analyze<EqualExpressionComparisonAnalyzer>(@"class Foo
@@ -29,7 +28,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact]
         public void TestInequality()
         {
             Analyze<EqualExpressionComparisonAnalyzer>(@"class Foo
@@ -52,7 +51,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact]
         public void TestEquals()
         {
             Analyze<EqualExpressionComparisonAnalyzer>(@"class Foo
@@ -74,7 +73,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNotEquals()
         {
             Analyze<EqualExpressionComparisonAnalyzer>(@"class Foo
@@ -96,7 +95,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticEquals()
         {
             Analyze<EqualExpressionComparisonAnalyzer>(@"class Foo
@@ -118,7 +117,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNotStaticEquals()
         {
             Analyze<EqualExpressionComparisonAnalyzer>(@"class Foo
@@ -140,7 +139,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<EqualExpressionComparisonAnalyzer>(@"class Foo

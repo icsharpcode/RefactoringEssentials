@@ -467,6 +467,40 @@ namespace RefactoringEssentials
                     : SpecializedCollections.EmptyEnumerable<SyntaxReference>();
         }
 
+        public static ISymbol GetContainingMemberOrThis(this ISymbol symbol)
+        {
+            if (symbol == null)
+                return null;
+            switch (symbol.Kind) {
+                case SymbolKind.Assembly:
+                case SymbolKind.NetModule:
+                case SymbolKind.Namespace:
+                case SymbolKind.Preprocessing:
+                case SymbolKind.Alias:
+                case SymbolKind.ArrayType:
+                case SymbolKind.DynamicType:
+                case SymbolKind.ErrorType:
+                case SymbolKind.NamedType:
+                case SymbolKind.PointerType:
+                case SymbolKind.Label:
+                    throw new NotSupportedException();
+                case SymbolKind.Field:
+                case SymbolKind.Property:
+                case SymbolKind.Event:
+                    return symbol;
+                case SymbolKind.Method:
+                    if (symbol.IsAccessorMethod())
+                        return ((IMethodSymbol)symbol).AssociatedSymbol;
+                    return symbol;
+                case SymbolKind.Local:
+                case SymbolKind.Parameter:
+                case SymbolKind.TypeParameter:
+                case SymbolKind.RangeVariable:
+                    return GetContainingMemberOrThis(symbol.ContainingSymbol);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 }
 

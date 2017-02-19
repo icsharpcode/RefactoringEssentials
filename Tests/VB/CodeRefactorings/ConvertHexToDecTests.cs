@@ -1,13 +1,11 @@
-using System;
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertHexToDecTests : VBCodeRefactoringTestBase
     {
-        [Test()]
+        [Fact]
         public void Test()
         {
             Test<ConvertHexToDecCodeRefactoringProvider>(@"

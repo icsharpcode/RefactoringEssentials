@@ -30,7 +30,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var diagnostic = diagnostics.First();
             var constructor = root.FindToken(span.Start).Parent.AncestorsAndSelf().OfType<ConstructorDeclarationSyntax>().First();
             context.RegisterCodeFix(CodeActionFactory.Create(span, diagnostic.Severity, "Make constructor protected", delegate

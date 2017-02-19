@@ -1,14 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantLambdaParameterTypeTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void SimpleCase()
         {
             Test<RedundantLambdaParameterTypeAnalyzer>(@"
@@ -34,7 +32,7 @@ class Program
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void MultipleCases()
         {
             Test<RedundantLambdaParameterTypeAnalyzer>(@"
@@ -60,7 +58,7 @@ class Program
 ", 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInspectorCase2()
         {
             Test<RedundantLambdaParameterTypeAnalyzer>(@"
@@ -100,7 +98,7 @@ namespace application
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInspectorCase3()
         {
             Analyze<RedundantLambdaParameterTypeAnalyzer>(@"using System;
@@ -123,7 +121,7 @@ namespace application
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInvalidContext()
         {
             Analyze<RedundantLambdaParameterTypeAnalyzer>(@"using System;
@@ -145,7 +143,7 @@ namespace application
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestResharperDisableRestore()
         {
             Analyze<RedundantLambdaParameterTypeAnalyzer>(@"using System;

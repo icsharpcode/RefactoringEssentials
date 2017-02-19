@@ -2,15 +2,11 @@
 // From https://github.com/mattwar/nullaby
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 
 namespace Nullaby
 {
-    public struct FlowLocation : IEquatable<FlowLocation>, IComparable<FlowLocation>
+	public struct FlowLocation : IEquatable<FlowLocation>, IComparable<FlowLocation>
     {
         private SyntaxNode node;
         private bool isStart;

@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertIfStatementToSelectCaseStatementTests : VBCodeRefactoringTestBase
     {
 
-        [Test]
+        [Fact]
         public void TestBreak()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -42,7 +41,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestBreakWithComment()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -79,7 +78,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -110,7 +109,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestConstantExpression()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -173,7 +172,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedOr()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -202,7 +201,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexSwitchExpression()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -231,7 +230,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNonConstantExpression()
         {
             TestWrongContext<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -282,7 +281,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNonEqualityComparison()
         {
             TestWrongContext<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -302,7 +301,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestValidType()
         {
             // enum
@@ -372,7 +371,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidType()
         {
             TestWrongContext<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -388,7 +387,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNoElse()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -415,7 +414,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedIf()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -447,7 +446,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestInLoop()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"
@@ -485,7 +484,7 @@ Class TestClass
     End Sub
 End Class");
         }
-        [Test]
+        [Fact]
         public void TestInLoop2()
         {
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"

@@ -57,6 +57,7 @@
     <Compile Include="Converter\CodeConverter.cs" />
     <Compile Include="Converter\CodeWithOptions.cs" />
     <Compile Include="Converter\ConversionResult.cs" />
+    <Compile Include="CSharp\CodeFixes\Custom\CS0132StaticConstructorParameterCodeFixProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs" />
     <Compile Include="CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs" />
@@ -235,7 +236,6 @@
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyDestructorAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyNamespaceAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntAnalyzer.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallAnalyzer.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerAnalyzer.cs" />
@@ -357,7 +357,7 @@
     <Compile Include="CSharp\Diagnostics\Synced\Opportunities\ConvertClosureToMethodGroupCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EmptyNamespaceCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntCodeFixProvider.cs" />
-    <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedCodeFixProvider.cs" />
+    <Compile Include="CSharp\CodeFixes\Custom\CS0168LocalVariableNotUsedCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantBaseConstructorCallCodeFixProvider.cs" />
     <Compile Include="CSharp\Diagnostics\Synced\RedundanciesInDeclaration\RedundantDefaultFieldInitializerCodeFixProvider.cs" />
@@ -502,6 +502,7 @@
     <Compile Include="Util\GeneratedCodeRecognition.cs" />
     <Compile Include="Util\HelpLink.cs" />
     <Compile Include="Util\NRefactory6Host.cs" />
+    <Compile Include="Util\ReflectionNamespaces.cs" />
     <Compile Include="Util\RoslynReflection.cs" />
     <Compile Include="Util\SyntaxExtensions.cs" />
     <Compile Include="Util\TypeExtensions.cs" />

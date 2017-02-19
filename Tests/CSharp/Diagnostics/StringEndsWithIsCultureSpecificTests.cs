@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class StringEndsWithIsCultureSpecificTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestEndsWith()
         {
             Analyze<StringEndsWithIsCultureSpecificAnalyzer>(@"
@@ -28,7 +27,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestEndsWithStringComparisonOverload()
         {
             Analyze<StringEndsWithIsCultureSpecificAnalyzer>(@"
@@ -42,7 +41,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestEndsWithCultureInfoOverload()
         {
             Analyze<StringEndsWithIsCultureSpecificAnalyzer>(@"
@@ -56,7 +55,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<StringEndsWithIsCultureSpecificAnalyzer>(@"

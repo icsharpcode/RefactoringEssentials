@@ -1,4 +1,3 @@
-using System.Linq;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis;
 using System.Threading.Tasks;
@@ -8,12 +7,12 @@ using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.Samples.CSharp
 {
-    /// <summary>
-    /// Sample CodeRefactoringProvider for C#.
-    /// </summary>
-    // PLEASE UNCOMMENT THIS LINE TO REGISTER REFACTORING IN IDE.
-    //[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Sample code refactoring")]
-    public class SampleCodeRefactoringProvider : CodeRefactoringProvider
+	/// <summary>
+	/// Sample CodeRefactoringProvider for C#.
+	/// </summary>
+	// PLEASE UNCOMMENT THIS LINE TO REGISTER REFACTORING IN IDE.
+	//[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Sample code refactoring")]
+	public class SampleCodeRefactoringProvider : CodeRefactoringProvider
     {
         /*
             This sample code refactoring shows some basics of refactoring implementations

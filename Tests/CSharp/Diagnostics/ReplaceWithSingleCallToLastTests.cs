@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ReplaceWithSingleCallToLastTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Analyze<ReplaceWithSingleCallToLastAnalyzer>(@"using System.Linq;
@@ -24,7 +23,7 @@ public class CSharpDemo {
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ReplaceWithSingleCallToLastAnalyzer>(@"using System.Linq;

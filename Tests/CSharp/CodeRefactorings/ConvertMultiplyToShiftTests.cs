@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertMultiplyToShiftTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestMultiply()
         {
             Test<ConvertMultiplyToShiftCodeRefactoringProvider>(@"
@@ -26,7 +25,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDivide()
         {
             Test<ConvertMultiplyToShiftCodeRefactoringProvider>(@"
@@ -46,7 +45,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvaid()
         {
             TestWrongContext<ConvertMultiplyToShiftCodeRefactoringProvider>(@"

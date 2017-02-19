@@ -3,21 +3,19 @@ using Microsoft.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp;
 using System.Linq;
-using System.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    /// <summary>
-    /// Create a delegate from an anonymous event declaration.
-    /// </summary>
-    /// <remarks>
-    /// Language assumptions based on the C# 5.0 Language Specification.
-    /// https://msdn.microsoft.com/en-us/library/ms228593.aspx
-    /// </remarks>
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Create delegate")]
+	/// <summary>
+	/// Create a delegate from an anonymous event declaration.
+	/// </summary>
+	/// <remarks>
+	/// Language assumptions based on the C# 5.0 Language Specification.
+	/// https://msdn.microsoft.com/en-us/library/ms228593.aspx
+	/// </remarks>
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Create delegate")]
     public class CreateDelegateAction : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

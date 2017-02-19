@@ -1,14 +1,13 @@
 ﻿// (c) by Matt Warren. Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 // From https://github.com/mattwar/nullaby
 
-using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
 namespace Nullaby
 {
-    public class FlowAnalysis<TState>
+	public class FlowAnalysis<TState>
         where TState : FlowState
     {
         private readonly ImmutableDictionary<FlowLocation, TState> states;

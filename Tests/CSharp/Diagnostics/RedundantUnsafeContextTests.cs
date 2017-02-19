@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantUnsafeContextTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestUnsafeClass()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"$unsafe$ class Foo
@@ -26,7 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestUnsafeStatement()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
@@ -52,7 +51,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedUnsafeStatement()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
@@ -83,7 +82,7 @@ unsafe class Program
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestValidFixedPointer()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
@@ -94,7 +93,7 @@ unsafe struct Foo {
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
@@ -109,7 +108,7 @@ unsafe class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestSizeOf()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
@@ -126,7 +125,7 @@ public static class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFixed()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"
@@ -140,7 +139,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestUnsafeProperty()
         {
             Analyze<RedundantUnsafeContextAnalyzer>(@"

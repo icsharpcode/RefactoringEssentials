@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class SplitDeclarationListTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestLocalVariable()
         {
             Test<SplitDeclarationListCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestField()
         {
             Test<SplitDeclarationListCodeRefactoringProvider>(@"
@@ -44,7 +43,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEvent()
         {
             Test<SplitDeclarationListCodeRefactoringProvider>(@"
@@ -60,7 +59,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFixedField()
         {
             Test<SplitDeclarationListCodeRefactoringProvider>(@"
@@ -76,7 +75,7 @@ struct TestStruct
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestVariableInFor()
         {
             TestWrongContext<SplitDeclarationListCodeRefactoringProvider>(@"
@@ -90,7 +89,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSingleVariable()
         {
             TestWrongContext<SplitDeclarationListCodeRefactoringProvider>(@"

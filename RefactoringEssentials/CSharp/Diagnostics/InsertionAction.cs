@@ -41,17 +41,17 @@ namespace RefactoringEssentials
 
         protected override Task<Document> GetChangedDocumentAsync(CancellationToken cancellationToken)
         {
-            return createInsertion.Invoke(cancellationToken).ContinueWith(t => CreateChangedDocument(t, cancellationToken).Result);
+            return createInsertion.Invoke(cancellationToken).ContinueWith(t => CreateChangedDocument(t, cancellationToken).GetAwaiter().GetResult());
         }
 
         static async Task<Document> CreateChangedDocument(Task<InsertionResult> task, CancellationToken cancellationToken)
         {
-            var insertionResult = task.Result;
+            var insertionResult = task.GetAwaiter().GetResult();
             var document = insertionResult.Context.Document;
             var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
             var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
 
-            var targetType = root.FindNode(task.Result.Location.SourceSpan).AncestorsAndSelf().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+            var targetType = root.FindNode(insertionResult.Location.SourceSpan).AncestorsAndSelf().OfType<TypeDeclarationSyntax>().FirstOrDefault();
 
             var childNodes = targetType.Members;
             var memberToInsert = (MemberDeclarationSyntax)insertionResult.Node.WithAdditionalAnnotations(Formatter.Annotation);

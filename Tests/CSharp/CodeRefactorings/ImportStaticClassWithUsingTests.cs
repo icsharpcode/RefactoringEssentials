@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ImportStaticClassWithUsingTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimple()
         {
             Test<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
@@ -31,7 +30,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticClassInSameCompilationUnit1()
         {
             Test<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
@@ -80,7 +79,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticClassInSameCompilationUnit2()
         {
             Test<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
@@ -121,7 +120,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExtensionMethod()
         {
             TestWrongContext<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
@@ -137,7 +136,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMemberConflict()
         {
             Test<ImportStaticClassWithUsingCodeRefactoringProvider>(@"
@@ -170,7 +169,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLocalConflict()
         {
             Test<ImportStaticClassWithUsingCodeRefactoringProvider>(@"

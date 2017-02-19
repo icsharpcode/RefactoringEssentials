@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantAnonymousTypePropertyNameTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Analyze<RedundantAnonymousTypePropertyNameAnalyzer>(@"
@@ -36,7 +35,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoredCase()
         {
             Analyze<RedundantAnonymousTypePropertyNameAnalyzer>(@"
@@ -55,7 +54,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<RedundantAnonymousTypePropertyNameAnalyzer>(@"

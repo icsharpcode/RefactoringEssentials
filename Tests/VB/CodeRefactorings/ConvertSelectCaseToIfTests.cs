@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertSelectCaseToIfTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestReturn()
         {
             Test<ConvertSelectCaseToIfCodeRefactoringProvider>(@"
@@ -39,7 +38,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestWithoutDefault()
         {
             Test<ConvertSelectCaseToIfCodeRefactoringProvider>(@"
@@ -68,7 +67,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestBreak()
         {
             Test<ConvertSelectCaseToIfCodeRefactoringProvider>(@"
@@ -99,7 +98,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestOperatorPriority()
         {
             Test<ConvertSelectCaseToIfCodeRefactoringProvider>(@"
@@ -128,7 +127,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestEmptySwitch()
         {
             TestWrongContext<ConvertSelectCaseToIfCodeRefactoringProvider>(@"
@@ -140,7 +139,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestSwitchWithDefaultOnly()
         {
             TestWrongContext<ConvertSelectCaseToIfCodeRefactoringProvider>(@"
@@ -153,7 +152,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNonTrailingBreak()
         {
             TestWrongContext<ConvertSelectCaseToIfCodeRefactoringProvider>(@"

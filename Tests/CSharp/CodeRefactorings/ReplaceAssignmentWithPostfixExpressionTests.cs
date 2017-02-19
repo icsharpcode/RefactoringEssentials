@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceAssignmentWithPostfixExpressionTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestAdd()
         {
             Test<ReplaceAssignmentWithPostfixExpressionCodeRefactoringProvider>(@"
@@ -26,8 +25,7 @@ class Test
 }");
         }
 
-        [Ignore("broken")]
-        [Test]
+        [Fact]
         public void TestAddWithComment()
         {
             Test<ReplaceAssignmentWithPostfixExpressionCodeRefactoringProvider>(@"
@@ -49,7 +47,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSub()
         {
             Test<ReplaceAssignmentWithPostfixExpressionCodeRefactoringProvider>(@"
@@ -70,7 +68,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestAddCase2()
         {
             Test<ReplaceAssignmentWithPostfixExpressionCodeRefactoringProvider>(@"

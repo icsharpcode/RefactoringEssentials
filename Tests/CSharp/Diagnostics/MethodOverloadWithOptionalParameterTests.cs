@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class MethodOverloadWithOptionalParameterTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSingleMethod()
         {
             Analyze<MethodOverloadWithOptionalParameterAnalyzer>(@"
@@ -27,7 +26,7 @@ public class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestTwoParameters()
         {
             Analyze<MethodOverloadWithOptionalParameterAnalyzer>(@"
@@ -52,7 +51,7 @@ public class FooBar
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexer()
         {
             Analyze<MethodOverloadWithOptionalParameterAnalyzer>(@"
@@ -74,7 +73,7 @@ public class FooBar
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<MethodOverloadWithOptionalParameterAnalyzer>(@"
@@ -96,7 +95,7 @@ public class FooBar
 ");
         }
 
-        [Test]
+        [Fact]
         public void Test()
         {
             var input = @"
@@ -110,7 +109,7 @@ class TestClass
             Analyze<MethodOverloadWithOptionalParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void Test2()
         {
             var input = @"
@@ -124,7 +123,7 @@ class TestClass
             Analyze<MethodOverloadWithOptionalParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNoIssue()
         {
             var input = @"
@@ -136,7 +135,7 @@ class TestClass
             Analyze<MethodOverloadWithOptionalParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestNoIssue_Generics()
         {
             var input = @"

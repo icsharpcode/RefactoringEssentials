@@ -287,7 +287,7 @@ namespace RefactoringEssentials
                 }
             }
 
-            var types = typeInferenceService.InferTypes(model, expr, cancellationToken).ToList();
+            var types = typeInferenceService.InferTypes(model, expr, null, cancellationToken).ToList();
 
             return types;
         }

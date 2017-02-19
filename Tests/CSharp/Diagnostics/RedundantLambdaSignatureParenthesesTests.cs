@@ -1,14 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantLambdaSignatureParenthesesTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void SimpleCase()
         {
             Test<RedundantLambdaSignatureParenthesesAnalyzer>(@"
@@ -34,7 +32,7 @@ class Program
 ", 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void InvalidCase1()
         {
             Analyze<RedundantLambdaSignatureParenthesesAnalyzer>(@"
@@ -50,7 +48,7 @@ class Program
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void InvalidCase2()
         {
             Analyze<RedundantLambdaSignatureParenthesesAnalyzer>(@"
@@ -67,7 +65,7 @@ class Program
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInvalid()
         {
             Analyze<RedundantLambdaSignatureParenthesesAnalyzer>(@"
@@ -84,7 +82,7 @@ class Program
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<RedundantLambdaSignatureParenthesesAnalyzer>(@"

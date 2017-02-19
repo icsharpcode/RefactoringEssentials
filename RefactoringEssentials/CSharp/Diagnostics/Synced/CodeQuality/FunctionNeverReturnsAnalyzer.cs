@@ -4,14 +4,12 @@ using System.Collections.Immutable;
 using System;
 using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
-using System.Threading;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Nullaby;
 using RefactoringEssentials.Util.Analysis;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class FunctionNeverReturnsAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

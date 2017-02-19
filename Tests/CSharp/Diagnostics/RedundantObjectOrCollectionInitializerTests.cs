@@ -1,14 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantObjectOrCollectionInitializerTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void Test()
         {
             var input = @"
@@ -30,7 +28,7 @@ class TestClass
             Test<RedundantObjectOrCollectionInitializerAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<RedundantObjectOrCollectionInitializerAnalyzer>(@" class TestClass
@@ -43,7 +41,7 @@ class TestClass
     }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNoArgumentList()
         {
             var input = @"
@@ -65,7 +63,7 @@ class TestClass
             Test<RedundantObjectOrCollectionInitializerAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNoIssue()
         {
             var input = @"

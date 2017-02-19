@@ -1,24 +1,23 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class EmptyConstructorTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<EmptyConstructorAnalyzer>(@"using System;class Test {private int member; $public Test(){}$}", @"using System;class Test {private int member; }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<EmptyConstructorAnalyzer>(@"using System;class Test {private int member;$public Test(){}$ static Test(){}}", @"using System;class Test {private int member;static Test(){}}");
         }
 
-        [Test]
+        [Fact]
         public void TestResharperDisable()
         {
             Analyze<EmptyConstructorAnalyzer>(@"using System;
@@ -29,19 +28,19 @@ class Test {
 	}");
         }
 
-        [Test]
+        [Fact]
         public void TestNegateCase1()
         {
             Analyze<EmptyConstructorAnalyzer>(@"using System;class Test {public Test(){Foo();}}");
         }
 
-        [Test]
+        [Fact]
         public void TestNegateCase2()
         {
             Analyze<EmptyConstructorAnalyzer>(@"using System;class Test {public Test(){Bar();} private Test(){}}");
         }
 
-        [Test]
+        [Fact]
         public void TestNegateCase3()
         {
             Analyze<EmptyConstructorAnalyzer>(@"using System;class Test {public Test() : base(4) {}}");

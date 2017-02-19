@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantDefaultFieldInitializerTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact]
         public void TestRedundantIntInitializer()
         {
             var input = @"
@@ -25,7 +24,7 @@ class TestClass
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantFloatInitializer()
         {
             var input = @"
@@ -43,7 +42,7 @@ class TestClass
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantBooleanInitializer()
         {
             var input = @"
@@ -59,7 +58,7 @@ class TestClass
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantCharInitializer()
         {
             var input = @"
@@ -75,7 +74,7 @@ class TestClass
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantReferenceTypeInitializer()
         {
             var input = @"
@@ -91,7 +90,7 @@ class TestClass
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantDynamicInitializer()
         {
             var input = @"
@@ -107,7 +106,7 @@ class TestClass
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantStructInitializer()
         {
             var input = @"
@@ -129,7 +128,7 @@ class TestClass
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantNullableInitializer()
         {
             var input = @"
@@ -146,19 +145,19 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestRedundantConstantBug()
         {
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(@"class Test { const int foo = 0;  }");
         }
 
-        [Test]
+        [Fact]
         public void TestRedundantReadOnlyBug()
         {
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(@"struct Test { static readonly Test foo = new Test ();  }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             var input = @"

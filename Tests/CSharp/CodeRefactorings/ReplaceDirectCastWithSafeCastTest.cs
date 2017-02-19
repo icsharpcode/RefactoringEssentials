@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceDirectCastWithSafeCastTest : CSharpCodeRefactoringTestBase
     {
         void TestType(string type)
@@ -29,19 +28,19 @@ class TestClass
             Test<ReplaceDirectCastWithSafeCastCodeRefactoringProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void Test()
         {
             TestType("Exception");
         }
 
-        [Test]
+        [Fact]
         public void TestNullable()
         {
             TestType("int?");
         }
 
-        [Test]
+        [Fact]
         public void TestWithComment()
         {
             string input = @"
@@ -68,7 +67,7 @@ class TestClass
             Test<ReplaceDirectCastWithSafeCastCodeRefactoringProvider>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestNonReferenceType()
         {
             TestWrongContext<ReplaceDirectCastWithSafeCastCodeRefactoringProvider>(@"
@@ -82,7 +81,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInsertParentheses()
         {
             string input = @"

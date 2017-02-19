@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class NonPublicMethodWithTestAttributeTests : CSharpDiagnosticTestBase
     {
         const string NUnitClasses = @"using System;
@@ -14,7 +13,7 @@ namespace NUnit.Framework {
 	public class TestAttribute : System.Attribute {}
 }";
 
-        [Test]
+        [Fact]
         public void TestImplicitPrivate()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses +
@@ -38,7 +37,7 @@ class Tests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExplicitPrivate()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses +
@@ -62,7 +61,7 @@ class Tests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExplicitProtected()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses +
@@ -86,7 +85,7 @@ class Tests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExplicitInternal()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses +
@@ -110,11 +109,10 @@ class Tests
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<NonPublicMethodWithTestAttributeAnalyzer>(NUnitClasses + @"
-[TestFixture]
 class Tests 
 {
 #pragma warning disable " + CSharpDiagnosticIDs.NonPublicMethodWithTestAttributeAnalyzerID + @"

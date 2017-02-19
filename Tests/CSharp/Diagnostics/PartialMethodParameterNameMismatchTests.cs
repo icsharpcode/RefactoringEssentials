@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class PartialMethodParameterNameMismatchTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact]
         public void SimpleCaseFix()
         {
             Analyze<PartialMethodParameterNameMismatchAnalyzer>(@"
@@ -38,7 +37,7 @@ partial class Test
         }
 
 
-        [Test]
+        [Fact]
         public void NoMismatch()
         {
             Analyze<PartialMethodParameterNameMismatchAnalyzer>(@"
@@ -56,7 +55,7 @@ partial class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<PartialMethodParameterNameMismatchAnalyzer>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class DoubleNegationOperatorTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestLogicalNot()
         {
             Analyze<DoubleNegationOperatorAnalyzer>(@"
@@ -32,7 +31,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestBitwiseNot()
         {
             Analyze<DoubleNegationOperatorAnalyzer>(@"
@@ -52,7 +51,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<DoubleNegationOperatorAnalyzer>(@"

@@ -32,7 +32,11 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (property == null || !property.Identifier.Span.Contains(span))
                 return;
 
-            if (property.AccessorList.Accessors.Any(b => !IsEmptyOrNotImplemented(b.Body))) //ignore properties with >=1 accessor body
+            if (property.AccessorList?.Accessors.Any(b => !IsEmptyOrNotImplemented(b.Body)) != false) //ignore properties with >=1 accessor body
+                return;
+            
+            TypeDeclarationSyntax enclosingTypeDeclaration = property.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+            if(enclosingTypeDeclaration == null || enclosingTypeDeclaration is InterfaceDeclarationSyntax)
                 return;
             context.RegisterRefactoring(
                 CodeActionFactory.Create(

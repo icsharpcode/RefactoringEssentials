@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertIfStatementToNullCoalescingExpressionActionTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestDeclaration()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -38,7 +37,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDeclarationWithComment1()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -72,7 +71,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDeclarationWithComment2()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -105,7 +104,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDeclarationWithComment3()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -137,7 +136,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestYodaConditionals()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -167,7 +166,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAssignment()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -199,7 +198,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIsolated()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -222,7 +221,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestBlock()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -254,7 +253,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvertedCondition()
         {
             Test<ConvertIfStatementToNullCoalescingExpressionAction>(@"
@@ -287,7 +286,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForImproperCondition()
         {
             TestWrongContext<ConvertIfStatementToNullCoalescingExpressionAction>(@"

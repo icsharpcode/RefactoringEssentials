@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConvertIfDoToWhileTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBasicCase()
         {
             Analyze<ConvertIfDoToWhileAnalyzer>(@"class FooBar
@@ -33,7 +32,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWithoutBlocks()
         {
             Analyze<ConvertIfDoToWhileAnalyzer>(@"class FooBar
@@ -55,7 +54,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidCase()
         {
             Analyze<ConvertIfDoToWhileAnalyzer>(@"class FooBar
@@ -71,7 +70,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ConvertIfDoToWhileAnalyzer>(@"class FooBar
