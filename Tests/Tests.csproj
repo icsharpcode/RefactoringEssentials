@@ -149,6 +149,7 @@
     <Compile Include="CSharp\CodeFixes\InvalidConversionTests.cs" />
     <Compile Include="CSharp\CodeFixes\ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests.cs" />
     <Compile Include="CSharp\CodeFixes\UnreachableCodeTests.cs" />
+    <Compile Include="CSharp\CodeRefactorings\ContractRequiresStringNotNullOrEmptyTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ContractRequiresNotNullTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ContractEnsuresNotNullReturnTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\GenerateSwitchLabelsTests.cs" />

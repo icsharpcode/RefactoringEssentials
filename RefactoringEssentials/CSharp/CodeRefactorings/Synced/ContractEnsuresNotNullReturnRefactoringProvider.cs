@@ -48,7 +48,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
         protected IEnumerable<CodeAction> GetActions(Document document, SyntaxNode root, AccessorDeclarationSyntax node)
         {
-            var propertyOrIndexerDeclaration = node.Ancestors().Where(n => n.GetType().Equals(typeof(PropertyDeclarationSyntax)) || n.GetType().Equals(typeof(IndexerDeclarationSyntax))).FirstOrDefault();
+            var propertyOrIndexerDeclaration = node.Ancestors().FirstOrDefault(n => n.GetType().Equals(typeof(PropertyDeclarationSyntax)) || n.GetType().Equals(typeof(IndexerDeclarationSyntax)));
 
             var nullableType = propertyOrIndexerDeclaration.ChildNodes().OfType<NullableTypeSyntax>().FirstOrDefault();
             

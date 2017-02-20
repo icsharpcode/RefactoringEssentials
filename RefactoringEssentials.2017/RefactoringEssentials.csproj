@@ -181,6 +181,9 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider.cs</Link>
+    </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs</Link>
     </Compile>
