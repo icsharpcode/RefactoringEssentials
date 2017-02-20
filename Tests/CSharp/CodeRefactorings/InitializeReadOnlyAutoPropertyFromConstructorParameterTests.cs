@@ -1,12 +1,11 @@
-using NUnit.Framework;
+using Xunit;
 using RefactoringEssentials.CSharp.CodeRefactorings;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class InitializeReadOnlyAutoPropertyFromConstructorParameterTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void InitialiseInteger()
         {
             Test<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
@@ -27,7 +26,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void InitialiseInterface()
         {
             Test<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
@@ -48,7 +47,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void NotInParameterList()
         {
             TestWrongContext<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
@@ -60,7 +59,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void NotInParameterValue()
         {
             TestWrongContext<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
@@ -72,7 +71,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void NotInConstructor()
         {
             TestWrongContext<InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider>(@"
