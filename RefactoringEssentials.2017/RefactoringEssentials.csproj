@@ -17,6 +17,15 @@
     <DefineConstants>TRACE;RELEASE;NETSTANDARD1_3;RE2017</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\RefactoringEssentials\CSharp\ConstructorParameterContext.cs">
+      <Link>CSharp\ConstructorParameterContext.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\ConstructorParameterContextFinder.cs">
+      <Link>CSharp\ConstructorParameterContextFinder.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs</Link>
+    </Compile>
     <Compile Include="..\RefactoringEssentials\Common\CodeContractsCodeRefactoringProvider.cs">
       <Link>Common\CodeContractsCodeRefactoringProvider.cs</Link>
     </Compile>
@@ -1308,6 +1317,9 @@
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedTypeParameterAnalyzer.cs">
       <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedTypeParameterAnalyzer.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Manipulations.cs">
+      <Link>CSharp\Manipulations.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\SyntaxExtensions.cs">
       <Link>CSharp\SyntaxExtensions.cs</Link>
