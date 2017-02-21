@@ -1465,6 +1465,7 @@
     <Compile Include="..\RefactoringEssentials\Util\ReflectionCompatibilityExtensions.cs">
       <Link>Util\ReflectionCompatibilityExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ReflectionNamespaces.cs" Link="Util\ReflectionNamespaces.cs" />
     <Compile Include="..\RefactoringEssentials\Util\RoslynReflection.cs">
       <Link>Util\RoslynReflection.cs</Link>
     </Compile>
