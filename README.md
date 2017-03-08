@@ -2,6 +2,8 @@
 
 [![Join the chat at https://gitter.im/icsharpcode/RefactoringEssentials](https://badges.gitter.im/icsharpcode/RefactoringEssentials.svg)](https://gitter.im/icsharpcode/RefactoringEssentials?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![](https://codescene.io/projects/842/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/842/jobs/latest-successful/results)
+
 [@vsrefactoring](https://twitter.com/vsrefactoring) | [vsrefactoringessentials.com](http://vsrefactoringessentials.com/)
 
 Refactorings Essentials sports the following features:
