@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\MonoDevelop.props" Condition="Exists('..\..\..\MonoDevelop.props')" />
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <AssemblyName>RefactoringEssentials</AssemblyName>
@@ -1697,5 +1698,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.0.0-rc4" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.0.0-rc4" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.0.0-rc4" />
+  </ItemGroup>
+  <!-- The InternalVisibleTo fails when building with signing -->
+  <ItemGroup Condition="'$(SignAssembly)'=='True'">
+    <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
 </Project>
