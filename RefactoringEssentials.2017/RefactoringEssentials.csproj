@@ -1,14 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <AssemblyName>Refactoring Essentials</AssemblyName>
+    <AssemblyName>RefactoringEssentials</AssemblyName>
     <RootNamespace>RefactoringEssentials</RootNamespace>
     <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
     <Company>ICSharpCode</Company>
     <Description>Analyzers and Code Fixes for Visual Studio 2017 (Roslyn-based).</Description>
     <Product>Refactoring Essentials for Visual Studio 2017</Product>
-    <Copyright>Copyright 2010-2017 AlphaSierraPapa and Xamarin Inc.</Copyright>
-    <AssemblyVersion>5.0.0.0</AssemblyVersion>
+    <Copyright>Copyright (c) 2014-2017 AlphaSierraPapa and Xamarin Inc.</Copyright>
+    <AssemblyVersion>5.1.0.0</AssemblyVersion>
+    <FileVersion>5.1.0.0</FileVersion>
+    <Version>5.1.0</Version>
+    <PackageId>RefactoringEssentials</PackageId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NETSTANDARD1_3;RE2017</DefineConstants>
@@ -17,6 +20,15 @@
     <DefineConstants>TRACE;RELEASE;NETSTANDARD1_3;RE2017</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="..\RefactoringEssentials\CSharp\ConstructorParameterContext.cs">
+      <Link>CSharp\ConstructorParameterContext.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\ConstructorParameterContextFinder.cs">
+      <Link>CSharp\ConstructorParameterContextFinder.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Custom\InitializeReadOnlyAutoPropertyFromConstructorParameterCodeRefactoringProvider.cs</Link>
+    </Compile>
     <Compile Include="..\RefactoringEssentials\Common\CodeContractsCodeRefactoringProvider.cs">
       <Link>Common\CodeContractsCodeRefactoringProvider.cs</Link>
     </Compile>
@@ -171,6 +183,9 @@
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs</Link>
@@ -1309,6 +1324,9 @@
     <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedTypeParameterAnalyzer.cs">
       <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\UnusedTypeParameterAnalyzer.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\Manipulations.cs">
+      <Link>CSharp\Manipulations.cs</Link>
+    </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\SyntaxExtensions.cs">
       <Link>CSharp\SyntaxExtensions.cs</Link>
     </Compile>
@@ -1450,6 +1468,7 @@
     <Compile Include="..\RefactoringEssentials\Util\ReflectionCompatibilityExtensions.cs">
       <Link>Util\ReflectionCompatibilityExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ReflectionNamespaces.cs" Link="Util\ReflectionNamespaces.cs" />
     <Compile Include="..\RefactoringEssentials\Util\RoslynReflection.cs">
       <Link>Util\RoslynReflection.cs</Link>
     </Compile>
@@ -1672,12 +1691,6 @@
     <Compile Include="..\RefactoringEssentials\Xml\TreeTraversal.cs">
       <Link>Xml\TreeTraversal.cs</Link>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\AssemblyInfoBase.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0-rc4" />

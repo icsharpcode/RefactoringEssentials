@@ -15,6 +15,7 @@ namespace RefactoringEssentials.VsExtension
         public void Initialize()
         {
             hideConverterContextMenuCheckBox.Checked = optionsPage.HideConverterFromContextMenu;
+            versionInfo.Text += ReflectionNamespaces.VersionInfo;
         }
 
         private void hideConverterContextMenuCheckBox_CheckedChanged(object sender, EventArgs e)

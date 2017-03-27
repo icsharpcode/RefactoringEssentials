@@ -106,18 +106,9 @@
     <Content Include="..\Vsix\REConverterPackage.vsct">
       <Link>REConverterPackage.vsct</Link>
     </Content>
-    <Content Include="source.extension.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>source.extension.vsixmanifest</LastGenOutput>
-      <SubType>Designer</SubType>
-    </Content>
+    <None Include="source.extension.vsixmanifest" />
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="source.extension.vsixmanifest">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>source.extension.tt</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
