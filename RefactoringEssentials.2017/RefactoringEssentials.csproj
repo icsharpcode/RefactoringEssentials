@@ -1698,4 +1698,12 @@
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="RefactoringEssentials.Library.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="RefactoringEssentials.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
