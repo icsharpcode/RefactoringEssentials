@@ -4,7 +4,7 @@
     only:
       - release
   
-  version: 5.1.{build}
+  version: 5.2.{build}
   configuration: Release
   
   image: Visual Studio 2017
@@ -38,7 +38,7 @@
     only:
       - master
   
-  version: 5.1.{build}
+  version: 5.2.{build}
   configuration: Release
   
   image: Visual Studio 2017 RC
