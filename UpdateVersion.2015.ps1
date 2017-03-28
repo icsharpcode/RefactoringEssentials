@@ -19,12 +19,12 @@ $copyright = 'Copyright (c) 2014-2017 AlphaSierraPapa and Xamarin Inc.'
 (cat RefactoringEssentials/RefactoringEssentials.nuspec) | % { $_ `
     -replace '<copyright>.+</copyright>', ('<copyright>' + $copyright + '</copyright>') `
     -replace '<version>.+</version>', ('<version>{0}.{1}.{2}</version>' -f $version.Major, $version.Minor, $version.Build) `
-    -replace 'https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-.+', ('https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-' + '{0}.{1}' -f $version.Major, $version.Minor) `
+    -replace '<releaseNotes>Please see https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-.+ for more information.</releaseNotes>', ('<releaseNotes>Please see https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-{0}.{1} for more information.</releaseNotes>' -f $version.Major, $version.Minor) `
  } | Out-File -Encoding "utf8" RefactoringEssentials/RefactoringEssentials.nuspec
  (cat RefactoringEssentials/RefactoringEssentials.Library.nuspec) | % { $_ `
     -replace '<copyright>.+</copyright>', ('<copyright>' + $copyright + '</copyright>') `
     -replace '<version>.+</version>', ('<version>{0}.{1}.{2}</version>' -f $version.Major, $version.Minor, $version.Build) `
-    -replace 'https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-.+', ('https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-' + '{0}.{1}' -f $version.Major, $version.Minor) `
+    -replace '<releaseNotes>Please see https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-.+ for more information.</releaseNotes>', ('<releaseNotes>Please see https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-{0}.{1} for more information.</releaseNotes>' -f $version.Major, $version.Minor) `
  } | Out-File -Encoding "utf8" RefactoringEssentials/RefactoringEssentials.Library.nuspec
 
 # VSIX manifest
