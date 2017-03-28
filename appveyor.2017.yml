@@ -41,7 +41,7 @@
   version: 5.2.{build}
   configuration: Release
   
-  image: Visual Studio 2017 RC
+  image: Visual Studio 2017
   
   install: 
     - cmd: set PATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\Bin;C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin;%PATH%
