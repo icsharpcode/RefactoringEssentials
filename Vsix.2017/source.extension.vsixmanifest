@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
 	<Metadata>
-		<Identity Id="RefactoringEssentials.Vsix.cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="5.2.0.0" Language="en-US" Publisher="IC#Code"/>
+		<Identity Id="RefactoringEssentials.Vsix.cd27e59b-5c56-4238-8931-c9bb745a7a7f" Version="5.3.0.0" Language="en-US" Publisher="IC#Code"/>
 		<DisplayName>Refactoring Essentials for Visual Studio 2017</DisplayName>
 		<Description xml:space="preserve">Free refactorings for C# and Visual Basic (VB) - plus more!</Description>
 		<License>license.txt</License>
-		<GettingStartedGuide>https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-5.2</GettingStartedGuide>
-		<ReleaseNotes>https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-5.2</ReleaseNotes>
+		<GettingStartedGuide>https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-5.4</GettingStartedGuide>
+		<ReleaseNotes>https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-5.4</ReleaseNotes>
 		<Icon>Images\refactoringessentials-logo90.png</Icon>
 		<PreviewImage>Images\refactoringessentials-preview.png</PreviewImage>
 	</Metadata>

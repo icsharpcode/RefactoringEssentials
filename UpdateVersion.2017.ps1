@@ -1,6 +1,6 @@
 # Version settings
-$version = New-Object System.Version("5.2.0.0")
-$releaseNotesLink = 'https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-5.2'
+$version = New-Object System.Version("5.3.0.0")
+$releaseNotesLink = 'https://github.com/icsharpcode/RefactoringEssentials/wiki/Release-5.4'
 $copyright = 'Copyright (c) 2014-2017 AlphaSierraPapa and Xamarin Inc.'
 
 # ========================================================================================
