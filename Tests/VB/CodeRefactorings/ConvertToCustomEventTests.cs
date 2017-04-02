@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertToCustomEventTests : VBCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestDelegateBasedEvent()
         {
             Test<ConvertToCustomEventCodeRefactoringProvider>(@"
@@ -32,7 +31,7 @@ Class Test
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestGenericDelegateBasedEvent()
         {
             Test<ConvertToCustomEventCodeRefactoringProvider>(@"
@@ -58,7 +57,7 @@ Class Test
 End Class");
         }
 
-[Test]
+[Fact]
         public void TestEventBasedOnCustomDelegateWithGenericParam()
         {
             Test<ConvertToCustomEventCodeRefactoringProvider>(@"
@@ -88,7 +87,7 @@ Class Test
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestNonDelegateBasedEvent()
         {
             TestWrongContext<ConvertToCustomEventCodeRefactoringProvider>(@"

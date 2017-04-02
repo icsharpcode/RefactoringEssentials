@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class UnusedTypeParameterTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact]
         public void TestUnusedTypeParameter()
         {
             var input = @"
@@ -19,7 +18,7 @@ class TestClass {
             Analyze<UnusedTypeParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestUsedTypeParameter()
         {
             var input = @"
@@ -39,7 +38,7 @@ class TestClass {
         }
 
 
-        [Test]
+        [Fact]
         public void TestInterface()
         {
             var input = @"
@@ -49,7 +48,7 @@ interface ITest {
             Analyze<UnusedTypeParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestInterfaceImplementation()
         {
             var input = @"
@@ -66,7 +65,7 @@ class TestClass : ITest {
         }
 
 
-        [Test]
+        [Fact]
         public void TestAbstractClass()
         {
             var input = @"
@@ -75,7 +74,7 @@ abstract class TestClass<T> {
             Analyze<UnusedTypeParameterAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestAbstractMethod()
         {
             var input = @"

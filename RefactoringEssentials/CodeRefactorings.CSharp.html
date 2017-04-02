@@ -15,7 +15,7 @@
 
     -->
     <h2>Supported Refactorings</h2>
-    <p>104 code refactorings for C#</p>
+    <p>108 code refactorings for C#</p>
     <ul>
       <li>Adds another accessor (AddAnotherAccessorCodeRefactoringProvider)</li>
       <li>Add braces (AddBracesCodeRefactoringProvider)</li>
@@ -25,6 +25,8 @@
       <li>Introduce format item (AddNewFormatItemCodeRefactoringProvider)</li>
       <li>Add null check (AddNullCheckCodeRefactoringProvider)</li>
       <li>Add one or more optional parameters to an invocation, using their default values (AddOptionalParameterToInvocationCodeRefactoringProvider)</li>
+      <li>Convert loop to Linq expression (AutoLinqSumAction)</li>
+      <li>Change access level (ChangeAccessModifierAction)</li>
       <li>Check array index value (CheckArrayIndexValueCodeRefactoringProvider)</li>
       <li>Check collection index value (CheckCollectionIndexValueCodeRefactoringProvider)</li>
       <li>Check dictionary key value (CheckDictionaryKeyValueCodeRefactoringProvider)</li>
@@ -34,6 +36,7 @@
       <li>Compute constant value (ComputeConstantValueCodeRefactoringProvider)</li>
       <li>Add a Contract to specify the return value must not be null (ContractEnsuresNotNullReturnCodeRefactoringProvider)</li>
       <li>Add a Contract to specify the parameter must not be null (ContractRequiresNotNullCodeRefactoringProvider)</li>
+      <li>Add a Contract to specify the string parameter must not be null or empty (ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider)</li>
       <li>Convert anonymous method to lambda expression (ConvertAnonymousMethodToLambdaCodeRefactoringProvider)</li>
       <li>Convert auto-property to computed propertyy (ConvertAutoPropertyToPropertyCodeRefactoringProvider)</li>
       <li>Replace bitwise flag comparison with call to 'Enum.HasFlag' (ConvertBitwiseFlagComparisonToHasFlagsCodeRefactoringProvider)</li>
@@ -53,7 +56,7 @@
       <li>Convert 'if' to '??' expression (ConvertIfStatementToNullCoalescingExpressionAction)</li>
       <li>Convert 'if' to 'return' (ConvertIfStatementToReturnStatementAction)</li>
       <li>Convert 'if' to 'switch' (ConvertIfStatementToSwitchStatementCodeRefactoringProvider)</li>
-      <li>Convert implict to explicit implementation (ConvertImplicitToExplicitImplementationCodeRefactoringProvider)</li>
+      <li>Convert implicit to explicit implementation (ConvertImplicitToExplicitImplementationCodeRefactoringProvider)</li>
       <li>Convert instance to static method (ConvertInstanceToStaticMethodCodeRefactoringProvider)</li>
       <li>Convert string interpolation to 'string.Format' (ConvertInterpolatedStringToStringFormatCodeRefactoringProvider)</li>
       <li>Converts expression of lambda body to statement (ConvertLambdaBodyExpressionToStatementCodeRefactoringProvider)</li>
@@ -80,6 +83,7 @@
       <li>Swap 'Equals' target and argument (FlipEqualsTargetAndArgumentCodeRefactoringProvider)</li>
       <li>Flip an operator operands (FlipOperatorArgumentsCodeRefactoringProvider)</li>
       <li>Flip an relational operator operands (FlipRelationalOperatorArgumentsCodeRefactoringProvider)</li>
+      <li>Generate getter (GenerateGetterAction)</li>
       <li>Generate switch labels (GenerateSwitchLabelsCodeRefactoringProvider)</li>
       <li>Import static class with using directive in file (ImportStaticClassWithUsingCodeRefactoringProvider)</li>
       <li>Initialize auto property from constructor parameter (InitializeAutoPropertyFromConstructorParameterCodeRefactoringProvider)</li>

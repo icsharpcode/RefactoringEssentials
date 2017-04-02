@@ -1,13 +1,12 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class UseSystemStringEmptyTests : CSharpCodeRefactoringTestBase
     {
-        [Test()]
+        [Fact]
         public void TestSimpleString()
         {
             string result = RunContextAction(
@@ -21,7 +20,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}"
             );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
                 "	void Test ()" + Environment.NewLine +

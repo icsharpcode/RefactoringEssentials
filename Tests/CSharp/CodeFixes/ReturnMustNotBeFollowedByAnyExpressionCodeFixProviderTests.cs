@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeFixes;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 {
-    [TestFixture]
     public class ReturnMustNotBeFollowedByAnyExpressionCodeFixProviderTests : CSharpCodeFixTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Test<ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider>(@"class Foo
@@ -25,7 +24,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
         }
 
 
-        [Test]
+        [Fact]
         public void TestReturnTypeFix()
         {
             Test<ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider>(@"class Foo
@@ -43,7 +42,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 }", 1);
         }
 
-        [Test]
+        [Fact]
         public void TestAnonymousMethod()
         {
             Test<ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider>(@"class Foo

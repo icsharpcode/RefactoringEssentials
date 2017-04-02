@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceAutoPropertyWithPropertyAndBackingFieldTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleStore()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -31,7 +30,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestStaticStore()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -56,7 +55,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWrongLocation()
         {
             TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -84,8 +83,22 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
+        [Fact]
+        public void TestAlreadyExpressionBody()
+        {
+            TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
+{
+	public string Test => string.Empty;
+}");
 
-        [Test]
+            TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
+{
+	string FooBar.Test => string.Empty;
+}");
+        }
+
+
+        [Fact]
         public void TestUnimplementedComputedProperty()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -121,7 +134,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGetter()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -141,7 +154,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestGetterAndSetter()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -174,7 +187,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
 
-        [Test]
+        [Fact]
         public void TestWrongLocation2()
         {
             TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -214,7 +227,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestPreserveVisibility()
         {
             Test<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(@"class TestClass
@@ -237,6 +250,14 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
     }
 }");
+        }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider>(
+                "interface Test { int $Test2 { get; set; } }"
+            );
         }
     }
 }

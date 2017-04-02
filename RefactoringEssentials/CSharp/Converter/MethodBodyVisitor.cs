@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -18,6 +16,8 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			SemanticModel semanticModel;
 			NodesVisitor nodesVisitor;
+
+            public bool IsIterator { get; set; }
 
 			public MethodBodyVisitor(SemanticModel semanticModel, NodesVisitor nodesVisitor)
 			{
@@ -61,10 +61,17 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override SyntaxList<StatementSyntax> VisitReturnStatement(VBSyntax.ReturnStatementSyntax node)
 			{
-				return SingleStatement(SyntaxFactory.ReturnStatement((ExpressionSyntax)node.Expression?.Accept(nodesVisitor)));
-			}
+                if (IsIterator)
+                    return SingleStatement(SyntaxFactory.YieldStatement(SyntaxKind.YieldBreakStatement));
+                return SingleStatement(SyntaxFactory.ReturnStatement((ExpressionSyntax)node.Expression?.Accept(nodesVisitor)));
+            }
 
-			public override SyntaxList<StatementSyntax> VisitYieldStatement(VBSyntax.YieldStatementSyntax node)
+            public override SyntaxList<StatementSyntax> VisitContinueStatement(VBSyntax.ContinueStatementSyntax node)
+            {
+                return SingleStatement(SyntaxFactory.ContinueStatement());
+            }
+
+            public override SyntaxList<StatementSyntax> VisitYieldStatement(VBSyntax.YieldStatementSyntax node)
 			{
 				return SingleStatement(SyntaxFactory.YieldStatement(SyntaxKind.YieldReturnStatement, (ExpressionSyntax)node.Expression?.Accept(nodesVisitor)));
 			}
@@ -94,11 +101,24 @@ namespace RefactoringEssentials.CSharp.Converter
 							throw new NotSupportedException();
 						return SingleStatement(SyntaxFactory.ReturnStatement(expr));
 					default:
-						throw new NotImplementedException();
+                        return SingleStatement(SyntaxFactory.BreakStatement());
 				}
 			}
 
-			public override SyntaxList<StatementSyntax> VisitSingleLineIfStatement(VBSyntax.SingleLineIfStatementSyntax node)
+            public override SyntaxList<StatementSyntax> VisitRaiseEventStatement(VBSyntax.RaiseEventStatementSyntax node)
+            {
+                return SingleStatement(
+                    SyntaxFactory.ConditionalAccessExpression(
+                        (ExpressionSyntax)node.Name.Accept(nodesVisitor),
+                        SyntaxFactory.InvocationExpression(
+                            SyntaxFactory.MemberBindingExpression(SyntaxFactory.IdentifierName("Invoke")),
+                            (ArgumentListSyntax)node.ArgumentList.Accept(nodesVisitor)
+                        )
+                    )
+                );
+            }
+
+            public override SyntaxList<StatementSyntax> VisitSingleLineIfStatement(VBSyntax.SingleLineIfStatementSyntax node)
 			{
 				var condition = (ExpressionSyntax)node.Condition.Accept(nodesVisitor);
 				var block = SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this)));
@@ -107,9 +127,9 @@ namespace RefactoringEssentials.CSharp.Converter
 				if (node.ElseClause != null)
 				{
 					var elseBlock = SyntaxFactory.Block(node.ElseClause.Statements.SelectMany(s => s.Accept(this)));
-					elseClause = SyntaxFactory.ElseClause(elseBlock.Statements.Count == 1 ? elseBlock.Statements[0] : elseBlock);
+					elseClause = SyntaxFactory.ElseClause(elseBlock.UnpackBlock());
 				}
-				return SingleStatement(SyntaxFactory.IfStatement(condition, block.Statements.Count == 1 ? block.Statements[0] : block, elseClause));
+				return SingleStatement(SyntaxFactory.IfStatement(condition, block.UnpackBlock(), elseClause));
 			}
 
 			public override SyntaxList<StatementSyntax> VisitMultiLineIfBlock(VBSyntax.MultiLineIfBlockSyntax node)
@@ -121,17 +141,17 @@ namespace RefactoringEssentials.CSharp.Converter
 				if (node.ElseBlock != null)
 				{
 					var elseBlock = SyntaxFactory.Block(node.ElseBlock.Statements.SelectMany(s => s.Accept(this)));
-					elseClause = SyntaxFactory.ElseClause(elseBlock);
+					elseClause = SyntaxFactory.ElseClause(elseBlock.UnpackBlock());
 				}
 
 				foreach (var elseIf in node.ElseIfBlocks.Reverse())
 				{
 					var elseBlock = SyntaxFactory.Block(elseIf.Statements.SelectMany(s => s.Accept(this)));
-					var ifStmt = SyntaxFactory.IfStatement((ExpressionSyntax)elseIf.ElseIfStatement.Condition.Accept(nodesVisitor), elseBlock, elseClause);
+					var ifStmt = SyntaxFactory.IfStatement((ExpressionSyntax)elseIf.ElseIfStatement.Condition.Accept(nodesVisitor), elseBlock.UnpackBlock(), elseClause);
 					elseClause = SyntaxFactory.ElseClause(ifStmt);
 				}
 
-				return SingleStatement(SyntaxFactory.IfStatement(condition, block, elseClause));
+				return SingleStatement(SyntaxFactory.IfStatement(condition, block.UnpackBlock(), elseClause));
 			}
 
 			public override SyntaxList<StatementSyntax> VisitForBlock(VBSyntax.ForBlockSyntax node)
@@ -169,7 +189,7 @@ namespace RefactoringEssentials.CSharp.Converter
 					declaration != null ? SyntaxFactory.SeparatedList<ExpressionSyntax>() : SyntaxFactory.SingletonSeparatedList(startValue),
 					condition,
 					SyntaxFactory.SingletonSeparatedList(step),
-					block));
+					block.UnpackBlock()));
 			}
 
 			public override SyntaxList<StatementSyntax> VisitForEachBlock(VBSyntax.ForEachBlockSyntax node)
@@ -197,7 +217,7 @@ namespace RefactoringEssentials.CSharp.Converter
 						type,
 						id,
 						(ExpressionSyntax)stmt.Expression.Accept(nodesVisitor),
-						block
+						block.UnpackBlock()
 					));
 			}
 
@@ -217,7 +237,7 @@ namespace RefactoringEssentials.CSharp.Converter
 				var sections = new List<SwitchSectionSyntax>();
 				foreach (var block in caseBlocks)
 				{
-					var labels = SyntaxFactory.List<SwitchLabelSyntax>();
+					var labels = new List<SwitchLabelSyntax>();
 					foreach (var c in block.CaseStatement.Cases)
 					{
 						if (c is VBSyntax.SimpleCaseClauseSyntax) {
@@ -227,8 +247,8 @@ namespace RefactoringEssentials.CSharp.Converter
 							labels.Add(SyntaxFactory.DefaultSwitchLabel());
 						} else return false;
 					}
-					var list = SyntaxFactory.List(block.Statements.SelectMany(s => s.Accept(this)));
-					sections.Add(SyntaxFactory.SwitchSection(labels, list));
+					var list = SyntaxFactory.List(block.Statements.SelectMany(s => s.Accept(this)).Concat(SyntaxFactory.BreakStatement()));
+					sections.Add(SyntaxFactory.SwitchSection(SyntaxFactory.List(labels), list));
 				}
 				switchStatement = SyntaxFactory.SwitchStatement(expr, SyntaxFactory.List(sections));
 				return true;
@@ -250,7 +270,7 @@ namespace RefactoringEssentials.CSharp.Converter
 			{
 				return SingleStatement(SyntaxFactory.LockStatement(
 					(ExpressionSyntax)node.SyncLockStatement.Expression.Accept(nodesVisitor),
-					SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this)))
+					SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))).UnpackBlock()
 				));
 			}
 
@@ -264,7 +284,7 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SingleStatement(stmt);
 				} else {
 					var expr = (ExpressionSyntax)node.UsingStatement.Expression.Accept(nodesVisitor);
-					return SingleStatement(SyntaxFactory.UsingStatement(null, expr, SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this)))));
+					return SingleStatement(SyntaxFactory.UsingStatement(null, expr, SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))).UnpackBlock()));
 				}
 			}
 
@@ -272,8 +292,8 @@ namespace RefactoringEssentials.CSharp.Converter
 			{
 				return SingleStatement(SyntaxFactory.WhileStatement(
 					(ExpressionSyntax)node.WhileStatement.Condition.Accept(nodesVisitor),
-					SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this)))
-				));
+					SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))).UnpackBlock()
+                ));
 			}
 
 			public override SyntaxList<StatementSyntax> VisitDoLoopBlock(VBSyntax.DoLoopBlockSyntax node)
@@ -284,25 +304,25 @@ namespace RefactoringEssentials.CSharp.Converter
 					if (stmt.WhileOrUntilKeyword.IsKind(VBasic.SyntaxKind.WhileKeyword))
 						return SingleStatement(SyntaxFactory.WhileStatement(
 							(ExpressionSyntax)stmt.Condition.Accept(nodesVisitor),
-							SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this)))
-						));
+							SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))).UnpackBlock()
+                        ));
 					else
 						return SingleStatement(SyntaxFactory.WhileStatement(
 							SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, (ExpressionSyntax)stmt.Condition.Accept(nodesVisitor)),
-							SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this)))
-						));
+							SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))).UnpackBlock()
+                        ));
 				}
 				if (node.LoopStatement.WhileOrUntilClause != null)
 				{
 					var stmt = node.LoopStatement.WhileOrUntilClause;
 					if (stmt.WhileOrUntilKeyword.IsKind(VBasic.SyntaxKind.WhileKeyword))
 						return SingleStatement(SyntaxFactory.DoStatement(
-							SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))),
+							SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))).UnpackBlock(),
 							(ExpressionSyntax)stmt.Condition.Accept(nodesVisitor)
 						));
 					else
 						return SingleStatement(SyntaxFactory.DoStatement(
-							SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))),
+							SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(this))).UnpackBlock(),
 							SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, (ExpressionSyntax)stmt.Condition.Accept(nodesVisitor))
 						));
 				}
@@ -319,5 +339,13 @@ namespace RefactoringEssentials.CSharp.Converter
 				return SyntaxFactory.SingletonList<StatementSyntax>(SyntaxFactory.ExpressionStatement(expression));
 			}
 		}
-	}
+    }
+
+    static class Extensions
+    {
+        public static StatementSyntax UnpackBlock(this BlockSyntax block)
+        {
+            return block.Statements.Count == 1 ? block.Statements[0] : block;
+        }
+    }
 }

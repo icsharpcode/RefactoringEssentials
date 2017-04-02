@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class RemoveCatchExceptionTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void RemovesSimpleExceptionMatch()
         {
             Test<RemoveCatchExceptionCodeRefactoringProvider>(@"
@@ -30,7 +29,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void PreservesBody()
         {
             Test<RemoveCatchExceptionCodeRefactoringProvider>(@"
@@ -56,7 +55,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void PreservesWhitespaceInBody1()
         {
             Test<RemoveCatchExceptionCodeRefactoringProvider>(@"
@@ -84,7 +83,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void PreservesWhitespaceInBody2()
         {
             Test<RemoveCatchExceptionCodeRefactoringProvider>(@"
@@ -114,7 +113,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresReferencedExceptionMatch()
         {
             TestWrongContext<RemoveCatchExceptionCodeRefactoringProvider>(@"
@@ -130,7 +129,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullReferenceExceptionBig()
         {
             TestWrongContext<RemoveCatchExceptionCodeRefactoringProvider>(@"

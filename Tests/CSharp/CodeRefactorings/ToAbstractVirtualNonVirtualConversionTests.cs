@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ToAbstractVirtualNonVirtualConversionTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void VirtualToNonVirtualTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -23,7 +22,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void VirtualToAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -38,7 +37,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void VirtualIndexerToAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -55,7 +54,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void NonVirtualStaticToVirtualTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -72,7 +71,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void NonVirtualToVirtualTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -89,7 +88,14 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
+        public void DoNotSuggestOnPrivateMethod()
+        {
+            TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
+                "class Test { void $Foo() { } }");
+        }
+
+        [Fact]
         public void InvalidPrivateImplementationTypeTest()
         {
             TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -102,8 +108,8 @@ class Test : IDisposable
 }");
         }
 
-        [Test]
-        public void AbstractToNonAbstractTest()
+		[Fact]
+		public void AbstractToNonAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
                 @"abstract class Test
@@ -118,8 +124,8 @@ class Test : IDisposable
 }");
         }
 
-        [Test]
-        public void AbstractToVirtualTest()
+		[Fact]
+		public void AbstractToVirtualTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
                 @"abstract class Test
@@ -134,8 +140,8 @@ class Test : IDisposable
 }", 1);
         }
 
-        [Test]
-        public void AbstractPropertyToNonAbstractTest()
+		[Fact]
+		public void AbstractPropertyToNonAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
                 @"abstract class Test
@@ -162,7 +168,7 @@ class Test : IDisposable
 }");
         }
 
-        [Test]
+        [Fact]
         public void AbstractEventToNonAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -177,8 +183,8 @@ abstract class Test
 }");
         }
 
-        [Test]
-        public void NonAbstractToAbstractTest()
+		[Fact]
+		public void NonAbstractToAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
                 @"abstract class Test
@@ -193,8 +199,8 @@ abstract class Test
 }");
         }
 
-        [Test]
-        public void NonAbstractEventToAbstractTest()
+		[Fact]
+		public void NonAbstractEventToAbstractTest()
         {
             Test<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
                 @"abstract class Test
@@ -213,7 +219,7 @@ abstract class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void StaticMethodInStaticClassTest()
         {
             TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -226,7 +232,7 @@ abstract class Test
     }");
         }
 
-        [Test]
+        [Fact]
         public void InvalidLocalContext()
         {
             TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -241,7 +247,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void InvalidOverrideTest()
         {
             TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -254,7 +260,21 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
+        public void ExternMethodTest()
+        {
+            TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
+                @"using System;
+using System.Runtime.InteropServices;
+
+class Test
+{
+    [DllImport(""user32.dll"")]
+    static extern bool $CloseWindow(IntPtr hWnd);
+}");
+        }
+
+        [Fact]
         public void InvalidMethodTest()
         {
             var actions = GetActions<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -267,11 +287,11 @@ abstract class Test
     }
 }");
             // only virtual -> non virtual should be provided - no abstract conversion
-            Assert.AreEqual(1, actions.Count);
+            Assert.Equal(1, actions.Count);
         }
 
 
-        [Test]
+        [Fact]
         public void TestNullReferenceException()
         {
             TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
@@ -280,6 +300,20 @@ abstract class Test
     throw new System.NotImplementedException();
 }
 ");
+        }
+
+        [Fact]
+        public void TestInterfaceContext()
+        {
+            TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
+                @"interface Test
+{
+                void $Test2();
+                int $Test { get; set; }
+    event EventHandler $TestEvent;
+    }
+"
+            );
         }
     }
 }

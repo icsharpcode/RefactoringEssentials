@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class NonReadonlyReferencedInGetHashCodeTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<NonReadonlyReferencedInGetHashCodeAnalyzer>(@"using System;
@@ -29,7 +28,7 @@ public class TestClass2
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase2()
         {
             Analyze<NonReadonlyReferencedInGetHashCodeAnalyzer>(@"using System;
@@ -50,7 +49,7 @@ public class TestClass2
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase3()
         {
             Analyze<NonReadonlyReferencedInGetHashCodeAnalyzer>(@"using System;
@@ -71,7 +70,7 @@ public class TestClass2
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInspectorCase4()
         {
             Analyze<NonReadonlyReferencedInGetHashCodeAnalyzer>(@"
@@ -108,7 +107,7 @@ public class Test3
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<NonReadonlyReferencedInGetHashCodeAnalyzer>(@"using System;
@@ -137,7 +136,7 @@ namespace resharper_test
 
 
 
-        [Test]
+        [Fact]
         public void TestConst()
         {
             Analyze<NonReadonlyReferencedInGetHashCodeAnalyzer>(@"using System;
@@ -153,7 +152,7 @@ public class TestClass1
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestReadOnly()
         {
             Analyze<NonReadonlyReferencedInGetHashCodeAnalyzer>(@"using System;

@@ -17,9 +17,7 @@
 // DEALINGS IN THE SOFTWARE.
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading;
 using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;

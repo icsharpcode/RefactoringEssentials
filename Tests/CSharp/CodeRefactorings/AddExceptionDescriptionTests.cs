@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class AddExceptionDescriptionTests : CSharpCodeRefactoringTestBase
     {
 
-        [Test]
+        [Fact]
         public void TestPlainEntity()
         {
             TestWrongContext<AddExceptionDescriptionCodeRefactoringProvider>(@"using System;
@@ -22,7 +21,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestAddToExistingDocumentation()
         {
             Test<AddExceptionDescriptionCodeRefactoringProvider>(@"using System;
@@ -55,7 +54,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestAddRethrowToExistingDocumentation1()
         {
             Test<AddExceptionDescriptionCodeRefactoringProvider>(@"using System;
@@ -100,7 +99,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestAddRethrowToExistingDocumentation2()
         {
             Test<AddExceptionDescriptionCodeRefactoringProvider>(@"using System;
@@ -145,7 +144,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestAlreadyAdded()
         {
             TestWrongContext<AddExceptionDescriptionCodeRefactoringProvider>(@"

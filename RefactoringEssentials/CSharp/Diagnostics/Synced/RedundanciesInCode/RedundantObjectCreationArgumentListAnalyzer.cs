@@ -3,11 +3,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
-using System.Linq;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
+	[DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantObjectCreationArgumentListAnalyzer : DiagnosticAnalyzer
     {
         private static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

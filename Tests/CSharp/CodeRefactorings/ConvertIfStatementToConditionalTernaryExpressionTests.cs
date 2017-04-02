@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertIfStatementToConditionalTernaryExpressionTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestAssignment()
         {
             Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
@@ -32,7 +31,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAssignmentWithComment()
         {
             Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
@@ -60,7 +59,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAssignmentWithDifferingTypes1()
         {
             Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
@@ -86,7 +85,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAssignmentWithDifferingTypes2()
         {
             Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
@@ -112,7 +111,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAddAssignment()
         {
             Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
@@ -138,7 +137,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIfElse()
         {
             TestWrongContext<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
@@ -158,7 +157,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void MultipleStatementsInIf()
         {
             TestWrongContext<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
@@ -177,7 +176,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDifferentAssignmentOperator()
         {
 
@@ -196,8 +195,7 @@ class TestClass
 }");
         }
 
-        [Ignore("Are there any cases where this is needed ?")]
-        [Test]
+        [Fact]
         public void TestInsertNecessaryParentheses()
         {
             Test<ConvertIfStatementToConditionalTernaryExpressionCodeRefactoringProvider>(@"
@@ -225,7 +223,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidImplicitElse()
         {
 

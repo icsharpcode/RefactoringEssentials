@@ -1,17 +1,13 @@
-﻿using System;
-using System.Linq;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.FindSymbols;
 using Microsoft.CodeAnalysis.Text;
-using NUnit.Framework;
+using Xunit;
 
 namespace RefactoringEssentials.Tests
 {
-    [TestFixture]
     public class SymbolChecksTest
     {
-        [Test]
+        [Fact]
         public void DirectSpecialType()
         {
             var symbol = FindSymbol<IParameterSymbol>(@"
@@ -24,13 +20,13 @@ class Test
     }
 }");
 
-            Assert.That(
-                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable), Is.True,
-                message: "Symbol is implementing IDisposable"
+            Assert.True(
+                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable),
+                userMessage: "Symbol is implementing IDisposable"
             );
         }
 
-        [Test]
+        [Fact]
         public void SpecialTypeAsGenericConstraint()
         {
             var symbol = FindSymbol<IParameterSymbol>(@"
@@ -44,13 +40,13 @@ class Test
     }
 }");
 
-            Assert.That(
-                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable), Is.True,
-                message: "Symbol is implementing IDisposable"
+			Assert.True(
+				symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable),
+                userMessage: "Symbol is implementing IDisposable"
             );
         }
 
-        [Test]
+        [Fact]
         public void InterfaceInheritingSpecialTypeAsGenericConstraint()
         {
             var symbol = FindSymbol<IParameterSymbol>(@"
@@ -68,13 +64,13 @@ class Test
     }
 }");
 
-            Assert.That(
-                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable), Is.True,
-                message: "Symbol is implementing IDisposable"
+            Assert.True(
+                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable),
+				userMessage: "Symbol is implementing IDisposable"
             );
         }
 
-        [Test]
+        [Fact]
         public void InterfaceInheritingSpecialTypeAsParameter()
         {
             var symbol = FindSymbol<IParameterSymbol>(@"
@@ -90,13 +86,13 @@ class Test
         var x = $a;
     }
 }");
-            Assert.That(
-                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable), Is.True,
-                message: "Symbol is implementing IDisposable"
+            Assert.True(
+                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable),
+				userMessage: "Symbol is implementing IDisposable"
             );
         }
 
-        [Test]
+        [Fact]
         public void ClassInheritingImplementionOfSpecialTypeAsGenericConstraint()
         {
             var symbol = FindSymbol<IParameterSymbol>(@"
@@ -123,13 +119,13 @@ class Test
     }
 }");
 
-            Assert.That(
-                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable), Is.True,
-                message: "Symbol is implementing IDisposable"
+            Assert.True(
+                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable),
+				userMessage: "Symbol is implementing IDisposable"
             );
         }
 
-        [Test]
+        [Fact]
         public void ClassInheritingImplementionOfGenericSpecialTypeAsGenericConstraint()
         {
             var symbol = FindSymbol<IParameterSymbol>(@"
@@ -164,13 +160,13 @@ class Test
     }
 }");
 
-            Assert.That(
-                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_Collections_Generic_IEnumerable_T), Is.True,
-                message: "Symbol is implementing IDisposable"
+            Assert.True(
+                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_Collections_Generic_IEnumerable_T),
+                userMessage: "Symbol is implementing IDisposable"
             );
         }
 
-        [Test]
+        [Fact]
         public void LocallyDefinedDisposableNotDetectedAsSpecialType()
         {
             var symbol = FindSymbol<IParameterSymbol>(@"
@@ -184,13 +180,13 @@ class Test
     }
 }");
 
-            Assert.That(
-                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable), Is.False,
-                message: "Symbol is not implementing IDisposable"
+            Assert.False(
+                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable),
+                userMessage: "Symbol is not implementing IDisposable"
             );
         }
 
-        [Test]
+        [Fact]
         public void DoNotHangOnGenericTypes()
         {
             var symbol = FindSymbol<IParameterSymbol>(@"
@@ -202,9 +198,9 @@ class Test
     }
 }");
 
-            Assert.That(
-                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable), Is.False,
-                message: "Symbol is not implementing IDisposable"
+            Assert.False(
+                symbol.GetSymbolType().ImplementsSpecialTypeInterface(SpecialType.System_IDisposable),
+                userMessage: "Symbol is not implementing IDisposable"
             );
         }
 
@@ -238,16 +234,16 @@ class Test
 
             var document = workspace.CurrentSolution.GetDocument(documentId);
 
-            var semanticModel = document.GetSemanticModelAsync().Result;
+			var semanticModel = document.GetSemanticModelAsync().GetAwaiter().GetResult();
 
             var diag = semanticModel.GetDiagnostics();
 
-            Assert.That(diag, Is.Empty, "No errors reported");
+            Assert.True(diag.IsEmpty, "No errors reported");
 
-            var symbol = SymbolFinder.FindSymbolAtPosition(semanticModel, position, workspace);
+            var symbol = SymbolFinder.FindSymbolAtPositionAsync(semanticModel, position, workspace).GetAwaiter().GetResult();
 
-            Assert.That(symbol, Is.Not.Null, "Symbol should be found");
-            Assert.That(symbol, Is.InstanceOf<TSymbol>());
+            Assert.True(symbol != null, "Symbol should be found");
+            Assert.True(symbol is TSymbol);
 
             return (TSymbol)symbol;
         }

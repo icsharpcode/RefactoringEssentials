@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ExtractAnonymousMethodTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestLambdaWithBodyStatement()
         {
             Test<ExtractAnonymousMethodCodeRefactoringProvider>(@"
@@ -30,7 +29,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLambdaWithBodyExpression()
         {
             Test<ExtractAnonymousMethodCodeRefactoringProvider>(@"
@@ -74,7 +73,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAnonymousMethod()
         {
             Test<ExtractAnonymousMethodCodeRefactoringProvider>(@"
@@ -98,7 +97,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestContainLocalReference()
         {
             TestWrongContext<ExtractAnonymousMethodCodeRefactoringProvider>(@"
@@ -112,7 +111,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestLambdaInField()
         {
             Test<ExtractAnonymousMethodCodeRefactoringProvider>(@"
@@ -130,7 +129,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNameClash()
         {
             Test<ExtractAnonymousMethodCodeRefactoringProvider>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantCommaInArrayInitializerTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             var input = @"
@@ -28,7 +27,7 @@ class TestClass
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestArrayInitializerNoRedundance()
         {
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
@@ -41,7 +40,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestArrayInitializerDescription()
         {
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
@@ -54,7 +53,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestObjectInitializerDescription()
         {
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
@@ -68,7 +67,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCollectionInitializerDescrition()
         {
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"
@@ -81,7 +80,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             var input = @"
@@ -96,7 +95,7 @@ class TestClass
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(input);
         }
 
-        [Test]
+        [Fact]
         public void TestPreserveTrivia()
         {
             Analyze<RedundantCommaInArrayInitializerAnalyzer>(@"

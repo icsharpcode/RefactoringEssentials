@@ -348,5 +348,18 @@ namespace RefactoringEssentials
         {
             return sequence.Any(predicate);
         }
+
+        public static int IndexOf<T>(this IEnumerable<T> sequence, Func<T, bool> predicate)
+        {
+            if (sequence == null)
+                throw new ArgumentNullException(nameof(sequence));
+            int index = 0;
+            foreach (var item in sequence) {
+                if (predicate(item))
+                    return index;
+                index++;
+            }
+            return -1;
+        }
     }
 }

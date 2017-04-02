@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class MemberHidesStaticFromOuterClassTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestProperty()
         {
             Analyze<MemberHidesStaticFromOuterClassAnalyzer>(@"
@@ -23,7 +22,7 @@ public class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<MemberHidesStaticFromOuterClassAnalyzer>(@"

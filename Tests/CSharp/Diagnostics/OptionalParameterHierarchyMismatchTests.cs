@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class OptionalParameterHierarchyMismatchTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestSimpleCase()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -29,7 +27,7 @@ class Derived : Base
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNullCase()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -43,7 +41,7 @@ class Derived : Base
 }", 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInterface()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -65,7 +63,7 @@ class Derived : IBase
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestIndexer()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -99,7 +97,7 @@ class Derived : IBase
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisabledForCorrect()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -113,7 +111,7 @@ class Derived : IBase
 }", 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestAddOptional()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -135,7 +133,7 @@ class Derived : Base
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestRemoveOptional()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -157,7 +155,7 @@ class Derived : Base
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestTakeDeclarationValue()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -210,7 +208,7 @@ class C : B
 
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisableForInterfaceMismatch()
         {
             Analyze<OptionalParameterHierarchyMismatchAnalyzer>(@"class A
@@ -237,7 +235,7 @@ class B : A, IA
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -252,7 +250,7 @@ class Derived : Base
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestEnumValue()
         {
             Test<OptionalParameterHierarchyMismatchAnalyzer>(@"
@@ -276,7 +274,7 @@ class Derived : Base
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisableForExplicitInterfaceImplementation()
         {
             Analyze<OptionalParameterHierarchyMismatchAnalyzer>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class BaseMemberHasParamsTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBasicCase()
         {
             Analyze<BaseMemberHasParamsAnalyzer>(@"class FooBar
@@ -38,7 +37,7 @@ class FooBar2 : FooBar
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestValidCase()
         {
             Analyze<BaseMemberHasParamsAnalyzer>(@"class FooBar
@@ -57,7 +56,7 @@ class FooBar2 : FooBar
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<BaseMemberHasParamsAnalyzer>(@"class FooBar

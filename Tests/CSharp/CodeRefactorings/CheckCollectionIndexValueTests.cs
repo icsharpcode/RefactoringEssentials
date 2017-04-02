@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class CheckCollectionIndexValueTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
 
@@ -30,7 +29,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNestedCase()
         {
             Test<CheckCollectionIndexValueCodeRefactoringProvider>(@"

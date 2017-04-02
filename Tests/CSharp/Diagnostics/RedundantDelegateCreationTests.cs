@@ -1,14 +1,13 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
 using System;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    
-    [TestFixture]
+
     public class RedundantDelegateCreationTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestAdd()
         {
             var input = @"
@@ -52,7 +51,7 @@ public class FooBase
             throw new NotImplementedException();
         }
 
-        [Test]
+        [Fact]
         public void TestRemove()
         {
             Analyze<RedundantDelegateCreationAnalyzer>(@"
@@ -88,7 +87,7 @@ public class FooBase
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<RedundantDelegateCreationAnalyzer>(@"
@@ -110,7 +109,7 @@ public class FooBase
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestBug33763()
         {
             var input = @"

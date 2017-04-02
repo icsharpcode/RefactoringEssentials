@@ -6,7 +6,6 @@
 **C#**
 
 * AutoLinqSumAction
-* ChangeAccessModifierAction
 * CreateIndexerAction
 * GenerateGetterAction
 * IntroduceConstantAction

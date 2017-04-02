@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.VisualBasic;
 
 namespace RefactoringEssentials.Tests.VB.Diagnostics
 {
-    public class VBDiagnosticTestBase : DiagnosticTestBase
+	public class VBDiagnosticTestBase : DiagnosticTestBase
     {
         public static VisualBasicCompilation CreateCompilation(
             IEnumerable<SyntaxTree> trees,

@@ -1,10 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantCatchClauseTests : CSharpDiagnosticTestBase
     {
         const string BaseInput = @"
@@ -15,7 +13,7 @@ class A
 	{";
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             var input = BaseInput + @"
@@ -32,7 +30,7 @@ class A
             Analyze<RedundantCatchClauseAnalyzer>(input);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestEmptyCatch()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -56,7 +54,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestOnlyRedundantCatches()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -74,7 +72,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void AddsBlockIfNeccessary()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -96,7 +94,7 @@ class A
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void AddsBlockIfNeccessaryOnEmptyTryBlock()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -113,7 +111,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void EmptyTryCatchSkeleton()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -124,7 +122,7 @@ class A
 }", 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void DoesNotAddBlockIfUnneccessary()
         {
             Test<RedundantCatchClauseAnalyzer>(@"
@@ -142,7 +140,7 @@ class A
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void NoIssuesWhenMissingCatch()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -153,7 +151,7 @@ class A
 }", 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestEmptyCatchWithFinally()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -178,7 +176,7 @@ class A
         /// <summary>
         /// Bug 12273 - Incorrect redundant catch warning
         /// </summary>
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestBug12273()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -211,7 +209,7 @@ class A
         /// <summary>
         /// Bug 12273 - Incorrect redundant catch warning
         /// </summary>
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestBug12273Case2()
         {
             Test<RedundantCatchClauseAnalyzer>(BaseInput + @"
@@ -240,7 +238,7 @@ class A
         /// <summary>
         /// Bug 14451 - False positive of "Redundant catch clause" 
         /// </summary>
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestBugBug14451()
         {
             Analyze<RedundantCatchClauseAnalyzer>(@"

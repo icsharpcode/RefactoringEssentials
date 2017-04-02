@@ -1,23 +1,19 @@
 ﻿// (c) by Matt Warren. Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 // From https://github.com/mattwar/nullaby
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace Nullaby
 {
-    /// <summary>
-    /// Analyzises a block of code for state transitions across code flow
-    /// </summary>
-    public class FlowAnalyzer<TState> : CSharpSyntaxWalker
+	/// <summary>
+	/// Analyzises a block of code for state transitions across code flow
+	/// </summary>
+	public class FlowAnalyzer<TState> : CSharpSyntaxWalker
         where TState : FlowState
     {
         protected readonly SemanticModel Model;

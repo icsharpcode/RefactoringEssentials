@@ -1,85 +1,92 @@
-using Microsoft.CodeAnalysis.CodeRefactorings;
-using Microsoft.CodeAnalysis;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CodeRefactorings;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Generate getter")]
-    [NotPortedYet]
     public class GenerateGetterAction : CodeRefactoringProvider
     {
-        public override Task ComputeRefactoringsAsync(CodeRefactoringContext context)
+        public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
         {
-            //var document = context.Document;
-            //var span = context.Span;
-            //var cancellationToken = context.CancellationToken;
-            //var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
-            //if (model.IsFromGeneratedCode(cancellationToken))
-            //	return;
-            //var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
-            return Task.FromResult(0);
+            var document = context.Document;
+            if (document.Project.Solution.Workspace.Kind == WorkspaceKind.MiscellaneousFiles)
+                return;
+            var span = context.Span;
+            if (!span.IsEmpty)
+                return;
+            var cancellationToken = context.CancellationToken;
+            if (cancellationToken.IsCancellationRequested)
+                return;
+            var model = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
+            if (model.IsFromGeneratedCode(cancellationToken))
+                return;
+            var root = await model.SyntaxTree.GetRootAsync(cancellationToken).ConfigureAwait(false);
+            var token = root.FindToken(span.Start);
+            if (!(token.Parent is VariableDeclaratorSyntax))
+                return;
+            var declarator = (VariableDeclaratorSyntax)token.Parent;
+            var fieldDeclaration = declarator.Parent?.Parent as FieldDeclarationSyntax;
+            if (fieldDeclaration == null)
+                return;
+            var enclosingType = fieldDeclaration.Parent as TypeDeclarationSyntax;
+            if (enclosingType == null)
+                return;
+            foreach (var member in enclosingType.Members) {
+                if (member is PropertyDeclarationSyntax && ContainsGetter(model, (PropertyDeclarationSyntax)member, declarator))
+                    return;
+            }
+            context.RegisterRefactoring(
+                CodeActionFactory.Create(
+                    token.Span,
+                    DiagnosticSeverity.Info,
+                    GettextCatalog.GetString("Generate getter"),
+                    t2 => {
+                        var newRoot = root.InsertNodesAfter(fieldDeclaration, new[] { GeneratePropertyDeclaration(fieldDeclaration, declarator) });
+                        return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                    }
+                )
+            );
         }
-        //		public async Task ComputeRefactoringsAsync(Document document, TextSpan span, CancellationToken cancellationToken)
-        //		{
-        //			var initializer = GetVariableInitializer(context);
-        //			if (initializer == null || !initializer.NameToken.Contains(context.Location)) {
-        //				yield break;
-        //			}
-        //			var type = initializer.Parent.Parent as TypeDeclaration;
-        //			if (type == null) {
-        //				yield break;
-        //			}
-        //			foreach (var member in type.Members) {
-        //				if (member is PropertyDeclaration && ContainsGetter((PropertyDeclaration)member, initializer)) {
-        //					yield break;
-        //				}
-        //			}
-        //			var field = initializer.Parent as FieldDeclaration;
-        //			if (field == null) {
-        //				yield break;
-        //			}
-        //			
-        //			yield return new CodeAction(context.TranslateString("Create getter"), script => {
-        //				script.InsertWithCursor(
-        //					context.TranslateString("Create getter"),
-        //					Script.InsertPosition.After,
-        //					GeneratePropertyDeclaration(context, field, initializer));
-        //			}, initializer);
-        //		}
-        //		
-        //		static PropertyDeclaration GeneratePropertyDeclaration (SemanticModel context, FieldDeclaration field, VariableInitializer initializer)
-        //		{
-        //			var mod = RefactoringEssentials.Modifiers.Public;
-        //			if (field.HasModifier (RefactoringEssentials.Modifiers.Static))
-        //				mod |= RefactoringEssentials.Modifiers.Static;
-        //			
-        //			return new PropertyDeclaration () {
-        //				Modifiers = mod,
-        //				Name = context.GetNameProposal (initializer.Name, false),
-        //				ReturnType = field.ReturnType.Clone (),
-        //				Getter = new Accessor () {
-        //					Body = new BlockStatement () {
-        //						new ReturnStatement (new IdentifierExpression (initializer.Name))
-        //					}
-        //				}
-        //			};
-        //		}
-        //		
-        //		bool ContainsGetter (PropertyDeclaration property, VariableInitializer initializer)
-        //		{
-        //			if (property.Getter.IsNull || property.Getter.Body.Statements.Count () != 1)
-        //				return false;
-        //			var ret = property.Getter.Body.Statements.Single () as ReturnStatement;
-        //			if (ret == null)
-        //				return false;
-        //			return ret.Expression.IsMatch (new IdentifierExpression (initializer.Name)) || 
-        //				ret.Expression.IsMatch (new MemberReferenceExpression (new ThisReferenceExpression (), initializer.Name));
-        //		}
-        //		
-        //		VariableInitializer GetVariableInitializer (SemanticModel context)
-        //		{
-        //			return context.GetNode<VariableInitializer> ();
-        //		}
+	
+        static PropertyDeclarationSyntax GeneratePropertyDeclaration(FieldDeclarationSyntax field, VariableDeclaratorSyntax initializer)
+        {
+            var modifiers = SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
+            if (field.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword)))
+                modifiers = modifiers.Add(SyntaxFactory.Token(SyntaxKind.StaticKeyword));
+
+            string propertyName = NameProposalService.GetNameProposal(initializer.Identifier.ValueText, SyntaxKind.PropertyDeclaration);
+            var block = SyntaxFactory.Block(SyntaxFactory.ReturnStatement(SyntaxFactory.IdentifierName(initializer.Identifier)));
+            return SyntaxFactory.PropertyDeclaration(field.Declaration.Type, propertyName)
+                .WithModifiers(modifiers)
+                .WithAccessorList(
+                    SyntaxFactory.AccessorList(SyntaxFactory.SingletonList(
+                        SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration, block)
+                    ))
+                ).WithAdditionalAnnotations(Formatter.Annotation);
+        }
+
+        static bool ContainsGetter(SemanticModel model, PropertyDeclarationSyntax property, VariableDeclaratorSyntax declarator)
+        {
+            var symbol = model.GetDeclaredSymbol(declarator);
+            if (property.ExpressionBody != null)
+                return model.GetSymbolInfo(property.ExpressionBody.Expression).Symbol == symbol;
+            var getter = property.AccessorList?.Accessors.FirstOrDefault(a => a.IsKind(SyntaxKind.GetAccessorDeclaration));
+            if (getter == null || getter.Body?.Statements.Count != 1)
+                return false;
+#if RE2017
+#warning "Check for get => ExpressionBody!"
+#endif
+            var ret = getter.Body?.Statements.Single() as ReturnStatementSyntax;
+            if (ret == null)
+                return false;
+            return model.GetSymbolInfo(ret.Expression).Symbol == symbol;
+        }
     }
 }
 

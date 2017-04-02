@@ -1,39 +1,37 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [Ignore("TODO")]
-    [TestFixture]
     public class CheckNamespaceTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO")]
         public void TestWrongNamespace()
         {
             TestIssue<CheckNamespaceAnalyzer>(@"namespace Foo {}");
         }
 
-        [Test]
+        [Fact(Skip="TODO")]
         public void TestSubstring()
         {
             TestIssue<CheckNamespaceAnalyzer>(@"namespace TestFoo {}");
         }
 
 
-        [Test]
+        [Fact(Skip="TODO")]
         public void TestGlobalClass()
         {
             TestIssue<CheckNamespaceAnalyzer>(@"class Foo {}");
         }
 
 
-        [Test]
+        [Fact(Skip="TODO")]
         public void CheckValidNamespace()
         {
             Analyze<CheckNamespaceAnalyzer>(@"namespace Test {}");
         }
 
-        [Test]
+        [Fact(Skip="TODO")]
         public void TestDisable()
         {
             Analyze<CheckNamespaceAnalyzer>(@"

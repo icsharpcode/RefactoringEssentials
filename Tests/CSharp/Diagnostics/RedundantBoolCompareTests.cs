@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantBoolCompareTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void Test()
         {
             var input = @"
@@ -37,7 +35,7 @@ class TestClass
             Test<RedundantBoolCompareAnalyzer>(input, 4, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInsertParentheses()
         {
             var input = @"
@@ -59,7 +57,7 @@ class TestClass
             Test<RedundantBoolCompareAnalyzer>(input, 1, output);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInvalid()
         {
             Analyze<RedundantBoolCompareAnalyzer>(@"
@@ -76,7 +74,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNullable()
         {
             var input = @"

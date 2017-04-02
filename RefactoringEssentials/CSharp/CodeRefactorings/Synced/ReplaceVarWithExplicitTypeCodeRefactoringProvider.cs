@@ -3,6 +3,7 @@ using Microsoft.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CSharp;
+using System;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
@@ -46,32 +47,23 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 type = model.GetTypeInfo(foreachStatement.Type).Type;
                 typeSyntax = foreachStatement.Type;
             }
-
             if (type == null || !typeSyntax.IsVar || type.TypeKind == TypeKind.Error || type.TypeKind == TypeKind.Unknown)
                 return;
             if (!(type.SpecialType != SpecialType.System_Nullable_T && type.TypeKind != TypeKind.Unknown && !ContainsAnonymousType(type)))
-            {
                 return;
-            }
             context.RegisterRefactoring(
                 CodeActionFactory.Create(
                     token.Span,
                     DiagnosticSeverity.Info,
                     GettextCatalog.GetString("To explicit type"),
-                    t2 => Task.FromResult(PerformAction(document, model, root, type, typeSyntax))
+                    t2 => Task.FromResult(PerformAction(document, root, typeSyntax, type.ToSyntax(model, typeSyntax)))
                 )
             );
         }
 
-        static Document PerformAction(Document document, SemanticModel model, SyntaxNode root, ITypeSymbol type, TypeSyntax typeSyntax)
+        static Document PerformAction(Document document, SyntaxNode root, TypeSyntax typeSyntax, TypeSyntax replacementType)
         {
-            var newRoot = root.ReplaceNode((SyntaxNode)
-                typeSyntax,
-                SyntaxFactory.ParseTypeName(type.ToMinimalDisplayString(model, typeSyntax.SpanStart))
-                .WithLeadingTrivia(typeSyntax.GetLeadingTrivia())
-                .WithTrailingTrivia(typeSyntax.GetTrailingTrivia())
-            );
-            return document.WithSyntaxRoot(newRoot);
+            return document.WithSyntaxRoot(root.ReplaceNode(typeSyntax, replacementType));
         }
 
         static bool ContainsAnonymousType(ITypeSymbol type)

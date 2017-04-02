@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 
-    [TestFixture]
     public class DoNotCallOverridableMethodsInConstructorTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void CatchesBadCase()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -24,7 +23,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -43,7 +42,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 
 
 
-        [Test]
+        [Fact]
         public void IgnoresGoodCase()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -60,7 +59,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresSealedClasses()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"sealed class Foo
@@ -77,7 +76,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresOverriddenSealedMethods()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
@@ -102,7 +101,7 @@ class DerivedClass : BaseClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresNonLocalCalls()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -119,7 +118,7 @@ class DerivedClass : BaseClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresEventHandlers()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -135,7 +134,7 @@ class DerivedClass : BaseClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresDelegates1()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
@@ -155,7 +154,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresDelegates2()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
@@ -181,7 +180,7 @@ class Foo
         /// <summary>
         /// Bug 14450 - False positive of "Virtual member call in constructor"
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug14450()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
@@ -195,7 +194,7 @@ public class Test {
 ");
         }
 
-        [Test]
+        [Fact]
         public void SetVirtualPropertyThroughThis()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -209,7 +208,7 @@ public class Test {
 }");
         }
 
-        [Test]
+        [Fact]
         public void SetVirtualProperty()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -223,7 +222,7 @@ public class Test {
 }");
         }
 
-        [Test]
+        [Fact]
         public void GetVirtualPropertyThroughThis()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -237,7 +236,7 @@ public class Test {
 }");
         }
 
-        [Test]
+        [Fact]
         public void GetVirtualProperty()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -251,7 +250,7 @@ public class Test {
 }");
         }
 
-        [Test]
+        [Fact]
         public void GetVirtualPropertyWithPrivateSetter()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -265,7 +264,7 @@ public class Test {
 }");
         }
 
-        [Test]
+        [Fact]
         public void SetVirtualPropertyWithPrivateSetter()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -279,7 +278,7 @@ public class Test {
 }");
         }
 
-        [Test]
+        [Fact]
         public void SetVirtualPropertyWithPrivateSetterThroughThis()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"class Foo
@@ -296,7 +295,7 @@ public class Test {
         /// <summary>
         /// Bug 39180 - "Virtual member call in constructor" when no call is made
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug39180()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@" class Test {
@@ -307,7 +306,7 @@ public class Test {
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestBug39180_Case2()
         {
             Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@" class Test {

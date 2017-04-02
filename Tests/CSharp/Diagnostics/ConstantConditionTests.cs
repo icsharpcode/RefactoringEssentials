@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConstantConditionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestConditionalExpression()
         {
             Analyze<ConstantConditionAnalyzer>(@"
@@ -28,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIf()
         {
             Analyze<ConstantConditionAnalyzer>(@"
@@ -68,7 +67,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFor()
         {
             Analyze<ConstantConditionAnalyzer>(@"
@@ -88,7 +87,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestWhile()
         {
             Analyze<ConstantConditionAnalyzer>(@"
@@ -110,7 +109,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDoWhile()
         {
             Analyze<ConstantConditionAnalyzer>(@"
@@ -132,7 +131,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNoIssue()
         {
             Analyze<ConstantConditionAnalyzer>(@"

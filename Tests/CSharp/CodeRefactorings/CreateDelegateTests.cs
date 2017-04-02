@@ -1,14 +1,13 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class CreateDelegateTests : CSharpCodeRefactoringTestBase
     {
         
-        [Test]
-        [Description("Test that only event field declarations are refactored.")]
+        [Fact]
+        // Test that only event field declarations are refactored.
         public void TestEventDeclarationsAreNotRefactored()
         {
             TestWrongContext<CreateDelegateAction>(
@@ -23,8 +22,8 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 ");
         }
 
-        [Test]
-        [Description("Test that only event field declarations are refactored.")]
+        [Fact]
+        // Test that only event field declarations are refactored.
         public void TestDelegateNotCreatedIfAlreadyExists()
         {
             TestWrongContext<CreateDelegateAction>(
@@ -37,10 +36,10 @@ interface TestClass
 ");
         }
         
-        [TestCase(@"$event MyEventHandler evt;")]
-        [TestCase(@"event $MyEventHandler evt;")]
-        [TestCase(@"event MyEventHandler $evt;")]
-        [Description("Test that an undefined delegate gets created.")]
+        [InlineData(@"$event MyEventHandler evt;")]
+        [InlineData(@"event $MyEventHandler evt;")]
+        [InlineData(@"event MyEventHandler $evt;")]
+        // Test that an undefined delegate gets created.
         public void TestCreateDelegate(string given)
         {
             Test<CreateDelegateAction>(
@@ -58,8 +57,8 @@ class TestClass
 ");
         }
 
-        [Test]
-        [Description("Test that an undefined delegate gets created for interface type.")]
+        [Fact]
+        // Test that an undefined delegate gets created for interface type.
         public void TestCreateDelegateForInterface()
         {
             Test<CreateDelegateAction>(
@@ -77,8 +76,8 @@ interface TestClass
 ");
         }
 
-        [Test]
-        [Description("Test that an undefined delegate gets created for struct type.")]
+        [Fact]
+        // Test that an undefined delegate gets created for struct type.
         public void TestCreateDelegateForStruct()
         {
             Test<CreateDelegateAction>(
@@ -96,8 +95,8 @@ struct TestClass
 ");
         }
 
-        [Test]
-        [Description("Test that an undefined delegate gets created as external public.")]
+        [Fact]
+        // Test that an undefined delegate gets created as external public.
         public void TestCreateDelegateExternalPublic()
         {
             Test<CreateDelegateAction>(
@@ -113,8 +112,8 @@ public class TestClass
 }");
         }
 
-        [Test]
-        [Description("Test that an undefined delegate gets created as external public.")]
+        [Fact]
+        // Test that an undefined delegate gets created as external public.
         public void TestCreateDelegateExternalProtected()
         {
             Test<CreateDelegateAction>(
@@ -130,8 +129,8 @@ public class TestClass
 }");
         }
 
-        [Test]
-        [Description("Test that an undefined delegate gets created as internal private.")]
+        [Fact]
+        // Test that an undefined delegate gets created as internal private.
         public void TestCreateDelegatePrivate()
         {
             Test<CreateDelegateAction>(
@@ -147,8 +146,8 @@ public class TestClass
 }");
         }
 
-        [Test]
-        [Description("Test that an undefined delegate gets created as internal private.")]
+        [Fact]
+        // Test that an undefined delegate gets created as internal private.
         public void TestCreateDelegateInteral()
         {
             Test<CreateDelegateAction>(
@@ -164,8 +163,8 @@ public class TestClass
 }");
         }
 
-        [Test]
-        [Description("Test that an undefined delegate gets created and properly uses the static modifier.")]
+        [Fact]
+        // Test that an undefined delegate gets created and properly uses the static modifier.
         public void TestCreatePublicStaticDelegate()
         {
             Test<CreateDelegateAction>(
@@ -182,10 +181,10 @@ public class TestClass
         }
 
 
-        [TestCase(@"$event MyEventHandler evt;")]
-        [TestCase(@"event $MyEventHandler evt;")]
-        [TestCase(@"event MyEventHandler $evt;")]
-        [Description("Test that an undefined delegate gets created within namespace.")]
+        [InlineData(@"$event MyEventHandler evt;")]
+        [InlineData(@"event $MyEventHandler evt;")]
+        [InlineData(@"event MyEventHandler $evt;")]
+        // Test that an undefined delegate gets created within namespace.
         public void TestCreateDelegateWithNamespace(string given)
         {
             Test<CreateDelegateAction>(
@@ -207,13 +206,13 @@ public class TestClass
 }");
         }
 
-        [TestCase(@"$event EventHandler evt;")]
-        [TestCase(@"event $EventHandler evt;")]
-        [TestCase(@"event EventHandler $evt;")]
-        [TestCase(@"$event EventHandler<AssemblyLoadEventArgs> evt;")]
-        [TestCase(@"event $EventHandler<AssemblyLoadEventArgs> evt;")]
-        [TestCase(@"event EventHandler<AssemblyLoadEventArgs> $evt;")]
-        [Description("Test that a delegate does not get created for standard EventHandler and EventHandler<> types.")]
+        [InlineData(@"$event EventHandler evt;")]
+        [InlineData(@"event $EventHandler evt;")]
+        [InlineData(@"event EventHandler $evt;")]
+        [InlineData(@"$event EventHandler<AssemblyLoadEventArgs> evt;")]
+        [InlineData(@"event $EventHandler<AssemblyLoadEventArgs> evt;")]
+        [InlineData(@"event EventHandler<AssemblyLoadEventArgs> $evt;")]
+        // Test that a delegate does not get created for standard EventHandler and EventHandler<> types.
         public void TestDoesNotCreateDelegate(string given)
         {
             TestWrongContext<CreateDelegateAction>(

@@ -37,6 +37,8 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var declaredSymbol = model.GetDeclaredSymbol(node, cancellationToken);
             if (declaredSymbol == null || !declaredSymbol.IsKind(SymbolKind.Event))
                 return;
+            if (declaredSymbol.ContainingSymbol.IsInterfaceType())
+                return;
             var invokeMethod = declaredSymbol.GetReturnType().GetDelegateInvokeMethod();
             if (invokeMethod == null)
                 return;

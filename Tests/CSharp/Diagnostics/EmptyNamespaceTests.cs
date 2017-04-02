@@ -1,11 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    public class EmptyNamespaceTests : CSharpDiagnosticTestBase
+	public class EmptyNamespaceTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestBasicCase()
         {
             Analyze<EmptyNamespaceAnalyzer>(@"
@@ -14,7 +14,7 @@ $namespace Foo
 }$", @"");
         }
 
-        [Test]
+        [Fact]
         public void TestCaseWithRegions()
         {
             Analyze<EmptyNamespaceAnalyzer>(@"
@@ -25,7 +25,7 @@ $namespace Foo
 }$", @"");
         }
 
-        [Test]
+        [Fact]
         public void TestCaseWithUsing()
         {
             Analyze<EmptyNamespaceAnalyzer>(@"
@@ -35,7 +35,7 @@ $namespace Foo
 }$", @"");
         }
 
-        [Test]
+        [Fact]
         public void TestCaseWithNesting()
         {
             Analyze<EmptyNamespaceAnalyzer>(@"
@@ -50,7 +50,7 @@ namespace Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForNonEmpty()
         {
             Analyze<EmptyNamespaceAnalyzer>(@"
@@ -62,7 +62,7 @@ namespace Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForRegionsWithClasses()
         {
             Analyze<EmptyNamespaceAnalyzer>(@"
@@ -76,7 +76,7 @@ namespace Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<EmptyNamespaceAnalyzer>(@"

@@ -1,13 +1,12 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertForeachToForTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestArray()
         {
             string result = RunContextAction(
@@ -24,7 +23,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "using System;" + Environment.NewLine +
                 "class TestClass" + Environment.NewLine +
                 "{" + Environment.NewLine +
@@ -39,7 +38,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Test]
+        [Fact]
         public void TestListOfT()
         {
             string result = RunContextAction(
@@ -57,7 +56,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "using System;" + Environment.NewLine +
                 "using System.Collections.Generic;" + Environment.NewLine +
                 "class TestClass" + Environment.NewLine +
@@ -76,7 +75,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         /// <summary>
         /// Bug 9876 - Convert to for loop created invalid code if iteration variable is called i
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug9876()
         {
             Test<ConvertForeachToForCodeRefactoringProvider>(@"class TestClass
@@ -101,7 +100,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestOptimizedForLoop()
         {
             Test<ConvertForeachToForCodeRefactoringProvider>(@"
@@ -127,7 +126,7 @@ class Test
 }", 1);
         }
 
-        [Test]
+        [Fact]
         public void TestOptimizedForLoopWithComment()
         {
             Test<ConvertForeachToForCodeRefactoringProvider>(@"
@@ -155,7 +154,7 @@ class Test
 }", 1);
         }
 
-        [Test]
+        [Fact]
         public void TestEnumerableConversion()
         {
             Test<ConvertForeachToForCodeRefactoringProvider>(@"
@@ -187,7 +186,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEnumerableConversionWithComment()
         {
             Test<ConvertForeachToForCodeRefactoringProvider>(@"
@@ -224,7 +223,7 @@ class Test
         /// <summary>
         /// Bug 30238 - [Roslyn Migration] Smart tag follows cursor while typing comment
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug30238()
         {
             TestWrongContext<ConvertForeachToForCodeRefactoringProvider>(@"

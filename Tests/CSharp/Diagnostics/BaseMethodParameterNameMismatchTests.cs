@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class BaseMethodParameterNameMismatchTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestMethod()
         {
             Analyze<BaseMethodParameterNameMismatchAnalyzer>(@"
@@ -38,7 +37,7 @@ class Bar : Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodWithXmlDoc()
         {
             Analyze<BaseMethodParameterNameMismatchAnalyzer>(@"
@@ -74,7 +73,7 @@ class Bar : Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestIndexer()
         {
             Analyze<BaseMethodParameterNameMismatchAnalyzer>(@"

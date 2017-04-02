@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class ConvertToLambdaExpressionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestReturn()
         {
             Test<ConvertToLambdaExpressionAnalyzer>(@"
@@ -29,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestExpressionStatement()
         {
             Test<ConvertToLambdaExpressionAnalyzer>(@"
@@ -51,7 +49,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<ConvertToLambdaExpressionAnalyzer>(@"
@@ -68,7 +66,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestAssignmentExpression()
         {
             Analyze<ConvertToLambdaExpressionAnalyzer>(@"
@@ -91,7 +89,7 @@ public class Test
         /// <summary>
         /// Bug 14840 - Incorrect "can be converted to expression" suggestion
         /// </summary>
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestBug14840()
         {
             Analyze<ConvertToLambdaExpressionAnalyzer>(@"using System;
@@ -110,7 +108,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestAnonymousMethod()
         {
             Test<ConvertToLambdaExpressionAnalyzer>(@"
@@ -133,7 +131,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestAnonymousFunction()
         {
             Test<ConvertToLambdaExpressionAnalyzer>(@"
@@ -155,7 +153,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestAnonymousMethodWithoutParameterList()
         {
             Analyze<ConvertToLambdaExpressionAnalyzer>(@"

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ValueParameterNotUsedTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestPropertySetter()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"class A
@@ -26,7 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"class A
@@ -48,7 +47,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMatchingIndexerSetter()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"class A
@@ -61,7 +60,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMatchingEventAdder()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"class A	
@@ -79,7 +78,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNonMatchingIndexerSetter()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"class A
@@ -93,7 +92,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresAutoSetter()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"class A
@@ -102,7 +101,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoreReadOnlyProperty()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"class A
@@ -111,7 +110,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void DoesNotCrashOnNullIndexerAccessorBody()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"abstract class A
@@ -120,7 +119,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void DoesNotWarnOnExceptionThrowingAccessor()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"abstract class A
@@ -134,7 +133,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void DoesNotWarnOnEmptyCustomEvent()
         {
             // Empty custom events are often used when the event can never be raised
@@ -150,7 +149,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void DoesNotWarnOnNotImplementedCustomEvent()
         {
             Analyze<ValueParameterNotUsedAnalyzer>(@"class A	

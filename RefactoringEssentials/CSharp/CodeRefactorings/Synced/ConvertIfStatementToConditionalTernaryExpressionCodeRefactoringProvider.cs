@@ -108,6 +108,10 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     assignmentTargetType.GenerateTypeSyntax(Simplifier.Annotation),
                     falseAssignmentExpr).WithAdditionalAnnotations(Formatter.Annotation);
             }
+            if (trueAssignmentExpr.IsAnyAssignExpression())
+                trueAssignmentExpr = SyntaxFactory.ParenthesizedExpression(trueAssignmentExpr);
+            if (falseAssignmentExpr.IsAnyAssignExpression())
+                falseAssignmentExpr = SyntaxFactory.ParenthesizedExpression(falseAssignmentExpr);
 
             context.RegisterRefactoring(
                 CodeActionFactory.Create(span, DiagnosticSeverity.Info, GettextCatalog.GetString("To '?:' expression"),

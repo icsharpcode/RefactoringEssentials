@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class InvertLogicalExpressionTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void ConditionlAnd()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -34,7 +33,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlAndReverse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -62,7 +61,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlOr()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -90,7 +89,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlOrReverse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -119,7 +118,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void ConditionlAnd2()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -147,7 +146,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void ConditionlOr2()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -175,7 +174,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void Equals()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -203,7 +202,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void EqualsReverse()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -232,7 +231,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestNullCoalescing()
         {
             TestWrongContext<InvertLogicalExpressionCodeRefactoringProvider>(@"
@@ -247,7 +246,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestUnaryExpression()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"

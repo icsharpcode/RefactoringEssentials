@@ -1,16 +1,24 @@
-﻿<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" />
-  <PropertyGroup Label="Configuration" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\bin\Debug</OutputPath>
-    <DefineConstants>TRACE;DEBUG;RE2017</DefineConstants>
-  </PropertyGroup>
-  <PropertyGroup Label="Configuration" Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\bin\Release</OutputPath>
-    <DefineConstants>RE2017</DefineConstants>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\..\MonoDevelop.props" Condition="Exists('..\..\..\MonoDevelop.props')" />
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <PackageTargetFallback>$(PackageTargetFallback);portable-net45+win8+wp8+wpa81</PackageTargetFallback>
+    <AssemblyName>RefactoringEssentials</AssemblyName>
+    <RootNamespace>RefactoringEssentials</RootNamespace>
+    <PackageTargetFallback>portable-net45+win8</PackageTargetFallback>
+    <Company>ICSharpCode</Company>
+    <Description>Analyzers and Code Fixes for Visual Studio 2017 (Roslyn-based).</Description>
+    <Product>Refactoring Essentials for Visual Studio 2017</Product>
+    <Copyright>Copyright (c) 2014-2017 AlphaSierraPapa and Xamarin Inc.</Copyright>
+    <AssemblyVersion>5.3.0.0</AssemblyVersion>
+    <FileVersion>5.3.0.0</FileVersion>
+    <Version>5.3.0</Version>
+    <PackageId>RefactoringEssentials</PackageId>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD1_3;RE2017</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DefineConstants>TRACE;RELEASE;NETSTANDARD1_3;RE2017</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\RefactoringEssentials\CSharp\ConstructorParameterContext.cs">
@@ -46,6 +54,7 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0108UseNewKeywordIfHidingIntendedCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\CS0108UseNewKeywordIfHidingIntendedCodeFixProvider.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0132StaticConstructorParameterCodeFixProvider.cs" Link="CSharp\CodeFixes\Custom\CS0132StaticConstructorParameterCodeFixProvider.cs" />
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0152DuplicateCaseLabelValueCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\CS0152DuplicateCaseLabelValueCodeFixProvider.cs</Link>
     </Compile>
@@ -55,6 +64,7 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0164LabelHasNotBeenReferencedCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\CS0164LabelHasNotBeenReferencedCodeFixProvider.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0168LocalVariableNotUsedCodeFixProvider.cs" Link="CSharp\CodeFixes\Custom\CS0168LocalVariableNotUsedCodeFixProvider.cs" />
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\CS0759RedundantPartialMethodCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\CS0759RedundantPartialMethodCodeFixProvider.cs</Link>
     </Compile>
@@ -69,9 +79,6 @@
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeFixes\Custom\ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider.cs">
       <Link>CSharp\CodeFixes\Custom\ReturnMustNotBeFollowedByAnyExpressionCodeFixProvider.cs</Link>
-    </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\AddBracesCodeRefactoringProvider.cs">
-      <Link>CSharp\CodeRefactorings\Custom\AddBracesCodeRefactoringProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Custom\AddNullCheckCodeRefactoringProvider.cs</Link>
@@ -177,6 +184,9 @@
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ContractEnsuresNotNullReturnRefactoringProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider.cs">
+      <Link>CSharp\CodeRefactorings\Synced\ContractRequiresStringNotNullOrEmptyCodeRefactoringProvider.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ContractRequiresNotNullCodeRefactoringProvider.cs</Link>
@@ -1276,12 +1286,6 @@
     <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntCodeFixProvider.cs">
       <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\EnumUnderlyingTypeIsIntCodeFixProvider.cs</Link>
     </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedAnalyzer.cs">
-      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedAnalyzer.cs</Link>
-    </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedCodeFixProvider.cs">
-      <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\LocalVariableNotUsedCodeFixProvider.cs</Link>
-    </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartAnalyzer.cs">
       <Link>CSharp\Diagnostics\Synced\RedundanciesInDeclaration\PartialTypeWithSinglePartAnalyzer.cs</Link>
     </Compile>
@@ -1465,6 +1469,7 @@
     <Compile Include="..\RefactoringEssentials\Util\ReflectionCompatibilityExtensions.cs">
       <Link>Util\ReflectionCompatibilityExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\Util\ReflectionNamespaces.cs" Link="Util\ReflectionNamespaces.cs" />
     <Compile Include="..\RefactoringEssentials\Util\RoslynReflection.cs">
       <Link>Util\RoslynReflection.cs</Link>
     </Compile>
@@ -1687,107 +1692,29 @@
     <Compile Include="..\RefactoringEssentials\Xml\TreeTraversal.cs">
       <Link>Xml\TreeTraversal.cs</Link>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\AssemblyInfoBase.cs">
-      <DependentUpon>AssemblyInfoBase.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Util\ReflectionNamespaces.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Properties\AssemblyInfoBase.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AssemblyInfoBase.cs</LastGenOutput>
-    </None>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis">
-      <Version>2.0.0-rc</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp">
-      <Version>2.0.0-rc</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
-      <Version>2.0.0-rc</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic">
-      <Version>2.0.0-rc</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces">
-      <Version>2.0.0-rc</Version>
-    </PackageReference>
-    <PackageReference Include="NETStandard.Library">
-      <Version>1.6</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Sdk">
-      <Version>1.0.0-alpha-20161104-2</Version>
-      <PrivateAssets>All</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.Collections.Immutable">
-      <Version>1.3.0</Version>
-    </PackageReference>
-    <PackageReference Include="System.Runtime.Serialization.Primitives">
-      <Version>4.1.1</Version>
-    </PackageReference>
+    <None Update="RefactoringEssentials.Library.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="RefactoringEssentials.nuspec">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="tools\install.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="tools\uninstall.ps1">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  <!-- The InternalVisibleTo fails when building with signing -->
+  <ItemGroup Condition="'$(SignAssembly)'=='True'">
+    <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\RefactoringEssentials\buildlibrarypackage.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>buildlibrarypackage.cmd</Link>
-    </None>
-    <None Include="..\RefactoringEssentials\buildpackage.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>buildpackage.cmd</Link>
-    </None>
-    <None Include="..\RefactoringEssentials\buildpackages_appveyor.cmd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>buildpackages_appveyor.cmd</Link>
-    </None>
-    <None Include="..\RefactoringEssentials\tools\install.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>tools\install.ps1</Link>
-    </None>
-    <None Include="..\RefactoringEssentials\tools\uninstall.ps1">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Link>tools\uninstall.ps1</Link>
-    </None>
-    <None Include="..\RefactoringEssentials\Util\Reflection.md">
-      <Link>Util\Reflection.md</Link>
-    </None>
-    <None Include="..\RefactoringEssentials\Xml\ICSharpCode.NRefactory.Xml.csproj">
-      <Link>Xml\ICSharpCode.NRefactory.Xml.csproj</Link>
-    </None>
-    <None Include="CodeAnalyzers.html.template" />
-    <None Include="CodeFixes.html.template" />
-    <None Include="CodeRefactorings.html.template" />
-    <None Include="missing.md" />
-    <None Include="RefactoringEssentials.Library.nuspec">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RefactoringEssentials.Library.tt</DependentUpon>
-    </None>
-    <None Include="RefactoringEssentials.Library.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RefactoringEssentials.Library.nuspec</LastGenOutput>
-    </None>
-    <None Include="RefactoringEssentials.nuspec">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>RefactoringEssentials.tt</DependentUpon>
-    </None>
-    <None Include="RefactoringEssentials.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>RefactoringEssentials.nuspec</LastGenOutput>
-    </None>
-    <None Include="RefactoringEssentials.version" />
-    <None Include="Versioning.t4.template" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
 </Project>

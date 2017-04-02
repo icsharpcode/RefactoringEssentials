@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.Converter
 {
-    [TestFixture]
     public class StatementTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void EmptyStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -40,7 +34,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void AssignmentStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -59,7 +53,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void AssignmentStatementInDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -76,7 +70,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void AssignmentStatementInVarDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -93,7 +87,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ObjectInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -112,7 +106,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ObjectInitializationStatementInDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -129,7 +123,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ObjectInitializationStatementInVarDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -146,7 +140,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ArrayDeclarationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -163,7 +157,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -180,7 +174,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ArrayInitializationStatementInVarDeclaration()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -197,7 +191,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -214,7 +208,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ArrayInitializationStatementWithLength()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -231,7 +225,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void MultidimensionalArrayDeclarationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -248,7 +242,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact(Skip = "Not implemented!")]
         public void MultidimensionalArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -265,7 +259,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact(Skip = "Not implemented!")]
         public void MultidimensionalArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -282,7 +276,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact(Skip = "Not implemented!")]
         public void MultidimensionalArrayInitializationStatementWithLengths()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -299,7 +293,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void JaggedArrayDeclarationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -316,7 +310,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void JaggedArrayInitializationStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -333,7 +327,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void JaggedArrayInitializationStatementWithType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -350,7 +344,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void JaggedArrayInitializationStatementWithLength()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -367,7 +361,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void DeclarationStatements()
         {
             TestConversionCSharpToVisualBasic(
@@ -391,7 +385,7 @@ the_beginning:
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void IfStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -427,7 +421,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void WhileStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -460,7 +454,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void DoWhileStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -494,7 +488,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ForEachStatementWithExplicitType()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -520,7 +514,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ForEachStatementWithVar()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -546,7 +540,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void SyncLockStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -571,7 +565,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ForWithUnknownConditionAndSingleStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -594,7 +588,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ForWithUnknownConditionAndBlock()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -618,7 +612,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ForWithSingleStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -637,7 +631,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ForWithBlock()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -658,7 +652,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void LabeledAndForStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -741,7 +735,7 @@ Finish:
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ThrowStatement()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -759,7 +753,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void AddRemoveHandler()
         {
             TestConversionCSharpToVisualBasic(@"using System;
@@ -802,7 +796,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void SelectCase1()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -852,7 +846,7 @@ _Select0_CaseDefault:
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TryCatch()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -922,7 +916,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void Yield()
         {
             TestConversionCSharpToVisualBasic(@"

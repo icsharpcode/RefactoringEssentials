@@ -1,13 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class StaticMethodInvocationToExtensionMethodInvocationTests : CSharpDiagnosticTestBase
     {
 
-        [Test]
+        [Fact]
         public void HandlesBasicCase()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -39,7 +38,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesBasicCaseWithComment()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -73,7 +72,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesBasicCaseWithFullNamespace()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -95,7 +94,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesReturnValueUsage()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -129,7 +128,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresIfNullArgument()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -147,7 +146,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresIfNotExtensionMethod()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -165,7 +164,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresIfAlreadyExtensionMethodCallSyntax()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -184,7 +183,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresPropertyInvocation()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -201,7 +200,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresTypeMismatchImplicitConversion()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -246,7 +245,7 @@ class Program
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesDelegateExtensionMethodOnVariable()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"
@@ -282,7 +281,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void AddParenthesesIfNecessary()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
@@ -314,7 +313,7 @@ class Program
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresDelegateExtensionMethodOnMethod()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
@@ -338,7 +337,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresLambdaAsExtensionMethodParameter()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"using System;
@@ -357,7 +356,7 @@ class C
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<InvokeAsExtensionMethodAnalyzer>(@"

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -14,10 +13,10 @@ using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace RefactoringEssentials.CSharp
 {
-    /// <summary>
-    /// Converts an instance method to a static method adding an additional parameter as "this" replacement.
-    /// </summary>
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert instance to static method")]
+	/// <summary>
+	/// Converts an instance method to a static method adding an additional parameter as "this" replacement.
+	/// </summary>
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert instance to static method")]
     public class ConvertInstanceToStaticMethodCodeRefactoringProvider : SpecializedCodeRefactoringProvider<SyntaxNode>
     {
         protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, SyntaxNode node, CancellationToken cancellationToken)
@@ -27,7 +26,7 @@ namespace RefactoringEssentials.CSharp
                 yield break;
 
             TypeDeclarationSyntax enclosingTypeDeclaration = methodDeclaration.Ancestors().OfType<TypeDeclarationSyntax>().FirstOrDefault();
-            if (enclosingTypeDeclaration == null)
+            if (enclosingTypeDeclaration == null || enclosingTypeDeclaration is InterfaceDeclarationSyntax)
                 yield break;
             if (methodDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword))
                 yield break;
@@ -69,7 +68,7 @@ namespace RefactoringEssentials.CSharp
         {
             // Collect all invocations of changed method
             var methodReferencesVisitor = new MethodReferencesVisitor(document.Project.Solution, methodSymbol, methodDeclaration, cancellationToken);
-            await methodReferencesVisitor.Collect();
+            await methodReferencesVisitor.Collect().ConfigureAwait(false);
 
             // Collect all references to type members and "this" expressions inside of changed method
             var memberReferencesVisitor = new MemberReferencesVisitor(model, declaringTypeSymbol.GetMembers().Where(m => m != methodSymbol), cancellationToken);
@@ -99,7 +98,7 @@ namespace RefactoringEssentials.CSharp
                 }
                 else
                 {
-                    thisDocRoot = await invocationsInDocument.Document.GetSyntaxRootAsync();
+                    thisDocRoot = await invocationsInDocument.Document.GetSyntaxRootAsync().ConfigureAwait(false);
                     if (thisDocRoot == null)
                         continue;
                     thisDocRoot = thisDocRoot.TrackNodes(invocationsInDocument.References.Select(r => r.InvocationExpression));
@@ -232,7 +231,7 @@ namespace RefactoringEssentials.CSharp
 
             public async Task Collect()
             {
-                var invocations = await SymbolFinder.FindCallersAsync(methodSymbol, solution);
+                var invocations = await SymbolFinder.FindCallersAsync(methodSymbol, solution).ConfigureAwait(false);
                 var invocationsPerDocument = from invocation in invocations
                                              from location in invocation.Locations
                                              where location.SourceTree != null
@@ -245,7 +244,7 @@ namespace RefactoringEssentials.CSharp
                     if (document == null)
                         continue;
 
-                    var root = await document.GetSyntaxRootAsync(cancellationToken);
+                    var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
                     if (root == null)
                         continue;
 

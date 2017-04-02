@@ -34,7 +34,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (!catchClause.Declaration.Identifier.IsMissing)
             {
                 var sym = model.GetDeclaredSymbol(catchClause.Declaration);
-                var refs = await SymbolFinder.FindReferencesAsync(sym, document.Project.Solution, cancellationToken);
+                var refs = await SymbolFinder.FindReferencesAsync(sym, document.Project.Solution, cancellationToken).ConfigureAwait(false);
                 foreach (var r in refs)
                 {
                     if (r.Definition != sym)

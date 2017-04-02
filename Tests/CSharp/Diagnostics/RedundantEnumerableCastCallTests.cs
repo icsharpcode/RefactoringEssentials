@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantEnumerableCastCallTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestRedundantCast()
         {
             Test<RedundantEnumerableCastCallAnalyzer>(@"
@@ -37,7 +35,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestRedundantCastCase2()
         {
             Test<RedundantEnumerableCastCallAnalyzer>(@"
@@ -67,7 +65,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestRedundantOfType()
         {
             Test<RedundantEnumerableCastCallAnalyzer>(@"
@@ -97,7 +95,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestRedundantOfTypeResolution2()
         {
             Test<RedundantEnumerableCastCallAnalyzer>(@"
@@ -128,7 +126,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInvalid()
         {
             Analyze<RedundantEnumerableCastCallAnalyzer>(@"
@@ -147,7 +145,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<RedundantEnumerableCastCallAnalyzer>(@"

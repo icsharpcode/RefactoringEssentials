@@ -31,7 +31,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostic = context.Diagnostics.First();
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var node = root.FindToken(context.Span.Start).Parent as IfStatementSyntax;
             if (node == null)
                 return;

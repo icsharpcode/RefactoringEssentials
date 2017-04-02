@@ -1,85 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ReplaceWithOfTypeTests : CSharpDiagnosticTestBase
     {
-        [Test]
-        [Ignore("Does this even make sense? There's no SelectNotNull method!")]
-        public void TestCaseSelectNotNull()
-        {
-            Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.SelectNotNull((object o) => o as Test);
-    }
-}", @"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.OfType<Test> ();
-    }
-}");
-            Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.SelectNotNull(o => o as Test);
-    }
-}", @"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.OfType<Test> ();
-    }
-}");
-        }
-
-        [Test]
-        [Ignore("Does this even make sense? There's no SelectNotNull method!")]
-        public void TestCaseSelectNotNullWithParentheses()
-        {
-            Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.SelectNotNull(o => ((o as Test)));
-    }
-}", @"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.OfType<Test> ();
-    }
-}");
-            Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.SelectNotNull(o => o as Test);
-    }
-}", @"using System.Linq;
-class Test
-{
-    public void Foo(object[] obj)
-    {
-        obj.OfType<Test> ();
-    }
-}");
-        }
-
-
-        [Test]
+        [Fact]
         public void TestCaseSelectWhereCase1()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
@@ -97,25 +23,9 @@ class Test
         obj.OfType<Test>();
     }
 }");
-            //There's no SelectNotNull!
-            //			Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
-            //class Test
-            //{
-            //    public void Foo(object[] obj)
-            //    {
-            //        obj.SelectNotNull(o => o as Test);
-            //    }
-            //}", @"using System.Linq;
-            //class Test
-            //{
-            //    public void Foo(object[] obj)
-            //    {
-            //        obj.OfType<Test> ();
-            //    }
-            //}");
         }
 
-        [Test]
+        [Fact]
         public void TestCaseSelectWhereGarbage()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
@@ -137,7 +47,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact]
         public void TestCaseSelectWhereCase2WithParens()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;
@@ -176,7 +86,7 @@ class Test
 
 
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ReplaceWithOfTypeAnalyzer>(@"using System.Linq;

@@ -414,11 +414,17 @@ namespace RefactoringEssentials
             inferTypesMethod = baseTypeInfo.GetMethod("InferTypes", new[] {
                 typeof(SemanticModel),
                 typeof(int),
+#if RE2017
+                typeof(string),
+#endif
                 typeof(CancellationToken)
             });
             inferTypes2Method = baseTypeInfo.GetMethod("InferTypes", new[] {
                 typeof(SemanticModel),
                 typeof(SyntaxNode),
+#if RE2017
+                typeof(string),
+#endif
                 typeof(CancellationToken)
             });
         }
@@ -428,13 +434,16 @@ namespace RefactoringEssentials
             instance = Activator.CreateInstance(typeInfo);
         }
 
-        public IEnumerable<ITypeSymbol> InferTypes(SemanticModel semanticModel, int position, CancellationToken cancellationToken)
+        public IEnumerable<ITypeSymbol> InferTypes(SemanticModel semanticModel, int position, string nameOpt, CancellationToken cancellationToken)
         {
             try
             {
                 return (IEnumerable<ITypeSymbol>)inferTypesMethod.Invoke(instance, new object[] {
                     semanticModel,
                     position,
+#if RE2017
+                    nameOpt,
+#endif
                     cancellationToken
                 });
             }
@@ -445,13 +454,16 @@ namespace RefactoringEssentials
             }
         }
 
-        public IEnumerable<ITypeSymbol> InferTypes(SemanticModel semanticModel, SyntaxNode expression, CancellationToken cancellationToken)
+        public IEnumerable<ITypeSymbol> InferTypes(SemanticModel semanticModel, SyntaxNode expression, string nameOpt, CancellationToken cancellationToken)
         {
             try
             {
                 return (IEnumerable<ITypeSymbol>)inferTypes2Method.Invoke(instance, new object[] {
                     semanticModel,
                     expression,
+#if RE2017
+                    nameOpt,
+#endif
                     cancellationToken
                 });
             }
@@ -462,14 +474,14 @@ namespace RefactoringEssentials
             }
         }
 
-
+        // see https://github.com/dotnet/roslyn/blob/master/src/Workspaces/Core/Portable/Shared/Extensions/ITypeInferenceServiceExtensions.cs
         public ITypeSymbol InferType(
             SemanticModel semanticModel,
             SyntaxNode expression,
             bool objectAsDefault,
             CancellationToken cancellationToken)
         {
-            var types = InferTypes(semanticModel, expression, cancellationToken)
+            var types = InferTypes(semanticModel, expression, null, cancellationToken)
                 .WhereNotNull();
 
             if (!types.Any())
@@ -497,7 +509,7 @@ namespace RefactoringEssentials
             bool objectAsDefault,
             CancellationToken cancellationToken)
         {
-            var types = this.InferTypes(semanticModel, position, cancellationToken)
+            var types = this.InferTypes(semanticModel, position, null, cancellationToken)
                 .WhereNotNull();
 
             if (!types.Any())

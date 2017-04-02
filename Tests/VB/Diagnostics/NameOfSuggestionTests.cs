@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.VB.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.Diagnostics
 {
-    [TestFixture]
-    public class NameOfSuggestionTests : VBDiagnosticTestBase
+	public class NameOfSuggestionTests : VBDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestArgumentNullExceptionInMethod()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -24,7 +23,7 @@ Class A
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentException()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -46,7 +45,7 @@ Class A
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentOutOfRangeExceptionSwap()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -64,7 +63,7 @@ Class A
 End Class", 0);
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullExceptionInConstructor()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -82,7 +81,7 @@ Class A
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullExceptionInEventHandlerAccessor()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -110,7 +109,7 @@ Class A
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullExceptionInGetAccessor()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -136,7 +135,7 @@ Class A
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullExceptionInIndexer()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"
@@ -162,7 +161,7 @@ Class A
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void TestArgumentNullExceptionInLambda()
         {
             Analyze<NameOfSuggestionAnalyzer>(@"

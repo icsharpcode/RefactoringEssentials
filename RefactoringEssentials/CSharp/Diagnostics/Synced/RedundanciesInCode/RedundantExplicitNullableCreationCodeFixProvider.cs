@@ -1,6 +1,5 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using System.Collections.Immutable;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantExplicitNullableCreationCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds
@@ -31,7 +30,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var diagnostic = diagnostics.First();
             var objectCreation = root.FindNode(context.Span, getInnermostNodeForTie: true) as ObjectCreationExpressionSyntax;
             var argumentListArgument = objectCreation.ArgumentList.Arguments.FirstOrDefault();

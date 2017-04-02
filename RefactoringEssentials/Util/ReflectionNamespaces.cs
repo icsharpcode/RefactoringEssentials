@@ -1,15 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace RefactoringEssentials
+﻿namespace RefactoringEssentials
 {
-    class ReflectionNamespaces
+	public static class ReflectionNamespaces
     {
-        public const string WorkspacesAsmName = ", Microsoft.CodeAnalysis.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CSWorkspacesAsmName = ", Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string VBWorkspacesAsmName = ", Microsoft.CodeAnalysis.VisualBasic.Workspaces, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CAAsmName = ", Microsoft.CodeAnalysis, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
-        public const string CACSharpAsmName = ", Microsoft.CodeAnalysis.CSharp, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35";
+        public static readonly string WorkspacesAsmName;
+        public static readonly string CSWorkspacesAsmName;
+        public static readonly string VBWorkspacesAsmName;
+        public static readonly string CAAsmName;
+        public static readonly string CACSharpAsmName;
+        public static readonly string VersionInfo;
+
+        static ReflectionNamespaces()
+        {
+            const string namePart = "Microsoft.CodeAnalysis.LanguageNames, Microsoft.CodeAnalysis, ";
+            VersionInfo = typeof(Microsoft.CodeAnalysis.LanguageNames).AssemblyQualifiedName.Substring(namePart.Length);
+            WorkspacesAsmName = ", Microsoft.CodeAnalysis.Workspaces, " + VersionInfo;
+            CSWorkspacesAsmName = ", Microsoft.CodeAnalysis.CSharp.Workspaces, " + VersionInfo;
+            VBWorkspacesAsmName = ", Microsoft.CodeAnalysis.VisualBasic.Workspaces, " + VersionInfo;
+            CAAsmName = ", Microsoft.CodeAnalysis, " + VersionInfo;
+            CACSharpAsmName = ", Microsoft.CodeAnalysis.CSharp, " + VersionInfo;
+        }
     }
 }

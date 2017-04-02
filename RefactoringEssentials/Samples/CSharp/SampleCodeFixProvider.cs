@@ -4,15 +4,14 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.CSharp;
 using RefactoringEssentials.CSharp.Diagnostics;
 
 namespace RefactoringEssentials.Samples.CSharp
 {
-    // PLEASE UNCOMMENT THIS LINE TO REGISTER CODE FIX IN IDE.
-    //[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
-    public class SampleCodeFixProvider : CodeFixProvider
+	// PLEASE UNCOMMENT THIS LINE TO REGISTER CODE FIX IN IDE.
+	//[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	public class SampleCodeFixProvider : CodeFixProvider
     {
         // A CodeFixProvider is a complement of an analyzer providing a fix for the
         // potential code issue. To link to the correct analyzer its diagnostic ID must
@@ -41,7 +40,7 @@ namespace RefactoringEssentials.Samples.CSharp
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 
             // This is an instance of Diagnostic instance created by corresponding analyzer
             var diagnostic = diagnostics.First();

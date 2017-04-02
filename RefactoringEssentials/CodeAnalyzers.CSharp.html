@@ -58,7 +58,6 @@
       <li>Function does not reach its end or a 'return' statement by any of possible execution paths (FunctionNeverReturnsAnalyzer)</li>
       <li>If an extension method is called as static method convert it to method syntax (InvokeAsExtensionMethodAnalyzer)</li>
       <li>Local variable has the same name as a member and hides it (LocalVariableHidesMemberAnalyzer)</li>
-      <li>Local variable is never used (LocalVariableNotUsedAnalyzer)</li>
       <li>Lowercase 'l' is often confused with '1' (LongLiteralEndingLowerLAnalyzer)</li>
       <li>Member hides static member from outer class (MemberHidesStaticFromOuterClassAnalyzer)</li>
       <li>Method with optional parameter is hidden by overload (MethodOverloadWithOptionalParameterAnalyzer)</li>
@@ -135,6 +134,7 @@
       <li>[ThreadStatic] doesn't work with instance fields (ThreadStaticAtInstanceFieldAnalyzer)</li>
       <li>Parameter is never used (UnusedParameterAnalyzer)</li>
       <li>Type parameter is never used (UnusedTypeParameterAnalyzer)</li>
+      <li>Replace usages of 'Count()' with call to 'Any()' (UseMethodAnyAnalyzer)</li>
       <li>Warns about property or indexer setters and event adders or removers that do not use the value parameter (ValueParameterNotUsedAnalyzer)</li>
       <li>Validate Xml docs (XmlDocAnalyzer)</li>
     </ul>

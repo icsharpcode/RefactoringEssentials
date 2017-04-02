@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertTernaryExpressionToIfStatementCodeRefactoringProviderTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestConditionalOperator()
         {
             Test<ConvertTernaryExpressionToIfStatementCodeRefactoringProvider>(@"
@@ -33,7 +32,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullCoalescingOperator()
         {
             Test<ConvertTernaryExpressionToIfStatementCodeRefactoringProvider>(@"
@@ -60,7 +59,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEmbeddedStatement()
         {
             Test<ConvertTernaryExpressionToIfStatementCodeRefactoringProvider>(@"
@@ -88,7 +87,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestAssignment()
         {
             Test<ConvertTernaryExpressionToIfStatementCodeRefactoringProvider>(@"
@@ -133,7 +132,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReturnConditionalOperator()
         {
             Test<ConvertTernaryExpressionToIfStatementCodeRefactoringProvider>(@"
@@ -155,7 +154,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReturnConditionalOperatorWithComment()
         {
             Test<ConvertTernaryExpressionToIfStatementCodeRefactoringProvider>(@"
@@ -179,7 +178,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReturnNullCoalescingOperator()
         {
             Test<ConvertTernaryExpressionToIfStatementCodeRefactoringProvider>(@"

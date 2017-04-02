@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
+﻿using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.Converter
 {
-    [TestFixture]
     public class ExpressionTests : ConverterTestBase
     {
-        [Test]
+        [Fact]
         public void MultilineString()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -29,7 +23,7 @@ World!""
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ConditionalExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -46,7 +40,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void NullCoalescingExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -63,7 +57,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void MemberAccessAndInvocationExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -86,7 +80,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ElvisOperatorExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -109,7 +103,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact(Skip = "Not implemented!")]
         public void ObjectInitializerExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -139,7 +133,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact(Skip = "Not implemented!")]
         public void ObjectInitializerExpression2()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -159,7 +153,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void ThisMemberAccessExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -180,7 +174,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void BaseMemberAccessExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -208,7 +202,7 @@ Class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void DelegateExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -228,7 +222,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void LambdaBodyExpression()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -256,7 +250,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void Await()
         {
             TestConversionCSharpToVisualBasic(@"
@@ -284,7 +278,7 @@ class TestClass
 End Class");
         }
 
-        [Test]
+        [Fact]
         public void Linq1()
         {
             TestConversionCSharpToVisualBasic(@"static void SimpleQuery()
@@ -308,7 +302,7 @@ End Class");
 End Sub");
         }
 
-        [Test]
+        [Fact(Skip = "Not implemented!")]
         public void Linq2()
         {
             TestConversionCSharpToVisualBasic(@"public static void Linq40() 
@@ -343,7 +337,7 @@ End Sub");
 End Sub");
         }
 
-        [Test]
+        [Fact(Skip = "Not implemented!")]
         public void Linq3()
         {
             TestConversionCSharpToVisualBasic(@"class Product {
@@ -392,7 +386,7 @@ Class Test
 End Class");
         }
 
-        [Test]
+        [Fact(Skip = "Not implemented!")]
         public void Linq4()
         {
             TestConversionCSharpToVisualBasic(@"public void Linq103() 

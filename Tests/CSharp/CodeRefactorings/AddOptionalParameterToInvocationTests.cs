@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class AddOptionalParameterToInvocationTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimple()
         {
             Test<AddOptionalParameterToInvocationCodeRefactoringProvider>(@"
@@ -26,7 +25,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleWithComment()
         {
             Test<AddOptionalParameterToInvocationCodeRefactoringProvider>(@"
@@ -48,7 +47,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultiple1()
         {
             Test<AddOptionalParameterToInvocationCodeRefactoringProvider>(@"
@@ -68,7 +67,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestExtensionMethod()
         {
             Test<AddOptionalParameterToInvocationCodeRefactoringProvider>(@"
@@ -94,7 +93,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultiple2()
         {
             Test<AddOptionalParameterToInvocationCodeRefactoringProvider>(@"
@@ -114,7 +113,7 @@ class TestClass
 }", 1);
         }
 
-        [Test]
+        [Fact]
         public void TestMultiple3()
         {
             Test<AddOptionalParameterToInvocationCodeRefactoringProvider>(@"
@@ -136,7 +135,7 @@ class TestClass
 }", 2);
         }
 
-        [Test]
+        [Fact]
         public void TestNoMoreParameters()
         {
             TestWrongContext<AddOptionalParameterToInvocationCodeRefactoringProvider>(@"
@@ -150,7 +149,7 @@ class TestClass
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestParams()
         {
             TestWrongContext<AddOptionalParameterToInvocationCodeRefactoringProvider>(@"

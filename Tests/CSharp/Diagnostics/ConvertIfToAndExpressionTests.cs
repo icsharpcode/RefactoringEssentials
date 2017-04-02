@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConvertIfToAndExpressionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestVariableDeclarationCase()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -26,7 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestVariableDeclarationCaseAndComment()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -48,7 +47,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestVariableDeclarationCaseWithBlock()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -70,7 +69,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexVariableDeclarationCase()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -90,7 +89,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestConversionBug()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -109,7 +108,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCommonCase()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -132,7 +131,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCommonCaseWithComment()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -157,7 +156,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCommonCaseWithBlock()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -182,7 +181,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCommonCaseWithElse()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -203,7 +202,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullCheckBug()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -218,7 +217,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexAssignmentCase()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Foo
@@ -234,7 +233,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexMemberAssignment()
         {
             Analyze<ConvertIfToAndExpressionAnalyzer>(@"class Item

@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantArgumentNameTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void MethodInvocation1()
         {
             Analyze<RedundantArgumentNameAnalyzer>(@"
@@ -30,7 +29,7 @@ class TestClass
 ");
         }
 
-        [Test]
+        [Fact]
         public void MethodInvocation2()
         {
             Analyze<RedundantArgumentNameAnalyzer>(@"
@@ -54,7 +53,7 @@ class TestClass
 ", 0);
         }
 
-        [Test]
+        [Fact]
         public void MethodInvocation3()
         {
             Analyze<RedundantArgumentNameAnalyzer>(@"
@@ -79,7 +78,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void MethodInvocation4()
         {
             Analyze<RedundantArgumentNameAnalyzer>(@"
@@ -109,7 +108,7 @@ class TestClass
 ");
         }
 
-        [Test]
+        [Fact]
         public void IndexerExpression()
         {
             Analyze<RedundantArgumentNameAnalyzer>(@"
@@ -149,7 +148,7 @@ internal class Test
 ", 0);
         }
 
-        [Test]
+        [Fact]
         public void TestAttributes()
         {
             Analyze<RedundantArgumentNameAnalyzer>(@"using System;
@@ -177,7 +176,7 @@ class TestClass
 ", 1);
         }
 
-        [Test]
+        [Fact]
         public void TestObjectCreation()
         {
             Analyze<RedundantArgumentNameAnalyzer>(@"
@@ -208,7 +207,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void Invalid()
         {
             Analyze<RedundantArgumentNameAnalyzer>(@"

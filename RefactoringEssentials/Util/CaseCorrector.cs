@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Threading;
@@ -7,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 namespace RefactoringEssentials
 {
-    [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
+	[RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
     class CaseCorrector
     {
         public static SyntaxAnnotation Annotation => (SyntaxAnnotation)RoslynReflection.CaseCorrector.AnnotationField.GetValue(null);

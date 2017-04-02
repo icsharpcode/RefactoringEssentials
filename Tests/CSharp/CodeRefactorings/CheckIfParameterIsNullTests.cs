@@ -1,75 +1,61 @@
 using System;
-using NUnit.Framework;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class CheckIfParameterIsNullTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
-            string result = RunContextAction(
-                                         new CheckIfParameterIsNullCodeRefactoringProvider(),
-                                         "using System;" + Environment.NewLine +
-                                         "class TestClass" + Environment.NewLine +
-                                         "{" + Environment.NewLine +
-                                         "    void Test (string $param)" + Environment.NewLine +
-                                         "    {" + Environment.NewLine +
-                                         "        Console.WriteLine (param);" + Environment.NewLine +
-                                         "    }" + Environment.NewLine +
-                                         "}"
-                                     );
-
-            Assert.AreEqual(
-                "using System;" + Environment.NewLine +
-                "class TestClass" + Environment.NewLine +
-                "{" + Environment.NewLine +
-                "    void Test (string param)" + Environment.NewLine +
-                "    {" + Environment.NewLine +
-                "        if (param == null)" + Environment.NewLine +
-                "            throw new ArgumentNullException(nameof(param));" + Environment.NewLine +
-                "        Console.WriteLine (param);" + Environment.NewLine +
-                "    }" + Environment.NewLine +
-                "}", result);
+            Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"using System;
+class TestClass
+{
+    void Test (string $param)
+    {
+        Console.WriteLine (param);
+    }
+}", @"using System;
+class TestClass
+{
+    void Test (string param)
+    {
+        if (param == null)
+            throw new ArgumentNullException(nameof(param));
+        Console.WriteLine (param);
+    }
+}");
         }
 
-        [Ignore("broken")]
-        [Test]
+        [Fact]
         public void TestWithComment()
         {
-            string result = RunContextAction(
-                                         new CheckIfParameterIsNullCodeRefactoringProvider(),
-                                         "using System;" + Environment.NewLine +
-                                         "class TestClass" + Environment.NewLine +
-                                         "{" + Environment.NewLine +
-                                         "    void Test (string $param)" + Environment.NewLine +
-                                         "    {" + Environment.NewLine +
-                                         "        // Some comment" + Environment.NewLine +
-                                         "        Console.WriteLine (param);" + Environment.NewLine +
-                                         "    }" + Environment.NewLine +
-                                         "}"
-                                     );
-
-            Assert.AreEqual(
-                "using System;" + Environment.NewLine +
-                "class TestClass" + Environment.NewLine +
-                "{" + Environment.NewLine +
-                "    void Test (string param)" + Environment.NewLine +
-                "    {" + Environment.NewLine +
-                "        if (param == null)" + Environment.NewLine +
-                "            throw new ArgumentNullException(\"param\");" + Environment.NewLine +
-                "        // Some comment" + Environment.NewLine +
-                "        Console.WriteLine (param);" + Environment.NewLine +
-                "    }" + Environment.NewLine +
-                "}", result);
+            Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"using System;
+class TestClass
+{
+    void Test (string $param)
+    {
+        // Some comment
+        Console.WriteLine(param);
+    }
+}", @"using System;
+class TestClass
+{
+    void Test (string param)
+    {
+        if (param == null)
+            throw new ArgumentNullException(nameof(param));
+        // Some comment
+        Console.WriteLine(param);
+    }
+}");
         }
 
-        [Test]
+        [Fact]
         public void TestLambda()
         {
             Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -91,7 +77,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAnonymousMethod()
         {
             Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -113,7 +99,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullCheckAlreadyThere_StringName()
         {
             TestWrongContext<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -128,7 +114,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNullCheckAlreadyThere_NameOf()
         {
             TestWrongContext<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -143,7 +129,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestPopupOnlyOnName()
         {
             TestWrongContext<CheckIfParameterIsNullCodeRefactoringProvider>(@"class Foo
@@ -155,7 +141,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         }
 
 
-        [Test]
+        [Fact]
         public void Test_OldCSharp()
         {
             var parseOptions = new CSharpParseOptions(

@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using System.Threading;
 using System.Linq;
 using System.Collections.Generic;
@@ -9,11 +8,11 @@ using Microsoft.CodeAnalysis.Text;
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.VisualBasic;
-using RefactoringEssentials.Tests.VB.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.VB.CodeRefactorings
 {
-    public abstract class VBCodeRefactoringTestBase : CodeRefactoringTestBase
+	public abstract class VBCodeRefactoringTestBase : CodeRefactoringTestBase
     {
         public void Test<T>(string input, string output, int action = 0, bool expectErrors = false, VisualBasicParseOptions parseOptions = null)
             where T : CodeRefactoringProvider, new()
@@ -33,7 +32,7 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
                 Console.WriteLine("-----------Got:");
                 Console.WriteLine(result);
             }
-            Assert.AreEqual(output, result);
+            Assert.Equal(output, result);
         }
 
         internal static List<Microsoft.CodeAnalysis.CodeActions.CodeAction> GetActions<T>(string input) where T : CodeRefactoringProvider, new()
@@ -101,12 +100,12 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
             doc = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
             var actions = new List<CodeAction>();
             var context = new CodeRefactoringContext(doc, selectedSpan, actions.Add, default(CancellationToken));
-            action.ComputeRefactoringsAsync(context).Wait();
+            action.ComputeRefactoringsAsync(context).GetAwaiter().GetResult();
             if (markedSpan.Start > 0)
             {
                 foreach (var nra in actions.OfType<NRefactoryCodeAction>())
                 {
-                    Assert.AreEqual(markedSpan, nra.TextSpan, "Activation span does not match.");
+                    Assert.True(markedSpan == nra.TextSpan, "Activation span does not match.");
                 }
             }
             return actions;
@@ -120,11 +119,11 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
             if (actions.Count < actionIndex)
                 Console.WriteLine("invalid input is:" + input);
             var a = actions[actionIndex];
-            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).Result)
+            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).GetAwaiter().GetResult())
             {
                 op.Apply(workspace, default(CancellationToken));
             }
-            return workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            return workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().GetAwaiter().GetResult().ToString();
         }
 
 
@@ -133,7 +132,7 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
             Document doc;
             DiagnosticTestBase.TestWorkspace workspace;
             var actions = GetActions(action, input, out workspace, out doc);
-            Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
+            Assert.True(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
         }
 
 
@@ -154,7 +153,7 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
         //			var ctx = TestRefactoringContext.Create(input);
         //			ctx.FormattingOptions = formattingOptions;
         //			var actions = provider.GetActions(ctx).ToList();
-        //			Assert.AreEqual(
+        //			Assert.Equal(
         //				expected,
         //				actions.Select(a => a.Description).ToArray());
         //		}

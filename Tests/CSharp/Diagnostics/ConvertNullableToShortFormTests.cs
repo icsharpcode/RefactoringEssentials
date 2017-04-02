@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class ConvertNullableToShortFormTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Analyze<ConvertNullableToShortFormAnalyzer>(@"using System;
@@ -28,7 +27,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleCaseWithXmlDoc()
         {
             Analyze<ConvertNullableToShortFormAnalyzer>(@"using System;
@@ -56,7 +55,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestFullyQualifiedNameCase()
         {
             Analyze<ConvertNullableToShortFormAnalyzer>(@"class Foo
@@ -75,7 +74,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestAlreadyShort()
         {
             Analyze<ConvertNullableToShortFormAnalyzer>(@"class Foo
@@ -87,7 +86,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalid()
         {
             Analyze<ConvertNullableToShortFormAnalyzer>(@"using System;
@@ -103,7 +102,7 @@ namespace NN {
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidTypeOf()
         {
             Analyze<ConvertNullableToShortFormAnalyzer>(@"using System;
@@ -121,7 +120,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<ConvertNullableToShortFormAnalyzer>(@"class Foo

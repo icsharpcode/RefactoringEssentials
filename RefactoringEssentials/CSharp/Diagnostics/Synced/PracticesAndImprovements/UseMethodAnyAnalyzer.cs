@@ -1,11 +1,13 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    [NotPortedYet]
     public class UseMethodAnyAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
@@ -24,137 +26,158 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         {
             context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-            //context.RegisterSyntaxNodeAction(
-            //	(nodeContext) => {
-            //		Diagnostic diagnostic;
-            //		if (TryGetDiagnostic (nodeContext, out diagnostic)) {
-            //			nodeContext.ReportDiagnostic(diagnostic);
-            //		}
-            //	}, 
-            //	new SyntaxKind[] { SyntaxKind.None }
-            //);
+            context.RegisterSyntaxNodeAction(
+                (nodeContext) => {
+                    Diagnostic diagnostic;
+                    if (TryGetDiagnostic(nodeContext, out diagnostic)) {
+                        nodeContext.ReportDiagnostic(diagnostic);
+                    }
+                },
+                SyntaxKind.EqualsExpression,
+                SyntaxKind.NotEqualsExpression,
+                SyntaxKind.GreaterThanExpression,
+                SyntaxKind.GreaterThanOrEqualExpression,
+                SyntaxKind.LessThanExpression,
+                SyntaxKind.LessThanOrEqualExpression
+            );
         }
 
         static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
         {
             diagnostic = default(Diagnostic);
-            //var node = nodeContext.Node as ;
-            //diagnostic = Diagnostic.Create (descriptor, node.GetLocation ());
-            //return true;
-            return false;
+            var node = nodeContext.Node as BinaryExpressionSyntax;
+            ExpressionSyntax target;
+            ArgumentListSyntax arguments;
+            bool isNot;
+            if (!MatchCount0Or1(node, nodeContext.SemanticModel, out target, out arguments, out isNot))
+                return false;
+
+            diagnostic = Diagnostic.Create(
+                descriptor,
+                node.GetLocation(),
+                "Any()"
+            );
+            return true;
         }
 
-        //		class GatherVisitor : GatherVisitorBase<UseMethodAnyAnalyzer>
-        //		{
-        //			public GatherVisitor(SemanticModel semanticModel, Action<Diagnostic> addDiagnostic, CancellationToken cancellationToken)
-        //				: base (semanticModel, addDiagnostic, cancellationToken)
-        //			{
-        //			}
-        ////
-        ////			void AddDiagnosticAnalyzer2(BinaryOperatorExpression binaryOperatorExpression, Expression expr)
-        ////			{
-        ////			}
-        ////
-        ////			readonly AstNode anyPattern =
-        ////				new Choice {
-        ////					PatternHelper.CommutativeOperatorWithOptionalParentheses(
-        ////						new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count"))),
-        ////						BinaryOperatorType.InEquality,
-        ////						new PrimitiveExpression(0)
-        ////					),
-        ////					new BinaryOperatorExpression (
-        ////						PatternHelper.OptionalParentheses(new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count")))),
-        ////						BinaryOperatorType.GreaterThan,
-        ////						PatternHelper.OptionalParentheses(new PrimitiveExpression(0))
-        ////					),
-        ////					new BinaryOperatorExpression (
-        ////						PatternHelper.OptionalParentheses(new PrimitiveExpression(0)),
-        ////						BinaryOperatorType.LessThan,
-        ////						PatternHelper.OptionalParentheses(new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count"))))
-        ////					),
-        ////					new BinaryOperatorExpression (
-        ////						PatternHelper.OptionalParentheses(new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count")))),
-        ////						BinaryOperatorType.GreaterThanOrEqual,
-        ////						PatternHelper.OptionalParentheses(new PrimitiveExpression(1))
-        ////					),
-        ////					new BinaryOperatorExpression (
-        ////						PatternHelper.OptionalParentheses(new PrimitiveExpression(1)),
-        ////						BinaryOperatorType.LessThanOrEqual,
-        ////						PatternHelper.OptionalParentheses(new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count"))))
-        ////					)
-        ////			};
-        ////
-        ////			readonly AstNode notAnyPattern =
-        ////				new Choice {
-        ////					PatternHelper.CommutativeOperatorWithOptionalParentheses(
-        ////						new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count"))),
-        ////						BinaryOperatorType.Equality,
-        ////						new PrimitiveExpression(0)
-        ////					),
-        ////					new BinaryOperatorExpression (
-        ////						PatternHelper.OptionalParentheses(new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count")))),
-        ////						BinaryOperatorType.LessThan,
-        ////						PatternHelper.OptionalParentheses(new PrimitiveExpression(1))
-        ////					),
-        ////					new BinaryOperatorExpression (
-        ////						PatternHelper.OptionalParentheses(new PrimitiveExpression(1)),
-        ////						BinaryOperatorType.GreaterThan,
-        ////						PatternHelper.OptionalParentheses(new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count"))))
-        ////					),
-        ////					new BinaryOperatorExpression (
-        ////						PatternHelper.OptionalParentheses(new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count")))),
-        ////						BinaryOperatorType.LessThanOrEqual,
-        ////						PatternHelper.OptionalParentheses(new PrimitiveExpression(0))
-        ////					),
-        ////					new BinaryOperatorExpression (
-        ////						PatternHelper.OptionalParentheses(new PrimitiveExpression(0)),
-        ////						BinaryOperatorType.GreaterThanOrEqual,
-        ////						PatternHelper.OptionalParentheses(new NamedNode ("invocation", new InvocationExpression(new MemberReferenceExpression(new AnyNode("expr"), "Count"))))
-        ////					)
-        ////				};
-        ////
-        ////			void AddMatch(BinaryOperatorExpression binaryOperatorExpression, Match match, bool negateAny)
-        ////			{
-        ////				AddDiagnosticAnalyzer(new CodeIssue(
-        ////					binaryOperatorExpression,
-        ////					ctx.TranslateString(""), 
-        ////					script =>  {
-        ////						Expression expr = new InvocationExpression(new MemberReferenceExpression(match.Get<Expression>("expr").First().Clone(), "Any"));
-        ////						if (negateAny)
-        ////							expr = new UnaryOperatorExpression(UnaryOperatorType.Not, expr);
-        ////						script.Replace(binaryOperatorExpression, expr);
-        ////					}
-        ////				));
-        ////			}
-        ////
-        ////			bool CheckMethod(Match match)
-        ////			{
-        ////				var invocation = match.Get<Expression>("invocation").First();
-        ////				var rr = ctx.Resolve(invocation) as CSharpInvocationResolveResult;
-        ////				if (rr == null || rr.IsError)
-        ////					return false;
-        ////				var method = rr.Member as IMethod;
-        ////				return 
-        ////					method != null &&
-        ////					method.IsExtensionMethod &&
-        ////					method.DeclaringTypeDefinition.Namespace == "System.Linq" && 
-        ////					method.DeclaringTypeDefinition.Name == "Enumerable";
-        ////			}
-        ////
-        ////			public override void VisitBinaryOperatorExpression(BinaryOperatorExpression binaryOperatorExpression)
-        ////			{
-        ////				base.VisitBinaryOperatorExpression(binaryOperatorExpression);
-        ////				var match = anyPattern.Match(binaryOperatorExpression);
-        ////				if (match.Success && CheckMethod (match)) {
-        ////					AddMatch(binaryOperatorExpression, match, false);
-        ////					return;
-        ////				}
-        ////				match = notAnyPattern.Match(binaryOperatorExpression);
-        ////				if (match.Success && CheckMethod (match)) {
-        ////					AddMatch(binaryOperatorExpression, match, true);
-        ////					return;
-        ////				}
-        ////			}
-        //		}
+        static bool MatchCount0Or1(BinaryExpressionSyntax node, SemanticModel semanticModel, out ExpressionSyntax target, out ArgumentListSyntax arguments, out bool isNot)
+        {
+            var left = node.Left.SkipParens();
+            var right = node.Right.SkipParens();
+            target = null;
+            arguments = null;
+            isNot = false;
+
+            InvocationExpressionSyntax invocation = left as InvocationExpressionSyntax ?? right as InvocationExpressionSyntax;
+            SyntaxToken? constant = (right as LiteralExpressionSyntax)?.Token ?? (left as LiteralExpressionSyntax)?.Token;
+
+            if (invocation == null || !(constant?.Value is int))
+                return false;
+            if (semanticModel != null && !CheckInvocation(semanticModel, invocation))
+                return false;
+            int constantValue = (int)constant?.Value;
+            bool callLeft = left == invocation;
+
+            switch (node.Kind()) {
+                // invocation == 0
+                // 0 == invocation
+                case SyntaxKind.EqualsExpression:
+                    isNot = true;
+                    if (constantValue != 0)
+                        return false;
+                    break;
+                // invocation != 0
+                // 0 != invocation
+                case SyntaxKind.NotEqualsExpression:
+                    if (constantValue != 0)
+                        return false;
+                    break;
+                // invocation > 0
+                // 1 > invocation
+                case SyntaxKind.GreaterThanExpression:
+                    if (callLeft) {
+                        if (constantValue != 0)
+                            return false;
+                    } else {
+                        isNot = true;
+                        if (constantValue != 1)
+                            return false;
+                    }
+                    break;
+                // invocation >= 1
+                // 0 >= invocation
+                case SyntaxKind.GreaterThanOrEqualExpression:
+                    if (callLeft) {
+                        if (constantValue != 1)
+                            return false;
+                    } else {
+                        isNot = true;
+                        if (constantValue != 0)
+                            return false;
+                    }
+                    break;
+                // 0 < invocation
+                // invocation < 1
+                case SyntaxKind.LessThanExpression:
+                    if (callLeft) {
+                        isNot = true;
+                        if (constantValue != 1)
+                            return false;
+                    } else {
+                        if (constantValue != 0)
+                            return false;
+                    }
+                    break;
+                // 1 <= invocation
+                // invocation <= 0
+                case SyntaxKind.LessThanOrEqualExpression:
+                    if (callLeft) {
+                        isNot = true;
+                        if (constantValue != 0)
+                            return false;
+                    } else {
+                        if (constantValue != 1)
+                            return false;
+                    }
+                    break;
+                default:
+                    return false;
+            }
+
+            target = (invocation.Expression as MemberAccessExpressionSyntax)?.Expression;
+            if (target == null)
+                return false;
+
+            arguments = invocation.ArgumentList;
+            return true;
+        }
+
+        private static bool CheckInvocation(SemanticModel semanticModel, InvocationExpressionSyntax invocation)
+        {
+            var symbol = semanticModel.GetSymbolInfo(invocation).Symbol;
+            return symbol != null
+                && symbol.Name == "Count"
+                && symbol.IsExtensionMethod()
+                && symbol.ContainingType.GetFullName() == "System.Linq.Enumerable";
+        }
+
+        internal static ExpressionSyntax MakeAnyCall(BinaryExpressionSyntax node)
+        {
+            ExpressionSyntax target;
+            ArgumentListSyntax arguments;
+            bool isNot;
+            if (MatchCount0Or1(node, null, out target, out arguments, out isNot)) {
+                var anyIdentifier = ((SimpleNameSyntax)SyntaxFactory.ParseName("Any"));
+                var invocation = SyntaxFactory.InvocationExpression(
+                    SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, target, anyIdentifier),
+                    SyntaxFactory.ArgumentList(arguments.Arguments)
+                );
+                if (isNot)
+                    return SyntaxFactory.PrefixUnaryExpression(SyntaxKind.LogicalNotExpression, invocation);
+                return invocation;
+            }
+
+            return null;
+        }
     }
 }

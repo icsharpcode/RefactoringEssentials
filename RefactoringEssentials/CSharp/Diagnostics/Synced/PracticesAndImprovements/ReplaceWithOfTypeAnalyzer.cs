@@ -177,7 +177,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         internal static InvocationExpressionSyntax MakeOfTypeCall(InvocationExpressionSyntax anyInvoke)
         {
-            var member = ((MemberAccessExpressionSyntax)anyInvoke.Expression).Name;
             ExpressionSyntax target;
             TypeSyntax type;
             if (MatchWhereSelect(anyInvoke, out target, out type))

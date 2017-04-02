@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class UseArrayCreationExpressionTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestTypeOfIsAssignableFrom()
         {
             Test<UseArrayCreationExpressionAnalyzer>(@"
@@ -29,7 +27,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void MultiDim()
         {
             Test<UseArrayCreationExpressionAnalyzer>(@"
@@ -51,7 +49,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<UseArrayCreationExpressionAnalyzer>(@"

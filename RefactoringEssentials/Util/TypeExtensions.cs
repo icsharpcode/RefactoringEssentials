@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Text;
-using System.Reflection;
 
 namespace RefactoringEssentials
 {
 #if NR6
     public
 #endif
-    static class TypeExtensions
+	static class TypeExtensions
     {
         [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
         public static TypeSyntax GenerateTypeSyntax(this ITypeSymbol typeSymbol, SyntaxAnnotation simplifierAnnotation = null)

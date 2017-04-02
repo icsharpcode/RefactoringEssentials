@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class AddArgumentNameTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void MethodInvocation1()
         {
             Test<AddNameToArgumentCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodInvocation1WithComment()
         {
             Test<AddNameToArgumentCodeRefactoringProvider>(@"
@@ -52,7 +51,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodInvocation2()
         {
             Test<AddNameToArgumentCodeRefactoringProvider>(@"
@@ -74,7 +73,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AttributeUsage()
         {
             Test<AddNameToArgumentCodeRefactoringProvider>(@"
@@ -92,7 +91,7 @@ public class AnyClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AttributeUsageWithComment()
         {
             Test<AddNameToArgumentCodeRefactoringProvider>(@"
@@ -112,7 +111,7 @@ public class AnyClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void AttributeNamedArgument()
         {
             Test<AddNameToArgumentCodeRefactoringProvider>(@"
@@ -156,7 +155,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void AttributeWithParams()
         {
             TestWrongContext<AddNameToArgumentCodeRefactoringProvider>(@"using System;
@@ -178,7 +177,7 @@ public class TestClass
 ");
         }
 
-        [Test]
+        [Fact]
         public void AttributeNamedArgumentInvalidCase()
         {
             TestWrongContext<AddNameToArgumentCodeRefactoringProvider>(@"
@@ -203,7 +202,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void IndexerInvocation()
         {
             Test<AddNameToArgumentCodeRefactoringProvider>(@"
@@ -241,7 +240,7 @@ internal class Test
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestParamsInvalidContext()
         {
 
@@ -256,7 +255,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void Expression()
         {
             Test<AddNameToArgumentCodeRefactoringProvider>(@"

@@ -1,14 +1,12 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
+	[ExportCodeFixProvider(LanguageNames.CSharp), System.Composition.Shared]
     public class RedundantExplicitArraySizeCodeFixProvider : CodeFixProvider
     {
         public override ImmutableArray<string> FixableDiagnosticIds
@@ -30,7 +28,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var cancellationToken = context.CancellationToken;
             var span = context.Span;
             var diagnostics = context.Diagnostics;
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var diagnostic = diagnostics.First();
             var node = root.FindNode(context.Span);
             if (node == null)

@@ -1,11 +1,10 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 namespace RefactoringEssentials
 {
-    public interface INameProposalStrategy
+	public interface INameProposalStrategy
     {
         string GetNameProposal(string baseName, SyntaxKind syntaxKindHint, Accessibility accessibility, bool isStatic, Document document, int position);
     }

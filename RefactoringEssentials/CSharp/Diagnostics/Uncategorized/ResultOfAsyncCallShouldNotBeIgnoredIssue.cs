@@ -88,7 +88,7 @@ namespace ICSharpCode.NRefactory6.CSharp.Diagnostics
 
         public async Task<IEnumerable<CodeAction>> GetFixesAsync(Document document, TextSpan span, IEnumerable<Diagnostic> diagnostics, CancellationToken cancellationToken)
         {
-            var root = await document.GetSyntaxRootAsync(cancellationToken);
+            var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
             var result = new List<CodeAction>();
             foreach (var diagonstic in diagnostics)
             {

@@ -1,14 +1,12 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
 
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class PolymorphicFieldLikeEventInvocationTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestSimpleCase()
         {
             TestIssue<PolymorphicFieldLikeEventInvocationAnalyzer>(@"
@@ -31,7 +29,7 @@ public class Foo : Bar
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestCustomEvent()
         {
             // Should be marked as error
@@ -58,7 +56,7 @@ public class Foo : Bar
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<PolymorphicFieldLikeEventInvocationAnalyzer>(@"

@@ -1,13 +1,12 @@
 using System;
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplacePropertyWithBackingFieldWithAutoPropertyTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleStore()
         {
             Test<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"
@@ -28,7 +27,7 @@ class TestClass
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestSimpleStoreWithXmlDoc()
         {
             Test<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"
@@ -60,7 +59,7 @@ class TestClass
         /// <summary>
         /// Bug 3292 -Error in analysis service
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug3292()
         {
             TestWrongContext<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(
@@ -77,7 +76,7 @@ class TestClass
             );
         }
 
-        [Test()]
+        [Fact]
         public void TestBug3292Case2()
         {
             TestWrongContext<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(
@@ -95,7 +94,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestWrongLocation()
         {
             TestWrongContext<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"class TestClass
@@ -141,7 +140,7 @@ class TestClass
         /// <summary>
         /// Bug 16108 - Convert to autoproperty issues
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug16108Case1()
         {
             TestWrongContext<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"
@@ -160,7 +159,7 @@ class MyClass
         /// <summary>
         /// Bug 16108 - Convert to autoproperty issues
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug16108Case2()
         {
             TestWrongContext<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"
@@ -179,7 +178,7 @@ class MyClass
         /// <summary>
         /// Bug 16447 - Convert to Auto Property removes multiple variable if declared inline
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug16447()
         {
             Test<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"
@@ -201,7 +200,7 @@ public class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestUnimplementedComputedProperty()
         {
             Test<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"
@@ -228,7 +227,7 @@ class TestClass
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestPreserveVisibility()
         {
             Test<ReplacePropertyWithBackingFieldWithAutoPropertyCodeRefactoringProvider>(@"

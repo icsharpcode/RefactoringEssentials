@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ConvertMethodGroupToLambdaTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestVoidMethod()
         {
             Test<ConvertMethodGroupToLambdaCodeRefactoringProvider>(@"
@@ -30,7 +29,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestVoidMethodWithComment1()
         {
             Test<ConvertMethodGroupToLambdaCodeRefactoringProvider>(@"
@@ -56,7 +55,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestVoidMethodWithComment2()
         {
             Test<ConvertMethodGroupToLambdaCodeRefactoringProvider>(@"
@@ -80,7 +79,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestParameter()
         {
             Test<ConvertMethodGroupToLambdaCodeRefactoringProvider>(@"
@@ -104,7 +103,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestFunction()
         {
             Test<ConvertMethodGroupToLambdaCodeRefactoringProvider>(@"
@@ -128,7 +127,7 @@ public class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestOverloads()
         {
             Test<ConvertMethodGroupToLambdaCodeRefactoringProvider>(@"

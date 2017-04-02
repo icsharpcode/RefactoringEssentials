@@ -1,5 +1,4 @@
 using System;
-using NUnit.Framework;
 using System.Threading;
 using System.Linq;
 using System.Collections.Generic;
@@ -12,10 +11,12 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Simplification;
+using Xunit;
+using System.Text;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    public abstract class CSharpCodeRefactoringTestBase : CodeRefactoringTestBase
+	public abstract class CSharpCodeRefactoringTestBase : CodeRefactoringTestBase
     {
         public void Test<T>(string input, string output, int action = 0, bool expectErrors = false, CSharpParseOptions parseOptions = null)
             where T : CodeRefactoringProvider, new()
@@ -30,17 +31,18 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             bool passed = result == output;
             if (!passed)
             {
-                Console.WriteLine("-----------Expected:");
-                Console.WriteLine(output);
-                Console.WriteLine("-----------Got:");
-                Console.WriteLine(result);
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("-----------Expected:");
+                sb.AppendLine(output);
+                sb.AppendLine("-----------Got:");
+                sb.AppendLine(result);
+                Assert.True(passed, sb.ToString());
             }
-            Assert.AreEqual(output, result);
         }
 
-        internal static List<Microsoft.CodeAnalysis.CodeActions.CodeAction> GetActions<T>(string input) where T : CodeRefactoringProvider, new()
+        internal static List<CodeAction> GetActions<T>(string input) where T : CodeRefactoringProvider, new()
         {
-            CSharpDiagnosticTestBase.TestWorkspace workspace;
+            DiagnosticTestBase.TestWorkspace workspace;
             Document doc;
             return GetActions(new T(), input, out workspace, out doc);
         }
@@ -102,12 +104,12 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             doc = workspace.CurrentSolution.GetProject(projectId).GetDocument(documentId);
             var actions = new List<CodeAction>();
             var context = new CodeRefactoringContext(doc, selectedSpan, actions.Add, default(CancellationToken));
-            action.ComputeRefactoringsAsync(context).Wait();
+            action.ComputeRefactoringsAsync(context).GetAwaiter().GetResult();
             if (markedSpan.Start > 0)
             {
                 foreach (var nra in actions.OfType<NRefactoryCodeAction>())
                 {
-                    Assert.AreEqual(markedSpan, nra.TextSpan, "Activation span does not match.");
+                    Assert.True(markedSpan == nra.TextSpan, "Activation span does not match.");
                 }
             }
             return actions;
@@ -121,11 +123,11 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             if (actions.Count < actionIndex)
                 Console.WriteLine("invalid input is:" + input);
             var a = actions[actionIndex];
-            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).Result)
+            foreach (var op in a.GetOperationsAsync(default(CancellationToken)).GetAwaiter().GetResult())
             {
                 op.Apply(workspace, default(CancellationToken));
             }
-            var result = workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().Result.ToString();
+            var result = workspace.CurrentSolution.GetDocument(doc.Id).GetTextAsync().GetAwaiter().GetResult().ToString();
             if (Environment.NewLine != "\r\n")
                 result = result.Replace("\r\n", Environment.NewLine);
             return result;
@@ -135,32 +137,14 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         protected void TestWrongContext(CodeRefactoringProvider action, string input)
         {
             Document doc;
-            RefactoringEssentials.Tests.CSharp.Diagnostics.CSharpDiagnosticTestBase.TestWorkspace workspace;
+            CSharpDiagnosticTestBase.TestWorkspace workspace;
             var actions = GetActions(action, input, out workspace, out doc);
-            Assert.IsTrue(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
+            Assert.True(actions == null || actions.Count == 0, action.GetType() + " shouldn't be valid there.");
         }
-
 
         protected void TestWrongContext<T>(string input) where T : CodeRefactoringProvider, new()
         {
             TestWrongContext(new T(), input);
         }
-
-        //		protected List<CodeAction> GetActions<T> (string input) where T : CodeActionProvider, new ()
-        //		{
-        //			var ctx = TestRefactoringContext.Create(input);
-        //			ctx.FormattingOptions = formattingOptions;
-        //			return new T().GetActions(ctx).ToList();
-        //		}
-        //
-        //		protected void TestActionDescriptions (CodeActionProvider provider, string input, params string[] expected)
-        //		{
-        //			var ctx = TestRefactoringContext.Create(input);
-        //			ctx.FormattingOptions = formattingOptions;
-        //			var actions = provider.GetActions(ctx).ToList();
-        //			Assert.AreEqual(
-        //				expected,
-        //				actions.Select(a => a.Description).ToArray());
-        //		}
     }
 }

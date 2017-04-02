@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RefactoringEssentials.Converter
 {
-    public class ConversionResult
+	public class ConversionResult
     {
         public bool Success { get; private set; }
         public string ConvertedCode { get; private set; }

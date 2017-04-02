@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RoslynUsageTests : CSharpDiagnosticTestBase
     {
         const string attributeFakes = @"
@@ -56,7 +55,7 @@ namespace Microsoft.CodeAnalysis.CodeRefactorings
 }
 ";
 
-        [Test]
+        [Fact]
         public void ForbiddenMethodInAnalyzer()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -79,7 +78,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForbiddenClassInAnalyzer()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -102,7 +101,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForbiddenMethodInCodeFix()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -125,7 +124,7 @@ public class TestCodeFix : CodeFixProvider
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForbiddenMethodInRefactoring()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -148,7 +147,7 @@ public class TestRefactoring : CodeRefactoringProvider
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForbiddenCallToCodeFixMethodInAnalyzer()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -170,7 +169,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
 }");
         }
 
-        [Test]
+        [Fact]
         public void AllowedCallToAnalyzerMethodInCodeFix()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -192,7 +191,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
 }");
         }
 
-        [Test]
+        [Fact]
         public void AllowedMethodInAnalyzer1()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -215,7 +214,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
 }");
         }
 
-        [Test]
+        [Fact]
         public void AllowedMethodInAnalyzer2()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -238,7 +237,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
 }");
         }
 
-        [Test]
+        [Fact]
         public void AllowedMethodInAnalyzer3()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"
@@ -260,7 +259,7 @@ public class TestAnalyzer : DiagnosticAnalyzer
 }");
         }
 
-        [Test]
+        [Fact]
         public void MethodNotInAnalyzer()
         {
             Analyze<RoslynUsageAnalyzer>(attributeFakes + @"

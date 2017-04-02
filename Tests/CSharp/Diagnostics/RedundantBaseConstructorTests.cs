@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantBaseConstructorTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             var input = @"
@@ -36,7 +35,7 @@ class TestClass : BaseClass
             Analyze<RedundantBaseConstructorCallAnalyzer>(input, output);
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             var input = @"

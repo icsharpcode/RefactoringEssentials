@@ -1,9 +1,8 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class CompareOfFloatsByEqualityOperatorTests : CSharpDiagnosticTestBase
     {
         static void TestOperator(string inputOp, string outputOp)
@@ -29,19 +28,19 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestEquality()
         {
             TestOperator("==", "<");
         }
 
-        [Test]
+        [Fact]
         public void TestInequality()
         {
             TestOperator("!=", ">");
         }
 
-        [Test]
+        [Fact]
         public void TestZero()
         {
             Analyze<CompareOfFloatsByEqualityOperatorAnalyzer>(@"
@@ -67,7 +66,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNaN()
         {
             Analyze<CompareOfFloatsByEqualityOperatorAnalyzer>(@"
@@ -94,7 +93,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestPositiveInfinity()
         {
             Analyze<CompareOfFloatsByEqualityOperatorAnalyzer>(@"
@@ -120,7 +119,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestNegativeInfinity()
         {
             Analyze<CompareOfFloatsByEqualityOperatorAnalyzer>(@"
@@ -146,7 +145,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<CompareOfFloatsByEqualityOperatorAnalyzer>(@"

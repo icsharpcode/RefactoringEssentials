@@ -4,14 +4,12 @@ using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CS = Microsoft.CodeAnalysis.CSharp;
 using CSS = Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.VB.Converter
 {
-    public partial class CSharpConverter
+	public partial class CSharpConverter
     {
         class MethodBodyVisitor : CS.CSharpSyntaxVisitor<SyntaxList<StatementSyntax>>
         {

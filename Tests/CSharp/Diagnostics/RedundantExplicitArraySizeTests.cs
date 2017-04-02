@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantExplicitArraySizeTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestSimpleCase()
         {
             Analyze<RedundantExplicitArraySizeAnalyzer>(@"
@@ -28,7 +27,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidCase1()
         {
             Analyze<RedundantExplicitArraySizeAnalyzer>(@"
@@ -42,7 +41,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidCase2()
         {
             Analyze<RedundantExplicitArraySizeAnalyzer>(@"
@@ -56,7 +55,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidCase3()
         {
             Analyze<RedundantExplicitArraySizeAnalyzer>(@"
@@ -70,7 +69,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<RedundantExplicitArraySizeAnalyzer>(@"

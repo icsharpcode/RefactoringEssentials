@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class RedundantToStringCallTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void ConcatenationOperator()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -26,7 +25,7 @@ class Foo
 }", 0);
         }
 
-        [Test]
+        [Fact]
         public void TestValueTypes()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -40,7 +39,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void ConcatenationOperatorWithToStringAsOnlyString()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -53,7 +52,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresCallsToIFormattableToString()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -66,7 +65,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void StringTarget()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -88,7 +87,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void FormatStringTests()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -108,7 +107,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesNonLiteralFormatParameter()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -130,8 +129,7 @@ class Foo
 }");
         }
 
-        [Ignore("Not supported")]
-        [Test]
+        [Fact(Skip="Not supported")]
         public void FormatStringWithNonObjectParameterTests()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -165,8 +163,7 @@ class Foo
 }");
         }
 
-        [Ignore("Not supported")]
-        [Test]
+        [Fact(Skip="Not supported")]
         public void FormatMethodWithObjectParamsArray()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -194,7 +191,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void DetectsBlacklistedCalls()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -218,7 +215,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void ConcatenationOperator2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -231,7 +228,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestReferenceTypes2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -244,7 +241,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void ConcatenationOperatorWithToStringAsOnlyString2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -257,7 +254,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void IgnoresCallsToIFormattableToString2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -270,7 +267,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void FormatStringTests2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -283,7 +280,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void HandlesNonLiteralFormatParameter2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -297,8 +294,7 @@ class Foo
 }");
         }
 
-        [Ignore("Not supported")]
-        [Test]
+        [Fact(Skip="Not supported")]
         public void FormatStringWithNonObjectParameterTests2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -318,8 +314,7 @@ class Foo
 }");
         }
 
-        [Ignore("Not supported")]
-        [Test]
+        [Fact(Skip="Not supported")]
         public void FormatMethodWithObjectParamsArray2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -336,7 +331,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void DetectsBlacklistedCalls2()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -354,7 +349,7 @@ class Foo
         /// <summary>
         /// Bug 39162 - Incorrect "Redundant ToString() call"
         /// </summary>
-        [Test]
+        [Fact]
         public void TestBug39162()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -368,7 +363,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestNoRedundantParameter()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -383,7 +378,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoresShadowedToStringInConcatenation()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"
@@ -404,7 +399,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestIgnoresShadowedToStringInFormatParameter()
         {
             Analyze<RedundantToStringCallAnalyzer>(@"

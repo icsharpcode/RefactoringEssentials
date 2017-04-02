@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantArgumentDefaultValueTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestSimpleCase()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -32,7 +30,7 @@ class Test
         }
 
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestNamedArgument()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -54,7 +52,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestMultipleRemoveFirst()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -78,7 +76,7 @@ class Test
 ", 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestMultipleRemoveSecond()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -102,7 +100,7 @@ class Test
 ", 1);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInvalid()
         {
             Analyze<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -115,7 +113,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInvalidCase2()
         {
             Analyze<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -128,7 +126,7 @@ class Test
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -144,7 +142,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestConstructor()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -166,7 +164,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestIndexer()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -190,7 +188,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void SimpleCase()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -218,7 +216,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void ChecksConstructors()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -246,7 +244,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void IgnoresAllParametersPreceedingANeededOne()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -274,7 +272,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void ChecksParametersIfParamsAreUnused()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -302,7 +300,7 @@ class TestClass
 }", 0);
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void IgnoresIfParamsAreUsed()
         {
             Analyze<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -319,8 +317,7 @@ class TestClass
 }");
         }
 
-        [Ignore("Fixme")]
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void NamedArgument()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -348,8 +345,7 @@ class TestClass
 }");
         }
 
-        [Ignore("Fixme")]
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void DoesNotStopAtDifferingNamedParameters()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"
@@ -377,8 +373,7 @@ class TestClass
 }");
         }
 
-        [Ignore("Fixme")]
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void DoesNotStopAtNamedParamsArray()
         {
             Test<RedundantArgumentDefaultValueAnalyzer>(@"

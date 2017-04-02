@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReplaceExplicitTypeWithVarTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void SimpleVarDeclaration()
         {
             string result = RunContextAction(new ReplaceExplicitTypeWithVarCodeRefactoringProvider(),
@@ -17,7 +16,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 		$TestClass aVar = this;
 	}
 }");
-            Assert.AreEqual(@"class TestClass
+            Assert.Equal(@"class TestClass
 {
 	void Test ()
 	{
@@ -26,7 +25,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }", result);
         }
 
-        [Test]
+        [Fact]
         public void AlreadyAVar()
         {
             TestWrongContext(new ReplaceExplicitTypeWithVarCodeRefactoringProvider(),
@@ -39,7 +38,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void AlreadyAVarInForeach()
         {
             TestWrongContext(new ReplaceExplicitTypeWithVarCodeRefactoringProvider(),
@@ -53,7 +52,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void ForeachDeclaration()
         {
             string result = RunContextAction(new ReplaceExplicitTypeWithVarCodeRefactoringProvider(),
@@ -65,7 +64,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 		}
 	}
 }");
-            Assert.AreEqual(@"class TestClass
+            Assert.Equal(@"class TestClass
 {
 	void Test ()
 	{
@@ -75,7 +74,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }", result);
         }
 
-        [Test]
+        [Fact]
         public void TestInvalidLocationBug()
         {
             TestWrongContext(new ReplaceExplicitTypeWithVarCodeRefactoringProvider(),
@@ -88,7 +87,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleInitializers()
         {
             TestWrongContext(new ReplaceExplicitTypeWithVarCodeRefactoringProvider(),

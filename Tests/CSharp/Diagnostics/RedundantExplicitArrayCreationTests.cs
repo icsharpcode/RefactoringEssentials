@@ -1,13 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
-    [Ignore("TODO: Issue not ported yet")]
     public class RedundantExplicitArrayCreationTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestSimpleCase()
         {
             Test<RedundantExplicitArrayCreationAnalyzer>(@"
@@ -29,7 +27,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInvalid()
         {
             Analyze<RedundantExplicitArrayCreationAnalyzer>(@"
@@ -43,7 +41,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestInvalidCase2()
         {
 
@@ -58,7 +56,7 @@ class Test
 ");
         }
 
-        [Test]
+        [Fact(Skip="TODO: Issue not ported yet")]
         public void TestDisable()
         {
             Analyze<RedundantExplicitArrayCreationAnalyzer>(@"

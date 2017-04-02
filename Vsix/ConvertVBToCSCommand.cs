@@ -1,24 +1,14 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Editor;
-using System.Windows;
-using Microsoft.VisualStudio.Text;
-using RefactoringEssentials.Converter;
-using Microsoft.VisualStudio;
-using System.Runtime.InteropServices;
 using System.IO;
 
 namespace RefactoringEssentials.VsExtension
 {
-    /// <summary>
-    /// Command handler
-    /// </summary>
-    internal sealed class ConvertVBToCSCommand
+	/// <summary>
+	/// Command handler
+	/// </summary>
+	internal sealed class ConvertVBToCSCommand
     {
         public const int MainMenuCommandId = 0x0200;
         public const int CtxMenuCommandId = 0x0201;

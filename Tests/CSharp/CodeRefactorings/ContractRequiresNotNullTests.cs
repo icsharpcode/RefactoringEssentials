@@ -1,16 +1,15 @@
 using System;
-using NUnit.Framework;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Collections.Immutable;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ContractRequiresNotNullTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void Test()
         {
             string result = RunContextAction(
@@ -25,7 +24,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                                          "}"
                                      );
 
-            Assert.AreEqual(
+            Assert.Equal(
                 "using System;" + Environment.NewLine +
                 "using System.Diagnostics.Contracts;" + Environment.NewLine + Environment.NewLine +
             "class TestClass" + Environment.NewLine +
@@ -38,7 +37,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "}", result);
         }
 
-        [Test]
+        [Fact]
         public void TestLambda()
         {
             Test<ContractRequiresNotNullCodeRefactoringProvider>(@"class Foo
@@ -61,7 +60,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestAnonymousMethod()
         {
             Test<ContractRequiresNotNullCodeRefactoringProvider>(@"class Foo
@@ -84,7 +83,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestContractRequiresNotNullCheckAlreadyThere()
         {
             TestWrongContext<ContractRequiresNotNullCodeRefactoringProvider>(@"class Foo
@@ -98,7 +97,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestContractRequiresNotNullCheckNotAlreadyThere()
         {
             Test<ContractRequiresNotNullCodeRefactoringProvider>(@"class Foo
@@ -123,7 +122,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestUsingStatementAlreadyThere()
         {
             Test<ContractRequiresNotNullCodeRefactoringProvider>(@"using System.Diagnostics.Contracts;
@@ -146,7 +145,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestPopupOnlyOnName()
         {
             TestWrongContext<ContractRequiresNotNullCodeRefactoringProvider>(@"class Foo
@@ -157,7 +156,7 @@ class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void Test_OldCSharp()
         {
             var parseOptions = new CSharpParseOptions(

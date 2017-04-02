@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class ReverseDirectionForForLoopTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestPrimitveExpression()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -30,7 +29,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestPrimitveExpressionCase2()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -54,7 +53,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestPrimitveExpressionReverse()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -78,7 +77,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestLowerEqualPrimitveExpression()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -102,7 +101,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestLowerEqualPrimitveExpressionCase2()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -126,7 +125,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestArbitraryBounds()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -150,7 +149,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestArbitraryBoundsCase2()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -175,7 +174,7 @@ class Foo
         }
 
 
-        [Test]
+        [Fact]
         public void TestComplex()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -199,7 +198,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestComplexReverse()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -223,7 +222,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestArbitraryBoundsReverse()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -247,7 +246,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestPrimitiveExpressionArbitrarySteps()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -271,7 +270,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestPrimitiveExpressionArbitraryStepsCase2()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -295,7 +294,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestPrimitiveExpressionArbitraryStepsReverse()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -319,7 +318,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestArbitrarySteps()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -343,7 +342,7 @@ class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestArbitraryStepsReverse()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"
@@ -367,8 +366,7 @@ class Foo
 ");
         }
 
-        [Ignore("Implement me")]
-        [Test]
+        [Fact(Skip="Implement me")]
         public void TestOptimizedFor()
         {
             Test<ReverseDirectionForForLoopCodeRefactoringProvider>(@"

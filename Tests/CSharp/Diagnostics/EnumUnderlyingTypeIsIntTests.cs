@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class EnumUnderlyingTypeIsIntTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestCase()
         {
             Analyze<EnumUnderlyingTypeIsIntAnalyzer>(@"
@@ -20,7 +19,7 @@ public enum Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisable()
         {
             Analyze<EnumUnderlyingTypeIsIntAnalyzer>(@"
@@ -32,7 +31,7 @@ public enum Foo : int
         }
 
 
-        [Test]
+        [Fact]
         public void TestNestedCase()
         {
             Analyze<EnumUnderlyingTypeIsIntAnalyzer>(@"
@@ -52,7 +51,7 @@ class Outer
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForNoUnderlyingType()
         {
             Analyze<EnumUnderlyingTypeIsIntAnalyzer>(@"
@@ -62,7 +61,7 @@ public enum Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestDisabledForOtherTypes()
         {
             Analyze<EnumUnderlyingTypeIsIntAnalyzer>(@"

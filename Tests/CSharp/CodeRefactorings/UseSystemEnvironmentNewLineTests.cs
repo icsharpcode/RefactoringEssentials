@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.CodeRefactorings;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
-    [TestFixture]
     public class UseSystemEnvironmentNewLineTests : CSharpCodeRefactoringTestBase
     {
-        [Test]
+        [Fact]
         public void TestLFString()
         {
             Test<UseSystemEnvironmentNewLineCodeRefactoringProvider>(@"
@@ -26,7 +25,7 @@ class TestClass
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestCRString()
         {
             Test<UseSystemEnvironmentNewLineCodeRefactoringProvider>(@"
@@ -47,7 +46,7 @@ class TestClass
         }
 
 
-        [Test]
+        [Fact]
         public void TestCRLFString()
         {
             Test<UseSystemEnvironmentNewLineCodeRefactoringProvider>(@"

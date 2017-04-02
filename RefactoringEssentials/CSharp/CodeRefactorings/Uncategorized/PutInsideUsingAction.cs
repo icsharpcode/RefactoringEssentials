@@ -8,12 +8,11 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.FindSymbols;
 using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "put inside 'using'")]
+	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "put inside 'using'")]
     public class PutInsideUsingAction : SpecializedCodeRefactoringProvider<VariableDeclaratorSyntax>
     {        
         protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, VariableDeclaratorSyntax node, CancellationToken cancellationToken)
@@ -151,9 +150,17 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     insideUsing.Insert(i + 1, needAssignment.Declarator.InitializerAsAssignment());
                 }
 
+                var localDeclarationTypeSyntax = localDeclarationStmt.Declaration.Type;
+
+                if (localDeclarationTypeSyntax.IsVar)
+                {
+                    var localDeclarationType = (ITypeSymbol)semanticModel.GetSymbolInfo(localDeclarationTypeSyntax).Symbol;
+                    localDeclarationTypeSyntax = localDeclarationType.ToSyntax(semanticModel, localDeclarationTypeSyntax);
+                }
+
                 beforeUsing.Add(SyntaxFactory.LocalDeclarationStatement(
                         SyntaxFactory.VariableDeclaration(
-                            localDeclarationStmt.Declaration.Type,
+                            localDeclarationTypeSyntax,
                             SyntaxFactory.SeparatedList(variablesToMove.Select(x => x.Declarator.WithInitializer(null)))
                             )
                     )

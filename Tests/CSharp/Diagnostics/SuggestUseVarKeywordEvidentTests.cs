@@ -1,12 +1,11 @@
-using NUnit.Framework;
 using RefactoringEssentials.CSharp.Diagnostics;
+using Xunit;
 
 namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 {
-    [TestFixture]
     public class SuggestUseVarKeywordEvidentTests : CSharpDiagnosticTestBase
     {
-        [Test]
+        [Fact]
         public void TestInspectorCase1()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -24,7 +23,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestV2()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -42,7 +41,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void When_Creating_An_Object()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -60,7 +59,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
-        [Test]
+        [Fact]
         public void When_Creating_An_Object_Of_SubType()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"interface IFoo
@@ -77,7 +76,7 @@ class Foo : IFoo
 }");
         }
 
-        [Test]
+        [Fact]
         public void WithDynamic()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -89,7 +88,7 @@ class Foo : IFoo
 }");
         }
 
-        [Test]
+        [Fact]
         public void When_Explicitely_Initializing_An_Array()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -108,7 +107,7 @@ class Foo : IFoo
 
         }
 
-        [Test]
+        [Fact]
         public void When_Implicitely_Initializing_An_Array()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -120,7 +119,7 @@ class Foo : IFoo
 }");
         }
 
-        [Test]
+        [Fact]
         public void When_Retrieving_Object_By_Property()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"
@@ -156,7 +155,7 @@ public class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void When_Retrieving_Object_By_Property_Of_SubType()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"
@@ -180,7 +179,7 @@ public class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void When_Casting_Objects()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"
@@ -214,7 +213,7 @@ public class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void When_Casting_Objects_To_SubType()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"
@@ -238,7 +237,7 @@ public class Foo
 ");
         }
 
-        [Test]
+        [Fact]
         public void TestNoInitializer()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -250,7 +249,7 @@ public class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMultipleInitializers()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -262,7 +261,7 @@ public class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodReturn()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
@@ -290,7 +289,7 @@ public class Foo
 }");
         }
 
-        [Test]
+        [Fact]
         public void TestMethodReturn_NotOfSameType()
         {
             Analyze<SuggestUseVarKeywordEvidentAnalyzer>(@"class Foo
