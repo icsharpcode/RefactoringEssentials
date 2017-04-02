@@ -46,16 +46,16 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
                 "interface Test { string $Test2 { get; } }");
         }
 
-        [Fact(Skip = "Simplifier.Annotation not working! (bug in Roslyn)")]
+        [Fact]
         public void TestSimplify()
         {
             Test<ConvertAutoPropertyToPropertyCodeRefactoringProvider>(@"
-using Sytem;
+using System;
 class TestClass
 {
 	string $Test { get; set; }
 }", @"
-using Sytem;
+using System;
 class TestClass
 {
     string Test
