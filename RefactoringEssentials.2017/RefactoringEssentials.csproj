@@ -197,15 +197,12 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs</Link>
     </Compile>
-    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs">
-      <Link>CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs</Link>
-    </Compile>
+      <Compile Include="..\RefactoringEssentials\CSharp\SyntaxExtensions.cs">
+          <Link>CSharp\SyntaxExtensions.cs</Link>
+      </Compile>
       <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyManipulater.cs">
           <Link>CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyManipulater.cs</Link>
       </Compile>
-      <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs">
-      <Link>CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs</Link>
-    </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertCoalescingToConditionalExpressionCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ConvertCoalescingToConditionalExpressionCodeRefactoringProvider.cs</Link>
     </Compile>
