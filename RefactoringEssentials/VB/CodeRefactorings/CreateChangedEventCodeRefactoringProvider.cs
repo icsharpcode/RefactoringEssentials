@@ -35,6 +35,9 @@ namespace RefactoringEssentials.VB.CodeRefactorings
 
             var propertyBlock = property.Parent as PropertyBlockSyntax;
 
+			if (propertyBlock == null)
+				return;
+
             var field = GetBackingField(model, propertyBlock);
             if (field == null)
                 return;
