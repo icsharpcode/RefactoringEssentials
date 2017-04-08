@@ -214,6 +214,17 @@ Class TestClass
     End Property
 End Class");
         }
-    }
+
+		[Fact]
+		public void TestIssue291()
+		{
+			TestWrongContext<CreateChangedEventCodeRefactoringProvider>(@"
+Class TestClass
+    Dim _test As String
+
+    Public Property $Test As String
+End Class");
+		}
+	}
 }
 
