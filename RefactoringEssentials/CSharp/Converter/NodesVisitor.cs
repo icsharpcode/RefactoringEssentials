@@ -60,6 +60,36 @@ namespace RefactoringEssentials.CSharp.Converter
                 throw new NotImplementedException(node.GetType() + " not implemented!");
             }
 
+            public override CSharpSyntaxNode VisitAggregateClause(VBSyntax.AggregateClauseSyntax node)
+            {
+                foreach (var item in node.Variables)
+                {
+                    var ident = SyntaxFactory.Identifier(item.Identifier.ToString());
+                    return SyntaxFactory.FromClause(ident, (ExpressionSyntax)item.Expression.Accept(this));
+                }
+                return null;
+                //return SyntaxFactory.FromClause(
+                //    SyntaxFactory.CollectionRangeVariable(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(node.Identifier)),
+                //    (ExpressionSyntax)node.Expression.Accept(this))
+                //);
+                
+
+                //foreach (var item in node.Variables)
+                //{
+                //              
+                //}
+                //var res = SyntaxFactory.ParseExpression(node.ToString());
+                ////node.
+                //return SyntaxFactory.FromClause()
+
+                //return res;
+                //return SyntaxFactory.GroupClause(
+                //    SyntaxFactory.SingletonSeparatedList(SyntaxFactory.rang((ExpressionSyntax)group.GroupExpression.Accept(this))),
+                //    SyntaxFactory.SingletonSeparatedList(SyntaxFactory.ExpressionRangeVariable(SyntaxFactory.VariableNameEquals(SyntaxFactory.ModifiedIdentifier(GeneratePlaceholder("groupByKey"))), (ExpressionSyntax)group.ByExpression.Accept(this))),
+                //    SyntaxFactory.SingletonSeparatedList(SyntaxFactory.AggregationRangeVariable(SyntaxFactory.FunctionAggregation(ConvertIdentifier(body.Continuation.Identifier))))
+                //return base.VisitAggregateClause(node);
+            }
+
             public override CSharpSyntaxNode VisitGlobalName(VBSyntax.GlobalNameSyntax node)
             {
                 return SyntaxFactory.IdentifierName("Global");
@@ -117,7 +147,6 @@ namespace RefactoringEssentials.CSharp.Converter
                 foreach (var item in node.Variables)
                 {
                     return SyntaxFactory.SelectClause((ExpressionSyntax)item.Expression.Accept(this));
-                    Console.WriteLine(item);
                 }
                 return base.VisitSelectClause(node);
             }
@@ -130,14 +159,16 @@ namespace RefactoringEssentials.CSharp.Converter
                 {
                     var ident = SyntaxFactory.Identifier(item.Identifier.ToString());
                     return SyntaxFactory.FromClause(ident, (ExpressionSyntax)item.Expression.Accept(this));
-                    Console.WriteLine(item);
                 }
                 return base.VisitFromClause(node);
             }
             public override CSharpSyntaxNode VisitQueryExpression(VBSyntax.QueryExpressionSyntax node)
             {
-                //SyntaxFactory.QueryExpression(node.)
-                //var selectOrGroup = SyntaxFactory
+                //return SyntaxFactory.QueryExpression(
+                //    SyntaxFactory.SingletonList((QueryClauseSyntax)node.FromClause.Accept(this))
+                //    .AddRange(node.Clauses.Select(c => (QueryClauseSyntax)c.Accept(this)))
+                //    .AddRange(ConvertQueryBody(node.Body))
+                //);
                 
                 SelectOrGroupClauseSyntax selg = null;
                 FromClauseSyntax fromc = null;
@@ -147,7 +178,7 @@ namespace RefactoringEssentials.CSharp.Converter
                     var csclause = item.Accept(this);
                     if (csclause.IsKind(SyntaxKind.SelectClause) || csclause.IsKind(SyntaxKind.GroupClause))
                     {
-                        selg = (SelectOrGroupClauseSyntax) csclause;
+                        selg = (SelectOrGroupClauseSyntax)csclause;
                     }
                     else if (csclause.IsKind(SyntaxKind.FromClause))
                     {
@@ -158,14 +189,16 @@ namespace RefactoringEssentials.CSharp.Converter
                         lst.Add((QueryClauseSyntax)csclause);
                     }
                 }
+                if (selg == null)
+                {
+                    
+                    selg = SyntaxFactory.SelectClause(SyntaxFactory.ParseExpression($"{fromc.Identifier}"));
+                }
                 var body = SyntaxFactory.QueryBody(selg);
                 body = body.WithClauses(lst);
+                
 
-                //SyntaxFactory.QueryExpression()
                 return SyntaxFactory.QueryExpression(fromc, body);
-                //return base.VisitQueryExpression(node);
-
-                //return null;
             }
 
             public override CSharpSyntaxNode VisitDirectCastExpression(VBSyntax.DirectCastExpressionSyntax node)
@@ -582,6 +615,9 @@ namespace RefactoringEssentials.CSharp.Converter
                     case VBasic.SyntaxKind.RemoveHandlerAccessorBlock:
                         blockKind = SyntaxKind.RemoveAccessorDeclaration;
                         break;
+                    case VBasic.SyntaxKind.RaiseEventAccessorBlock:
+                        blockKind = SyntaxKind.UnknownAccessorDeclaration;
+                        break;
                     default:
                         throw new NotSupportedException();
                 }
@@ -976,21 +1012,30 @@ namespace RefactoringEssentials.CSharp.Converter
                 SyntaxToken token = default(SyntaxToken);
                 if (symbol != null)
                 {
-                    var p = symbol.GetParameters()[argID];
-                    switch (p.RefKind)
+                    var paras = symbol.GetParameters();
+                    if (argID > (paras.Length-1))
                     {
-                        case RefKind.None:
-                            token = default(SyntaxToken);
-                            break;
-                        case RefKind.Ref:
-                            token = SyntaxFactory.Token(SyntaxKind.RefKeyword);
-                            break;
-                        case RefKind.Out:
-                            token = SyntaxFactory.Token(SyntaxKind.OutKeyword);
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
+                        token = default(SyntaxToken);
                     }
+                    else
+                    {
+                        var p = paras[argID];
+                        switch (p.RefKind)
+                        {
+                            case RefKind.None:
+                                token = default(SyntaxToken);
+                                break;
+                            case RefKind.Ref:
+                                token = SyntaxFactory.Token(SyntaxKind.RefKeyword);
+                                break;
+                            case RefKind.Out:
+                                token = SyntaxFactory.Token(SyntaxKind.OutKeyword);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
+
                 }
                 return SyntaxFactory.Argument(
                     node.IsNamed ? SyntaxFactory.NameColon((IdentifierNameSyntax)node.NameColonEquals.Name.Accept(this)) : null,

@@ -377,8 +377,17 @@ namespace RefactoringEssentials.CSharp.Converter
                     return SyntaxKind.DefaultKeyword;
                 case VBasic.SyntaxKind.ShadowsKeyword:
                     return SyntaxKind.None;
-                    //case VBasic.SyntaxKind.ExponentiateExpression:
-                    //  throw;
+                case VBasic.SyntaxKind.OverloadsKeyword:
+                    return SyntaxKind.None;
+                case VBasic.SyntaxKind.IntegerDivideExpression:
+                    return SyntaxKind.DivideExpression;
+                case VBasic.SyntaxKind.ConcatenateAssignmentStatement:
+                    return SyntaxKind.AddAssignmentExpression;
+                case VBasic.SyntaxKind.GreaterThanEqualsToken:
+                    return SyntaxKind.GreaterThanEqualsToken;
+                case VBasic.SyntaxKind.LessThanEqualsToken:
+                    return SyntaxKind.LessThanEqualsToken;
+
 
             }
             throw new NotSupportedException(t + " not supported!");

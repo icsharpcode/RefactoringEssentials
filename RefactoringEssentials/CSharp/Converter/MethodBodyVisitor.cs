@@ -30,7 +30,50 @@ namespace RefactoringEssentials.CSharp.Converter
 				throw new NotImplementedException(node.GetType() + " not implemented!");
 			}
 
-			public override SyntaxList<StatementSyntax> VisitLocalDeclarationStatement(VBSyntax.LocalDeclarationStatementSyntax node)
+            public override SyntaxList<StatementSyntax> VisitWithBlock(VBSyntax.WithBlockSyntax node)
+            {
+                //var nameExpr = node.WithStatement.Expression.Accept(this);
+                var name = SyntaxFactory.ParseName(node.WithStatement.Expression.ToString());
+                
+                var statements = new List<StatementSyntax>();
+
+                foreach (var stmVB in node.Statements)
+                {
+                    var stmCS = stmVB.Accept(this);
+                    foreach (ExpressionStatementSyntax item in stmCS)
+                    {
+                        InvocationExpressionSyntax ioc = (InvocationExpressionSyntax)item.Expression;
+                        MemberBindingExpressionSyntax mb = (MemberBindingExpressionSyntax)ioc.Expression;
+                        
+                        var mas = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression,name, mb.Name );
+
+                        var r = SyntaxFactory.InvocationExpression(mas, ioc.ArgumentList);
+                        statements.Add(SyntaxFactory.ExpressionStatement(r));
+                    }
+
+                }
+
+                return SyntaxFactory.List<StatementSyntax>(statements);
+            }
+
+
+
+            public override SyntaxList<StatementSyntax> VisitAddRemoveHandlerStatement(VBSyntax.AddRemoveHandlerStatementSyntax node)
+            {
+                //node.EventExpression
+                //var kind = ConvertToken(node.Kind(), TokenContext.Local);
+                var kind = SyntaxKind.SimpleAssignmentExpression;
+                var left = (ExpressionSyntax)node.EventExpression.Accept(nodesVisitor);
+                var right = (ExpressionSyntax)node.DelegateExpression.Accept(nodesVisitor);
+                return SingleStatement(SyntaxFactory.AssignmentExpression(kind, left, right));
+
+                //SyntaxFactory.event
+                //SyntaxFactory.ExpressionStatement
+
+                //SyntaxFactory.hand
+                //return base.VisitAddRemoveHandlerStatement(node);
+            }
+            public override SyntaxList<StatementSyntax> VisitLocalDeclarationStatement(VBSyntax.LocalDeclarationStatementSyntax node)
 			{
 				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Local);
 
@@ -51,7 +94,7 @@ namespace RefactoringEssentials.CSharp.Converter
 			public override SyntaxList<StatementSyntax> VisitAssignmentStatement(VBSyntax.AssignmentStatementSyntax node)
 			{
 				var kind = ConvertToken(node.Kind(), TokenContext.Local);
-				return SingleStatement(SyntaxFactory.AssignmentExpression(kind, (ExpressionSyntax)node.Left.Accept(nodesVisitor), (ExpressionSyntax)node.Right.Accept(nodesVisitor)));
+                return SingleStatement(SyntaxFactory.AssignmentExpression(kind, (ExpressionSyntax)node.Left.Accept(nodesVisitor), (ExpressionSyntax)node.Right.Accept(nodesVisitor)));
 			}
 
 			public override SyntaxList<StatementSyntax> VisitThrowStatement(VBSyntax.ThrowStatementSyntax node)
@@ -240,12 +283,41 @@ namespace RefactoringEssentials.CSharp.Converter
 					var labels = new List<SwitchLabelSyntax>();
 					foreach (var c in block.CaseStatement.Cases)
 					{
-						if (c is VBSyntax.SimpleCaseClauseSyntax) {
-							var s = (VBSyntax.SimpleCaseClauseSyntax)c;
-							labels.Add(SyntaxFactory.CaseSwitchLabel((ExpressionSyntax)s.Value.Accept(nodesVisitor)));
-						} else if (c is VBSyntax.ElseCaseClauseSyntax) {
-							labels.Add(SyntaxFactory.DefaultSwitchLabel());
-						} else return false;
+                        if (c is VBSyntax.SimpleCaseClauseSyntax)
+                        {
+                            var s = (VBSyntax.SimpleCaseClauseSyntax)c;
+                            labels.Add(SyntaxFactory.CaseSwitchLabel((ExpressionSyntax)s.Value.Accept(nodesVisitor)));
+                        }
+                        else if (c is VBSyntax.ElseCaseClauseSyntax)
+                        {
+                            labels.Add(SyntaxFactory.DefaultSwitchLabel());
+                        }
+                        else if (c is VBSyntax.RelationalCaseClauseSyntax)
+                        {
+                            var s = (VBSyntax.RelationalCaseClauseSyntax)c;
+                            //s.OperatorToken
+                            //var kind = ConvertToken(s.OperatorToken , TokenContext.Local);
+                            //var opr = SyntaxFactory.Token(CSharpUtil.GetExpressionOperatorTokenKind(kind));
+                            //var val = (ExpressionSyntax)s.Value.Accept(nodesVisitor);
+
+                            var relexpr =  SyntaxFactory.ParseExpression($"{s.OperatorToken} {s.Value}");          
+                            //var relexpr = SyntaxFactory.PrefixUnaryExpression(expr.Kind(),kind, val);
+
+                            //var relexpr = SyntaxFactory.BinaryExpression(SyntaxKind.SimpleLambdaExpression , expr, kind, val);
+                            //s.OperatorToken
+                            //s.withope
+                            //var l = (ExpressionSyntax)s.Value.Accept(nodesVisitor);
+                            //labels.Add(SyntaxFactory.CaseSwitchLabel(l));
+                            //var pat = SyntaxFactory.pattern
+                            //SyntaxFactory.pattern
+                            //SyntaxFactory.CasePatternSwitchLabel()
+                            labels.Add(SyntaxFactory.CaseSwitchLabel(relexpr));
+                        }
+                        else
+                        {
+                            
+                            return false;
+                        }
 					}
 					var list = SyntaxFactory.List(block.Statements.SelectMany(s => s.Accept(this)).Concat(SyntaxFactory.BreakStatement()));
 					sections.Add(SyntaxFactory.SwitchSection(SyntaxFactory.List(labels), list));
