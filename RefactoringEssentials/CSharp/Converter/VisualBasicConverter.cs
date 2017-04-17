@@ -39,13 +39,13 @@ namespace RefactoringEssentials.CSharp.Converter
             var compilation = VBasic.VisualBasicCompilation.Create("Conversion", new[] { tree }, references);
             //try
             //{
-            return new ConversionResult(Convert((VBasic.VisualBasicSyntaxNode)tree.GetRoot(), compilation.GetSemanticModel(tree, true), null).NormalizeWhitespace().ToFullString());
+                return new ConversionResult(Convert((VBasic.VisualBasicSyntaxNode)tree.GetRoot(), compilation.GetSemanticModel(tree, true), null).NormalizeWhitespace().ToFullString());
             //}
             //catch (Exception ex)
             //{
             //    return new ConversionResult(ex);
             //}
-        }
+}
 
         static Dictionary<string, VariableDeclarationSyntax> SplitVariableDeclarations(VBSyntax.VariableDeclaratorSyntax declarator, NodesVisitor nodesVisitor, SemanticModel semanticModel)
         {
@@ -55,10 +55,31 @@ namespace RefactoringEssentials.CSharp.Converter
                 _ => { throw new NotImplementedException($"{_.GetType().FullName} not implemented!"); }
             )?.Accept(nodesVisitor) ?? SyntaxFactory.ParseTypeName("var");
 
-            var initializer = (ExpressionSyntax)declarator.AsClause?.TypeSwitch(
+            var initializer  = (ExpressionSyntax)declarator.AsClause?.TypeSwitch(
                 (VBSyntax.SimpleAsClauseSyntax _) => declarator.Initializer?.Value,
                 (VBSyntax.AsNewClauseSyntax c) => c.NewExpression
             )?.Accept(nodesVisitor) ?? (ExpressionSyntax)declarator.Initializer?.Value.Accept(nodesVisitor);
+
+            if (initializer != null && rawType.IsVar == false)
+            {
+                if (initializer.IsKind(SyntaxKind.ObjectCreationExpression))
+                {
+                    if (((ObjectCreationExpressionSyntax)initializer).Type.IsEquivalentTo(rawType))
+                    {
+                        //correct type
+                    }
+                    else
+                    {
+                        initializer = SyntaxFactory.CastExpression(rawType, initializer);
+                    }
+                }
+                else
+                {
+                    initializer = SyntaxFactory.CastExpression(rawType, initializer);
+                }
+                
+            }
+            
 
             var newDecls = new Dictionary<string, VariableDeclarationSyntax>();
 

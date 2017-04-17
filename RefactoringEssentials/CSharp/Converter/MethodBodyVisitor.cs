@@ -32,7 +32,6 @@ namespace RefactoringEssentials.CSharp.Converter
 
             public override SyntaxList<StatementSyntax> VisitWithBlock(VBSyntax.WithBlockSyntax node)
             {
-                //var nameExpr = node.WithStatement.Expression.Accept(this);
                 var name = SyntaxFactory.ParseName(node.WithStatement.Expression.ToString());
                 
                 var statements = new List<StatementSyntax>();
@@ -60,19 +59,12 @@ namespace RefactoringEssentials.CSharp.Converter
 
             public override SyntaxList<StatementSyntax> VisitAddRemoveHandlerStatement(VBSyntax.AddRemoveHandlerStatementSyntax node)
             {
-                //node.EventExpression
-                //var kind = ConvertToken(node.Kind(), TokenContext.Local);
                 var kind = SyntaxKind.SimpleAssignmentExpression;
                 var left = (ExpressionSyntax)node.EventExpression.Accept(nodesVisitor);
                 var right = (ExpressionSyntax)node.DelegateExpression.Accept(nodesVisitor);
                 return SingleStatement(SyntaxFactory.AssignmentExpression(kind, left, right));
-
-                //SyntaxFactory.event
-                //SyntaxFactory.ExpressionStatement
-
-                //SyntaxFactory.hand
-                //return base.VisitAddRemoveHandlerStatement(node);
             }
+
             public override SyntaxList<StatementSyntax> VisitLocalDeclarationStatement(VBSyntax.LocalDeclarationStatementSyntax node)
 			{
 				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Local);
@@ -94,10 +86,31 @@ namespace RefactoringEssentials.CSharp.Converter
 			public override SyntaxList<StatementSyntax> VisitAssignmentStatement(VBSyntax.AssignmentStatementSyntax node)
 			{
 				var kind = ConvertToken(node.Kind(), TokenContext.Local);
-                return SingleStatement(SyntaxFactory.AssignmentExpression(kind, (ExpressionSyntax)node.Left.Accept(nodesVisitor), (ExpressionSyntax)node.Right.Accept(nodesVisitor)));
-			}
+                ExpressionSyntax Left;
+                ExpressionSyntax Right;
+                if (node.Left.IsKind(VBasic.SyntaxKind.InvocationExpression))                    
+                {
+                    Left = (ExpressionSyntax) nodesVisitor.IndexedAccess((VBSyntax.InvocationExpressionSyntax)node.Left);
+                }
+                else
+                {
+                    Left = (ExpressionSyntax)node.Left.Accept(nodesVisitor);
+                }
 
-			public override SyntaxList<StatementSyntax> VisitThrowStatement(VBSyntax.ThrowStatementSyntax node)
+                //if (node.Right.IsKind(VBasic.SyntaxKind.InvocationExpression))
+                //{
+                //    Right = (ExpressionSyntax)nodesVisitor.IndexedAccess((VBSyntax.InvocationExpressionSyntax)node.Right);
+                //}
+                //else
+                //{
+                
+                    Right = (ExpressionSyntax)node.Right.Accept(nodesVisitor);
+                //}
+
+                return SingleStatement(SyntaxFactory.AssignmentExpression(kind, Left, Right));
+            }
+
+            public override SyntaxList<StatementSyntax> VisitThrowStatement(VBSyntax.ThrowStatementSyntax node)
 			{
 				return SingleStatement(SyntaxFactory.ThrowStatement((ExpressionSyntax)node.Expression?.Accept(nodesVisitor)));
 			}

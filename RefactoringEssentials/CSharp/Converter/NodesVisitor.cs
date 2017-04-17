@@ -28,35 +28,6 @@ namespace RefactoringEssentials.CSharp.Converter
 
             public override CSharpSyntaxNode DefaultVisit(SyntaxNode node)
             {
-                //var summary = node.ToString();
-
-                //var retnode = SyntaxFactory.DocumentationCommentTrivia(
-                //    SyntaxKind.SingleLineDocumentationCommentTrivia,
-                //    SyntaxFactory.SingletonList<XmlNodeSyntax>(
-                //        SyntaxFactory.XmlElement(
-                //            SyntaxFactory.XmlElementStartTag(SyntaxFactory.XmlName("summary")),
-                //            SyntaxFactory.SingletonList<XmlNodeSyntax>(
-                //                SyntaxFactory.XmlText(
-                //                    SyntaxFactory.TokenList(
-                //                        SyntaxFactory.XmlTextLiteral(
-                //                            SyntaxFactory.TriviaList(), summary, summary, SyntaxFactory.TriviaList())))),
-                //            SyntaxFactory.XmlElementEndTag(SyntaxFactory.XmlName("summary")))))
-                //    .WithLeadingTrivia(SyntaxFactory.ElasticMarker, SyntaxFactory.DocumentationCommentExterior("/// "));
-
-                //return retnode;AnonymousObjectCreationExpressionSyntax 
-                //if (node.GetType() == typeof (AnonymousObjectCreationExpressionSyntax))
-                //{
-
-                //}
-                //else
-                //{
-
-                //}
-                //throw new NotImplementedException(node.GetType() + " not implemented!");
-                //if (node.GetType() == typeof(VBSyntax.AnonymousObjectCreationExpressionSyntax))
-                //{
-                //    return VisitAnonymousObjectCreationExpression((VBSyntax.AnonymousObjectCreationExpressionSyntax)node);
-                //}
                 throw new NotImplementedException(node.GetType() + " not implemented!");
             }
 
@@ -68,26 +39,6 @@ namespace RefactoringEssentials.CSharp.Converter
                     return SyntaxFactory.FromClause(ident, (ExpressionSyntax)item.Expression.Accept(this));
                 }
                 return null;
-                //return SyntaxFactory.FromClause(
-                //    SyntaxFactory.CollectionRangeVariable(SyntaxFactory.ModifiedIdentifier(ConvertIdentifier(node.Identifier)),
-                //    (ExpressionSyntax)node.Expression.Accept(this))
-                //);
-                
-
-                //foreach (var item in node.Variables)
-                //{
-                //              
-                //}
-                //var res = SyntaxFactory.ParseExpression(node.ToString());
-                ////node.
-                //return SyntaxFactory.FromClause()
-
-                //return res;
-                //return SyntaxFactory.GroupClause(
-                //    SyntaxFactory.SingletonSeparatedList(SyntaxFactory.rang((ExpressionSyntax)group.GroupExpression.Accept(this))),
-                //    SyntaxFactory.SingletonSeparatedList(SyntaxFactory.ExpressionRangeVariable(SyntaxFactory.VariableNameEquals(SyntaxFactory.ModifiedIdentifier(GeneratePlaceholder("groupByKey"))), (ExpressionSyntax)group.ByExpression.Accept(this))),
-                //    SyntaxFactory.SingletonSeparatedList(SyntaxFactory.AggregationRangeVariable(SyntaxFactory.FunctionAggregation(ConvertIdentifier(body.Continuation.Identifier))))
-                //return base.VisitAggregateClause(node);
             }
 
             public override CSharpSyntaxNode VisitGlobalName(VBSyntax.GlobalNameSyntax node)
@@ -102,16 +53,11 @@ namespace RefactoringEssentials.CSharp.Converter
 
             public override CSharpSyntaxNode VisitNamedFieldInitializer(VBSyntax.NamedFieldInitializerSyntax node)
             {
-                return SyntaxFactory.AnonymousObjectMemberDeclarator((ExpressionSyntax)node.Expression.Accept(this));
+                var expr = (ExpressionSyntax)node.Expression.Accept(this);
+                var name = (IdentifierNameSyntax)node.Name.Accept(this);
+                var nameEQ = SyntaxFactory.NameEquals(name);
+                return SyntaxFactory.AnonymousObjectMemberDeclarator(nameEQ, expr);
             }
-
-            //public CSharpSyntaxNode VisitAnonymousObjectCreationExpression(VBSyntax.AnonymousObjectCreationExpressionSyntax node)
-            //{
-            //    //var members = SyntaxFactory.List(node.Members.Select(m => (MemberDeclarationSyntax)m.Accept(this)));
-            //    //return SyntaxFactory.AnonymousObjectCreationExpression()
-            //}
-
-
 
             public override CSharpSyntaxNode VisitOrdering(VBSyntax.OrderingSyntax node)
             {
@@ -164,12 +110,6 @@ namespace RefactoringEssentials.CSharp.Converter
             }
             public override CSharpSyntaxNode VisitQueryExpression(VBSyntax.QueryExpressionSyntax node)
             {
-                //return SyntaxFactory.QueryExpression(
-                //    SyntaxFactory.SingletonList((QueryClauseSyntax)node.FromClause.Accept(this))
-                //    .AddRange(node.Clauses.Select(c => (QueryClauseSyntax)c.Accept(this)))
-                //    .AddRange(ConvertQueryBody(node.Body))
-                //);
-                
                 SelectOrGroupClauseSyntax selg = null;
                 FromClauseSyntax fromc = null;
                 var lst = new SyntaxList<QueryClauseSyntax>();
@@ -316,10 +256,20 @@ namespace RefactoringEssentials.CSharp.Converter
 
             #region Namespace Members
 
-            IEnumerable<MemberDeclarationSyntax> ConvertMembers(SyntaxList<VBSyntax.StatementSyntax> members)
+            IEnumerable<MemberDeclarationSyntax> ConvertMembers(SyntaxList<VBSyntax.StatementSyntax> members, TokenContext context = TokenContext.Global)
             {
-                foreach (var member in members.Select(m => (MemberDeclarationSyntax)m.Accept(this)))
+                MemberDeclarationSyntax member;
+                foreach (var smember in members.Select(m => (MemberDeclarationSyntax)m.Accept(this)))
                 {
+                    if (context == TokenContext.InterfaceOrModule)
+                    {
+                        var modifiers = ConvertModifiers(smember.GetModifiers(), TokenContext.InterfaceOrModule);
+                        member = (MemberDeclarationSyntax)smember.WithModifiers(modifiers);
+                    }
+                    else
+                    {
+                        member = smember;
+                    }
                     MemberDeclarationSyntax[] declarations;
                     if (member is BaseFieldDeclarationSyntax && additionalDeclarations.TryGetValue(member, out declarations))
                     {
@@ -411,12 +361,13 @@ namespace RefactoringEssentials.CSharp.Converter
             {
                 var stmt = node.InterfaceStatement;
                 var attributes = SyntaxFactory.List(stmt.AttributeLists.SelectMany(ConvertAttribute));
-                var members = SyntaxFactory.List(ConvertMembers(node.Members));
+                var members = SyntaxFactory.List(ConvertMembers(node.Members, TokenContext.InterfaceOrModule));
 
                 TypeParameterListSyntax parameters;
                 SyntaxList<TypeParameterConstraintClauseSyntax> constraints;
                 SplitTypeParameters(stmt.TypeParameterList, out parameters, out constraints);
 
+                                
                 return SyntaxFactory.InterfaceDeclaration(
                     attributes,
                     ConvertModifiers(stmt.Modifiers, TokenContext.InterfaceOrModule),
@@ -1080,35 +1031,24 @@ namespace RefactoringEssentials.CSharp.Converter
 
             public override CSharpSyntaxNode VisitAnonymousObjectCreationExpression(VBSyntax.AnonymousObjectCreationExpressionSyntax node)
             {
-                //return SyntaxFactory.AnonymousObjectCreationExpression(
-                //    SyntaxFactory.ObjectMemberInitializer(SyntaxFactory.SeparatedList(
-                //        node.Initializers.Select(i => (FieldInitializerSyntax)i.Accept(this))
-                //    ))
-                //);
-                
-                //node.Initializer.Initializers
-                //var initializer = node.Initializer.Accept(this);
-                //node.Initializer.Initializers 
-                //var members = SyntaxFactory.List(node.Members.Select(m => (MemberDeclarationSyntax)m.Accept(this)));
-                //var a = node.Initializer.Initializers.Select(m => m.Accept(this));
-                //node.Initializer
+
                 var a = from m in node.Initializer.Initializers
                         select (AnonymousObjectMemberDeclaratorSyntax)m.Accept(this);
                 var initializers = SyntaxFactory.SeparatedList<AnonymousObjectMemberDeclaratorSyntax>(a);
 
-                ////'SyntaxFactory.AnonymousObjectCreationExpression()
-
-                ////return base.VisitAnonymousObjectCreationExpression(node);
-
-                ////var initializer = (InitializerExpressionSyntax)node.Initializer?.Accept(this);
                 return SyntaxFactory.AnonymousObjectCreationExpression(initializers);
             }
 
             public override CSharpSyntaxNode VisitObjectCreationExpression(VBSyntax.ObjectCreationExpressionSyntax node)
             {
+                var arglist = SyntaxFactory.ArgumentList();
+                if (node.ArgumentList != null)
+                {
+                    arglist = (ArgumentListSyntax)node.ArgumentList.Accept(this);
+                }
                 return SyntaxFactory.ObjectCreationExpression(
                     (TypeSyntax)node.Type.Accept(this),
-                    (ArgumentListSyntax)node.ArgumentList?.Accept(this),
+                    (ArgumentListSyntax)arglist,
                     (InitializerExpressionSyntax)node.Initializer?.Accept(this)
                 );
             }
@@ -1262,7 +1202,14 @@ namespace RefactoringEssentials.CSharp.Converter
 				);
 			}
 
-			public override CSharpSyntaxNode VisitSingleLineLambdaExpression(VBSyntax.SingleLineLambdaExpressionSyntax node)
+            public CSharpSyntaxNode IndexedAccess(VBSyntax.InvocationExpressionSyntax node)
+            {
+                return SyntaxFactory.ElementAccessExpression(
+                    (ExpressionSyntax)node.Expression.Accept(this),
+                    SyntaxFactory.BracketedArgumentList(SyntaxFactory.SeparatedList(node.ArgumentList.Arguments.Select(a => (ArgumentSyntax)a.Accept(this)))));
+            }
+
+            public override CSharpSyntaxNode VisitSingleLineLambdaExpression(VBSyntax.SingleLineLambdaExpressionSyntax node)
 			{
 				CSharpSyntaxNode body;
 				if (node.Body is VBSyntax.ExpressionSyntax)
@@ -1330,8 +1277,10 @@ namespace RefactoringEssentials.CSharp.Converter
 					paramList.Add(tp);
 					var constraint = (TypeParameterConstraintClauseSyntax)p.TypeParameterConstraintClause?.Accept(this);
 					if (constraint != null)
-						constraintList.Add(constraint);
-				}
+                    {
+                        constraintList.Add(constraint);
+                    }
+                }
 				parameters = SyntaxFactory.TypeParameterList(SyntaxFactory.SeparatedList(paramList));
 				constraints = SyntaxFactory.List(constraintList);
 			}
@@ -1355,7 +1304,23 @@ namespace RefactoringEssentials.CSharp.Converter
 			public override CSharpSyntaxNode VisitTypeParameterMultipleConstraintClause(VBSyntax.TypeParameterMultipleConstraintClauseSyntax node)
 			{
 				var id = SyntaxFactory.IdentifierName(ConvertIdentifier(((VBSyntax.TypeParameterSyntax)node.Parent).Identifier, semanticModel));
-				return SyntaxFactory.TypeParameterConstraintClause(id, SyntaxFactory.SeparatedList(node.Constraints.Select(c => (TypeParameterConstraintSyntax)c.Accept(this))));
+                var constraints = node.Constraints.Select(c => (TypeParameterConstraintSyntax)c.Accept(this)).ToList();
+                TypeParameterConstraintSyntax NewConstraint = null;
+                foreach (var item in constraints)
+                {
+                    if (item.IsKind(SyntaxKind.ConstructorConstraint))
+                    {
+                        NewConstraint = item;
+                    }
+                }
+
+                if (NewConstraint != null)
+                {
+                    constraints.Remove(NewConstraint);
+                    constraints.Add(NewConstraint);
+                }
+
+                return SyntaxFactory.TypeParameterConstraintClause(id, SyntaxFactory.SeparatedList(constraints));
 			}
 
 			public override CSharpSyntaxNode VisitSpecialConstraint(VBSyntax.SpecialConstraintSyntax node)
