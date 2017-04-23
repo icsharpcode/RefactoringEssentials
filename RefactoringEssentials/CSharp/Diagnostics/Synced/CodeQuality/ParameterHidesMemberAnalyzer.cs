@@ -44,7 +44,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return;
             if (memberSymbol is IMethodSymbol && ((IMethodSymbol)memberSymbol).MethodKind == MethodKind.Constructor || memberSymbol.ExplicitInterfaceImplementations().Length > 0)
                 return;
-            var symbols = nodeContext.SemanticModel.LookupSymbols(node.SpanStart);
+            var symbols = nodeContext.SemanticModel.LookupSymbols(node.SpanStart, memberSymbol.ContainingType);
             foreach (var param in node.Parameters)
             {
                 var hidingMember = symbols.FirstOrDefault(v => v.Name == param.Identifier.ValueText && ((memberSymbol.IsStatic && v.IsStatic) || !memberSymbol.IsStatic) && !v.IsKind(SymbolKind.Local) && !v.IsKind(SymbolKind.Parameter));
