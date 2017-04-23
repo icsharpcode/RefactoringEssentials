@@ -37,7 +37,6 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (member == null)
                 return;
 
-            var symbols = nodeContext.SemanticModel.LookupSymbols(node.SpanStart);
             var memberSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(member);
             if (memberSymbol == null)
                 return;
@@ -45,6 +44,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return;
             if (memberSymbol is IMethodSymbol && ((IMethodSymbol)memberSymbol).MethodKind == MethodKind.Constructor || memberSymbol.ExplicitInterfaceImplementations().Length > 0)
                 return;
+
+            var symbols = nodeContext.SemanticModel.LookupSymbols(node.SpanStart, memberSymbol.GetContainingTypeOrThis ());
             foreach (var param in node.Parameters)
             {
                 var hidingMember = symbols.FirstOrDefault(v => v.Name == param.Identifier.ValueText && ((memberSymbol.IsStatic && v.IsStatic) || !memberSymbol.IsStatic) && !v.IsKind(SymbolKind.Local) && !v.IsKind(SymbolKind.Parameter));
