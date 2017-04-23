@@ -60,8 +60,8 @@ namespace RefactoringEssentials
             if (method == null || method.Kind != SymbolKind.Method)
                 return false;
 
-            // Serach for method of type: void Name(string format, params object[] args);
-            IList<IMethodSymbol> methods = method.ContainingType.GetMembers (method.Name).OfType<IMethodSymbol>().ToList();
+            // Search for method of type: void Name(string format, params object[] args);
+            var methods = method.ContainingType.GetMembers (method.Name).OfType<IMethodSymbol>();
             if (!methods.Any(m => m.Parameters.Length == 2 && 
                              m.Parameters[0].Type.SpecialType == SpecialType.System_String && parameterNames.Contains(m.Parameters[0].Name) && 
                              m.Parameters[1].IsParams))
@@ -70,16 +70,15 @@ namespace RefactoringEssentials
             // TODO: Handle argument -> parameter mapping.
             //var argumentToParameterMap = invocationResolveResult.GetArgumentToParameterMap();
             //var resolvedParameters = invocationResolveResult.Member.Parameters;
-            var allArguments = invocationExpression.ArgumentList.Arguments.ToArray();
-            for (int i = 0; i < allArguments.Length; i++) {
-                var parameterIndex = i; //argumentToParameterMap[i];
+            int i = 0;
+            foreach (var argument in invocationExpression.ArgumentList.Arguments) {
+                var parameterIndex = i++; //argumentToParameterMap[i];
                 if (parameterIndex < 0 || parameterIndex >= method.Parameters.Length) {
                     // No valid mapping for this argument, skip it
                     continue;
                 }
                 var parameter = method.Parameters[parameterIndex];
-                var argument = allArguments[i];
-                if (i == 0 && parameter.Type.SpecialType == SpecialType.System_String && parameterNames.Contains(parameter.Name)) {
+                if (parameterIndex == 0 && parameter.Type.SpecialType == SpecialType.System_String && parameterNames.Contains(parameter.Name)) {
                     formatArgument = argument.Expression;
                 } else if (formatArgument != null && parameter.IsParams /*&& !invocationResolveResult.IsExpandedForm*/) {
                     var ace = argument.Expression as ArrayCreationExpressionSyntax;
