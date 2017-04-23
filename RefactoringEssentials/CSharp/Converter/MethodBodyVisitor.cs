@@ -92,20 +92,30 @@ namespace RefactoringEssentials.CSharp.Converter
 				{
 					Left = (ExpressionSyntax) nodesVisitor.IndexedAccess((VBSyntax.InvocationExpressionSyntax)node.Left);
 				}
+				else if (node.Left.IsKind(VBasic.SyntaxKind.IdentifierName))
+				{
+					var LeftID = (VBSyntax.IdentifierNameSyntax)node.Left;
+					var symbol = semanticModel.GetSymbolInfo(LeftID).Symbol;
+					var symbolReturnType = symbol?.GetReturnType();
+					//symbol.GetSymbolType
+
+					Left = (ExpressionSyntax)node.Left.Accept(nodesVisitor);
+				}
 				else
 				{
 					Left = (ExpressionSyntax)node.Left.Accept(nodesVisitor);
 				}
 
-				//if (node.Right.IsKind(VBasic.SyntaxKind.InvocationExpression))
-				//{
-				//    Right = (ExpressionSyntax)nodesVisitor.IndexedAccess((VBSyntax.InvocationExpressionSyntax)node.Right);
-				//}
-				//else
-				//{
 				
-					Right = (ExpressionSyntax)node.Right.Accept(nodesVisitor);
-				//}
+				Right = (ExpressionSyntax)node.Right.Accept(nodesVisitor);
+
+				var LeftType = semanticModel.GetSymbolInfo(node.Left).Symbol?.GetReturnType();
+				var RightType = semanticModel.GetSymbolInfo(node.Right).Symbol?.GetReturnType();
+
+				if (LeftType != null && RightType != null && LeftType != RightType)
+				{
+					Right = SyntaxFactory.CastExpression(SyntaxFactory.ParseTypeName(LeftType.Name), Right);
+				}
 
 				return SingleStatement(SyntaxFactory.AssignmentExpression(kind, Left, Right));
 			}
@@ -308,22 +318,7 @@ namespace RefactoringEssentials.CSharp.Converter
 						else if (c is VBSyntax.RelationalCaseClauseSyntax)
 						{
 							var s = (VBSyntax.RelationalCaseClauseSyntax)c;
-							//s.OperatorToken
-							//var kind = ConvertToken(s.OperatorToken , TokenContext.Local);
-							//var opr = SyntaxFactory.Token(CSharpUtil.GetExpressionOperatorTokenKind(kind));
-							//var val = (ExpressionSyntax)s.Value.Accept(nodesVisitor);
-
 							var relexpr =  SyntaxFactory.ParseExpression($"{s.OperatorToken} {s.Value}");          
-							//var relexpr = SyntaxFactory.PrefixUnaryExpression(expr.Kind(),kind, val);
-
-							//var relexpr = SyntaxFactory.BinaryExpression(SyntaxKind.SimpleLambdaExpression , expr, kind, val);
-							//s.OperatorToken
-							//s.withope
-							//var l = (ExpressionSyntax)s.Value.Accept(nodesVisitor);
-							//labels.Add(SyntaxFactory.CaseSwitchLabel(l));
-							//var pat = SyntaxFactory.pattern
-							//SyntaxFactory.pattern
-							//SyntaxFactory.CasePatternSwitchLabel()
 							labels.Add(SyntaxFactory.CaseSwitchLabel(relexpr));
 						}
 						else

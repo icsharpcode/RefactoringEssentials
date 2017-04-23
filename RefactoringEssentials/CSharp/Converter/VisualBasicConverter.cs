@@ -37,15 +37,15 @@ namespace RefactoringEssentials.CSharp.Converter
 				throw new ArgumentNullException(nameof(references));
 			var tree = VBasic.SyntaxFactory.ParseSyntaxTree(SourceText.From(text));
 			var compilation = VBasic.VisualBasicCompilation.Create("Conversion", new[] { tree }, references);
-			//try
-			//{
+			try
+			{
 				return new ConversionResult(Convert((VBasic.VisualBasicSyntaxNode)tree.GetRoot(), compilation.GetSemanticModel(tree, true), null).NormalizeWhitespace().ToFullString());
-			//}
-			//catch (Exception ex)
-			//{
-			//    return new ConversionResult(ex);
-			//}
-}
+			}
+			catch (Exception ex)
+			{
+				return new ConversionResult(ex);
+			}
+		}
 
 		static Dictionary<string, VariableDeclarationSyntax> SplitVariableDeclarations(VBSyntax.VariableDeclaratorSyntax declarator, NodesVisitor nodesVisitor, SemanticModel semanticModel)
 		{
@@ -255,6 +255,8 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.CharKeyword;
 				case VBasic.SyntaxKind.ObjectKeyword:
 					return SyntaxKind.ObjectKeyword;
+				case VBasic.SyntaxKind.DateKeyword:
+					return SyntaxKind.None;
 				// literals
 				case VBasic.SyntaxKind.NothingKeyword:
 					return SyntaxKind.NullKeyword;
@@ -384,8 +386,6 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.AssemblyKeyword;
 				case VBasic.SyntaxKind.AsyncKeyword:
 					return SyntaxKind.AsyncKeyword;
-				case VBasic.SyntaxKind.DateKeyword:
-					return SyntaxKind.StringKeyword;
 				case VBasic.SyntaxKind.IsExpression:
 					return SyntaxKind.IsExpression;
 				case VBasic.SyntaxKind.IsNotExpression:
@@ -395,7 +395,7 @@ namespace RefactoringEssentials.CSharp.Converter
 				case VBasic.SyntaxKind.OverridableKeyword:
 					return SyntaxKind.None;
 				case VBasic.SyntaxKind.DefaultKeyword:
-					return SyntaxKind.DefaultKeyword;
+					return SyntaxKind.None;
 				case VBasic.SyntaxKind.ShadowsKeyword:
 					return SyntaxKind.None;
 				case VBasic.SyntaxKind.OverloadsKeyword:

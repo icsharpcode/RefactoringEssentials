@@ -164,34 +164,13 @@ namespace RefactoringEssentials.CSharp.Converter
 			public override CSharpSyntaxNode VisitXmlElement(VBSyntax.XmlElementSyntax node)
 			{
 				var nodecontent = node.Content.ToString();
-				var MathPow = SyntaxFactory.ParseExpression("Xml.Linq.XElement");
-
-				//var ArgLeft = SyntaxFactory.Argument((ExpressionSyntax)node.Left.Accept(this));
-				//var ArgRight = SyntaxFactory.Argument((ExpressionSyntax)node.Right.Accept(this));
+				var XmlExpression = SyntaxFactory.ParseExpression("Xml.Linq.XElement");
 
 				var Arg = SyntaxFactory.Argument(Literal(nodecontent));
 
 				var arglist = SyntaxFactory.ArgumentList();
 				var arglistSL = arglist.AddArguments(Arg);
-				return SyntaxFactory.InvocationExpression(MathPow, arglistSL);
-
-
-				//return SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression,)
-				//return SyntaxFactory.LiteralExpression(SyntaxKind.StringLiteralExpression,node.Content);
-
-
-				return Literal(nodecontent);
-
-				var startTag = (XmlElementStartTagSyntax)node.StartTag.Accept(this);
-				var endTag = (XmlElementEndTagSyntax)node.EndTag.Accept(this);
-				//var content = (SyntaxList<XmlNodeSyntax>)node.Content.Accept(this);
-				var content = new SyntaxList<XmlNodeSyntax>();
-
-
-
-				return SyntaxFactory.XmlElement(startTag, content, endTag);
-
-
+				return SyntaxFactory.InvocationExpression(XmlExpression, arglistSL);
 			}
 
 			public override CSharpSyntaxNode VisitGetTypeExpression(VBSyntax.GetTypeExpressionSyntax node)
@@ -491,7 +470,8 @@ namespace RefactoringEssentials.CSharp.Converter
 				var attributes = node.AttributeLists.SelectMany(ConvertAttribute);
 				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
 
-				var isIndexer = node.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.DefaultKeyword)) && node.Identifier.ValueText.Equals("Items", StringComparison.OrdinalIgnoreCase);
+				var isIndexer = node.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.DefaultKeyword));
+				var isReadOnly = node.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.ReadOnlyKeyword));
 
 				var rawType = (TypeSyntax)node.AsClause?.TypeSwitch(
 					(VBSyntax.SimpleAsClauseSyntax c) => c.Type,
@@ -503,12 +483,23 @@ namespace RefactoringEssentials.CSharp.Converter
 
 				if (!hasBody)
 				{
-					accessors = SyntaxFactory.AccessorList(
-						SyntaxFactory.List(new[] {
+					if (isReadOnly)
+					{
+						accessors = SyntaxFactory.AccessorList(
+							SyntaxFactory.List(new[] {
+							SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
+							})
+						);
+					}
+					else
+					{
+						accessors = SyntaxFactory.AccessorList(
+							SyntaxFactory.List(new[] {
 							SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
 							SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
-						})
-					);
+							})
+						);
+					}
 				}
 				else
 				{
@@ -646,6 +637,21 @@ namespace RefactoringEssentials.CSharp.Converter
 				var attributes = node.AttributeLists.SelectMany(ConvertAttribute);
 				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
 				var id = ConvertIdentifier(node.Identifier, semanticModel);
+
+				if (node.ImplementsClause != null)
+				{
+					var impl = (QualifiedNameSyntax)node.ImplementsClause.InterfaceMembers.First().Accept(this);
+					var eventName = ConvertIdentifier(impl.Right.Identifier, semanticModel);
+					var delegateName = SyntaxFactory.Identifier(eventName + "EventHandler");
+
+					return SyntaxFactory.EventFieldDeclaration(
+						SyntaxFactory.List(attributes),
+						modifiers,
+						SyntaxFactory.VariableDeclaration(SyntaxFactory.IdentifierName(delegateName),
+						SyntaxFactory.SingletonSeparatedList(SyntaxFactory.VariableDeclarator(eventName)))
+					);
+
+				}
 
 				if (node.AsClause == null)
 				{
@@ -924,8 +930,6 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitMemberAccessExpression(VBSyntax.MemberAccessExpressionSyntax node)
 			{
-				var kind = node.Kind();
-				//SyntaxFactory.XmlValueElement()
 				ExpressionSyntax left;
 				left = (ExpressionSyntax)node.Expression?.Accept(this);
 				if (left == null)
@@ -1165,9 +1169,7 @@ namespace RefactoringEssentials.CSharp.Converter
 				}
 				if (node.IsKind(VBasic.SyntaxKind.ExponentiateExpression))
 				{
-					//10 ^ 2 to Math.Pow(10,2)
-					//return SyntaxFactory.MemberAccessExpression()
-					//var MathPow = new ExpressionSyntax();
+					//eg 10 ^ 2 to Math.Pow(10,2)
 					var MathPow = SyntaxFactory.ParseExpression("Math.Pow");
 
 					var ArgLeft = SyntaxFactory.Argument((ExpressionSyntax)node.Left.Accept(this));
@@ -1190,7 +1192,23 @@ namespace RefactoringEssentials.CSharp.Converter
 			{
 				var invocationSymbol = semanticModel.GetSymbolInfo(node).Symbol;
 				var symbol = semanticModel.GetSymbolInfo(node.Expression).Symbol;
-				if (invocationSymbol?.IsIndexer() == true || symbol?.GetReturnType()?.IsArrayType() == true)
+				var symbolReturnType = symbol?.GetReturnType();
+				bool Indexed = false;
+
+				if (symbolReturnType != null)
+				{
+					if (symbolReturnType.Name == "Dictionary")
+					{
+						Indexed = true;
+					}
+				}
+
+				if (invocationSymbol?.IsIndexer() == true || symbolReturnType?.IsArrayType() == true)
+				{
+					Indexed = true;
+				}
+
+				if (Indexed)
 				{
 					return SyntaxFactory.ElementAccessExpression(
 						(ExpressionSyntax)node.Expression.Accept(this),
@@ -1245,7 +1263,21 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitPredefinedType(VBSyntax.PredefinedTypeSyntax node)
 			{
-				return SyntaxFactory.PredefinedType(ConvertToken(node.Keyword));
+				var token = ConvertToken(node.Keyword);
+				if (token.IsKind(SyntaxKind.None) == false)
+				{
+					return SyntaxFactory.PredefinedType(token);
+				}
+				
+				if (VBasic.VisualBasicExtensions.Kind(node.Keyword) == VBasic.SyntaxKind.DateKeyword)
+				{
+					return SyntaxFactory.ParseTypeName("DateTime");
+				}
+				else
+				{
+					return SyntaxFactory.ParseTypeName(node.Keyword.ToString());
+				}
+
 			}
 
 			public override CSharpSyntaxNode VisitNullableType(VBSyntax.NullableTypeSyntax node)

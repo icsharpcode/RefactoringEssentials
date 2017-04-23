@@ -41,6 +41,7 @@ public interface IProblem
 {
     string __table();
     void _FromSQLReader(IDataReader reader, Dictionary<string, int> colidx);
+
     object Item { get; set; }
 }
 ");
@@ -61,6 +62,22 @@ public interface IProblem
 {
 }
 ");
+        }
+
+        [Fact]
+        public void InterfaceChangedMethodName()
+        {
+
+            TestConversionVisualBasicToCSharp(@"
+Class TestClass
+    Implements INotifyPropertyChanged
+
+    Public Event PropertyChangedCHANGED(ByVal sender As Object, ByVal e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
+End Class", @"
+class TestClass : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler PropertyChanged;
+}");
         }
 
 
