@@ -73,6 +73,51 @@ class A
 }", 0);
         }
 
+        [Fact]
+        public void TestFullyQualifiedArgumentException()
+        {
+            Analyze<NameOfSuggestionAnalyzer>(@"
+class A
+{
+	void F(object foo)
+	{
+		if(foo != null)
+			throw new System.ArgumentException(""bar"", $""foo""$);
+	}
+}", @"
+class A
+{
+	void F(object foo)
+	{
+		if(foo != null)
+			throw new System.ArgumentException(""bar"", nameof(foo));
+	}
+}");
+        }
+
+        [Fact]
+        public void TestFullyQualifiedWithAliasArgumentException()
+        {
+            Analyze<NameOfSuggestionAnalyzer>(@"
+using ss = System;
+class A
+{
+	void F(object foo)
+	{
+		if(foo != null)
+			throw new ss::ArgumentException(""bar"", $""foo""$);
+	}
+}", @"
+using ss = System;
+class A
+{
+	void F(object foo)
+	{
+		if(foo != null)
+			throw new ss::ArgumentException(""bar"", nameof(foo));
+	}
+}");
+        }
     }
 }
 

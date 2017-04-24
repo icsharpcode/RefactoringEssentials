@@ -53,13 +53,11 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             var elementCount = node.Expressions.Count;
-            if (elementCount > node.Expressions.GetSeparators().Count())
+            var separatorCount = node.Expressions.SeparatorCount;
+            if (elementCount > separatorCount)
                 return false;
 
-            var tokens = node.ChildTokens().ToArray();
-            if (tokens.Length < 2)
-                return false;
-            var commaToken = tokens[tokens.Length - 2];
+            var commaToken = node.Expressions.GetSeparator(separatorCount - 1);
             if (!commaToken.IsKind(SyntaxKind.CommaToken))
                 return false;
 

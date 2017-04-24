@@ -27,56 +27,48 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             context.EnableConcurrentExecution();
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.RegisterSyntaxNodeAction(
-                (nodeContext) =>
-                {
-                    Diagnostic diagnostic;
-                    if (TryGetDiagnostic(nodeContext, out diagnostic))
-                    {
-                        nodeContext.ReportDiagnostic(diagnostic);
-                    }
-                },
-                SyntaxKind.Parameter
-                );
+                AnalyzeParameterList,
+                SyntaxKind.ParameterList
+            );
         }
 
-        private static bool TryGetDiagnostic(SyntaxNodeAnalysisContext nodeContext, out Diagnostic diagnostic)
+        private static void AnalyzeParameterList(SyntaxNodeAnalysisContext nodeContext)
         {
-            diagnostic = default(Diagnostic);
+            var parameterList = nodeContext.Node as ParameterListSyntax;
+            if (parameterList == null)
+                return;
 
-            var parameter = nodeContext.Node as ParameterSyntax;
-            if (parameter == null)
-                return false;
-
-            if (parameter.Modifiers.Any(SyntaxKind.OutKeyword) || parameter.Modifiers.Any(SyntaxKind.RefKeyword))
-                return false;
-
-            var localParamSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(parameter);
-            if (localParamSymbol == null)
-                return false;
-
-            var method = parameter.Parent.Parent as MethodDeclarationSyntax;
+            var method = parameterList.Parent as MethodDeclarationSyntax;
             if (method == null || method.Body == null)
-                return false;
+                return;
 
-            var dataFlow = nodeContext.SemanticModel.AnalyzeDataFlow(method.Body);
-            if (dataFlow.AlwaysAssigned.Except(dataFlow.ReadInside).Contains(localParamSymbol))
+            var dataFlow = new System.Lazy<DataFlowAnalysis>(() => nodeContext.SemanticModel.AnalyzeDataFlow(method.Body));
+            foreach (var parameter in parameterList.Parameters)
             {
-                var statements = method.Body.Statements;
-                foreach (var statement in statements)
+                if (parameter.Modifiers.Any(SyntaxKind.OutKeyword) || parameter.Modifiers.Any(SyntaxKind.RefKeyword))
+                    continue;
+
+                var localParamSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(parameter);
+                if (localParamSymbol == null)
+                    continue;
+                
+                if (dataFlow.Value.AlwaysAssigned.Except(dataFlow.Value.ReadInside).Contains(localParamSymbol))
                 {
-                    var expression = statement as ExpressionStatementSyntax;
-                    var assignment = expression?.Expression as AssignmentExpressionSyntax;
-                    if (assignment == null)
-                        continue;
-                    var symbol = nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol;
-                    if (localParamSymbol.Equals(symbol))
+                    var statements = method.Body.Statements;
+                    foreach (var statement in statements)
                     {
-                        diagnostic = Diagnostic.Create(descriptor, assignment.GetLocation());
-                        return true;
+                        var expression = statement as ExpressionStatementSyntax;
+                        var assignment = expression?.Expression as AssignmentExpressionSyntax;
+                        if (assignment == null)
+                            continue;
+                        var symbol = nodeContext.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IParameterSymbol;
+                        if (localParamSymbol.Equals(symbol))
+                        {
+                            nodeContext.ReportDiagnostic (Diagnostic.Create(descriptor, assignment.GetLocation()));
+                        }
                     }
                 }
             }
-            return false;
         }
     }
 }
