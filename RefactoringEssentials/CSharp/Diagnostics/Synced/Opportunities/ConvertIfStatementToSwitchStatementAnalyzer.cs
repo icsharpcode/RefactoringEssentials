@@ -103,7 +103,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 ExpressionSyntax switchExpr = null;
                 if (IsConstantExpression(context, binaryOp.Right))
                     switchExpr = binaryOp.Left;
-                if (IsConstantExpression(context, binaryOp.Left))
+                else if (IsConstantExpression(context, binaryOp.Left))
                     switchExpr = binaryOp.Right;
                 if (switchExpr != null && IsValidSwitchType(context.GetTypeInfo(switchExpr).Type))
                     return switchExpr;
@@ -119,23 +119,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var labels = new List<SwitchLabelSyntax>();
             if (!CollectCaseLabels(labels, context, ifStatement.Condition, switchExpr))
                 return false;
+            if (ifStatement.Statement.DescendantNodes().OfType<BreakStatementSyntax> ().Any())
+                return false;
+
             var statements = new List<StatementSyntax>();
             CollectSwitchSectionStatements(statements, context, ifStatement.Statement);
             result.Add(SyntaxFactory.SwitchSection(new SyntaxList<SwitchLabelSyntax>().AddRange(labels), new SyntaxList<StatementSyntax>().AddRange(statements)));
-
-            if (ifStatement.Statement.DescendantNodes().Any(n => n is BreakStatementSyntax))
-                return false;
-
             if (ifStatement.Else == null)
                 return true;
 
+            if (ifStatement.Else.Statement.DescendantNodes().OfType<BreakStatementSyntax>().Any())
+                return false;
+
             // else if
-            var falseStatement = ifStatement.Else.Statement as IfStatementSyntax;
-            if (falseStatement != null)
+            if (ifStatement.Else.Statement is IfStatementSyntax falseStatement)
                 return CollectSwitchSections(result, context, falseStatement, switchExpr);
 
-            if (ifStatement.Else.Statement.DescendantNodes().Any(n => n is BreakStatementSyntax))
-                return false;
             // else (default label)
             labels = new List<SwitchLabelSyntax>();
             labels.Add(SyntaxFactory.DefaultSwitchLabel());
