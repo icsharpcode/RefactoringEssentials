@@ -144,6 +144,36 @@ class TestClass
                 Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
         }
 
+        [Fact]
+        public void TestConstantPropagation()
+        {
+            var input = @"
+class TestClass
+{
+    const bool defVal = false;
+    bool shouldFind $= defVal$;
+}";
+            var output = @"
+class TestClass
+{
+    const bool defVal = false;
+    bool shouldFind;
+}";
+            Analyze<RedundantDefaultFieldInitializerAnalyzer>(input, output);
+        }
+
+        [Fact]
+        public void TestNewNotFound()
+        {
+            var input = @"
+class TestClass
+{
+    object x = new object();
+    DateTime y = new DateTime();
+}";
+            Analyze<RedundantDefaultFieldInitializerAnalyzer>(input);
+        }
+
 
         [Fact]
         public void TestRedundantConstantBug()

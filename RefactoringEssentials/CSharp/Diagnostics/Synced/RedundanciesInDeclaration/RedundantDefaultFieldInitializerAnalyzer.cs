@@ -76,6 +76,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (initializer == null)
                     continue;
 
+                // Fast-path for ignoring new object creation.
+                if (initializer is ObjectCreationExpressionSyntax)
+                    continue;
+
                 // Check for default expression or literal expressions as fast-path.
                 if (IsConstantValueFast(initializer, type))
                 {
