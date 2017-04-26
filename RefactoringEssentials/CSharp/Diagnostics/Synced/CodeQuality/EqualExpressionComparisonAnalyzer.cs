@@ -77,38 +77,51 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             diagnostic = default(Diagnostic);
             var node = nodeContext.Node as InvocationExpressionSyntax;
 
-            var info = nodeContext.SemanticModel.GetSymbolInfo(node);
+            SimpleNameSyntax methodName;
+            if (node.Expression is MemberAccessExpressionSyntax maes)
+                methodName = maes.Name;
+            else if (node.Expression is IdentifierNameSyntax ins)
+                methodName = ins;
+            else
+                return false;
 
-            if (info.Symbol == null || !info.Symbol.IsKind(SymbolKind.Method) || info.Symbol.Name != "Equals" || info.Symbol.GetReturnType().SpecialType != SpecialType.System_Boolean)
+            if (methodName.Identifier.ValueText != "Equals")
+                return false;
+
+            var info = nodeContext.SemanticModel.GetSymbolInfo(node);
+            if (info.Symbol == null || !info.Symbol.IsKind(SymbolKind.Method) || info.Symbol.GetReturnType().SpecialType != SpecialType.System_Boolean)
                 return false;
 
             var method = info.Symbol as IMethodSymbol;
             if (method.IsStatic) {
                 if (method.Parameters.Length != 2 || node.ArgumentList.Arguments.Count != 2)
                     return false;
-                if (CSharpUtil.AreConditionsEqual(node.ArgumentList.Arguments[0].Expression, node.ArgumentList.Arguments[1].Expression)) {
-                    if (node.Parent.IsKind(SyntaxKind.LogicalNotExpression)) {
-                        diagnostic = Diagnostic.Create(descriptor, node.Parent.GetLocation(), "false");
-                    } else {
-                        diagnostic = Diagnostic.Create(descriptor, node.GetLocation(), "true");
-                    }
+                if (AreConditionsEquivalent(node, node.ArgumentList.Arguments[0].Expression, node.ArgumentList.Arguments[1].Expression, out diagnostic))
                     return true;
-                }
             } else {
                 if (method.Parameters.Length != 1 || node.ArgumentList.Arguments.Count != 1)
                     return false;
                 var target = node.Expression as MemberAccessExpressionSyntax;
                 if (target == null)
                     return false;
-                if (CSharpUtil.AreConditionsEqual(node.ArgumentList.Arguments[0].Expression, target.Expression)) {
-                    if (node.Parent.IsKind(SyntaxKind.LogicalNotExpression)) {
-                        diagnostic = Diagnostic.Create(descriptor, node.Parent.GetLocation(), "false");
-                    } else {
-                        diagnostic = Diagnostic.Create(descriptor, node.GetLocation(), "true");
-                    }
+
+                if (AreConditionsEquivalent(node, node.ArgumentList.Arguments[0].Expression, target.Expression, out diagnostic))
                     return true;
-                }
             }
+            return false;
+        }
+
+        static bool AreConditionsEquivalent (ExpressionSyntax node, ExpressionSyntax arg1, ExpressionSyntax arg2, out Diagnostic diagnostic)
+        {
+            if (CSharpUtil.AreConditionsEqual(arg1, arg2))
+            {
+                if (node.Parent.IsKind(SyntaxKind.LogicalNotExpression))
+                    diagnostic = Diagnostic.Create(descriptor, node.Parent.GetLocation(), "false");
+                else
+                    diagnostic = Diagnostic.Create(descriptor, node.GetLocation(), "true");
+                return true;
+            }
+            diagnostic = default(Diagnostic);
             return false;
         }
     }
