@@ -48,7 +48,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (ifElseStatement == null)
                 return false;
 
-            if (!ElseIsRedundantControlFlow(ifElseStatement, nodeContext) || HasConflictingNames(nodeContext, ifElseStatement))
+            if (HasConflictingNames(nodeContext, ifElseStatement) || !ElseIsRedundantControlFlow(ifElseStatement, nodeContext))
                 return false;
 
             diagnostic = Diagnostic.Create(descriptor, ifElseStatement.Else.ElseKeyword.GetLocation());
@@ -76,7 +76,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             var member = ifElseStatement.Ancestors().FirstOrDefault(a => a is MemberDeclarationSyntax);
 
-            var priorLocalDeclarations = new List<string>();
+            var priorLocalDeclarations = new HashSet<string>();
             foreach (var localDecl in member.DescendantNodes().Where(n => n.SpanStart < ifElseStatement.Else.SpanStart).OfType<LocalDeclarationStatementSyntax>()) {
                 foreach (var v in localDecl.Declaration.Variables)
                     priorLocalDeclarations.Add(v.Identifier.ValueText);
@@ -87,9 +87,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 var decl = sym as LocalDeclarationStatementSyntax;
                 if (decl == null)
                     continue;
-                
-                if (priorLocalDeclarations.Contains(s => decl.Declaration.Variables.Any(v => v.Identifier.ValueText == s)))
-                    return true;
+
+                foreach (var variable in decl.Declaration.Variables)
+                    if (priorLocalDeclarations.Contains(variable.Identifier.ValueText))
+                        return true;
             }
             return false;
         }
