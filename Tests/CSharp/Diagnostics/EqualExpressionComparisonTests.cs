@@ -154,6 +154,27 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
 }");
         }
 
+        [Fact]
+        public void TestStaticQualifiedEquals()
+        {
+            Analyze<EqualExpressionComparisonAnalyzer>(@"class Foo
+{
+    static int Bar (object o)
+    {
+        if ($object.Equals(o, o)$) {
+        }
+        return 5;
+    }
+}", @"class Foo
+{
+    static int Bar (object o)
+    {
+        if (true) {
+        }
+        return 5;
+    }
+}");
+        }
     }
 }
 

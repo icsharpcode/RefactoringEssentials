@@ -31,6 +31,35 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             context.RegisterSyntaxNodeAction(AnalyzeField,  new SyntaxKind[] { SyntaxKind.FieldDeclaration });
         }
 
+        static bool IsConstantValueFast(ExpressionSyntax initializer, ITypeSymbol type)
+        {
+            if (initializer.IsKind(SyntaxKind.DefaultExpression))
+                return true;
+
+            if (type.IsReferenceType || type.IsNullableType())
+                return initializer.IsKind(SyntaxKind.NullLiteralExpression);
+
+            switch (type.SpecialType) {
+                case SpecialType.System_Boolean:
+                    return !initializer.IsKind(SyntaxKind.FalseLiteralExpression);
+                case SpecialType.System_Char:
+                    return initializer.IsKind(SyntaxKind.CharacterLiteralExpression) && ((LiteralExpressionSyntax)initializer).Token.ValueText == "\\0";
+                case SpecialType.System_SByte:
+                case SpecialType.System_Byte:
+                case SpecialType.System_Int16:
+                case SpecialType.System_UInt16:
+                case SpecialType.System_Int32:
+                case SpecialType.System_UInt32:
+                case SpecialType.System_Int64:
+                case SpecialType.System_UInt64:
+                case SpecialType.System_Single:
+                case SpecialType.System_Double:
+                case SpecialType.System_Decimal:
+                    return initializer.IsKind(SyntaxKind.NumericLiteralExpression) && ((LiteralExpressionSyntax)initializer).Token.ValueText == "0";
+            }
+            return false;
+        }
+
         static void AnalyzeField(SyntaxNodeAnalysisContext nodeContext)
         {
             var node = nodeContext.Node as FieldDeclarationSyntax;
@@ -47,13 +76,14 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (initializer == null)
                     continue;
 
-                if (initializer.IsKind(SyntaxKind.DefaultExpression))
+                // Fast-path for ignoring new object creation.
+                if (initializer is ObjectCreationExpressionSyntax)
+                    continue;
+
+                // Check for default expression or literal expressions as fast-path.
+                if (IsConstantValueFast(initializer, type))
                 {
-                    //var defaultExpr = (DefaultExpressionSyntax)initializer;
-                    //var defaultType = nodeContext.SemanticModel.GetTypeInfo(defaultExpr.Type).Type;
-                    //if (defaultType == type) {
                     nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor, v.Initializer.GetLocation()));
-                    //}
                     continue;
                 }
 
