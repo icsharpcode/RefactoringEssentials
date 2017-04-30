@@ -31,15 +31,7 @@ namespace RefactoringEssentials.CSharp.Converter
 				throw new NotImplementedException(node.GetType() + " not implemented!");
 			}
 
-			public override CSharpSyntaxNode VisitAggregateClause(VBSyntax.AggregateClauseSyntax node)
-			{
-				foreach (var item in node.Variables)
-				{
-					var ident = SyntaxFactory.Identifier(item.Identifier.ToString());
-					return SyntaxFactory.FromClause(ident, (ExpressionSyntax)item.Expression.Accept(this));
-				}
-				return null;
-			}
+
 
 			public override CSharpSyntaxNode VisitGlobalName(VBSyntax.GlobalNameSyntax node)
 			{

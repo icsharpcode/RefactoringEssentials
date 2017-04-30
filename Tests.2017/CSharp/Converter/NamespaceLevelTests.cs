@@ -42,7 +42,7 @@ public interface IProblem
     string __table();
     void _FromSQLReader(IDataReader reader, Dictionary<string, int> colidx);
 
-    object Item { get; set; }
+    object this[string colname] { get; set; }
 }
 ");
         }
@@ -52,12 +52,10 @@ public interface IProblem
         {
             TestConversionVisualBasicToCSharp(
 @"
-'Hello
 Public Interface IProblem
 End Interface
 ",
 @"
-//Hello
 public interface IProblem
 {
 }

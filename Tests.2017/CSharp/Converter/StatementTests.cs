@@ -159,7 +159,7 @@ class TestClass
         }
 
         [Fact]
-        public void IndexCall2()
+        public void IndexCallParameter()
         {
 
             TestConversionVisualBasicToCSharp(@"
@@ -201,8 +201,6 @@ class TestClass
     }
 }");
 		}
-
-
 
 	}
 }

@@ -25,6 +25,8 @@ namespace RefactoringEssentials.CSharp.Converter
 				this.nodesVisitor = nodesVisitor;
 			}
 
+
+
 			public override SyntaxList<StatementSyntax> DefaultVisit(SyntaxNode node)
 			{
 				throw new NotImplementedException(node.GetType() + " not implemented!");
@@ -97,8 +99,6 @@ namespace RefactoringEssentials.CSharp.Converter
 					var LeftID = (VBSyntax.IdentifierNameSyntax)node.Left;
 					var symbol = semanticModel.GetSymbolInfo(LeftID).Symbol;
 					var symbolReturnType = symbol?.GetReturnType();
-					//symbol.GetSymbolType
-
 					Left = (ExpressionSyntax)node.Left.Accept(nodesVisitor);
 				}
 				else
