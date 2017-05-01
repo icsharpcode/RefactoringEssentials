@@ -70,7 +70,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         static bool HasConflictingNames(SyntaxNodeAnalysisContext nodeContext, IfStatementSyntax ifElseStatement)
         {
-            var block = ifElseStatement?.Else.Statement as BlockSyntax;
+            var block = ifElseStatement.Else?.Statement as BlockSyntax;
             if (block == null || block.Statements.Count == 0)
                 return false;
 
