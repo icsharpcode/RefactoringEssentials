@@ -41,7 +41,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             switch (type.SpecialType) {
                 case SpecialType.System_Boolean:
-                    return !initializer.IsKind(SyntaxKind.FalseLiteralExpression);
+                    return initializer.IsKind(SyntaxKind.FalseLiteralExpression);
                 case SpecialType.System_Char:
                     return initializer.IsKind(SyntaxKind.CharacterLiteralExpression) && ((LiteralExpressionSyntax)initializer).Token.ValueText == "\\0";
                 case SpecialType.System_SByte:
