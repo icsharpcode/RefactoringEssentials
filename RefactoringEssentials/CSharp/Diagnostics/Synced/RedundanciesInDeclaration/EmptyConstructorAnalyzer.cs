@@ -64,6 +64,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return false;
 
             return constructorDeclaration.ParameterList.Parameters.Count == 0 &&
+                constructorDeclaration.ExpressionBody == null &&
                 EmptyDestructorAnalyzer.IsEmpty(constructorDeclaration.Body);
         }
     }
