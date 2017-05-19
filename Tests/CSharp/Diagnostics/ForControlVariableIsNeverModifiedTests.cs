@@ -102,5 +102,21 @@ class TestClass
 }";
             Analyze<ForControlVariableIsNeverModifiedAnalyzer>(input);
         }
+
+        [Fact]
+        public void TestBug56643()
+        {
+            var input = @"
+class TestClass
+{
+    void TestMethod ()
+    {
+        for (int i = 0, n = Count; i<n; i++) 
+        {
+        }
+    }
+}";
+            Analyze<ForControlVariableIsNeverModifiedAnalyzer>(input);
+        }
     }
 }

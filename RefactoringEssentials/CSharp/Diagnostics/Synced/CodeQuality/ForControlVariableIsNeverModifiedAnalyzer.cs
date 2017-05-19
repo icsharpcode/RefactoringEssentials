@@ -43,6 +43,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     return;
                 if ((node.Condition == null) || !node.Condition.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>().Any(n => n.Identifier.ValueText == local.Name))
                     continue;
+                if (!IsLoopVariable(node.Condition, local.Name))
+                    continue;
                 bool wasModified = false;
                 foreach (var identifier in node.DescendantNodesAndSelf().OfType<IdentifierNameSyntax>()) {
                     if (identifier.Identifier.ValueText != local.Name)
@@ -61,6 +63,20 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                     nodeContext.ReportDiagnostic(Diagnostic.Create(descriptor, variable.Identifier.GetLocation()));
                 }
             }
+        }
+
+        bool IsLoopVariable (ExpressionSyntax condition, string name)
+        {
+            foreach (var n in condition.DescendantNodesAndSelf ()) {
+                var binOp = n as BinaryExpressionSyntax;
+                if (binOp != null && binOp.Left.DescendantNodesAndSelf ().OfType<IdentifierNameSyntax> ().Any (i => i.Identifier.ValueText == name))
+                    return true;
+                if (n is PrefixUnaryExpressionSyntax || n is PostfixUnaryExpressionSyntax) {
+                    if (n.DescendantNodesAndSelf ().OfType<IdentifierNameSyntax> ().Any (i => i.Identifier.ValueText == name))
+                        return true;
+                }
+            }
+            return false;
         }
 
         bool IsModified(IdentifierNameSyntax identifier)
