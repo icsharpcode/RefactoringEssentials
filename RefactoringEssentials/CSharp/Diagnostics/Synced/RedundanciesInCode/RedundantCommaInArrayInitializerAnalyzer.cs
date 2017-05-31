@@ -54,7 +54,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
             var elementCount = node.Expressions.Count;
             var separatorCount = node.Expressions.SeparatorCount;
-            if (elementCount > separatorCount)
+            if (elementCount > separatorCount || separatorCount <= 0)
                 return false;
 
             var commaToken = node.Expressions.GetSeparator(separatorCount - 1);
