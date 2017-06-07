@@ -61,9 +61,64 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (!DidVariableDeclarationTypeCorrespondToObviousCase(nodeContext, localVariableStatement))
                     return false;
 
+                if (IsPrimitiveTypeOrSimpleCombination(localVariableStatement.Declaration.Type))
+                    return false;
+
                 diagnostic = Diagnostic.Create(descriptor, localVariableSyntax.Type.GetLocation());
             }
             return true;
+        }
+        
+        static bool IsPrimitiveTypeOrSimpleCombination(TypeSyntax candidateType)
+        {
+            if (candidateType is PredefinedTypeSyntax)
+                return true;
+            {
+                var type = candidateType as SimpleNameSyntax;
+                if (type != null)
+                {
+                    if (type.Identifier.Text == "DateTime" || type.Identifier.Text == "TimeSpan")
+                        return true;
+                }
+            }
+
+            TypeSyntax elementType = null;
+
+            {
+                var arrayType = candidateType as ArrayTypeSyntax;
+                if (arrayType != null)
+                {
+                    elementType = arrayType.ElementType;
+                }
+            }
+            {
+                var pointerType = candidateType as PointerTypeSyntax;
+                if (pointerType != null)
+                {
+                    elementType = pointerType.ElementType;
+                }
+            }
+            {
+                var nullableType = candidateType as NullableTypeSyntax;
+                if (nullableType != null)
+                {
+                    elementType = nullableType.ElementType;
+                }
+            }
+
+            if (elementType != null)
+            {
+                if (elementType is PredefinedTypeSyntax)
+                    return true;
+                var type = elementType as SimpleNameSyntax;
+                if (type != null)
+                {
+                    if (type.Identifier.Text == "DateTime" || type.Identifier.Text == "TimeSpan")
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         static bool TryValidateLocalVariableType(LocalDeclarationStatementSyntax localDeclarationStatementSyntax, VariableDeclarationSyntax variableDeclarationSyntax)
