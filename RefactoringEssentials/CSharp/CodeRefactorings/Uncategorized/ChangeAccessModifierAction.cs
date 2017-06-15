@@ -39,29 +39,29 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 node = node.Parent;
             if (node == null || node.IsKind(SyntaxKind.InterfaceDeclaration, SyntaxKind.EnumMemberDeclaration))
                 return;
-            
+
             ISymbol symbol = null;
             var field = node as FieldDeclarationSyntax;
-            if(field != null)
+            if (field != null)
                 symbol = model.GetDeclaredSymbol(field.Declaration.Variables.First(), cancellationToken);
             else
             {
                 var member = node as MemberDeclarationSyntax;
-                if(member != null)
+                if (member != null)
                     symbol = model.GetDeclaredSymbol(member, cancellationToken);
                 else
                 {
                     var accessor = node as AccessorDeclarationSyntax;
-                    if(accessor != null)
+                    if (accessor != null)
                         symbol = model.GetDeclaredSymbol(accessor, cancellationToken);
                 }
             }
             if (!symbol.AccessibilityChangeable())
                 return;
-            
+
             foreach (var accessibility in GetPossibleAccessibilities(model, symbol, node, cancellationToken))
             {
-                var modifiers = GetAccessibilityModifiers(accessibility);
+                var modifiers = GetAccessibilityModifiers(accessibility, node.GetModifiers());
                 context.RegisterRefactoring(CodeActionFactory.Create(
                     token.Span,
                     DiagnosticSeverity.Info,
@@ -84,13 +84,13 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (containingType == null)
             {
                 if (member.IsPublic())
-                    result = new [] { Accessibility.Internal };
+                    result = new[] { Accessibility.Internal };
 
-                result = new [] { Accessibility.Public };
+                result = new[] { Accessibility.Public };
             }
             else if (containingType.IsValueType)
             {
-                result = new []
+                result = new[]
                 {
                     Accessibility.Private,
                     Accessibility.Internal,
@@ -118,11 +118,11 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                 }
             }
-            
+
             return result.Where(a => a != member.DeclaredAccessibility);
         }
 
-        public static SyntaxTokenList GetAccessibilityModifiers(Accessibility accessibility)
+        public static SyntaxTokenList GetAccessibilityModifiers(Accessibility accessibility, SyntaxTokenList oldList)
         {
             var tokenList = new List<SyntaxToken>();
             switch (accessibility)
@@ -148,6 +148,17 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     tokenList.Add(SyntaxFactory.Token(SyntaxKind.PublicKeyword));
                     break;
             }
+
+            foreach (var token in oldList)
+            {
+                if (token.IsKind(SyntaxKind.PrivateKeyword) ||
+                    token.IsKind(SyntaxKind.ProtectedKeyword) ||
+                    token.IsKind(SyntaxKind.InternalKeyword) ||
+                    token.IsKind(SyntaxKind.PublicKeyword))
+                    continue;
+                tokenList.Add(token);
+            }
+
             return SyntaxFactory.TokenList(tokenList.Select(t => t.WithTrailingTrivia(SyntaxFactory.SyntaxTrivia(SyntaxKind.WhitespaceTrivia, " "))));
         }
     }
