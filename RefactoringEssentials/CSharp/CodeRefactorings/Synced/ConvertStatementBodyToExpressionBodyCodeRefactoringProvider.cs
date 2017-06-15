@@ -16,6 +16,9 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var document = context.Document;
             if (document.Project.Solution.Workspace.Kind == WorkspaceKind.MiscellaneousFiles)
                 return;
+            var options = document.Project.ParseOptions as CSharpParseOptions;
+            if (options != null && options.LanguageVersion < LanguageVersion.CSharp6)
+                return;
             var span = context.Span;
             if (!span.IsEmpty)
                 return;
