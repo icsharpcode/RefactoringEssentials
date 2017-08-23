@@ -6,7 +6,7 @@ using System.Linq;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RefactoringEssentials.Util.Analysis;
-
+/*
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
 	[DiagnosticAnalyzer(LanguageNames.CSharp)]
@@ -294,4 +294,4 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             }
         }
     }
-}
+}*/

@@ -1,3 +1,4 @@
+/*
 using RefactoringEssentials.CSharp.CodeRefactorings;
 using Xunit;
 
@@ -119,4 +120,4 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }");
         }
     }
-}
+}*/

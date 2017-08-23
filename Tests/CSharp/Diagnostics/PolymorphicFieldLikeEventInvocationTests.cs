@@ -1,3 +1,4 @@
+/*
 using RefactoringEssentials.CSharp.Diagnostics;
 using Xunit;
 
@@ -83,3 +84,4 @@ public class Foo : Bar
     }
 }
 
+*/

@@ -1,3 +1,4 @@
+/*
 using RefactoringEssentials.CSharp.Diagnostics;
 using Xunit;
 
@@ -173,4 +174,4 @@ namespace resharper_test
 ");
         }
     }
-}
+}*/
