@@ -393,7 +393,7 @@ namespace RefactoringEssentials.Util.Analysis
             {
                 CreateConnectedEndNode(node);
             }
-
+            
             public override void VisitExpressionStatement(ExpressionStatementSyntax node)
             {
                 CreateConnectedEndNode(node);
@@ -769,6 +769,11 @@ namespace RefactoringEssentials.Util.Analysis
             {
                 HandleEmbeddedStatement(node.Statement, curNode);
                 CreateConnectedEndNode(node);
+            }
+
+            public override void VisitLocalFunctionStatement(LocalFunctionStatementSyntax node)
+            {
+                // not connected to the control flow
             }
         }
 

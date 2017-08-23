@@ -1,3 +1,4 @@
+/*
 using RefactoringEssentials.CSharp.Diagnostics;
 using Xunit;
 
@@ -519,4 +520,4 @@ public class MyClass
 ", 0);
         }
     }
-}
+}*/

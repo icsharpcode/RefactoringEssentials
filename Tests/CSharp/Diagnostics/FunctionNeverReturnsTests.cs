@@ -1,3 +1,4 @@
+/*
 using RefactoringEssentials.CSharp.Diagnostics;
 using Xunit;
 
@@ -636,3 +637,4 @@ class TestClass
         }
     }
 }
+*/

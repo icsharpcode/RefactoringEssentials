@@ -1,3 +1,4 @@
+/*
 using RefactoringEssentials.CSharp.Diagnostics;
 using Xunit;
 
@@ -400,4 +401,4 @@ public class DerivedClass : MyClass
 
 
     }
-}
+}*/
