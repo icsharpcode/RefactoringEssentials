@@ -1709,10 +1709,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.1.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.1.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.1.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.3.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.3.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.3.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.3.2" />
   </ItemGroup>
   <ItemGroup>
     <None Update="RefactoringEssentials.Library.nuspec">
