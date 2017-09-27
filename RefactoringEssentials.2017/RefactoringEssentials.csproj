@@ -197,6 +197,9 @@
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyCodeRefactoringProvider.cs</Link>
     </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyManipulater.cs">
+	  <Link>CSharp\CodeRefactorings\Synced\ConvertAutoPropertyToPropertyManipulater.cs</Link>
+    </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactorings\Synced\ConvertCoalescingToConditionalExpressionCodeRefactoringProvider.cs">
       <Link>CSharp\CodeRefactorings\Synced\ConvertCoalescingToConditionalExpressionCodeRefactoringProvider.cs</Link>
     </Compile>
@@ -1330,6 +1333,18 @@
     </Compile>
     <Compile Include="..\RefactoringEssentials\CSharp\SyntaxExtensions.cs">
       <Link>CSharp\SyntaxExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\CodeRefactoringStatementSyntax.cs">
+      <Link>CSharp\CodeRefactoringStatementSyntax.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\DocumentManipulator.cs">
+      <Link>CSharp\DocumentManipulator.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\PropertyDeclarationContext.cs">
+      <Link>CSharp\PropertyDeclarationContext.cs</Link>
+    </Compile>
+    <Compile Include="..\RefactoringEssentials\CSharp\PropertyDeclarationContextFinder.cs">
+      <Link>CSharp\PropertyDeclarationContextFinder.cs</Link>
     </Compile>
     <Compile Include="..\RefactoringEssentials\Samples\CSharp\SampleAnalyzer.cs">
       <Link>Samples\CSharp\SampleAnalyzer.cs</Link>

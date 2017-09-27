@@ -2,6 +2,8 @@
 
 [![Join the chat at https://gitter.im/icsharpcode/RefactoringEssentials](https://badges.gitter.im/icsharpcode/RefactoringEssentials.svg)](https://gitter.im/icsharpcode/RefactoringEssentials?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![](https://codescene.io/projects/842/status.svg) Get more details at **codescene.io**.](https://codescene.io/projects/842/jobs/latest-successful/results)
+
 [@vsrefactoring](https://twitter.com/vsrefactoring) | [vsrefactoringessentials.com](http://vsrefactoringessentials.com/)
 
 Refactorings Essentials sports the following features:
@@ -28,3 +30,4 @@ Branch | Status 4.* (VS 2015) | Status 5.* (VS 2017)
 --- | --- | ---
 *master* (Development) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/master?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/r01wr5xdclj24y20/branch/master?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials-wgnsw/branch/master) 
 *release* (Latest Release) | [![Build status](https://ci.appveyor.com/api/projects/status/5463mskexnsa0176/branch/release?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials/branch/release) | [![Build status](https://ci.appveyor.com/api/projects/status/r01wr5xdclj24y20/branch/release?svg=true)](https://ci.appveyor.com/project/icsharpcode/refactoringessentials-wgnsw/branch/release)
+k
