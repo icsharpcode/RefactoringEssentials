@@ -44,7 +44,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             var destructorDeclaration = nodeContext.Node as DestructorDeclarationSyntax;
             diagnostic = default(Diagnostic);
 
-            if (!IsEmpty(destructorDeclaration.Body))
+            if (destructorDeclaration.ExpressionBody == null && !IsEmpty(destructorDeclaration.Body))
                 return false;
 
             diagnostic = Diagnostic.Create(
