@@ -156,7 +156,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     token.IsKind(SyntaxKind.InternalKeyword) ||
                     token.IsKind(SyntaxKind.PublicKeyword))
                     continue;
-                tokenList.Add(token);
+                tokenList.Add(token.WithoutTrivia());
             }
 
             return SyntaxFactory.TokenList(tokenList.Select(t => t.WithTrailingTrivia(SyntaxFactory.SyntaxTrivia(SyntaxKind.WhitespaceTrivia, " "))));
