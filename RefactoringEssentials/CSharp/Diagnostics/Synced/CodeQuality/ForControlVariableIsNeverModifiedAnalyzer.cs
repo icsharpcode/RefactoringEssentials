@@ -67,6 +67,10 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         bool IsLoopVariable (ExpressionSyntax condition, string name)
         {
+            var identifier = condition as IdentifierNameSyntax;
+            if ((identifier != null) && (identifier.Identifier.ValueText == name))
+                return true;
+
             foreach (var n in condition.DescendantNodesAndSelf ()) {
                 var binOp = n as BinaryExpressionSyntax;
                 if (binOp != null && binOp.Left.DescendantNodesAndSelf ().OfType<IdentifierNameSyntax> ().Any (i => i.Identifier.ValueText == name))
@@ -76,6 +80,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                         return true;
                 }
             }
+
             return false;
         }
 
