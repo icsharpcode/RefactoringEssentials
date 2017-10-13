@@ -115,6 +115,10 @@ namespace RefactoringEssentials
                     return SyntaxKind.ExclamationToken;
                 case SyntaxKind.BitwiseNotExpression:
                     return SyntaxKind.TildeToken;
+
+                case SyntaxKind.IsExpression:
+                    return SyntaxKind.EqualsEqualsToken;
+
             }
             throw new ArgumentOutOfRangeException(nameof(op));
         }

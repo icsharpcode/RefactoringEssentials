@@ -174,9 +174,9 @@ namespace RefactoringEssentials.Tests
 				);
 			}
 			workspace.Options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, false);
-			var compilationOptions = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-				.WithRootNamespace("TestProject")
-				.WithGlobalImports(GlobalImport.Parse("System", "System.Collections.Generic", "System.Linq", "Microsoft.VisualBasic"));
+            var compilationOptions = new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+                .WithRootNamespace("TestProject");
+				//.WithGlobalImports(GlobalImport.Parse("System", "System.Collections.Generic", "System.Linq", "Microsoft.VisualBasic"));
 			workspace.Open(ProjectInfo.Create(
 				projectId,
 				VersionStamp.Create(),
@@ -244,8 +244,8 @@ namespace RefactoringEssentials.Tests
 			var outputNode = Convert((VisualBasicSyntaxNode)inputDocument.GetSyntaxRootAsync().Result, inputDocument.GetSemanticModelAsync().Result, outputDocument);
 
 			var txt = outputDocument.WithSyntaxRoot(Formatter.Format(outputNode, vbWorkspace)).GetTextAsync().Result.ToString();
-			txt = Utils.HomogenizeEol(txt).TrimEnd();
-			expectedCsharpCode = Utils.HomogenizeEol(expectedCsharpCode).TrimEnd();
+			txt = Utils.HomogenizeEol(txt).Trim();
+			expectedCsharpCode = Utils.HomogenizeEol(expectedCsharpCode).Trim();
 			if (expectedCsharpCode != txt)
 			{
 				int l = Math.Max(expectedCsharpCode.Length, txt.Length);

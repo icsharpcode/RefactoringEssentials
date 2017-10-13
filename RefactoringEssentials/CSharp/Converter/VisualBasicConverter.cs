@@ -55,10 +55,31 @@ namespace RefactoringEssentials.CSharp.Converter
 				_ => { throw new NotImplementedException($"{_.GetType().FullName} not implemented!"); }
 			)?.Accept(nodesVisitor) ?? SyntaxFactory.ParseTypeName("var");
 
-			var initializer = (ExpressionSyntax)declarator.AsClause?.TypeSwitch(
+			var initializer  = (ExpressionSyntax)declarator.AsClause?.TypeSwitch(
 				(VBSyntax.SimpleAsClauseSyntax _) => declarator.Initializer?.Value,
 				(VBSyntax.AsNewClauseSyntax c) => c.NewExpression
 			)?.Accept(nodesVisitor) ?? (ExpressionSyntax)declarator.Initializer?.Value.Accept(nodesVisitor);
+
+			if (initializer != null && rawType.IsVar == false)
+			{
+				if (initializer.IsKind(SyntaxKind.ObjectCreationExpression))
+				{
+					if (((ObjectCreationExpressionSyntax)initializer).Type.IsEquivalentTo(rawType))
+					{
+						//correct type
+					}
+					else
+					{
+						initializer = SyntaxFactory.CastExpression(rawType, initializer);
+					}
+				}
+				else
+				{
+					initializer = SyntaxFactory.CastExpression(rawType, initializer);
+				}
+				
+			}
+			
 
 			var newDecls = new Dictionary<string, VariableDeclarationSyntax>();
 
@@ -97,17 +118,17 @@ namespace RefactoringEssentials.CSharp.Converter
 			if (id.SyntaxTree == semanticModel.SyntaxTree)
 			{
 				var symbol = semanticModel.GetSymbolInfo(id.Parent).Symbol;
-                if (symbol != null && !string.IsNullOrWhiteSpace(symbol.Name))
-                {
-                    if (symbol.IsConstructor() && isAttribute)
-                    {
-                        text = symbol.ContainingType.Name;
-                        if (text.EndsWith("Attribute", StringComparison.Ordinal))
-                            text = text.Remove(text.Length - "Attribute".Length);
-                    }
-                    else
-                        text = symbol.Name;
-                }
+				if (symbol != null && !string.IsNullOrWhiteSpace(symbol.Name))
+				{
+					if (symbol.IsConstructor() && isAttribute)
+					{
+						text = symbol.ContainingType.Name;
+						if (text.EndsWith("Attribute", StringComparison.Ordinal))
+							text = text.Remove(text.Length - "Attribute".Length);
+					}
+					else
+						text = symbol.Name;
+				}
 			}
 			return SyntaxFactory.Identifier(text);
 		}
@@ -234,6 +255,8 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.CharKeyword;
 				case VBasic.SyntaxKind.ObjectKeyword:
 					return SyntaxKind.ObjectKeyword;
+				case VBasic.SyntaxKind.DateKeyword:
+					return SyntaxKind.None;
 				// literals
 				case VBasic.SyntaxKind.NothingKeyword:
 					return SyntaxKind.NullKeyword;
@@ -272,8 +295,8 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.AbstractKeyword;
 				case VBasic.SyntaxKind.MustOverrideKeyword:
 					return SyntaxKind.AbstractKeyword;
-                case VBasic.SyntaxKind.NotOverridableKeyword:
-                case VBasic.SyntaxKind.NotInheritableKeyword:
+				case VBasic.SyntaxKind.NotOverridableKeyword:
+				case VBasic.SyntaxKind.NotInheritableKeyword:
 					return SyntaxKind.SealedKeyword;
 				// unary operators
 				case VBasic.SyntaxKind.UnaryMinusExpression:
@@ -363,6 +386,30 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.AssemblyKeyword;
 				case VBasic.SyntaxKind.AsyncKeyword:
 					return SyntaxKind.AsyncKeyword;
+				case VBasic.SyntaxKind.IsExpression:
+					return SyntaxKind.IsExpression;
+				case VBasic.SyntaxKind.IsNotExpression:
+					return SyntaxKind.IsExpression;
+				case VBasic.SyntaxKind.WithEventsKeyword:
+					return SyntaxKind.None;
+				case VBasic.SyntaxKind.OverridableKeyword:
+					return SyntaxKind.None;
+				case VBasic.SyntaxKind.DefaultKeyword:
+					return SyntaxKind.None;
+				case VBasic.SyntaxKind.ShadowsKeyword:
+					return SyntaxKind.None;
+				case VBasic.SyntaxKind.OverloadsKeyword:
+					return SyntaxKind.None;
+				case VBasic.SyntaxKind.IntegerDivideExpression:
+					return SyntaxKind.DivideExpression;
+				case VBasic.SyntaxKind.ConcatenateAssignmentStatement:
+					return SyntaxKind.AddAssignmentExpression;
+				case VBasic.SyntaxKind.GreaterThanEqualsToken:
+					return SyntaxKind.GreaterThanEqualsToken;
+				case VBasic.SyntaxKind.LessThanEqualsToken:
+					return SyntaxKind.LessThanEqualsToken;
+
+
 			}
 			throw new NotSupportedException(t + " not supported!");
 		}

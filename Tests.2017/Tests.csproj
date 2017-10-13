@@ -1121,6 +1121,8 @@
     <Compile Include="..\Tests\VB\Diagnostics\VBDiagnosticTestBase.cs">
       <Link>VB\Diagnostics\VBDiagnosticTestBase.cs</Link>
     </Compile>
+    <Compile Include="CSharp\Converter\NamespaceLevelTests.cs" />
+    <Compile Include="CSharp\Converter\StatementTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
