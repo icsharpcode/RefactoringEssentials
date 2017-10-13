@@ -21,20 +21,20 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
             if (outerIf != null)
             {
-                return HandleInnerIf(span, document, root, node, outerIf);
+                return HandleInnerIf(span, document, semanticModel, root, node, outerIf);
             }
 
             var innerIf = GetInnerIf(node.Statement);
 
             if (innerIf != null)
             {
-                return HandleInnerIf(span, document, root, innerIf, node);
+                return HandleInnerIf(span, document, semanticModel, root, innerIf, node);
             }
 
             return Enumerable.Empty<CodeAction>();
         }
 
-        private IEnumerable<CodeAction> HandleInnerIf(TextSpan span, Document document, SyntaxNode root, IfStatementSyntax innerIf, IfStatementSyntax outerIf)
+        private IEnumerable<CodeAction> HandleInnerIf(TextSpan span, Document document, SemanticModel semanticModel, SyntaxNode root, IfStatementSyntax innerIf, IfStatementSyntax outerIf)
         {
             if (innerIf.Else != null || outerIf.Else != null)
             {
@@ -48,12 +48,12 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 
                 var newCondition = SyntaxFactory.BinaryExpression(SyntaxKind.LogicalAndExpression, outerCondition, innerCondition);
 
-                if (((ParenthesizedExpressionSyntax)newCondition.Right).CanRemoveParentheses())
+                if (((ParenthesizedExpressionSyntax)newCondition.Right).CanRemoveParentheses(semanticModel))
                 {
                     newCondition = newCondition.ReplaceNode(newCondition.Right, innerCondition.Expression);
                 }
 
-                if (((ParenthesizedExpressionSyntax)newCondition.Left).CanRemoveParentheses())
+                if (((ParenthesizedExpressionSyntax)newCondition.Left).CanRemoveParentheses(semanticModel))
                 {
                     newCondition = newCondition.ReplaceNode(newCondition.Left, outerCondition.Expression);
                 }

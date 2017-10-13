@@ -214,7 +214,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     void Test()
     {
-        $for (;;) {
+        $for (; ; ) {
             Console.WriteLine(""Hello"");
         }
     }
@@ -222,7 +222,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     void Test()
     {
-        for (;;) Console.WriteLine(""Hello"");
+        for (; ; ) Console.WriteLine(""Hello"");
     }
 }");
         }

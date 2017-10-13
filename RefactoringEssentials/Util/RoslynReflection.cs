@@ -284,7 +284,7 @@ namespace RefactoringEssentials
             public ParenthesizedExpressionSyntaxExtensionsWrapper()
             {
                 var typeInfo = Type.GetType("Microsoft.CodeAnalysis.CSharp.Extensions.ParenthesizedExpressionSyntaxExtensions" + ReflectionNamespaces.CSWorkspacesAsmName, true);
-                CanRemoveParenthesesMethod = typeInfo.GetMethod("CanRemoveParentheses", new[] { typeof(ParenthesizedExpressionSyntax) });
+                CanRemoveParenthesesMethod = typeInfo.GetMethod("CanRemoveParentheses", new[] { typeof(ParenthesizedExpressionSyntax), typeof(SemanticModel) });
             }
         }
 
@@ -346,10 +346,10 @@ namespace RefactoringEssentials
         }
 
         // SpeculationAnalyzer
-        public static AbstractSpeculationAnalyzer_9Wrapper AbstractSpeculationAnalyzer_9 => abstractSpeculationAnalyzer_9Wrapper.Value;
-        static readonly Lazy<AbstractSpeculationAnalyzer_9Wrapper> abstractSpeculationAnalyzer_9Wrapper =
-            new Lazy<AbstractSpeculationAnalyzer_9Wrapper>(() => new AbstractSpeculationAnalyzer_9Wrapper());
-        public class AbstractSpeculationAnalyzer_9Wrapper
+        public static AbstractSpeculationAnalyzer_7Wrapper AbstractSpeculationAnalyzer_7 => abstractSpeculationAnalyzer_7Wrapper.Value;
+        static readonly Lazy<AbstractSpeculationAnalyzer_7Wrapper> abstractSpeculationAnalyzer_7Wrapper =
+            new Lazy<AbstractSpeculationAnalyzer_7Wrapper>(() => new AbstractSpeculationAnalyzer_7Wrapper());
+        public class AbstractSpeculationAnalyzer_7Wrapper
         {
             public readonly Type type;
 
@@ -357,34 +357,19 @@ namespace RefactoringEssentials
             public readonly MethodInfo ReplacementChangesSemanticsMethod;
             public readonly MethodInfo SymbolInfosAreCompatibleMethod;
 
-            public AbstractSpeculationAnalyzer_9Wrapper()
+            public AbstractSpeculationAnalyzer_7Wrapper()
             {
-#if RE2017
-				Type[] abstractSpeculationAnalyzerGenericParams = {
-                    Type.GetType ("Microsoft.CodeAnalysis.SyntaxNode" + ReflectionNamespaces.CAAsmName, true),
+                Type[] abstractSpeculationAnalyzerGenericParams = {
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.CommonForEachStatementSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ThrowStatementSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.SemanticModel" + ReflectionNamespaces.CAAsmName, true),
                     Type.GetType ("Microsoft.CodeAnalysis.CSharp.Conversion" + ReflectionNamespaces.CACSharpAsmName, true)
                 };
-#else
-				Type[] abstractSpeculationAnalyzerGenericParams = {
-                    Type.GetType ("Microsoft.CodeAnalysis.SyntaxNode" + ReflectionNamespaces.CAAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ExpressionSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.TypeSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ForEachStatementSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.CSharp.Syntax.ThrowStatementSyntax" + ReflectionNamespaces.CACSharpAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.SemanticModel" + ReflectionNamespaces.CAAsmName, true),
-                    Type.GetType ("Microsoft.CodeAnalysis.CSharp.Conversion" + ReflectionNamespaces.CACSharpAsmName, true)
-                };
-#endif
-				type = Type.GetType("Microsoft.CodeAnalysis.Shared.Utilities.AbstractSpeculationAnalyzer`9" + ReflectionNamespaces.WorkspacesAsmName, true)
+
+                type = Type.GetType("Microsoft.CodeAnalysis.Shared.Utilities.AbstractSpeculationAnalyzer`7" + ReflectionNamespaces.WorkspacesAsmName, true)
                     .MakeGenericType(abstractSpeculationAnalyzerGenericParams);
 
                 SymbolsForOriginalAndReplacedNodesAreCompatibleMethod = type.GetMethod("SymbolsForOriginalAndReplacedNodesAreCompatible", BindingFlags.Public | BindingFlags.Instance);

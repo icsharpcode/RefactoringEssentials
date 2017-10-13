@@ -32,7 +32,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return (bool)RoslynReflection.AbstractSpeculationAnalyzer_9.SymbolInfosAreCompatibleMethod.Invoke(null, new object[] { originalSymbolInfo, newSymbolInfo, performEquivalenceCheck, requireNonNullSymbols });
+                return (bool)RoslynReflection.AbstractSpeculationAnalyzer_7.SymbolInfosAreCompatibleMethod.Invoke(null, new object[] { originalSymbolInfo, newSymbolInfo, performEquivalenceCheck, requireNonNullSymbols });
             }
             catch (TargetInvocationException ex)
             {
@@ -45,7 +45,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return (bool)RoslynReflection.AbstractSpeculationAnalyzer_9.SymbolsForOriginalAndReplacedNodesAreCompatibleMethod.Invoke(instance, new object[0]);
+                return (bool)RoslynReflection.AbstractSpeculationAnalyzer_7.SymbolsForOriginalAndReplacedNodesAreCompatibleMethod.Invoke(instance, new object[0]);
             }
             catch (TargetInvocationException ex)
             {
@@ -58,7 +58,7 @@ namespace RefactoringEssentials
         {
             try
             {
-                return (bool)RoslynReflection.AbstractSpeculationAnalyzer_9.ReplacementChangesSemanticsMethod.Invoke(instance, new object[0]);
+                return (bool)RoslynReflection.AbstractSpeculationAnalyzer_7.ReplacementChangesSemanticsMethod.Invoke(instance, new object[0]);
             }
             catch (TargetInvocationException ex)
             {

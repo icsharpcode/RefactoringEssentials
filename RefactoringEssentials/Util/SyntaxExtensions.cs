@@ -124,11 +124,11 @@ namespace RefactoringEssentials
         }
 
         [RoslynReflectionUsage(RoslynReflectionAllowedContext.CodeFixes)]
-        public static bool CanRemoveParentheses(this ParenthesizedExpressionSyntax node)
+        public static bool CanRemoveParentheses(this ParenthesizedExpressionSyntax node, SemanticModel semanticModel)
         {
             try
             {
-                return (bool)RoslynReflection.ParenthesizedExpressionSyntaxExtensions.CanRemoveParenthesesMethod.Invoke(null, new object[] { node });
+                return (bool)RoslynReflection.ParenthesizedExpressionSyntaxExtensions.CanRemoveParenthesesMethod.Invoke(null, new object[] { node, semanticModel });
             }
             catch (TargetInvocationException ex)
             {
