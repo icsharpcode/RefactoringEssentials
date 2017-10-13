@@ -4,7 +4,7 @@
 
 [@vsrefactoring](https://twitter.com/vsrefactoring) | [vsrefactoringessentials.com](http://vsrefactoringessentials.com/)
 
-Refactorings Essentials sports the following features:
+Refactorings Essentials supports the following features:
 
 * Refactorings for C# and Visual Basic
 * Analyzers and code fixes for C# and Visual Basic
