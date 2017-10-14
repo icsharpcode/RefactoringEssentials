@@ -184,7 +184,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RefactoringEssentials.2017\RefactoringEssentials.csproj">
+    <ProjectReference Include="..\RefactoringEssentials\RefactoringEssentials.csproj">
       <Project>{18236d33-b3e1-45dc-99e7-230633a228b6}</Project>
       <Name>RefactoringEssentials</Name>
     </ProjectReference>
