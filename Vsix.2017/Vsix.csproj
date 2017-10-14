@@ -88,24 +88,10 @@
     <StartArguments>/rootsuffix Roslyn</StartArguments>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\Vsix\Images\refactoringessentials-logo90.png">
-      <Link>Images\refactoringessentials-logo90.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\Vsix\Images\refactoringessentials-preview.png">
-      <Link>Images\refactoringessentials-preview.png</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\Vsix\license.txt">
-      <Link>license.txt</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="..\Vsix\REConverterPackage.vsct">
-      <Link>REConverterPackage.vsct</Link>
-    </Content>
+    <Content Include="Images\refactoringessentials-logo90.png" />
+    <Content Include="Images\refactoringessentials-preview.png" />
+    <Content Include="license.txt" />
+    <Content Include="REConverterPackage.vsct" />
     <None Include="source.extension.vsixmanifest" />
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -251,51 +237,34 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Vsix\CodeConversion.cs">
-      <Link>CodeConversion.cs</Link>
-    </Compile>
-    <Compile Include="..\Vsix\ConvertCSToVBCommand.cs">
-      <Link>ConvertCSToVBCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\Vsix\ConvertVBToCSCommand.cs">
-      <Link>ConvertVBToCSCommand.cs</Link>
-    </Compile>
-    <Compile Include="..\Vsix\GeneralOptionsDialogPage.cs">
-      <Link>GeneralOptionsDialogPage.cs</Link>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="..\Vsix\GeneralOptionsDialogPageControl.cs">
-      <Link>GeneralOptionsDialogPageControl.cs</Link>
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="..\Vsix\GeneralOptionsDialogPageControl.designer.cs">
-      <Link>GeneralOptionsDialogPageControl.designer.cs</Link>
-      <DependentUpon>GeneralOptionsDialogPageControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="..\Vsix\REConverterPackage.cs">
-      <Link>REConverterPackage.cs</Link>
-    </Compile>
-    <Compile Include="..\Vsix\VisualStudioInteraction.cs">
-      <Link>VisualStudioInteraction.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\Vsix\GeneralOptionsDialogPageControl.resx">
-      <Link>GeneralOptionsDialogPageControl.resx</Link>
-      <DependentUpon>GeneralOptionsDialogPageControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\Vsix\VSPackage.resx">
-      <Link>VSPackage.resx</Link>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\RefactoringEssentials.2017\RefactoringEssentials.csproj">
       <Project>{18236d33-b3e1-45dc-99e7-230633a228b6}</Project>
       <Name>RefactoringEssentials</Name>
       <IncludeOutputGroupsInVSIX>DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CodeConversion.cs" />
+    <Compile Include="ConvertCSToVBCommand.cs" />
+    <Compile Include="ConvertVBToCSCommand.cs" />
+    <Compile Include="GeneralOptionsDialogPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="GeneralOptionsDialogPageControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GeneralOptionsDialogPageControl.Designer.cs">
+      <DependentUpon>GeneralOptionsDialogPageControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="REConverterPackage.cs" />
+    <Compile Include="VisualStudioInteraction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="GeneralOptionsDialogPageControl.resx">
+      <DependentUpon>GeneralOptionsDialogPageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VSPackage.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
