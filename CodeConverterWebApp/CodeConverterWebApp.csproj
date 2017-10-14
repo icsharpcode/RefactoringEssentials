@@ -174,8 +174,8 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RefactoringEssentials.2017\RefactoringEssentials.csproj">
-      <Project>{e4bfea15-ac4b-429f-bbbf-4219d47b425c}</Project>
+    <ProjectReference Include="..\RefactoringEssentials\RefactoringEssentials.csproj">
+      <Project>{01072acb-17a0-4b9d-819b-713c0215583a}</Project>
       <Name>RefactoringEssentials</Name>
     </ProjectReference>
   </ItemGroup>
