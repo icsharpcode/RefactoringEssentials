@@ -13,11 +13,11 @@
     - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
   
   before_build: 
-    - cmd: nuget restore RefactoringEssentials.2017\RefactoringEssentials.csproj
-    - cmd: nuget restore RefactoringEssentials.2017.sln
+    - cmd: nuget restore RefactoringEssentials\RefactoringEssentials.csproj
+    - cmd: nuget restore RefactoringEssentials.sln
 
   build:
-    project: RefactoringEssentials.2017.sln
+    project: RefactoringEssentials.sln
 
   after_test:
     - cmd: nuget pack bin\Release\RefactoringEssentials.nuspec -NoPackageAnalysis -BasePath bin\Release -OutputDirectory bin\Release
@@ -45,12 +45,12 @@
     - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
   
   before_build: 
-    - ps: Vsix-IncrementVsixVersion ".\Vsix.2017\source.extension.vsixmanifest" | Vsix-UpdateBuildVersion
-    - cmd: nuget restore RefactoringEssentials.2017\RefactoringEssentials.csproj
-    - cmd: nuget restore RefactoringEssentials.2017.sln
+    - ps: Vsix-IncrementVsixVersion ".\Vsix\source.extension.vsixmanifest" | Vsix-UpdateBuildVersion
+    - cmd: nuget restore RefactoringEssentials\RefactoringEssentials.csproj
+    - cmd: nuget restore RefactoringEssentials.sln
   
   build:
-    project: RefactoringEssentials.2017.sln
+    project: RefactoringEssentials.sln
   
   after_test:
     - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
