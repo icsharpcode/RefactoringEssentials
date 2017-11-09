@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class PutInsideUsingTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_PutInsideUsingAction()
         {
             Test<PutInsideUsingAction>(@"
 interface ITest : System.IDisposable

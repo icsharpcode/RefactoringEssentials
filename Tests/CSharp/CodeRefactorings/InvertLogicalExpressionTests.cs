@@ -175,7 +175,7 @@ class TestClass
         }
 
         [Fact]
-        public void Equals()
+        public void Equals_InvertLogicalExpressionCodeRefactoringProvider()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
 class TestClass

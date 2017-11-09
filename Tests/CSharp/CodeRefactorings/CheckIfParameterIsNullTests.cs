@@ -10,7 +10,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class CheckIfParameterIsNullTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_CheckIfParameterIsNullCodeRefactoringProvider()
         {
             Test<CheckIfParameterIsNullCodeRefactoringProvider>(@"using System;
 class TestClass

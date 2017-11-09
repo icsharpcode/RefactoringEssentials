@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class CreateCustomEventImplementationTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_CreateCustomEventImplementation()
         {
             Test<CreateCustomEventImplementationAction>(@"
 class TestClass

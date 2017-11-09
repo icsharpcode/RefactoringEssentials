@@ -7,7 +7,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class GenerateGetterTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_GenerateGetter()
         {
             Test<GenerateGetterAction>(@"using System;
 class TestClass

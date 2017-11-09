@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
     public class ReplaceSafeCastWithDirectCastTests : VBCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_ReplaceSafeCastWithDirectCastCodeRefactoringProvider()
         {
             Test<ReplaceSafeCastWithDirectCastCodeRefactoringProvider>(@"
 Class TestClass
