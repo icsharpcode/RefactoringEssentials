@@ -16,14 +16,12 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			SemanticModel semanticModel;
 			Document targetDocument;
-			CSharpCompilationOptions options;
 			readonly Dictionary<MemberDeclarationSyntax, MemberDeclarationSyntax[]> additionalDeclarations = new Dictionary<MemberDeclarationSyntax, MemberDeclarationSyntax[]>();
 
 			public NodesVisitor(SemanticModel semanticModel, Document targetDocument)
 			{
 				this.semanticModel = semanticModel;
 				this.targetDocument = targetDocument;
-				this.options = (CSharpCompilationOptions)targetDocument?.Project.CompilationOptions;
 			}
 
 			public override CSharpSyntaxNode DefaultVisit(SyntaxNode node)
