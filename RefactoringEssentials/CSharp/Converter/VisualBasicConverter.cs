@@ -119,7 +119,7 @@ namespace RefactoringEssentials.CSharp.Converter
 
 		static SyntaxTokenList ConvertModifiers(SyntaxTokenList modifiers, TokenContext context = TokenContext.Global)
 		{
-			return SyntaxFactory.TokenList(ConvertModifiersCore(modifiers, context));
+			return SyntaxFactory.TokenList(ConvertModifiersCore(modifiers, context).Where(t => t.Kind() != SyntaxKind.None));
 		}
 
 		static SyntaxToken? ConvertModifier(SyntaxToken m, TokenContext context = TokenContext.Global)

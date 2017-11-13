@@ -43,6 +43,14 @@ namespace RefactoringEssentials.CSharp.Converter
 				return SyntaxFactory.List<StatementSyntax>(declarations);
 			}
 
+			public override SyntaxList<StatementSyntax> VisitAddRemoveHandlerStatement(VBSyntax.AddRemoveHandlerStatementSyntax node)
+			{
+				var syntaxKind = node.Kind() == VBasic.SyntaxKind.AddHandlerStatement ? SyntaxKind.AddAssignmentExpression : SyntaxKind.SubtractAssignmentExpression;
+				return SingleStatement(SyntaxFactory.AssignmentExpression(syntaxKind,
+					(ExpressionSyntax) node.EventExpression.Accept(nodesVisitor),
+					(ExpressionSyntax) node.DelegateExpression.Accept(nodesVisitor)));
+			}
+
 			public override SyntaxList<StatementSyntax> VisitExpressionStatement(VBSyntax.ExpressionStatementSyntax node)
 			{
 				return SingleStatement((ExpressionSyntax)node.Expression.Accept(nodesVisitor));

@@ -853,7 +853,7 @@ class TestClass
 }");
         }
 
-        [Fact(Skip = "Not implemented!")]
+        [Fact]
         public void AddRemoveHandler()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -894,7 +894,6 @@ class TestClass
 
     private void MyHandler(object sender, EventArgs e)
     {
-
     }
 }");
         }
