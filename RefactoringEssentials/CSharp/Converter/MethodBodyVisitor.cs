@@ -30,6 +30,11 @@ namespace RefactoringEssentials.CSharp.Converter
 				throw new NotImplementedException(node.GetType() + " not implemented!");
 			}
 
+			public override SyntaxList<StatementSyntax> VisitStopOrEndStatement(VBSyntax.StopOrEndStatementSyntax node)
+			{
+				return SingleStatement(SyntaxFactory.ParseStatement("System.Environment.Exit(-1);"));
+			}
+
 			public override SyntaxList<StatementSyntax> VisitLocalDeclarationStatement(VBSyntax.LocalDeclarationStatementSyntax node)
 			{
 				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Local);
