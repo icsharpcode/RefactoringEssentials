@@ -349,6 +349,22 @@ class TestClass
         }
 
         [Fact]
+        public void ClassWithGloballyQualifiedAttribute()
+        {
+            TestConversionVisualBasicToCSharp(@"<Global.System.Diagnostics.DebuggerDisplay(""Hello World"")>
+Class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+[global::System.Diagnostics.DebuggerDisplay(""Hello World"")]
+class TestClass
+{
+}");
+        }
+
+        [Fact]
         public void ParamArray()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass

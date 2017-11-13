@@ -29,6 +29,11 @@ namespace RefactoringEssentials.CSharp.Converter
 				throw new NotImplementedException(node.GetType() + " not implemented!");
 			}
 
+			public override CSharpSyntaxNode VisitGlobalName(VBSyntax.GlobalNameSyntax node)
+			{
+				return SyntaxFactory.IdentifierName(SyntaxFactory.Token(SyntaxKind.GlobalKeyword));
+			}
+
 			#region Attributes
 
 			IEnumerable<AttributeListSyntax> ConvertAttribute(VBSyntax.AttributeListSyntax attributeList)
@@ -749,11 +754,17 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitMemberAccessExpression(VBSyntax.MemberAccessExpressionSyntax node)
 			{
+				var simpleNameSyntax = (SimpleNameSyntax)node.Name.Accept(this);
+
 				var left = (ExpressionSyntax)node.Expression?.Accept(this);
 				if (left == null)
-					return SyntaxFactory.MemberBindingExpression((SimpleNameSyntax)node.Name.Accept(this));
+					return SyntaxFactory.MemberBindingExpression(simpleNameSyntax);
+				else if (node.Expression.IsKind(VBasic.SyntaxKind.GlobalName))
+				{
+					return SyntaxFactory.AliasQualifiedName((IdentifierNameSyntax) left, simpleNameSyntax);
+				}
 				else
-					return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, left, (SimpleNameSyntax)node.Name.Accept(this));
+					return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, left, simpleNameSyntax);
 			}
 
 			public override CSharpSyntaxNode VisitConditionalAccessExpression(VBSyntax.ConditionalAccessExpressionSyntax node)
@@ -1121,7 +1132,12 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitQualifiedName(VBSyntax.QualifiedNameSyntax node)
 			{
-				return SyntaxFactory.QualifiedName((NameSyntax)node.Left.Accept(this), (SimpleNameSyntax)node.Right.Accept(this));
+				var lhsSyntax = (NameSyntax) node.Left.Accept(this);
+				var rhsSyntax = (SimpleNameSyntax)node.Right.Accept(this);
+
+				return node.Left.IsKind(VBasic.SyntaxKind.GlobalName)
+					? (CSharpSyntaxNode) SyntaxFactory.AliasQualifiedName((IdentifierNameSyntax) lhsSyntax, rhsSyntax)
+					: SyntaxFactory.QualifiedName(lhsSyntax, rhsSyntax);
 			}
 
 			public override CSharpSyntaxNode VisitGenericName(VBSyntax.GenericNameSyntax node)
