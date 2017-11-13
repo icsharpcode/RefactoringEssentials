@@ -29,6 +29,11 @@ namespace RefactoringEssentials.CSharp.Converter
 				throw new NotImplementedException(node.GetType() + " not implemented!");
 			}
 
+			public override CSharpSyntaxNode VisitGetTypeExpression(VBSyntax.GetTypeExpressionSyntax node)
+			{
+				return SyntaxFactory.TypeOfExpression((TypeSyntax) node.Type.Accept(this));
+			}
+
 			public override CSharpSyntaxNode VisitGlobalName(VBSyntax.GlobalNameSyntax node)
 			{
 				return SyntaxFactory.IdentifierName(SyntaxFactory.Token(SyntaxKind.GlobalKeyword));
