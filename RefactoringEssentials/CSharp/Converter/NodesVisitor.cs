@@ -885,9 +885,10 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitObjectCreationExpression(VBSyntax.ObjectCreationExpressionSyntax node)
 			{
+				var argumentListSyntax = node.ArgumentList ?? VBasic.SyntaxFactory.ArgumentList(); //VB can omit empty arg lists entirely
 				return SyntaxFactory.ObjectCreationExpression(
 					(TypeSyntax)node.Type.Accept(this),
-					(ArgumentListSyntax)node.ArgumentList?.Accept(this),
+					(ArgumentListSyntax)argumentListSyntax.Accept(this),
 					(InitializerExpressionSyntax)node.Initializer?.Accept(this)
 				);
 			}
