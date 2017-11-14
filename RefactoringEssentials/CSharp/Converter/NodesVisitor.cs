@@ -1000,14 +1000,15 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitInvocationExpression(VBSyntax.InvocationExpressionSyntax node)
 			{
-				var invocationSymbol = semanticModel.GetSymbolInfo(node).Symbol;
-				var symbol = semanticModel.GetSymbolInfo(node.Expression).Symbol;
-				if (invocationSymbol?.IsIndexer() == true || symbol?.GetReturnType()?.IsArrayType() == true)
+				var invocationSymbol = ExtractMatch(semanticModel.GetSymbolInfo(node));
+				var symbol = ExtractMatch(semanticModel.GetSymbolInfo(node.Expression));
+				if (invocationSymbol?.IsIndexer() == true || symbol?.GetReturnType()?.IsArrayType() == true && !(symbol is IMethodSymbol)) //The null case happens quite a bit - should try to fix
 				{
 					return SyntaxFactory.ElementAccessExpression(
 						(ExpressionSyntax)node.Expression.Accept(this),
 						SyntaxFactory.BracketedArgumentList(SyntaxFactory.SeparatedList(node.ArgumentList.Arguments.Select(a => (ArgumentSyntax)a.Accept(this)))));
 				}
+
 				return SyntaxFactory.InvocationExpression(
 					(ExpressionSyntax)node.Expression.Accept(this),
 					(ArgumentListSyntax)node.ArgumentList.Accept(this)

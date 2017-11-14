@@ -88,6 +88,29 @@ class TestClass
         }
 
         [Fact]
+        public void UsesSquareBracketsForIndexerButParenthesesForMethodInvocation()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Function TestMethod() As String()
+        Dim s = ""1,2""
+        Return s.Split(s(1))
+	End Function
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private string[] TestMethod()
+    {
+        var s = ""1,2"";
+        return s.Split(s[1]);
+    }
+}");
+        }
+
+        [Fact]
         public void ConditionalExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
