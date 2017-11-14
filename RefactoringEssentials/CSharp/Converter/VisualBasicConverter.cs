@@ -93,10 +93,10 @@ namespace RefactoringEssentials.CSharp.Converter
 
 		static SyntaxToken ConvertIdentifier(SyntaxToken id, SemanticModel semanticModel, bool isAttribute = false)
 		{
-			var keywordKind = SyntaxFacts.GetKeywordKind(id.ValueText);
-			if (keywordKind != SyntaxKind.None && !SyntaxFacts.IsPredefinedType(keywordKind))
-				return SyntaxFactory.Identifier("@" + id.ValueText);
 			string text = id.ValueText;
+			var keywordKind = SyntaxFacts.GetKeywordKind(text);
+			if (keywordKind != SyntaxKind.None && !SyntaxFacts.IsPredefinedType(keywordKind))
+				return SyntaxFactory.Identifier("@" + text);
 			if (id.SyntaxTree == semanticModel.SyntaxTree)
 			{
 				var symbol = semanticModel.GetSymbolInfo(id.Parent).Symbol;
@@ -107,6 +107,11 @@ namespace RefactoringEssentials.CSharp.Converter
                         text = symbol.ContainingType.Name;
                         if (text.EndsWith("Attribute", StringComparison.Ordinal))
                             text = text.Remove(text.Length - "Attribute".Length);
+					}
+					else if (text.StartsWith("_", StringComparison.Ordinal) && symbol is IFieldSymbol fieldSymbol && fieldSymbol.AssociatedSymbol?.IsKind(SymbolKind.Property) == true)
+					{
+
+						text = fieldSymbol.AssociatedSymbol.Name;
                     }
                     else
                         text = symbol.Name;

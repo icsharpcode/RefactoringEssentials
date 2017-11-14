@@ -348,6 +348,27 @@ class TestClass
 }");
         }
 
+
+        [Fact]
+        public void SynthesizedBackingFieldAccess()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Shared Property First As Integer
+
+    Private Second As Integer = _First
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private static int First { get; set; }
+
+    private int Second = First;
+}");
+        }
+
         [Fact]
         public void ClassWithGloballyQualifiedAttribute()
         {
