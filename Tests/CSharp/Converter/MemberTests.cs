@@ -21,7 +21,7 @@ class TestClass
 {
     const int answer = 42;
     private int value = 10;
-    readonly int v = 15;
+    private readonly int v = 15;
 }");
         }
 

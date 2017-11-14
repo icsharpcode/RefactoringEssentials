@@ -324,7 +324,7 @@ namespace RefactoringEssentials.CSharp.Converter
 			{
 				bool hasBody = node.Parent is VBSyntax.PropertyBlockSyntax;
 				var attributes = node.AttributeLists.SelectMany(ConvertAttribute);
-				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.Member);
+				var modifiers = ConvertModifiers(node.Modifiers, GetMethodOrPropertyContext(node));
 
 				var isIndexer = node.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.DefaultKeyword)) && node.Identifier.ValueText.Equals("Items", StringComparison.OrdinalIgnoreCase);
 
@@ -431,8 +431,8 @@ namespace RefactoringEssentials.CSharp.Converter
 				}
 				else
 				{
-					var parentType = semanticModel.GetDeclaredSymbol(node).ContainingType;
-					var modifiers = ConvertModifiers(node.Modifiers, parentType.TypeKind == TypeKind.Module ? TokenContext.MemberInModule : TokenContext.Member);
+					var tokenContext = GetMethodOrPropertyContext(node);
+					var modifiers = ConvertModifiers(node.Modifiers, tokenContext);
 
 					TypeParameterListSyntax typeParameters;
 					SyntaxList<TypeParameterConstraintClauseSyntax> constraints;
@@ -452,6 +452,24 @@ namespace RefactoringEssentials.CSharp.Converter
 					);
 					if (hasBody) return decl;
 					return decl.WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
+				}
+			}
+
+			private TokenContext GetMethodOrPropertyContext(VBSyntax.StatementSyntax node)
+			{
+				var parentType = semanticModel.GetDeclaredSymbol(node).ContainingType;
+				switch (parentType.TypeKind)
+				{
+					case TypeKind.Module:
+						return TokenContext.MemberInModule;
+					case TypeKind.Class:
+						return TokenContext.MemberInClass;
+					case TypeKind.Interface:
+						return TokenContext.MemberInInterface;
+					case TypeKind.Struct:
+						return TokenContext.MemberInStruct;
+					default:
+						throw new ArgumentOutOfRangeException(nameof(node));
 				}
 			}
 

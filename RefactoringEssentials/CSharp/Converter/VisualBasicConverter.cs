@@ -18,10 +18,13 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			Global,
 			InterfaceOrModule,
+			Local,
 			Member,
 			VariableOrConst,
-			Local,
-			MemberInModule
+			MemberInModule,
+			MemberInClass,
+			MemberInStruct,
+			MemberInInterface
 		}
 
 		public static CSharpSyntaxNode Convert(VBasic.VisualBasicSyntaxNode input, SemanticModel semanticModel, Document targetDocument)
@@ -136,7 +139,8 @@ namespace RefactoringEssentials.CSharp.Converter
 
 		static IEnumerable<SyntaxToken> ConvertModifiersCore(IEnumerable<SyntaxToken> modifiers, TokenContext context)
 		{
-			if (context != TokenContext.Local && context != TokenContext.InterfaceOrModule)
+			var contextsWithIdenticalDefaults = new[] { TokenContext.Global, TokenContext.Local, TokenContext.InterfaceOrModule, TokenContext.MemberInInterface };
+			if (!contextsWithIdenticalDefaults.Contains(context))
 			{
 				bool visibility = false;
 				foreach (var token in modifiers)
@@ -147,7 +151,7 @@ namespace RefactoringEssentials.CSharp.Converter
 						break;
 					}
 				}
-				if (!visibility && (context == TokenContext.MemberInModule || context == TokenContext.Member))
+				if (!visibility)
 					yield return VisualBasicDefaultVisibility(context);
 			}
 			foreach (var token in modifiers.Where(m => !IgnoreInContext(m, context)))
@@ -182,20 +186,27 @@ namespace RefactoringEssentials.CSharp.Converter
 				|| (context == TokenContext.VariableOrConst && token.IsKind(VBasic.SyntaxKind.ConstKeyword));
 		}
 
+		/// <remarks>
+		/// Incorrectly returns private for structs instead of public
+		/// </remarks>
 		static SyntaxToken VisualBasicDefaultVisibility(TokenContext context)
 		{
 			switch (context)
 			{
 				case TokenContext.Global:
+				case TokenContext.InterfaceOrModule:
 					return SyntaxFactory.Token(SyntaxKind.InternalKeyword);
+				case TokenContext.Member:
+				case TokenContext.MemberInModule:
+				case TokenContext.MemberInClass:
+				case TokenContext.MemberInInterface:
+				case TokenContext.MemberInStruct:
+					return SyntaxFactory.Token(SyntaxKind.PublicKeyword);
 				case TokenContext.Local:
 				case TokenContext.VariableOrConst:
-				case TokenContext.Member:
 					return SyntaxFactory.Token(SyntaxKind.PrivateKeyword);
-				case TokenContext.MemberInModule:
-					return SyntaxFactory.Token(SyntaxKind.PublicKeyword);
 			}
-			throw new ArgumentOutOfRangeException(nameof(context));
+			throw new ArgumentOutOfRangeException(nameof(context), context, "Specified argument was out of the range of valid values.");
 		}
 
 		static SyntaxToken ConvertToken(SyntaxToken t, TokenContext context = TokenContext.Global)
