@@ -916,7 +916,7 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitObjectCollectionInitializer(VBSyntax.ObjectCollectionInitializerSyntax node)
 			{
-				return SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, SyntaxFactory.SingletonSeparatedList((ExpressionSyntax) node.Initializer.Accept(this)));
+				return node.Initializer.Accept(this); //Dictionary initializer comes through here despite the FROM keyword not being in the source code
 			}
 
 			ExpressionSyntax IncreaseArrayUpperBoundExpression(VBSyntax.ExpressionSyntax expr)
