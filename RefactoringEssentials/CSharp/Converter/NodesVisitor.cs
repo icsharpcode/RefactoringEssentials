@@ -827,7 +827,17 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxFactory.AliasQualifiedName((IdentifierNameSyntax) left, simpleNameSyntax);
 				}
 				else
-					return SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, left, simpleNameSyntax);
+				{
+					var memberAccessExpressionSyntax = SyntaxFactory.MemberAccessExpression(SyntaxKind.SimpleMemberAccessExpression, left, simpleNameSyntax);
+					if (semanticModel.GetSymbolInfo(node).Symbol is IMethodSymbol methodSymbol && methodSymbol.ReturnType.Equals(semanticModel.GetTypeInfo(node).ConvertedType))
+					{
+						return SyntaxFactory.InvocationExpression(memberAccessExpressionSyntax, SyntaxFactory.ArgumentList());
+					}
+					else
+					{
+						return memberAccessExpressionSyntax;
+					}
+				}
 			}
 
 			public override CSharpSyntaxNode VisitConditionalAccessExpression(VBSyntax.ConditionalAccessExpressionSyntax node)
