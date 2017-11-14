@@ -95,7 +95,7 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			string text = id.ValueText;
 			var keywordKind = SyntaxFacts.GetKeywordKind(text);
-			if (keywordKind != SyntaxKind.None && !SyntaxFacts.IsPredefinedType(keywordKind))
+			if (keywordKind != SyntaxKind.None)
 				return SyntaxFactory.Identifier("@" + text);
 			if (id.SyntaxTree == semanticModel.SyntaxTree)
 			{

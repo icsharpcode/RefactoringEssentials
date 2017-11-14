@@ -404,6 +404,25 @@ class TestClass
 }");
         }
 
+        [Fact]
+        public void ParamNamedBool()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub SomeBools(ParamArray bool As Boolean())
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void SomeBools(params bool[] @bool)
+    {
+    }
+}");
+        }
+
 		[Fact(Skip = "Not implemented!")]
 		public void TestIndexer()
         {
