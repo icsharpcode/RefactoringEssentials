@@ -386,6 +386,24 @@ class TestClass
         }
 
         [Fact]
+        public void FieldWithAttribute()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    <ThreadStatic>
+    Private Shared First As Integer
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    [ThreadStatic]
+    private static int First;
+}");
+        }
+
+        [Fact]
         public void ParamArray()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass

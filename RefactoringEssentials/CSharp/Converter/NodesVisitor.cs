@@ -1196,7 +1196,7 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitIdentifierName(VBSyntax.IdentifierNameSyntax node)
 			{
-				return SyntaxFactory.IdentifierName(ConvertIdentifier(node.Identifier, semanticModel, node.Parent is VBSyntax.AttributeSyntax));
+				return SyntaxFactory.IdentifierName(ConvertIdentifier(node.Identifier, semanticModel,  node.GetAncestor<VBSyntax.AttributeSyntax>() != null));
 			}
 
 			public override CSharpSyntaxNode VisitQualifiedName(VBSyntax.QualifiedNameSyntax node)
