@@ -16,12 +16,28 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			SemanticModel semanticModel;
 			Document targetDocument;
+			private static Lazy<Dictionary<ITypeSymbol, string>> createConvertMethodsLookupByReturnType;
 			readonly Dictionary<MemberDeclarationSyntax, MemberDeclarationSyntax[]> additionalDeclarations = new Dictionary<MemberDeclarationSyntax, MemberDeclarationSyntax[]>();
 
 			public NodesVisitor(SemanticModel semanticModel, Document targetDocument)
 			{
 				this.semanticModel = semanticModel;
 				this.targetDocument = targetDocument;
+				if (createConvertMethodsLookupByReturnType == default(Lazy<Dictionary<ITypeSymbol, string>>))
+				{
+					createConvertMethodsLookupByReturnType = new Lazy<Dictionary<ITypeSymbol, string>>(CreateConvertMethodsLookupByReturnType);
+				}
+			}
+
+			private Dictionary<ITypeSymbol, string> CreateConvertMethodsLookupByReturnType()
+			{
+				var systemDotConvert = typeof(Convert).FullName;
+				var convertMethods = semanticModel.Compilation.GetTypeByMetadataName(systemDotConvert).GetMembers().Where(m =>
+					m.Name.StartsWith("To", StringComparison.Ordinal) && m.GetParameters().Length == 1);
+				var methodsByType = convertMethods.Where(m => m.Name != nameof(System.Convert.ToBase64String))
+					.GroupBy(m => new { ReturnType = m.GetReturnType(), Name = $"{systemDotConvert}.{m.Name}" })
+					.ToDictionary(m => m.Key.ReturnType, m => m.Key.Name);
+				return methodsByType;
 			}
 
 			public override CSharpSyntaxNode DefaultVisit(SyntaxNode node)
@@ -691,27 +707,51 @@ namespace RefactoringEssentials.CSharp.Converter
 				return SyntaxFactory.FinallyClause(SyntaxFactory.Block(node.Statements.SelectMany(s => s.Accept(new MethodBodyVisitor(semanticModel, this)))));
 			}
 
+
 			public override CSharpSyntaxNode VisitCTypeExpression(VBSyntax.CTypeExpressionSyntax node)
 			{
-				return SyntaxFactory.CastExpression(
-					(TypeSyntax)node.Type.Accept(this),
-					(ExpressionSyntax)node.Expression.Accept(this)
-				);
+				var expressionSyntax = (ExpressionSyntax)node.Expression.Accept(this);
+				var convertMethodForKeywordOrNull = GetConvertMethodForKeywordOrNull(node.Type);
+
+				return convertMethodForKeywordOrNull != null ?
+					SyntaxFactory.InvocationExpression(convertMethodForKeywordOrNull,
+						SyntaxFactory.ArgumentList(
+							SyntaxFactory.SingletonSeparatedList(
+								SyntaxFactory.Argument(expressionSyntax)))
+					) // Hopefully will be a compile error if it's wrong
+					: (ExpressionSyntax)SyntaxFactory.CastExpression((TypeSyntax)node.Type.Accept(this), expressionSyntax);
 			}
 
 			public override CSharpSyntaxNode VisitPredefinedCastExpression(VBSyntax.PredefinedCastExpressionSyntax node)
 			{
+				var expressionSyntax = (ExpressionSyntax)node.Expression.Accept(this);
 				if (node.Keyword.IsKind(VBasic.SyntaxKind.CDateKeyword))
 				{
 					return SyntaxFactory.CastExpression(
 						SyntaxFactory.ParseTypeName("DateTime"),
-						(ExpressionSyntax)node.Expression.Accept(this)
+						expressionSyntax
 					);
 				}
-				return SyntaxFactory.CastExpression(
+
+				var convertMethodForKeywordOrNull = GetConvertMethodForKeywordOrNull(node);
+
+				return convertMethodForKeywordOrNull != null ? (ExpressionSyntax)
+					SyntaxFactory.InvocationExpression(convertMethodForKeywordOrNull,
+						SyntaxFactory.ArgumentList(
+							SyntaxFactory.SingletonSeparatedList(
+								SyntaxFactory.Argument(expressionSyntax)))
+					) // Hopefully will be a compile error if it's wrong
+					: SyntaxFactory.CastExpression(
 					SyntaxFactory.PredefinedType(ConvertToken(node.Keyword)),
 					(ExpressionSyntax)node.Expression.Accept(this)
 				);
+			}
+
+			private ExpressionSyntax GetConvertMethodForKeywordOrNull(SyntaxNode type)
+			{
+				var convertedType = semanticModel.GetTypeInfo(type).ConvertedType;
+				return createConvertMethodsLookupByReturnType.Value.TryGetValue(convertedType, out var convertMethodName)
+					? SyntaxFactory.ParseExpression(convertMethodName) : null;
 			}
 
 			public override CSharpSyntaxNode VisitTryCastExpression(VBSyntax.TryCastExpressionSyntax node)
