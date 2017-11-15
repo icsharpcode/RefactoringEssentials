@@ -178,10 +178,22 @@ namespace RefactoringEssentials.CSharp.Converter
 					declaration = SplitVariableDeclarations(v, nodesVisitor, semanticModel).Values.Single();
 					declaration = declaration.WithVariables(SyntaxFactory.SingletonSeparatedList(declaration.Variables[0].WithInitializer(SyntaxFactory.EqualsValueClause(startValue))));
 					id = SyntaxFactory.IdentifierName(declaration.Variables[0].Identifier);
-				} else {
-					var v = (ExpressionSyntax)stmt.ControlVariable.Accept(nodesVisitor);
-					startValue = SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, v, startValue);
-					id = v;
+				} else
+				{
+					id = (ExpressionSyntax)stmt.ControlVariable.Accept(nodesVisitor);
+					var symbol = semanticModel.GetSymbolInfo(stmt.ControlVariable).Symbol;
+					if (!semanticModel.LookupSymbols(node.FullSpan.Start, name: symbol.Name).Any())
+					{
+						var variableDeclaratorSyntax = SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier(symbol.Name), null,
+							SyntaxFactory.EqualsValueClause(startValue));
+						declaration = SyntaxFactory.VariableDeclaration(
+							SyntaxFactory.IdentifierName("var"),
+							SyntaxFactory.SingletonSeparatedList(variableDeclaratorSyntax));
+					}
+					else
+					{
+						startValue = SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, id, startValue);
+					}
 				}
 
 				var step = (ExpressionSyntax)stmt.StepClause?.StepValue.Accept(nodesVisitor);

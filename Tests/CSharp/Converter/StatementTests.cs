@@ -718,7 +718,7 @@ class TestClass
     private void TestMethod()
     {
         int[] b, s;
-        for (i = 0; i <= end; i++)
+        for (var i = 0; i <= end; i++)
             b[i] = s[i];
     }
 }");
@@ -744,7 +744,7 @@ class TestClass
     private void TestMethod()
     {
         int[] b, s;
-        for (i = 0; i <= end - 1; i++)
+        for (var i = 0; i <= end - 1; i++)
             b[i] = s[i];
     }
 }");
