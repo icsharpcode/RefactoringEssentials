@@ -860,7 +860,7 @@ namespace RefactoringEssentials.CSharp.Converter
 				if (symbol != null)
 				{
 					var parameterKinds = symbol.GetParameters().Select(param => param.RefKind).ToList();
-
+					//WARNING: If named parameters can reach here it won't work properly for them
 					var refKind = argID >= parameterKinds.Count && symbol.IsParams() ? RefKind.None : parameterKinds[argID];
 					switch (refKind)
 					{
