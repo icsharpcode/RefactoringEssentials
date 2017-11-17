@@ -44,7 +44,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 return;
 
             var memberSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(member);
-            if (memberSymbol.IsAbstract || memberSymbol.IsVirtual || memberSymbol.IsOverride)
+            if (memberSymbol == null || memberSymbol.IsAbstract || memberSymbol.IsVirtual || memberSymbol.IsOverride)
                 return;
             if (memberSymbol.ExplicitInterfaceImplementations().Length > 0)
                 return;
