@@ -285,7 +285,7 @@ namespace RefactoringEssentials.CSharp.Converter
 							labels.Add(SyntaxFactory.DefaultSwitchLabel());
 						} else return false;
 					}
-					var list = SyntaxFactory.List(block.Statements.SelectMany(s => s.Accept(this)).Concat(SyntaxFactory.BreakStatement()));
+					var list = SingleStatement(SyntaxFactory.Block(block.Statements.SelectMany(s => s.Accept(this)).Concat(SyntaxFactory.BreakStatement())));
 					sections.Add(SyntaxFactory.SwitchSection(SyntaxFactory.List(labels), list));
 				}
 				switchStatement = SyntaxFactory.SwitchStatement(expr, SyntaxFactory.List(sections));
