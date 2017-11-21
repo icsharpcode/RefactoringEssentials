@@ -159,7 +159,7 @@ namespace RefactoringEssentials.CSharp.Converter
 				if (!visibility)
 					yield return VisualBasicDefaultVisibility(context);
 			}
-			foreach (var token in modifiers.Where(m => !IgnoreInContext(m, context)))
+			foreach (var token in modifiers.Where(m => !IgnoreInContext(m, context)).OrderBy(m => m.IsKind(VBasic.SyntaxKind.PartialKeyword)))
 			{
 				var m = ConvertModifier(token, context);
 				if (m.HasValue) yield return m.Value;
