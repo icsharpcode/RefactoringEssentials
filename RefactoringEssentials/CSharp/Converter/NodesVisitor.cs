@@ -879,6 +879,11 @@ namespace RefactoringEssentials.CSharp.Converter
 				return SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, SyntaxFactory.SeparatedList(node.Initializers.Select(i => (ExpressionSyntax)i.Accept(this))));
 			}
 
+			public override CSharpSyntaxNode VisitObjectCollectionInitializer(VBSyntax.ObjectCollectionInitializerSyntax node)
+			{
+				return SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, SyntaxFactory.SingletonSeparatedList((ExpressionSyntax) node.Initializer.Accept(this)));
+			}
+
 			ExpressionSyntax IncreaseArrayUpperBoundExpression(VBSyntax.ExpressionSyntax expr)
 			{
 				var constant = semanticModel.GetConstantValue(expr);
