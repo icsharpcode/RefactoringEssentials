@@ -216,6 +216,34 @@ class TestClass
         }
 
         [Fact]
+        public void WithBlock()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        With New StringBuilder
+            .Capacity = 20
+            .Length = 0
+        End With
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        {
+            var withBlock = new StringBuilder();
+            withBlock.Capacity = 20;
+            withBlock.Length = 0;
+        }
+    }
+}");
+        }
+
+        [Fact]
         public void ArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass

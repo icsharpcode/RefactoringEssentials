@@ -819,10 +819,18 @@ namespace RefactoringEssentials.CSharp.Converter
 			{
 				var simpleNameSyntax = (SimpleNameSyntax)node.Name.Accept(this);
 
-				var left = (ExpressionSyntax)node.Expression?.Accept(this);
+				var left = (ExpressionSyntax) node.Expression?.Accept(this);
 				if (left == null)
-					return SyntaxFactory.MemberBindingExpression(simpleNameSyntax);
-				else if (node.Expression.IsKind(VBasic.SyntaxKind.GlobalName))
+				{
+					if (!node.Parent.Parent.IsKind(VBasic.SyntaxKind.WithBlock))
+					{
+						return SyntaxFactory.MemberBindingExpression(simpleNameSyntax);
+					}
+
+					left = SyntaxFactory.IdentifierName(MethodBodyVisitor.WithBlockTempVariableName);
+				}
+
+				if (node.Expression.IsKind(VBasic.SyntaxKind.GlobalName))
 				{
 					return SyntaxFactory.AliasQualifiedName((IdentifierNameSyntax) left, simpleNameSyntax);
 				}

@@ -16,6 +16,7 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			SemanticModel semanticModel;
 			NodesVisitor nodesVisitor;
+			public const string WithBlockTempVariableName = "withBlock";
 
             public bool IsIterator { get; set; }
 
@@ -255,6 +256,18 @@ namespace RefactoringEssentials.CSharp.Converter
 				throw new NotSupportedException();
 			}
 
+			public override SyntaxList<StatementSyntax> VisitWithBlock(VBSyntax.WithBlockSyntax node)
+			{
+				var withExpression = (ExpressionSyntax) node.WithStatement.Expression.Accept(nodesVisitor);
+				var variableDeclaratorSyntax = SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier(WithBlockTempVariableName), null, SyntaxFactory.EqualsValueClause(withExpression));
+				var declaration = SyntaxFactory.LocalDeclarationStatement(SyntaxFactory.VariableDeclaration(
+					SyntaxFactory.IdentifierName("var"),
+					SyntaxFactory.SingletonSeparatedList(variableDeclaratorSyntax)));
+				var statements = node.Statements.SelectMany(s => s.Accept(this));
+				return SingleStatement(SyntaxFactory.Block(new[] {declaration}.Concat(statements).ToArray()));
+
+			}
+			
 			private bool ConvertToSwitch(ExpressionSyntax expr, SyntaxList<VBSyntax.CaseBlockSyntax> caseBlocks, out SwitchStatementSyntax switchStatement)
 			{
 				switchStatement = null;
