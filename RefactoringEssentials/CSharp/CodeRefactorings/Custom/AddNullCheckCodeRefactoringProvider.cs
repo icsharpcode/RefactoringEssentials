@@ -80,26 +80,24 @@ namespace RefactoringEssentials.CSharp
             {
                 if (StatementWithConditionContainsNullCheck(surroundingStatement, identifier))
                     return;
-                var surroundingIfStatement = surroundingStatement as IfStatementSyntax;
-                if (surroundingIfStatement != null)
+
+                if (surroundingStatement is IfStatementSyntax surroundingIfStatement
+                    && surroundingIfStatement.Else == null)
                 {
                     statementToWrap = surroundingIfStatement;
-                    newWrappedStatement = ExtendIfConditionWithNullCheck(surroundingIfStatement, identifier);
                 }
+            }
+
+            if (statementToWrap is IfStatementSyntax)
+            {
+                newWrappedStatement = ExtendIfConditionWithNullCheck((IfStatementSyntax)statementToWrap, identifier);
             }
             else
             {
-                if (statementToWrap is IfStatementSyntax)
-                {
-                    newWrappedStatement = ExtendIfConditionWithNullCheck((IfStatementSyntax)statementToWrap, identifier);
-                }
-                else
-                {
-                    newWrappedStatement = SyntaxFactory.IfStatement(
-                            SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, identifier, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
-                            SyntaxFactory.Block(statementToWrap).WithLeadingTrivia(statementToWrap.GetLeadingTrivia()).WithTrailingTrivia(statementToWrap.GetTrailingTrivia())
-                        ).WithAdditionalAnnotations(Formatter.Annotation);
-                }
+                newWrappedStatement = SyntaxFactory.IfStatement(
+                        SyntaxFactory.BinaryExpression(SyntaxKind.NotEqualsExpression, identifier, SyntaxFactory.LiteralExpression(SyntaxKind.NullLiteralExpression)),
+                        SyntaxFactory.Block(statementToWrap).WithLeadingTrivia(statementToWrap.GetLeadingTrivia()).WithTrailingTrivia(statementToWrap.GetTrailingTrivia())
+                    ).WithAdditionalAnnotations(Formatter.Annotation);
             }
 
             context.RegisterRefactoring(CodeActionFactory.Create(token.Span, DiagnosticSeverity.Info, GettextCatalog.GetString("Add null check"), t2 =>
