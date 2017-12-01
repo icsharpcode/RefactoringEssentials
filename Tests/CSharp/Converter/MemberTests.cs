@@ -370,6 +370,78 @@ class TestClass
         }
 
         [Fact]
+        public void PartialFriendClassWithOverloads()
+        {
+            TestConversionVisualBasicToCSharp(@"
+Partial Friend MustInherit Class TestClass1
+    Public Shared Sub CreateStatic()
+    End Sub
+
+    Public Sub CreateInstance()
+    End Sub
+
+    Public MustOverride Sub CreateAbstractInstance()
+
+    Public Overridable Sub CreateVirtualInstance()
+    End Sub
+End Class
+
+Friend Class TestClass2
+    Inherits TestClass1
+    Public Overloads Shared Sub CreateStatic()
+    End Sub
+
+    Public Overloads Sub CreateInstance()
+    End Sub
+
+    Public Overrides Sub CreateAbstractInstance()
+    End Sub
+
+    Public Overrides Sub CreateVirtualInstance()
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+internal abstract partial class TestClass1
+{
+    public static void CreateStatic()
+    {
+    }
+
+    public void CreateInstance()
+    {
+    }
+
+    public abstract void CreateAbstractInstance();
+
+    public virtual void CreateVirtualInstance()
+    {
+    }
+}
+
+internal class TestClass2 : TestClass1
+{
+    public new static void CreateStatic()
+    {
+    }
+
+    public new void CreateInstance()
+    {
+    }
+
+    public override void CreateAbstractInstance()
+    {
+    }
+
+    public override void CreateVirtualInstance()
+    {
+    }
+}");
+        }
+
+        [Fact]
         public void ClassWithGloballyQualifiedAttribute()
         {
             TestConversionVisualBasicToCSharp(@"<Global.System.Diagnostics.DebuggerDisplay(""Hello World"")>

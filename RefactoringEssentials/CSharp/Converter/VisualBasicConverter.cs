@@ -285,6 +285,10 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.ReadOnlyKeyword;
 				case VBasic.SyntaxKind.OverridesKeyword:
 					return SyntaxKind.OverrideKeyword;
+				case VBasic.SyntaxKind.OverloadsKeyword:
+					return SyntaxKind.NewKeyword;
+				case VBasic.SyntaxKind.OverridableKeyword:
+					return SyntaxKind.VirtualKeyword;
 				case VBasic.SyntaxKind.SharedKeyword:
 					return SyntaxKind.StaticKeyword;
 				case VBasic.SyntaxKind.ConstKeyword:
