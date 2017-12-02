@@ -124,7 +124,13 @@ namespace RefactoringEssentials.CSharp.Converter
 
 		static SyntaxToken? ConvertModifier(SyntaxToken m, TokenContext context = TokenContext.Global)
 		{
-			var token = ConvertToken(VBasic.VisualBasicExtensions.Kind(m), context);
+			VBasic.SyntaxKind vbSyntaxKind = VBasic.VisualBasicExtensions.Kind(m);
+			switch (vbSyntaxKind)
+			{
+				case VBasic.SyntaxKind.DateKeyword:
+					return SyntaxFactory.Identifier("System.DateTime");
+			}
+			var token = ConvertToken(vbSyntaxKind, context);
 			return token == SyntaxKind.None ? null : new SyntaxToken?(SyntaxFactory.Token(token));
 		}
 

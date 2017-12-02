@@ -1014,6 +1014,10 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override CSharpSyntaxNode VisitPredefinedType(VBSyntax.PredefinedTypeSyntax node)
 			{
+				if (node.Keyword.IsKind(VBasic.SyntaxKind.DateKeyword))
+				{
+					return SyntaxFactory.IdentifierName("System.DateTime");
+				}
 				return SyntaxFactory.PredefinedType(ConvertToken(node.Keyword));
 			}
 

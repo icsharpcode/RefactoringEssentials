@@ -28,6 +28,22 @@ World!"";
         }
 
         [Fact]
+        public void DateKeyword()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private DefaultDate as Date = Nothing
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private System.DateTime DefaultDate = default(Date);
+}");
+        }
+
+        [Fact]
         public void ConditionalExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
