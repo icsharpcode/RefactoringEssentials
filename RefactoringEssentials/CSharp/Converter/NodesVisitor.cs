@@ -770,7 +770,9 @@ namespace RefactoringEssentials.CSharp.Converter
 				SyntaxToken token = default(SyntaxToken);
 				if (symbol != null)
 				{
-                    var p = symbol.GetParameters()[argID];
+					var parameterSymbols = symbol.GetParameters();
+
+					var p = parameterSymbols[argID];
 					switch (p.RefKind)
 					{
 						case RefKind.None:
