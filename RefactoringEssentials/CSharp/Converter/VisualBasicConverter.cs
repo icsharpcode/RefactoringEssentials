@@ -200,7 +200,8 @@ namespace RefactoringEssentials.CSharp.Converter
 
 		static SyntaxToken ConvertToken(SyntaxToken t, TokenContext context = TokenContext.Global)
 		{
-			return SyntaxFactory.Token(ConvertToken(VBasic.VisualBasicExtensions.Kind(t), context));
+			VBasic.SyntaxKind vbSyntaxKind = VBasic.VisualBasicExtensions.Kind(t);
+			return SyntaxFactory.Token(ConvertToken(vbSyntaxKind, context));
 		}
 
 		static SyntaxKind ConvertToken(VBasic.SyntaxKind t, TokenContext context = TokenContext.Global)
