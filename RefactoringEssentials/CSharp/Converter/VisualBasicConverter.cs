@@ -326,6 +326,7 @@ namespace RefactoringEssentials.CSharp.Converter
 				// assignment
 				case VBasic.SyntaxKind.SimpleAssignmentStatement:
 					return SyntaxKind.SimpleAssignmentExpression;
+				case VBasic.SyntaxKind.ConcatenateAssignmentStatement:
 				case VBasic.SyntaxKind.AddAssignmentStatement:
 					return SyntaxKind.AddAssignmentExpression;
 				case VBasic.SyntaxKind.SubtractAssignmentStatement:

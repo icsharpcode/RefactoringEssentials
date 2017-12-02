@@ -44,6 +44,29 @@ class TestClass
         }
 
         [Fact]
+        public void StringConcatenationAssignment()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        Dim str = ""Hello, ""
+        str &= ""World""
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        var str = ""Hello, "";
+        str += ""World"";
+    }
+}");
+        }
+
+        [Fact]
         public void ConditionalExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
