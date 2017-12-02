@@ -282,7 +282,9 @@ namespace RefactoringEssentials.CSharp.Converter
 			public override CSharpSyntaxNode VisitFieldDeclaration(VBSyntax.FieldDeclarationSyntax node)
 			{
 				var attributes = node.AttributeLists.SelectMany(ConvertAttribute);
-				var modifiers = ConvertModifiers(node.Modifiers, TokenContext.VariableOrConst);
+				var unConvertableModifiers = node.Modifiers.Where(m => m.IsKind(VBasic.SyntaxKind.WithEventsKeyword)).Select(m => m.Text).ToList();
+				var convertableModifiers = node.Modifiers.Where(m => !m.IsKind(VBasic.SyntaxKind.WithEventsKeyword));
+				var convertedModifiers = ConvertModifiers(convertableModifiers, TokenContext.VariableOrConst);
 				var key = SyntaxFactory.FieldDeclaration(SyntaxFactory.VariableDeclaration(SyntaxFactory.PredefinedType(SyntaxFactory.Token(SyntaxKind.VoidKeyword))));
 				var declarations = new List<BaseFieldDeclarationSyntax>(node.Declarators.Count);
 
@@ -290,11 +292,17 @@ namespace RefactoringEssentials.CSharp.Converter
 				{
 					foreach (var decl in SplitVariableDeclarations(declarator, this, semanticModel).Values)
 					{
-						declarations.Add(SyntaxFactory.FieldDeclaration(
+						var baseFieldDeclarationSyntax = SyntaxFactory.FieldDeclaration(
 							SyntaxFactory.List(attributes),
-							modifiers,
+							convertedModifiers,
 							decl
-						));
+						);
+						declarations.Add(
+							unConvertableModifiers.Any()
+								? baseFieldDeclarationSyntax.WithAppendedTrailingTrivia(
+									SyntaxFactory.Comment(
+										$"/* TODO ERROR didn't convert: {string.Join(",", unConvertableModifiers)} */"))
+								: baseFieldDeclarationSyntax);
 					}
 				}
 
@@ -692,6 +700,13 @@ namespace RefactoringEssentials.CSharp.Converter
 				if (node.Token.Value == null)
 				{
 					var type = semanticModel.GetTypeInfo(node).ConvertedType;
+					if (type == null)
+					{
+						return Literal(null)
+							.WithTrailingTrivia(
+								SyntaxFactory.Comment("/* TODO Change to default(_) if this is not a reference type */"));
+
+					}
 					return !type.IsReferenceType ? SyntaxFactory.DefaultExpression(SyntaxFactory.ParseTypeName(type.ToMinimalDisplayString(semanticModel, node.SpanStart))) : Literal(null);
 				}
 				return Literal(node.Token.Value);
