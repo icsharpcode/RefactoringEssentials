@@ -231,12 +231,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        int[] b =
-        {
-            1,
-            2,
-            3
-        };
+        int[] b = new[] { 1, 2, 3 };
     }
 }");
         }
@@ -257,12 +252,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        var b =
-        {
-            1,
-            2,
-            3
-        };
+        var b = new[] { 1, 2, 3 };
     }
 }");
         }
@@ -304,12 +294,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        int[] b = new int[3]
-        {
-            1,
-            2, 
-            3
-        };
+        int[] b = new int[3] { 1, 2, 3 };
     }
 }");
         }
@@ -435,7 +420,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        int[][] b = { new int[] { 1, 2 }, new int[] { 3, 4 } };
+        int[][] b = new[] { new int[] { 1, 2 }, new int[] { 3, 4 } };
     }
 }");
         }
