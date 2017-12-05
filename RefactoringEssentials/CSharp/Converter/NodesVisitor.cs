@@ -911,7 +911,11 @@ namespace RefactoringEssentials.CSharp.Converter
 			{
 				if (node.Initializers.Count == 0 && node.Parent is VBSyntax.ArrayCreationExpressionSyntax)
 					return null;
-				return SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, SyntaxFactory.SeparatedList(node.Initializers.Select(i => (ExpressionSyntax)i.Accept(this))));
+				var initializer = SyntaxFactory.InitializerExpression(SyntaxKind.CollectionInitializerExpression, SyntaxFactory.SeparatedList(node.Initializers.Select(i => (ExpressionSyntax)i.Accept(this))));
+				var typeInfo = semanticModel.GetTypeInfo(node);
+				return typeInfo.Type == null && (typeInfo.ConvertedType?.SpecialType == SpecialType.System_Collections_IEnumerable || typeInfo.ConvertedType?.IsKind(SymbolKind.ArrayType) == true)
+					? (CSharpSyntaxNode) SyntaxFactory.ImplicitArrayCreationExpression(initializer)
+					: initializer;
 			}
 
 			public override CSharpSyntaxNode VisitObjectCollectionInitializer(VBSyntax.ObjectCollectionInitializerSyntax node)

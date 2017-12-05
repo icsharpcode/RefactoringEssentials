@@ -44,6 +44,28 @@ class TestClass
         }
 
         [Fact]
+        public void FullyTypeInferredEnumerableCreation()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        Dim strings = { ""1"", ""2"" }
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        var strings = new[] { ""1"", ""2"" };
+    }
+}");
+        }
+
+
+        [Fact]
         public void StringConcatenationAssignment()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass

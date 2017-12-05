@@ -404,7 +404,7 @@ class TestClass
 }");
         }
 
-		[Fact(Skip = "Not implemented!")]
+		[Fact]
 		public void JaggedArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
