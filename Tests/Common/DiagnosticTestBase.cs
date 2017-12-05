@@ -20,6 +20,7 @@ namespace RefactoringEssentials.Tests
         static MetadataReference systemAssembly;
         static MetadataReference systemXmlLinq;
         static MetadataReference systemCore;
+       private static MetadataReference visualBasic;
 
         internal static MetadataReference[] DefaultMetadataReferences;
 
@@ -33,11 +34,13 @@ namespace RefactoringEssentials.Tests
                 systemAssembly = MetadataReference.CreateFromFile(typeof(System.ComponentModel.BrowsableAttribute).Assembly.Location);
                 systemXmlLinq = MetadataReference.CreateFromFile(typeof(System.Xml.Linq.XElement).Assembly.Location);
                 systemCore = MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location);
+                visualBasic = MetadataReference.CreateFromFile(typeof(Microsoft.VisualBasic.Constants).Assembly.Location);
                 DefaultMetadataReferences = new[] {
                     mscorlib,
                     systemAssembly,
                     systemCore,
-                    systemXmlLinq
+                    systemXmlLinq,
+                    visualBasic
                 };
 
                 foreach (var provider in typeof(DiagnosticAnalyzerCategories).Assembly.GetTypes().Where(t => t.GetCustomAttributes(typeof(ExportCodeFixProviderAttribute), false).Length > 0))
