@@ -369,6 +369,25 @@ class TestClass
 }");
         }
 
+
+        [Fact]
+        public void PropertyInitializers()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private ReadOnly Property First As New List(Of String)
+    Private Property Second As Integer = 0
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private List<string> First { get; } = new List<string>();
+    private int Second { get; set; } = 0;
+}");
+        }
+
         [Fact]
         public void PartialFriendClassWithOverloads()
         {

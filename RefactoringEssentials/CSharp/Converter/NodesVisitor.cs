@@ -340,26 +340,35 @@ namespace RefactoringEssentials.CSharp.Converter
 			{
 				bool hasBody = node.Parent is VBSyntax.PropertyBlockSyntax;
 				var attributes = node.AttributeLists.SelectMany(ConvertAttribute);
-				var modifiers = ConvertModifiers(node.Modifiers, GetMethodOrPropertyContext(node));
-
+				var isReadonly = node.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.ReadOnlyKeyword));
+				var convertibleModifiers = node.Modifiers.Where(m => !m.IsKind(VBasic.SyntaxKind.ReadOnlyKeyword));
+				var modifiers = ConvertModifiers(convertibleModifiers, GetMethodOrPropertyContext(node));
 				var isIndexer = node.Modifiers.Any(m => m.IsKind(VBasic.SyntaxKind.DefaultKeyword)) && node.Identifier.ValueText.Equals("Items", StringComparison.OrdinalIgnoreCase);
 
+				var initializer = (EqualsValueClauseSyntax) node.Initializer?.Accept(this);
 				var rawType = (TypeSyntax)node.AsClause?.TypeSwitch(
 					(VBSyntax.SimpleAsClauseSyntax c) => c.Type,
-					(VBSyntax.AsNewClauseSyntax c) => VBasic.SyntaxExtensions.Type(c.NewExpression),
+					(VBSyntax.AsNewClauseSyntax c) =>
+					{
+						initializer = SyntaxFactory.EqualsValueClause((ExpressionSyntax) c.NewExpression.Accept(this));
+						return VBasic.SyntaxExtensions.Type(c.NewExpression);
+					},
 					_ => { throw new NotImplementedException($"{_.GetType().FullName} not implemented!"); }
 				)?.Accept(this) ?? SyntaxFactory.ParseTypeName("var");
 
-				AccessorListSyntax accessors = null;
 
+				AccessorListSyntax accessors = null;
 				if (!hasBody)
 				{
-					accessors = SyntaxFactory.AccessorList(
-						SyntaxFactory.List(new[] {
-							SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
-							SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
-                        })
-					);
+					var accessorList = new List<AccessorDeclarationSyntax>
+					{
+						SyntaxFactory.AccessorDeclaration(SyntaxKind.GetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)),
+					};
+					if (!isReadonly)
+					{
+						accessorList.Add(SyntaxFactory.AccessorDeclaration(SyntaxKind.SetAccessorDeclaration).WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
+					}
+					accessors = SyntaxFactory.AccessorList(SyntaxFactory.List(accessorList));
 				}
 				else
 				{
@@ -380,6 +389,7 @@ namespace RefactoringEssentials.CSharp.Converter
 						accessors
 					);
 				else
+				{
 					return SyntaxFactory.PropertyDeclaration(
 						SyntaxFactory.List(attributes),
 						modifiers,
@@ -387,7 +397,9 @@ namespace RefactoringEssentials.CSharp.Converter
 						null,
 						ConvertIdentifier(node.Identifier, semanticModel), accessors,
 						null,
-						null);
+						initializer,
+						SyntaxFactory.Token(initializer == null ? SyntaxKind.None : SyntaxKind.SemicolonToken));
+				}
 			}
 
 			public override CSharpSyntaxNode VisitPropertyBlock(VBSyntax.PropertyBlockSyntax node)
