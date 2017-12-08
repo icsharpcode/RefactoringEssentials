@@ -96,7 +96,7 @@ public class FooBar
         }
 
         [Fact]
-        public void Test()
+        public void Test_MethodOverloadWithOptionalParameterAnalyzer()
         {
             var input = @"
 class TestClass

@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class CreateOverloadWithoutParameterTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_CreateOverloadWithoutParameter()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
 class Test
@@ -126,7 +126,7 @@ class Test
         }
 
         [Fact]
-        public void TestDefaultValue()
+        public void TestDefaultValue_CreateOverloadWithoutParameterCodeRefactoringProvider()
         {
             TestDefaultValue("object", null, "null");
             TestDefaultValue("dynamic", null, "null");

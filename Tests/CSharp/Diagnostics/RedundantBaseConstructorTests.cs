@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     public class RedundantBaseConstructorTests : CSharpDiagnosticTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_RedundantBaseConstructorCallAnalyzer()
         {
             var input = @"
 class BaseClass

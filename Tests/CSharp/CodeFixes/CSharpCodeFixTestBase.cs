@@ -110,7 +110,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
                     if (selectedSpan.Start > 0)
                         Assert.True(selectedSpan == d.Location.SourceSpan, "Activation span does not match.");
 
-                    var context = new CodeFixContext(doc, d.Location.SourceSpan, diagnostics.Where(d2 => d2.Location.SourceSpan == d.Location.SourceSpan).ToImmutableArray(), (arg1, arg2) => actions.Add(Tuple.Create(arg1, arg2)), default(CancellationToken));
+                    var context = new CodeFixContext(doc, d.Location.SourceSpan, diagnostics.Where(d2 => d2.Location.SourceSpan == d.Location.SourceSpan).ToImmutableArray(), (arg1, arg2) => actions.Add(Tuple.Create(arg1, arg2)) , default(CancellationToken));
                     action.RegisterCodeFixesAsync(context);
                 }
             }

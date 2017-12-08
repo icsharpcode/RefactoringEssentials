@@ -10,7 +10,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class ContractRequiresNotNullTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_ContractRequiresNotNullCodeRefactoringProvider()
         {
             string result = RunContextAction(
                                          new ContractRequiresNotNullCodeRefactoringProvider(),
@@ -41,7 +41,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
         public void TestLambda()
         {
             Test<ContractRequiresNotNullCodeRefactoringProvider>(@"class Foo
-{
+
     void Test ()
     {
         var lambda = ($sender, e) => {
@@ -50,7 +50,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 }", @"using System.Diagnostics.Contracts;
 
 class Foo
-{
+
     void Test ()
     {
         var lambda = (sender, e) => {

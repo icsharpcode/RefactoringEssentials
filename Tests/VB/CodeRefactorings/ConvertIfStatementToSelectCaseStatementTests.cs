@@ -302,7 +302,7 @@ End Class");
         }
 
         [Fact]
-        public void TestValidType()
+        public void TestValidType_ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider()
         {
             // enum
             Test<ConvertIfStatementToSelectCaseStatementCodeRefactoringProvider>(@"

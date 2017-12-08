@@ -100,7 +100,7 @@ class TestClass
         }
 
         [Fact]
-        public void TestWrongContext()
+        public void TestWrongContext_ConvertLambdaBodyExpressionToStatement()
         {
             TestWrongContext<ConvertLambdaBodyExpressionToStatementCodeRefactoringProvider>(@"
 class TestClass
