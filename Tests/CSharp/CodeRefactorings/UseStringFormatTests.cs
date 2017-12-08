@@ -120,6 +120,7 @@ class TestClass
                 expectation);
         }
 
+        [Theory]
         [InlineData(@"var s = …@""Hello"" + @""World!"";", @"var s = @""HelloWorld!"";")]
         [InlineData(@"var s = @""Hello"" …+ @""World!"";", @"var s = @""HelloWorld!"";")]
         [InlineData(@"var s = @""Hello"" + …@""World!"";", @"var s = @""HelloWorld!"";")]

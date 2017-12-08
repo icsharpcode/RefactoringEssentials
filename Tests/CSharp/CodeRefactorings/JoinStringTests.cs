@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     public class JoinStringTests : CSharpCodeRefactoringTestBase
     {
-        public void Test(string input, string output)
+        private void Test(string input, string output)
         {
             Test<JoinStringCodeRefactoringProvider>(@"
 class TestClass

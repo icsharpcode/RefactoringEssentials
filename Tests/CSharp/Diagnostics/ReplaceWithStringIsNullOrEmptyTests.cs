@@ -394,6 +394,7 @@ class Foo
 }");
         }
 
+        [Theory]
         [InlineData("str == null || str.Length == 0")]
         [InlineData("str == null || 0 == str.Length")]
         [InlineData("null == str || str.Length == 0")]
@@ -415,6 +416,7 @@ class Foo
 }");
         }
 
+        [Theory]
         [InlineData("str != null && str.Length != 0")]
         [InlineData("str != null && 0 != str.Length")]
         [InlineData("str != null && str.Length > 0")]

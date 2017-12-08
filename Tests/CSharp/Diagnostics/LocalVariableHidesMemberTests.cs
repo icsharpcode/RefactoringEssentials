@@ -20,6 +20,7 @@ class TestClass
             Analyze<LocalVariableHidesMemberAnalyzer>(input);
         }
 
+        [Fact]
         public void TestDisable()
         {
             var input = @"class TestClass

@@ -5,7 +5,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
     public class NegateLogicalExpressionTests : CSharpCodeRefactoringTestBase
     {
-        public void Test(string op, string negatedOp)
+        private void Test(string op, string negatedOp)
         {
             Test<NegateLogicalExpressionCodeRefactoringProvider>(@"
 class TestClass

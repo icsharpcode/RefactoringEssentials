@@ -287,7 +287,7 @@ abstract class Test
     }
 }");
             // only virtual -> non virtual should be provided - no abstract conversion
-            Assert.Equal(1, actions.Count);
+            Assert.Single(actions);
         }
 
 

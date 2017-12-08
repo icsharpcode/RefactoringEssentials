@@ -35,7 +35,8 @@ interface TestClass
 }
 ");
         }
-        
+
+        [Theory]
         [InlineData(@"$event MyEventHandler evt;")]
         [InlineData(@"event $MyEventHandler evt;")]
         [InlineData(@"event MyEventHandler $evt;")]
@@ -180,7 +181,7 @@ public class TestClass
 }");
         }
 
-
+        [Theory]
         [InlineData(@"$event MyEventHandler evt;")]
         [InlineData(@"event $MyEventHandler evt;")]
         [InlineData(@"event MyEventHandler $evt;")]
@@ -206,6 +207,7 @@ public class TestClass
 }");
         }
 
+        [Theory]
         [InlineData(@"$event EventHandler evt;")]
         [InlineData(@"event $EventHandler evt;")]
         [InlineData(@"event EventHandler $evt;")]

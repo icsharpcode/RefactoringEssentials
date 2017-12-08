@@ -13,6 +13,8 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Simplification;
 using Xunit;
 using System.Text;
+using Microsoft.CodeAnalysis.CodeStyle;
+using Microsoft.CodeAnalysis.Options;
 
 namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
 {
@@ -66,8 +68,8 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
             }
             workspace.Options = workspace.Options
                 .WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, true)
-                .WithChangedOption(SimplificationOptions.PreferIntrinsicPredefinedTypeKeywordInDeclaration, LanguageNames.CSharp, true)
-                .WithChangedOption(SimplificationOptions.PreferIntrinsicPredefinedTypeKeywordInMemberAccess, LanguageNames.CSharp, true);
+                .WithChangedOption(new OptionKey(CodeStyleOptions.PreferIntrinsicPredefinedTypeKeywordInDeclaration, LanguageNames.CSharp), true)
+                .WithChangedOption(new OptionKey(CodeStyleOptions.PreferIntrinsicPredefinedTypeKeywordInMemberAccess, LanguageNames.CSharp), true);
             workspace.Open(ProjectInfo.Create(
                 projectId,
                 VersionStamp.Create(),

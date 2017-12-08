@@ -241,6 +241,7 @@ class RedundantCheckBeforeAssignmentTests
 }");
         }
 
+        [Theory]
         [InlineData("==")]
         [InlineData("<")]
         [InlineData(">")]
