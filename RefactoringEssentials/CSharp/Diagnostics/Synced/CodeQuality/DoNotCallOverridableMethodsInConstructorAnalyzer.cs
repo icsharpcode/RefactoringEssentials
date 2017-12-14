@@ -61,20 +61,22 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             readonly SyntaxNodeAnalysisContext nodeContext;
             internal List<Diagnostic> Diagnostics = new List<Diagnostic>();
             //ConstructorDeclarationSyntax node;
-            TypeDeclarationSyntax type;
+            TypeDeclarationSyntax typeSyntax;
+            INamedTypeSymbol typeSymbol;
 
             public VirtualCallFinderVisitor(SyntaxNodeAnalysisContext nodeContext, ConstructorDeclarationSyntax node, TypeDeclarationSyntax type)
             {
                 this.nodeContext = nodeContext;
                 //this.node = node;
-                this.type = type;
+                this.typeSyntax = type;
+                this.typeSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(type);
             }
 
             void Check(SyntaxNode n, bool skipMethods)
             {
                 var info = nodeContext.SemanticModel.GetSymbolInfo(n);
                 var symbol = info.Symbol;
-                if ((symbol == null) || (symbol.ContainingType == null) || symbol.ContainingType.Locations.Where(loc => loc.IsInSource && loc.SourceTree.FilePath == type.SyntaxTree.FilePath).All(loc => !type.Span.Contains(loc.SourceSpan)))
+                if ((symbol == null) || (symbol.ContainingType == null) || !symbol.ContainingType.InheritsFromOrEqualsIgnoringConstruction(typeSymbol) || symbol.ContainingType.Locations.Where(loc => loc.IsInSource && loc.SourceTree.FilePath == typeSyntax.SyntaxTree.FilePath).All(loc => !typeSyntax.Span.Contains(loc.SourceSpan)))
                     return;
                 if (symbol is ITypeSymbol)
                     return;

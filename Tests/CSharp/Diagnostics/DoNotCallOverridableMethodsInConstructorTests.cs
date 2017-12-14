@@ -176,6 +176,27 @@ class Foo
 }");
         }
 
+        [Fact]
+        public void IgnoresDelegates3()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@"
+public class Builder
+{
+	private readonly bool _isProduction;
+
+	public Builder(IsProduction isProduction)
+	{
+		_isProduction = isProduction();
+	}
+
+	public delegate bool IsProduction();
+
+	public string Build()
+	{
+		return string.Empty;
+	}
+}");
+        }
 
         /// <summary>
         /// Bug 14450 - False positive of "Virtual member call in constructor"
