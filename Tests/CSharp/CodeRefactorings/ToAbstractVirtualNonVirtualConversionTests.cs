@@ -315,5 +315,12 @@ abstract class Test
 "
             );
         }
+
+        [Fact]
+        public void TestDelegateContext()
+        {
+            TestWrongContext<ToAbstractVirtualNonVirtualConversionCodeRefactoringProvider>(
+                @"public delegate void $MyDelegate();");
+        }
     }
 }

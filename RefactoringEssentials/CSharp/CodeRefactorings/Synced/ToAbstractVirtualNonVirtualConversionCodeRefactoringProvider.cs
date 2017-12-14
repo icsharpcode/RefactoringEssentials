@@ -46,6 +46,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             if (declaration == null || symbol == null
                 || declaration is BaseTypeDeclarationSyntax
                 || declaration is ConstructorDeclarationSyntax
+                || declaration is DelegateDeclarationSyntax
                 || declaration is DestructorDeclarationSyntax)
                 return;
             var modifiers = declaration.GetModifiers();
