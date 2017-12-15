@@ -10,7 +10,7 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
         // always need to check for System.ArgumentNullException in the generated code, because the Simplifier is not working
         // see https://github.com/dotnet/roslyn/issues/473
         [Fact]
-        public void Test()
+        public void Test_CheckIfParameterIsNothingCodeRefactoringProvider()
         {
             Test<CheckIfParameterIsNothingCodeRefactoringProvider>(@"
 Imports System

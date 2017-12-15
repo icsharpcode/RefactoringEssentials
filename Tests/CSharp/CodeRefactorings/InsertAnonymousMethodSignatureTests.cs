@@ -7,7 +7,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class InsertAnonymousMethodSignatureTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_InsertAnonymousMethodSignature()
         {
             string result = RunContextAction(
                                          new InsertAnonymousMethodSignatureCodeRefactoringProvider(),

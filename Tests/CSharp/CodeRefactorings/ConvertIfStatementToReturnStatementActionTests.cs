@@ -168,7 +168,7 @@ class TestClass
         return 0;
     }
 }");
-            Assert.Equal(0, actions.Count);
+            Assert.Empty(actions);
         }
     }
 }

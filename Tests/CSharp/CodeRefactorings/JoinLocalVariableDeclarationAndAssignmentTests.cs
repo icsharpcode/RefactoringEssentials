@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class JoinLocalVariableDeclarationAndAssignmentTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_JoinLocalVariableDeclarationAndAssignmentCodeRefactoringProvider()
         {
             Test<JoinLocalVariableDeclarationAndAssignmentCodeRefactoringProvider>(@"
 class TestClass

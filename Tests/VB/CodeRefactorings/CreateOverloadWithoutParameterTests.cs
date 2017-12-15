@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
     public class CreateOverloadWithoutParameterTests : VBCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_CreateOverloadWithoutParameterCodeRefactoringProvider()
         {
             Test<CreateOverloadWithoutParameterCodeRefactoringProvider>(@"
 Public Class Test
@@ -83,7 +83,7 @@ End Class");
         }
 
         [Fact]
-        public void TestDefaultValue()
+        public void TestDefaultValue_CreateOverloadWithoutParameterCodeRefactoringProvider()
         {
             TestDefaultValue("Object", null, "Nothing");
             TestDefaultValue("Integer?", null, "Nothing");

@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class ConvertImplicitToExplicittImplementationTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void TestConvertImplicitToExplicittImplementationTests()
         {
             Test<ConvertImplicitToExplicitImplementationCodeRefactoringProvider>(@"
 interface ITest

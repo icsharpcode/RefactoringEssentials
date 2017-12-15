@@ -11,6 +11,7 @@ namespace RefactoringEssentials.Tests
             return Utils.HomogenizeEol(str);
         }
 
+        // Will always return 0 on $"string"!
         protected static string ParseText(string input, out TextSpan selectedSpan, out TextSpan markedSpan)
         {
             int start = -1, end = -1;

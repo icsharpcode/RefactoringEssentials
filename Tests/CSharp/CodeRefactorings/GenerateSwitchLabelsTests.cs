@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class GenerateSwitchLabelsTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_GenerateSwitchLabels()
         {
             Test<GenerateSwitchLabelsCodeRefactoringProvider>(@"
 using System;

@@ -211,7 +211,7 @@ class TestClass
         }
 
         [Fact]
-        public void TestValidType()
+        public void TestValidType_ConvertIfStatementToSwitchStatementAnalyzer()
         {
             // enum
             Analyze<ConvertIfStatementToSwitchStatementAnalyzer>(@"

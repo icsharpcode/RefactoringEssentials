@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.VB.CodeRefactorings
     public class ConvertHexToDecTests : VBCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_ConvertHexToDecCodeRefactoringProvider()
         {
             Test<ConvertHexToDecCodeRefactoringProvider>(@"
 Class TestClass

@@ -10,7 +10,7 @@ namespace RefactoringEssentials
         public static IEnumerable<MemberDeclarationSyntax> GetMembersFromAllParts(this ClassDeclarationSyntax type, SemanticModel model)
         {
             var typeSymbol = model.GetDeclaredSymbol(type);
-            if (typeSymbol.IsErrorType())
+            if (typeSymbol == null || typeSymbol.IsErrorType())
                 return null;
             var allTypeDeclarations = typeSymbol.DeclaringSyntaxReferences.Select(sr => sr.GetSyntax()).OfType<ClassDeclarationSyntax>();
             if (allTypeDeclarations.Any())

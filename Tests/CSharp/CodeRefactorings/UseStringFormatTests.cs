@@ -120,6 +120,7 @@ class TestClass
                 expectation);
         }
 
+        [Theory]
         [InlineData(@"var s = …@""Hello"" + @""World!"";", @"var s = @""HelloWorld!"";")]
         [InlineData(@"var s = @""Hello"" …+ @""World!"";", @"var s = @""HelloWorld!"";")]
         [InlineData(@"var s = @""Hello"" + …@""World!"";", @"var s = @""HelloWorld!"";")]
@@ -219,7 +220,7 @@ class TestClass
         [InlineData(@"string str = 1 + 2 + ""test"" + 1 + …""test"" + 1.1;")]
         [InlineData(@"string str = 1 + 2 + ""test"" + 1 + ""test"" …+ 1.1;")]
         [InlineData(@"string str = 1 + 2 + ""test"" + 1 + ""test"" + …1.1;")]
-        public void Test(string expression)
+        public void Test_UseStringFormatAction(string expression)
         {
             Test<UseStringFormatAction>(@"
 class TestClass

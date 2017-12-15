@@ -98,7 +98,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
         }
 
         [Fact]
-        public void Test()
+        public void Test_ConditionalTernaryEqualBranchAnalyzer()
         {
             Analyze<ConditionalTernaryEqualBranchAnalyzer>(@"
 class TestClass

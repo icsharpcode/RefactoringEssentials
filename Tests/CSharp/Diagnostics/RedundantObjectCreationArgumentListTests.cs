@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     public class RedundantObjectCreationArgumentListTests : CSharpDiagnosticTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_RedundantObjectCreationArgumentListAnalyzer()
         {
             var input = @"
 class TestClass
