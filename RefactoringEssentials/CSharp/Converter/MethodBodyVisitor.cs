@@ -16,14 +16,15 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			SemanticModel semanticModel;
 			NodesVisitor nodesVisitor;
-			public const string WithBlockTempVariableName = "withBlock";
+			private readonly Stack<string> withBlockTempVariableNames;
 
             public bool IsIterator { get; set; }
 
-			public MethodBodyVisitor(SemanticModel semanticModel, NodesVisitor nodesVisitor)
+			public MethodBodyVisitor(SemanticModel semanticModel, NodesVisitor nodesVisitor, Stack<string> withBlockTempVariableNames)
 			{
 				this.semanticModel = semanticModel;
 				this.nodesVisitor = nodesVisitor;
+				this.withBlockTempVariableNames = withBlockTempVariableNames;
 			}
 
 			public override SyntaxList<StatementSyntax> DefaultVisit(SyntaxNode node)
@@ -262,13 +263,23 @@ namespace RefactoringEssentials.CSharp.Converter
 			public override SyntaxList<StatementSyntax> VisitWithBlock(VBSyntax.WithBlockSyntax node)
 			{
 				var withExpression = (ExpressionSyntax) node.WithStatement.Expression.Accept(nodesVisitor);
-				var variableDeclaratorSyntax = SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier(WithBlockTempVariableName), null, SyntaxFactory.EqualsValueClause(withExpression));
-				var declaration = SyntaxFactory.LocalDeclarationStatement(SyntaxFactory.VariableDeclaration(
-					SyntaxFactory.IdentifierName("var"),
-					SyntaxFactory.SingletonSeparatedList(variableDeclaratorSyntax)));
-				var statements = node.Statements.SelectMany(s => s.Accept(this));
-				return SingleStatement(SyntaxFactory.Block(new[] {declaration}.Concat(statements).ToArray()));
+				withBlockTempVariableNames.Push("withBlock");
+				try
+				{
+					var variableDeclaratorSyntax = SyntaxFactory.VariableDeclarator(
+						SyntaxFactory.Identifier(withBlockTempVariableNames.Peek()), null,
+						SyntaxFactory.EqualsValueClause(withExpression));
+					var declaration = SyntaxFactory.LocalDeclarationStatement(SyntaxFactory.VariableDeclaration(
+						SyntaxFactory.IdentifierName("var"),
+						SyntaxFactory.SingletonSeparatedList(variableDeclaratorSyntax)));
+					var statements = node.Statements.SelectMany(s => s.Accept(this));
 
+					return SingleStatement(SyntaxFactory.Block(new[] {declaration}.Concat(statements).ToArray()));
+				}
+				finally
+				{
+					withBlockTempVariableNames.Pop();
+				}
 			}
 			
 			private bool ConvertToSwitch(ExpressionSyntax expr, SyntaxList<VBSyntax.CaseBlockSyntax> caseBlocks, out SwitchStatementSyntax switchStatement)
