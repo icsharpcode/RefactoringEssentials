@@ -33,7 +33,7 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override SyntaxList<StatementSyntax> VisitStopOrEndStatement(VBSyntax.StopOrEndStatementSyntax node)
 			{
-				return SingleStatement(SyntaxFactory.ParseStatement("System.Environment.Exit(-1);"));
+				return SingleStatement(SyntaxFactory.ParseStatement("System.Environment.Exit(0);"));
 			}
 
 			public override SyntaxList<StatementSyntax> VisitLocalDeclarationStatement(VBSyntax.LocalDeclarationStatementSyntax node)

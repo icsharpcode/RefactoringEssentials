@@ -210,7 +210,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        System.Environment.Exit(-1);
+        System.Environment.Exit(0);
     }
 }");
         }
