@@ -241,7 +241,7 @@ class TestClass
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
     Private Sub TestMethod()
-        With New StringBuilder
+        With New System.Text.StringBuilder
             .Capacity = 20
             .Length = 0
         End With
@@ -256,7 +256,7 @@ class TestClass
     private void TestMethod()
     {
         {
-            var withBlock = new StringBuilder();
+            var withBlock = new System.Text.StringBuilder();
             withBlock.Capacity = 20;
             withBlock.Length = 0;
         }
