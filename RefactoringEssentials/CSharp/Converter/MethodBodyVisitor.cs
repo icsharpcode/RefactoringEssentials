@@ -263,7 +263,7 @@ namespace RefactoringEssentials.CSharp.Converter
 			public override SyntaxList<StatementSyntax> VisitWithBlock(VBSyntax.WithBlockSyntax node)
 			{
 				var withExpression = (ExpressionSyntax) node.WithStatement.Expression.Accept(nodesVisitor);
-				withBlockTempVariableNames.Push("withBlock");
+				withBlockTempVariableNames.Push(GetUniqueVariableNameInScope(node, "withBlock"));
 				try
 				{
 					var variableDeclaratorSyntax = SyntaxFactory.VariableDeclarator(
@@ -281,7 +281,14 @@ namespace RefactoringEssentials.CSharp.Converter
 					withBlockTempVariableNames.Pop();
 				}
 			}
-			
+
+			private string GetUniqueVariableNameInScope(SyntaxNode node, string variableNameBase)
+			{
+				var reservedNames = withBlockTempVariableNames.Concat(node.DescendantNodesAndSelf()
+					.SelectMany(syntaxNode => semanticModel.LookupSymbols(syntaxNode.SpanStart).Select(s => s.Name)));
+				return NameGenerator.EnsureUniqueness(variableNameBase, reservedNames, true);
+			}
+
 			private bool ConvertToSwitch(ExpressionSyntax expr, SyntaxList<VBSyntax.CaseBlockSyntax> caseBlocks, out SwitchStatementSyntax switchStatement)
 			{
 				switchStatement = null;

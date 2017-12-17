@@ -265,6 +265,44 @@ class TestClass
         }
 
         [Fact]
+        public void NestedWithBlock()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        With New System.Text.StringBuilder
+            Dim withBlock as Integer = 3
+            With New System.Text.StringBuilder
+                Dim withBlock1 as Integer = 4
+                .Capacity = withBlock1
+            End With
+
+            .Length = withBlock
+        End With
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        {
+            var withBlock2 = new System.Text.StringBuilder();
+            int withBlock = 3;
+            {
+                var withBlock3 = new System.Text.StringBuilder();
+                int withBlock1 = 4;
+                withBlock3.Capacity = withBlock1;
+            }
+
+            withBlock2.Length = withBlock;
+        }
+    }
+}");
+        }
+        [Fact]
         public void ArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
