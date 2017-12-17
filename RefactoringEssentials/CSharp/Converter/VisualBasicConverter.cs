@@ -191,9 +191,6 @@ namespace RefactoringEssentials.CSharp.Converter
 				|| (context == TokenContext.VariableOrConst && token.IsKind(VBasic.SyntaxKind.ConstKeyword));
 		}
 
-		/// <remarks>
-		/// Incorrectly returns private for structs instead of public
-		/// </remarks>
 		static SyntaxToken VisualBasicDefaultVisibility(TokenContext context)
 		{
 			switch (context)
