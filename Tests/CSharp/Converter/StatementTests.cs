@@ -216,6 +216,27 @@ class TestClass
         }
 
         [Fact]
+        public void StopStatement()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        Stop
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        System.Diagnostics.Debugger.Break();
+    }
+}");
+        }
+
+        [Fact]
         public void WithBlock()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass

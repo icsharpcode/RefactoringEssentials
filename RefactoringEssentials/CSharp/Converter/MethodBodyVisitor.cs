@@ -33,7 +33,10 @@ namespace RefactoringEssentials.CSharp.Converter
 
 			public override SyntaxList<StatementSyntax> VisitStopOrEndStatement(VBSyntax.StopOrEndStatementSyntax node)
 			{
-				return SingleStatement(SyntaxFactory.ParseStatement("System.Environment.Exit(0);"));
+				var cSharpEquivalent = node.StopOrEndKeyword.IsKind(VBasic.SyntaxKind.StopKeyword) ? "System.Diagnostics.Debugger.Break();"
+					: node.StopOrEndKeyword.IsKind(VBasic.SyntaxKind.EndKeyword) ? "System.Environment.Exit(0);"
+						: throw new NotImplementedException(node.StopOrEndKeyword.Kind() + " not implemented!");
+				return SingleStatement(SyntaxFactory.ParseStatement(cSharpEquivalent));
 			}
 
 			public override SyntaxList<StatementSyntax> VisitLocalDeclarationStatement(VBSyntax.LocalDeclarationStatementSyntax node)
