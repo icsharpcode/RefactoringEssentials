@@ -16,18 +16,38 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			SemanticModel semanticModel;
 			NodesVisitor nodesVisitor;
+			private readonly Stack<string> withBlockTempVariableNames;
 
             public bool IsIterator { get; set; }
 
-			public MethodBodyVisitor(SemanticModel semanticModel, NodesVisitor nodesVisitor)
+			public MethodBodyVisitor(SemanticModel semanticModel, NodesVisitor nodesVisitor, Stack<string> withBlockTempVariableNames)
 			{
 				this.semanticModel = semanticModel;
 				this.nodesVisitor = nodesVisitor;
+				this.withBlockTempVariableNames = withBlockTempVariableNames;
 			}
 
 			public override SyntaxList<StatementSyntax> DefaultVisit(SyntaxNode node)
 			{
 				throw new NotImplementedException(node.GetType() + " not implemented!");
+			}
+
+			public override SyntaxList<StatementSyntax> VisitStopOrEndStatement(VBSyntax.StopOrEndStatementSyntax node)
+			{
+				return SingleStatement(SyntaxFactory.ParseStatement(GetCSharpEquivalentStatementText(node)));
+			}
+
+			private static string GetCSharpEquivalentStatementText(VBSyntax.StopOrEndStatementSyntax node)
+			{
+				switch (VBasic.VisualBasicExtensions.Kind(node.StopOrEndKeyword))
+				{
+					case VBasic.SyntaxKind.StopKeyword:
+						return "System.Diagnostics.Debugger.Break();";
+					case VBasic.SyntaxKind.EndKeyword:
+						return "System.Environment.Exit(0);";
+					default:
+						throw new NotImplementedException(node.StopOrEndKeyword.Kind() + " not implemented!");
+				}
 			}
 
 			public override SyntaxList<StatementSyntax> VisitLocalDeclarationStatement(VBSyntax.LocalDeclarationStatementSyntax node)
@@ -41,6 +61,14 @@ namespace RefactoringEssentials.CSharp.Converter
 						declarations.Add(SyntaxFactory.LocalDeclarationStatement(modifiers, decl.Value));
 
 				return SyntaxFactory.List<StatementSyntax>(declarations);
+			}
+
+			public override SyntaxList<StatementSyntax> VisitAddRemoveHandlerStatement(VBSyntax.AddRemoveHandlerStatementSyntax node)
+			{
+				var syntaxKind = node.Kind() == VBasic.SyntaxKind.AddHandlerStatement ? SyntaxKind.AddAssignmentExpression : SyntaxKind.SubtractAssignmentExpression;
+				return SingleStatement(SyntaxFactory.AssignmentExpression(syntaxKind,
+					(ExpressionSyntax) node.EventExpression.Accept(nodesVisitor),
+					(ExpressionSyntax) node.DelegateExpression.Accept(nodesVisitor)));
 			}
 
 			public override SyntaxList<StatementSyntax> VisitExpressionStatement(VBSyntax.ExpressionStatementSyntax node)
@@ -165,10 +193,22 @@ namespace RefactoringEssentials.CSharp.Converter
 					declaration = SplitVariableDeclarations(v, nodesVisitor, semanticModel).Values.Single();
 					declaration = declaration.WithVariables(SyntaxFactory.SingletonSeparatedList(declaration.Variables[0].WithInitializer(SyntaxFactory.EqualsValueClause(startValue))));
 					id = SyntaxFactory.IdentifierName(declaration.Variables[0].Identifier);
-				} else {
-					var v = (ExpressionSyntax)stmt.ControlVariable.Accept(nodesVisitor);
-					startValue = SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, v, startValue);
-					id = v;
+				} else
+				{
+					id = (ExpressionSyntax)stmt.ControlVariable.Accept(nodesVisitor);
+					var symbol = semanticModel.GetSymbolInfo(stmt.ControlVariable).Symbol;
+					if (!semanticModel.LookupSymbols(node.FullSpan.Start, name: symbol.Name).Any())
+					{
+						var variableDeclaratorSyntax = SyntaxFactory.VariableDeclarator(SyntaxFactory.Identifier(symbol.Name), null,
+							SyntaxFactory.EqualsValueClause(startValue));
+						declaration = SyntaxFactory.VariableDeclaration(
+							SyntaxFactory.IdentifierName("var"),
+							SyntaxFactory.SingletonSeparatedList(variableDeclaratorSyntax));
+					}
+					else
+					{
+						startValue = SyntaxFactory.AssignmentExpression(SyntaxKind.SimpleAssignmentExpression, id, startValue);
+					}
 				}
 
 				var step = (ExpressionSyntax)stmt.StepClause?.StepValue.Accept(nodesVisitor);
@@ -230,6 +270,35 @@ namespace RefactoringEssentials.CSharp.Converter
 				throw new NotSupportedException();
 			}
 
+			public override SyntaxList<StatementSyntax> VisitWithBlock(VBSyntax.WithBlockSyntax node)
+			{
+				var withExpression = (ExpressionSyntax) node.WithStatement.Expression.Accept(nodesVisitor);
+				withBlockTempVariableNames.Push(GetUniqueVariableNameInScope(node, "withBlock"));
+				try
+				{
+					var variableDeclaratorSyntax = SyntaxFactory.VariableDeclarator(
+						SyntaxFactory.Identifier(withBlockTempVariableNames.Peek()), null,
+						SyntaxFactory.EqualsValueClause(withExpression));
+					var declaration = SyntaxFactory.LocalDeclarationStatement(SyntaxFactory.VariableDeclaration(
+						SyntaxFactory.IdentifierName("var"),
+						SyntaxFactory.SingletonSeparatedList(variableDeclaratorSyntax)));
+					var statements = node.Statements.SelectMany(s => s.Accept(this));
+
+					return SingleStatement(SyntaxFactory.Block(new[] {declaration}.Concat(statements).ToArray()));
+				}
+				finally
+				{
+					withBlockTempVariableNames.Pop();
+				}
+			}
+
+			private string GetUniqueVariableNameInScope(SyntaxNode node, string variableNameBase)
+			{
+				var reservedNames = withBlockTempVariableNames.Concat(node.DescendantNodesAndSelf()
+					.SelectMany(syntaxNode => semanticModel.LookupSymbols(syntaxNode.SpanStart).Select(s => s.Name)));
+				return NameGenerator.EnsureUniqueness(variableNameBase, reservedNames, true);
+			}
+
 			private bool ConvertToSwitch(ExpressionSyntax expr, SyntaxList<VBSyntax.CaseBlockSyntax> caseBlocks, out SwitchStatementSyntax switchStatement)
 			{
 				switchStatement = null;
@@ -247,7 +316,7 @@ namespace RefactoringEssentials.CSharp.Converter
 							labels.Add(SyntaxFactory.DefaultSwitchLabel());
 						} else return false;
 					}
-					var list = SyntaxFactory.List(block.Statements.SelectMany(s => s.Accept(this)).Concat(SyntaxFactory.BreakStatement()));
+					var list = SingleStatement(SyntaxFactory.Block(block.Statements.SelectMany(s => s.Accept(this)).Concat(SyntaxFactory.BreakStatement())));
 					sections.Add(SyntaxFactory.SwitchSection(SyntaxFactory.List(labels), list));
 				}
 				switchStatement = SyntaxFactory.SwitchStatement(expr, SyntaxFactory.List(sections));

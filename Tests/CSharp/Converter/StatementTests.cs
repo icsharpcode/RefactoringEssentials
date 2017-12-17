@@ -195,6 +195,114 @@ class TestClass
         }
 
         [Fact]
+        public void EndStatement()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        End
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        System.Environment.Exit(0);
+    }
+}");
+        }
+
+        [Fact]
+        public void StopStatement()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        Stop
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        System.Diagnostics.Debugger.Break();
+    }
+}");
+        }
+
+        [Fact]
+        public void WithBlock()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        With New System.Text.StringBuilder
+            .Capacity = 20
+            .Length = 0
+        End With
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        {
+            var withBlock = new System.Text.StringBuilder();
+            withBlock.Capacity = 20;
+            withBlock.Length = 0;
+        }
+    }
+}");
+        }
+
+        [Fact]
+        public void NestedWithBlock()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        With New System.Text.StringBuilder
+            Dim withBlock as Integer = 3
+            With New System.Text.StringBuilder
+                Dim withBlock1 as Integer = 4
+                .Capacity = withBlock1
+            End With
+
+            .Length = withBlock
+        End With
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        {
+            var withBlock2 = new System.Text.StringBuilder();
+            int withBlock = 3;
+            {
+                var withBlock3 = new System.Text.StringBuilder();
+                int withBlock1 = 4;
+                withBlock3.Capacity = withBlock1;
+            }
+
+            withBlock2.Length = withBlock;
+        }
+    }
+}");
+        }
+        [Fact]
         public void ArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -210,12 +318,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        int[] b =
-        {
-            1,
-            2,
-            3
-        };
+        int[] b = new[] { 1, 2, 3 };
     }
 }");
         }
@@ -236,12 +339,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        var b =
-        {
-            1,
-            2,
-            3
-        };
+        var b = new[] { 1, 2, 3 };
     }
 }");
         }
@@ -283,12 +381,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        int[] b = new int[3]
-        {
-            1,
-            2, 
-            3
-        };
+        int[] b = new int[3] { 1, 2, 3 };
     }
 }");
         }
@@ -398,7 +491,7 @@ class TestClass
 }");
         }
 
-		[Fact(Skip = "Not implemented!")]
+		[Fact]
 		public void JaggedArrayInitializationStatement()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -414,7 +507,7 @@ class TestClass
 {
     private void TestMethod()
     {
-        int[][] b = { new int[] { 1, 2 }, new int[] { 3, 4 } };
+        int[][] b = new[] { new int[] { 1, 2 }, new int[] { 3, 4 } };
     }
 }");
         }
@@ -712,7 +805,7 @@ class TestClass
     private void TestMethod()
     {
         int[] b, s;
-        for (i = 0; i <= end; i++)
+        for (var i = 0; i <= end; i++)
             b[i] = s[i];
     }
 }");
@@ -738,7 +831,7 @@ class TestClass
     private void TestMethod()
     {
         int[] b, s;
-        for (i = 0; i <= end - 1; i++)
+        for (var i = 0; i <= end - 1; i++)
             b[i] = s[i];
     }
 }");
@@ -853,7 +946,7 @@ class TestClass
 }");
         }
 
-        [Fact(Skip = "Not implemented!")]
+        [Fact]
         public void AddRemoveHandler()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass
@@ -894,7 +987,6 @@ class TestClass
 
     private void MyHandler(object sender, EventArgs e)
     {
-
     }
 }");
         }
@@ -927,14 +1019,22 @@ class TestClass
             case 0:
             case 1:
             case 2:
-                Console.Write(""number is 0, 1, 2"");
-                break;
+                {
+                    Console.Write(""number is 0, 1, 2"");
+                    break;
+                }
+
             case 5:
-                Console.Write(""section 5"");
-                break;
+                {
+                    Console.Write(""section 5"");
+                    break;
+                }
+
             default:
-                Console.Write(""default section"");
-                break;
+                {
+                    Console.Write(""default section"");
+                    break;
+                }
         }
     }
 }");

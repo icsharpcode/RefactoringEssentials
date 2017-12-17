@@ -24,7 +24,7 @@ class Class1
     private void Test()
     {
         object o = 5;
-        int i = (int)o;
+        int i = System.Convert.ToInt32(o);
     }
 }
 ");
@@ -50,7 +50,7 @@ class Class1
     private void Test()
     {
         object o = ""Test"";
-        string s = (string)o;
+        string s = System.Convert.ToString(o);
     }
 }
 ");

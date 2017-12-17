@@ -28,6 +28,131 @@ World!"";
         }
 
         [Fact]
+        public void DateKeyword()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private DefaultDate as Date = Nothing
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private System.DateTime DefaultDate = default(Date);
+}");
+        }
+
+        [Fact]
+        public void FullyTypeInferredEnumerableCreation()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        Dim strings = { ""1"", ""2"" }
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        var strings = new[] { ""1"", ""2"" };
+    }
+}");
+        }
+
+        [Fact]
+        public void EmptyArgumentLists()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        Dim str = (New ThreadStaticAttribute).ToString
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        var str = (new ThreadStaticAttribute()).ToString();
+    }
+}");
+        }
+
+        [Fact]
+        public void StringConcatenationAssignment()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        Dim str = ""Hello, ""
+        str &= ""World""
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        var str = ""Hello, "";
+        str += ""World"";
+    }
+}");
+        }
+
+        [Fact]
+        public void GetTypeExpression()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub TestMethod()
+        Dim typ = GetType(String)
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void TestMethod()
+    {
+        var typ = typeof(string);
+    }
+}");
+        }
+
+        [Fact]
+        public void UsesSquareBracketsForIndexerButParenthesesForMethodInvocation()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Function TestMethod() As String()
+        Dim s = ""1,2""
+        Return s.Split(s(1))
+	End Function
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private string[] TestMethod()
+    {
+        var s = ""1,2"";
+        return s.Split(s[1]);
+    }
+}");
+        }
+
+        [Fact]
         public void ConditionalExpression()
         {
             TestConversionVisualBasicToCSharp(@"Class TestClass

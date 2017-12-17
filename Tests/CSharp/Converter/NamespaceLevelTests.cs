@@ -148,7 +148,7 @@ using Microsoft.VisualBasic;
 
 interface ITest : System.IDisposable
 {
-    private void Test();
+    void Test();
 }");
         }
 

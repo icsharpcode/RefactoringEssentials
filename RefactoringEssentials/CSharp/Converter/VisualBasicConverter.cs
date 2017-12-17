@@ -18,10 +18,13 @@ namespace RefactoringEssentials.CSharp.Converter
 		{
 			Global,
 			InterfaceOrModule,
+			Local,
 			Member,
 			VariableOrConst,
-			Local,
-			MemberInModule
+			MemberInModule,
+			MemberInClass,
+			MemberInStruct,
+			MemberInInterface
 		}
 
 		public static CSharpSyntaxNode Convert(VBasic.VisualBasicSyntaxNode input, SemanticModel semanticModel, Document targetDocument)
@@ -90,10 +93,10 @@ namespace RefactoringEssentials.CSharp.Converter
 
 		static SyntaxToken ConvertIdentifier(SyntaxToken id, SemanticModel semanticModel, bool isAttribute = false)
 		{
-			var keywordKind = SyntaxFacts.GetKeywordKind(id.ValueText);
-			if (keywordKind != SyntaxKind.None && !SyntaxFacts.IsPredefinedType(keywordKind))
-				return SyntaxFactory.Identifier("@" + id.ValueText);
 			string text = id.ValueText;
+			var keywordKind = SyntaxFacts.GetKeywordKind(text);
+			if (keywordKind != SyntaxKind.None)
+				return SyntaxFactory.Identifier("@" + text);
 			if (id.SyntaxTree == semanticModel.SyntaxTree)
 			{
 				var symbol = semanticModel.GetSymbolInfo(id.Parent).Symbol;
@@ -104,6 +107,11 @@ namespace RefactoringEssentials.CSharp.Converter
                         text = symbol.ContainingType.Name;
                         if (text.EndsWith("Attribute", StringComparison.Ordinal))
                             text = text.Remove(text.Length - "Attribute".Length);
+					}
+					else if (text.StartsWith("_", StringComparison.Ordinal) && symbol is IFieldSymbol fieldSymbol && fieldSymbol.AssociatedSymbol?.IsKind(SymbolKind.Property) == true)
+					{
+
+						text = fieldSymbol.AssociatedSymbol.Name;
                     }
                     else
                         text = symbol.Name;
@@ -119,18 +127,25 @@ namespace RefactoringEssentials.CSharp.Converter
 
 		static SyntaxTokenList ConvertModifiers(SyntaxTokenList modifiers, TokenContext context = TokenContext.Global)
 		{
-			return SyntaxFactory.TokenList(ConvertModifiersCore(modifiers, context));
+			return SyntaxFactory.TokenList(ConvertModifiersCore(modifiers, context).Where(t => t.Kind() != SyntaxKind.None));
 		}
 
 		static SyntaxToken? ConvertModifier(SyntaxToken m, TokenContext context = TokenContext.Global)
 		{
-			var token = ConvertToken(VBasic.VisualBasicExtensions.Kind(m), context);
+			VBasic.SyntaxKind vbSyntaxKind = VBasic.VisualBasicExtensions.Kind(m);
+			switch (vbSyntaxKind)
+			{
+				case VBasic.SyntaxKind.DateKeyword:
+					return SyntaxFactory.Identifier("System.DateTime");
+			}
+			var token = ConvertToken(vbSyntaxKind, context);
 			return token == SyntaxKind.None ? null : new SyntaxToken?(SyntaxFactory.Token(token));
 		}
 
 		static IEnumerable<SyntaxToken> ConvertModifiersCore(IEnumerable<SyntaxToken> modifiers, TokenContext context)
 		{
-			if (context != TokenContext.Local && context != TokenContext.InterfaceOrModule)
+			var contextsWithIdenticalDefaults = new[] { TokenContext.Global, TokenContext.Local, TokenContext.InterfaceOrModule, TokenContext.MemberInInterface };
+			if (!contextsWithIdenticalDefaults.Contains(context))
 			{
 				bool visibility = false;
 				foreach (var token in modifiers)
@@ -141,10 +156,10 @@ namespace RefactoringEssentials.CSharp.Converter
 						break;
 					}
 				}
-				if (!visibility && (context == TokenContext.MemberInModule || context == TokenContext.Member))
+				if (!visibility)
 					yield return VisualBasicDefaultVisibility(context);
 			}
-			foreach (var token in modifiers.Where(m => !IgnoreInContext(m, context)))
+			foreach (var token in modifiers.Where(m => !IgnoreInContext(m, context)).OrderBy(m => m.IsKind(VBasic.SyntaxKind.PartialKeyword)))
 			{
 				var m = ConvertModifier(token, context);
 				if (m.HasValue) yield return m.Value;
@@ -181,20 +196,25 @@ namespace RefactoringEssentials.CSharp.Converter
 			switch (context)
 			{
 				case TokenContext.Global:
+				case TokenContext.InterfaceOrModule:
 					return SyntaxFactory.Token(SyntaxKind.InternalKeyword);
+				case TokenContext.Member:
+				case TokenContext.MemberInModule:
+				case TokenContext.MemberInClass:
+				case TokenContext.MemberInInterface:
+				case TokenContext.MemberInStruct:
+					return SyntaxFactory.Token(SyntaxKind.PublicKeyword);
 				case TokenContext.Local:
 				case TokenContext.VariableOrConst:
-				case TokenContext.Member:
 					return SyntaxFactory.Token(SyntaxKind.PrivateKeyword);
-				case TokenContext.MemberInModule:
-					return SyntaxFactory.Token(SyntaxKind.PublicKeyword);
 			}
-			throw new ArgumentOutOfRangeException(nameof(context));
+			throw new ArgumentOutOfRangeException(nameof(context), context, "Specified argument was out of the range of valid values.");
 		}
 
 		static SyntaxToken ConvertToken(SyntaxToken t, TokenContext context = TokenContext.Global)
 		{
-			return SyntaxFactory.Token(ConvertToken(VBasic.VisualBasicExtensions.Kind(t), context));
+			VBasic.SyntaxKind vbSyntaxKind = VBasic.VisualBasicExtensions.Kind(t);
+			return SyntaxFactory.Token(ConvertToken(vbSyntaxKind, context));
 		}
 
 		static SyntaxKind ConvertToken(VBasic.SyntaxKind t, TokenContext context = TokenContext.Global)
@@ -262,6 +282,10 @@ namespace RefactoringEssentials.CSharp.Converter
 					return SyntaxKind.ReadOnlyKeyword;
 				case VBasic.SyntaxKind.OverridesKeyword:
 					return SyntaxKind.OverrideKeyword;
+				case VBasic.SyntaxKind.OverloadsKeyword:
+					return SyntaxKind.NewKeyword;
+				case VBasic.SyntaxKind.OverridableKeyword:
+					return SyntaxKind.VirtualKeyword;
 				case VBasic.SyntaxKind.SharedKeyword:
 					return SyntaxKind.StaticKeyword;
 				case VBasic.SyntaxKind.ConstKeyword:
@@ -319,6 +343,7 @@ namespace RefactoringEssentials.CSharp.Converter
 				// assignment
 				case VBasic.SyntaxKind.SimpleAssignmentStatement:
 					return SyntaxKind.SimpleAssignmentExpression;
+				case VBasic.SyntaxKind.ConcatenateAssignmentStatement:
 				case VBasic.SyntaxKind.AddAssignmentStatement:
 					return SyntaxKind.AddAssignmentExpression;
 				case VBasic.SyntaxKind.SubtractAssignmentStatement:

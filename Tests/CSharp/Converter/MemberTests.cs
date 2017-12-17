@@ -21,7 +21,7 @@ class TestClass
 {
     const int answer = 42;
     private int value = 10;
-    readonly int v = 15;
+    private readonly int v = 15;
 }");
         }
 
@@ -344,6 +344,190 @@ class TestClass
         remove {
             this.backingField -= value;
         }
+    }
+}");
+        }
+
+
+        [Fact]
+        public void SynthesizedBackingFieldAccess()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Shared Property First As Integer
+
+    Private Second As Integer = _First
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private static int First { get; set; }
+
+    private int Second = First;
+}");
+        }
+
+
+        [Fact]
+        public void PropertyInitializers()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private ReadOnly Property First As New List(Of String)
+    Private Property Second As Integer = 0
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private List<string> First { get; } = new List<string>();
+    private int Second { get; set; } = 0;
+}");
+        }
+
+        [Fact]
+        public void PartialFriendClassWithOverloads()
+        {
+            TestConversionVisualBasicToCSharp(@"
+Partial Friend MustInherit Class TestClass1
+    Public Shared Sub CreateStatic()
+    End Sub
+
+    Public Sub CreateInstance()
+    End Sub
+
+    Public MustOverride Sub CreateAbstractInstance()
+
+    Public Overridable Sub CreateVirtualInstance()
+    End Sub
+End Class
+
+Friend Class TestClass2
+    Inherits TestClass1
+    Public Overloads Shared Sub CreateStatic()
+    End Sub
+
+    Public Overloads Sub CreateInstance()
+    End Sub
+
+    Public Overrides Sub CreateAbstractInstance()
+    End Sub
+
+    Public Overrides Sub CreateVirtualInstance()
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+internal abstract partial class TestClass1
+{
+    public static void CreateStatic()
+    {
+    }
+
+    public void CreateInstance()
+    {
+    }
+
+    public abstract void CreateAbstractInstance();
+
+    public virtual void CreateVirtualInstance()
+    {
+    }
+}
+
+internal class TestClass2 : TestClass1
+{
+    public new static void CreateStatic()
+    {
+    }
+
+    public new void CreateInstance()
+    {
+    }
+
+    public override void CreateAbstractInstance()
+    {
+    }
+
+    public override void CreateVirtualInstance()
+    {
+    }
+}");
+        }
+
+        [Fact]
+        public void ClassWithGloballyQualifiedAttribute()
+        {
+            TestConversionVisualBasicToCSharp(@"<Global.System.Diagnostics.DebuggerDisplay(""Hello World"")>
+Class TestClass
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+[global::System.Diagnostics.DebuggerDisplay(""Hello World"")]
+class TestClass
+{
+}");
+        }
+
+        [Fact]
+        public void FieldWithAttribute()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    <ThreadStatic>
+    Private Shared First As Integer
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    [ThreadStatic]
+    private static int First;
+}");
+        }
+
+        [Fact]
+        public void ParamArray()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub SomeBools(ParamArray anyName As Boolean())
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void SomeBools(params bool[] anyName)
+    {
+    }
+}");
+        }
+
+        [Fact]
+        public void ParamNamedBool()
+        {
+            TestConversionVisualBasicToCSharp(@"Class TestClass
+    Private Sub SomeBools(ParamArray bool As Boolean())
+    End Sub
+End Class", @"using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualBasic;
+
+class TestClass
+{
+    private void SomeBools(params bool[] @bool)
+    {
     }
 }");
         }
