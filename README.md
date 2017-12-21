@@ -6,11 +6,11 @@ Refactorings Essentials sports the following features:
 
 * Refactorings for C# and Visual Basic
 * Analyzers and code fixes for C# and Visual Basic
-* Code Converters to convert C# to Visual Basic and vice versa (VB to C#)
+* Code Converters to convert C# to Visual Basic and vice versa (VB to C#) - now available separately via [https://github.com/icsharpcode/CodeConverter/](https://github.com/icsharpcode/CodeConverter/)
 
 Refactoring Essentials comes in the following flavors:
 
-* VSIX: built for Visual Studio - supports analyzers, refactorings and code converters
+* VSIX: built for Visual Studio - supports analyzers and refactorings
 * Nuget: packaged for build servers / IDEs that support analyzers via Nuget packages
 * RefactoringEssentials assembly: usable in any IDE (-like environment), base assembly with all features
 
