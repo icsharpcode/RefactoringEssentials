@@ -188,7 +188,6 @@
   <ItemGroup>
     <Compile Include="Common\CodeFixTestBase.cs" />
     <Compile Include="Common\CodeRefactoringTestBase.cs" />
-    <Compile Include="Common\ConverterTestBase.cs" />
     <Compile Include="Common\DiagnosticTestBase.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="CSharp\CodeFixes\CS0108UseNewKeywordIfHidingIntendedTests.cs" />
@@ -317,12 +316,6 @@
     <Compile Include="CSharp\CodeRefactorings\UseStringFormatTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\UseSystemEnvironmentNewLineTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\UseSystemStringEmptyTests.cs" />
-    <Compile Include="CSharp\Converter\ExpressionTests.cs" />
-    <Compile Include="CSharp\Converter\MemberTests.cs" />
-    <Compile Include="CSharp\Converter\NamespaceLevelTests.cs" />
-    <Compile Include="CSharp\Converter\SpecialConversionTests.cs" />
-    <Compile Include="CSharp\Converter\StatementTests.cs" />
-    <Compile Include="CSharp\Converter\TypeCastTests.cs" />
     <Compile Include="CSharp\Diagnostics\AccessToStaticMemberViaDerivedTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\AdditionalOfTypeTests.cs" />
     <Compile Include="CSharp\Diagnostics\ArrayCreationCanBeReplacedWithArrayInitializerTests.cs" />
@@ -502,12 +495,6 @@
     <Compile Include="VB\CodeRefactorings\ReplaceDirectCastWithSafeCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs" />
     <Compile Include="VB\CodeRefactorings\VBCodeRefactoringTestBase.cs" />
-    <Compile Include="VB\Converter\ExpressionTests.cs" />
-    <Compile Include="VB\Converter\MemberTests.cs" />
-    <Compile Include="VB\Converter\NamespaceLevelTests.cs" />
-    <Compile Include="VB\Converter\SpecialConversionTests.cs" />
-    <Compile Include="VB\Converter\StatementTests.cs" />
-    <Compile Include="VB\Converter\TypeCastTests.cs" />
     <Compile Include="VB\Diagnostics\NameOfSuggestionTests.cs" />
     <Compile Include="VB\Diagnostics\NonPublicMethodWithTestAttributeTests.cs" />
     <Compile Include="VB\Diagnostics\VBDiagnosticTestBase.cs" />
