@@ -9,9 +9,9 @@
     <Description>Analyzers and Code Fixes for Visual Studio 2017 (Roslyn-based).</Description>
     <Product>Refactoring Essentials for Visual Studio 2017</Product>
     <Copyright>Copyright (c) 2014-2017 AlphaSierraPapa and Xamarin Inc.</Copyright>
-    <AssemblyVersion>5.4.0.0</AssemblyVersion>
-    <FileVersion>5.4.0.0</FileVersion>
-    <Version>5.4.0</Version>
+    <AssemblyVersion>5.6.0.0</AssemblyVersion>
+    <FileVersion>5.6.0.0</FileVersion>
+    <Version>5.6.0</Version>
     <PackageId>RefactoringEssentials</PackageId>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
