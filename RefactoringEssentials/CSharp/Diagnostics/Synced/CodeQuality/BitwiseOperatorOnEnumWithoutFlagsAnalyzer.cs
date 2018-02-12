@@ -93,7 +93,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         static bool IsNonFlagsEnum(SemanticModel semanticModel, ExpressionSyntax expr)
         {
             var type = semanticModel.GetTypeInfo(expr).Type;
-            if (type == null || type.TypeKind != TypeKind.Enum)
+            if (type == null || type.TypeKind != TypeKind.Enum || !type.IsDefinedInSource())
                 return false;
 
             // check [Flags]
