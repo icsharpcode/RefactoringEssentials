@@ -190,7 +190,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (node.ParameterList.Parameters.Count == 0)
                     return;
 
-                Analyze(node.ParameterList.Parameters, new SyntaxNode[] { node.Body, node.Initializer }, node.Kind());
+                Analyze(node.ParameterList.Parameters, new SyntaxNode[] { node.Body, node.Initializer, node.ExpressionBody }, node.Kind());
             }
 
             public override void VisitAnonymousMethodExpression(AnonymousMethodExpressionSyntax node)
