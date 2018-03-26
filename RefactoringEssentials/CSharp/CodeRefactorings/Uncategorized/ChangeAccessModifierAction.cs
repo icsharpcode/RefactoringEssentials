@@ -83,9 +83,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var containingType = member.ContainingType;
             if (containingType == null)
             {
-                if (member.IsPublic())
-                    result = new[] { Accessibility.Internal };
-
                 result = new[] { Accessibility.Public };
             }
             else if (containingType.IsValueType)
