@@ -103,7 +103,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     GettextCatalog.GetString ("Use 'as' and check for null"),
                     t2 => {
                         var varName = NameGenerator.GenerateSafeCSharpName(
-                            ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider.GetNameProposal(RefactoringHelpers.GuessNameFromType(rr.Type), ctx, isExpression));
+                            GetNameProposal(RefactoringHelpers.GuessNameFromType(rr.Type), ctx, isExpression));
 
                         var varDec = SyntaxFactory.LocalDeclarationStatement(
                             SyntaxFactory.VariableDeclaration(
@@ -188,7 +188,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                     DiagnosticSeverity.Info,
                     GettextCatalog.GetString ("Use 'as' and check for null"),
                     t2 => {
-                        var varName = ReplaceAutoPropertyWithPropertyAndBackingFieldCodeRefactoringProvider.GetNameProposal(RefactoringHelpers.GuessNameFromType(rr.Type), ctx, condition);
+                        var varName = GetNameProposal(RefactoringHelpers.GuessNameFromType(rr.Type), ctx, condition);
 
                         var varDec = SyntaxFactory.LocalDeclarationStatement(
                             SyntaxFactory.VariableDeclaration(
@@ -242,5 +242,29 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             }
             return false;
         }
+
+		public static string GetNameProposal(string name, SemanticModel model, SyntaxNode node)
+		{
+			string baseName = char.ToLower(name[0]) + name.Substring(1);
+			var enclosingClass = node.AncestorsAndSelf().OfType<TypeDeclarationSyntax>().FirstOrDefault();
+			if (enclosingClass == null)
+				return baseName;
+
+			INamedTypeSymbol typeSymbol = model.GetDeclaredSymbol(enclosingClass);
+			IEnumerable<string> members = typeSymbol.MemberNames;
+
+			string proposedName = null;
+			int number = 0;
+			do
+			{
+				proposedName = baseName;
+				if (number != 0)
+				{
+					proposedName = baseName + number.ToString();
+				}
+				number++;
+			} while (members.Contains(proposedName));
+			return proposedName;
+		}
     }
 }

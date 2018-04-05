@@ -294,7 +294,6 @@
     <Compile Include="CSharp\CodeRefactorings\RemoveCatchExceptionTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\RemoveRegionEndRegionDirectivesTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceAssignmentWithPostfixExpressionTests.cs" />
-    <Compile Include="CSharp\CodeRefactorings\ReplaceAutoPropertyWithPropertyAndBackingFieldTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceDirectCastWithSafeCastTest.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceExplicitTypeWithVarTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceOperatorAssignmentWithAssignmentTests.cs" />
