@@ -140,6 +140,12 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if ((validTypes.Count > 1) && IsUsageInInvocation(nodeContext))
                 return false;
 
+            var delegateMethod = validTypes [0].GetDelegateInvokeMethod ();
+            if (delegateMethod == null)
+                return false;
+            if (method.ReturnType != delegateMethod.ReturnType || !SignatureComparer.HaveSameSignature (method.GetParameters (), delegateMethod.GetParameters ()))
+                return false;
+
             diagnostic = Diagnostic.Create(
                 descriptor,
                 nodeContext.Node.GetLocation(),
