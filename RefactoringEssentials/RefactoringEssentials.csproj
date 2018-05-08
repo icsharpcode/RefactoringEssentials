@@ -43,6 +43,7 @@
   <!-- The InternalVisibleTo fails when building with signing -->
   <ItemGroup Condition="'$(SignAssembly)'=='True'">
     <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Compile Remove="CSharp\CodeRefactorings\Synced\ReplaceVarWithExplicitTypeCodeRefactoringProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />

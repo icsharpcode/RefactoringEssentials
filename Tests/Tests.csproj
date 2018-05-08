@@ -295,12 +295,10 @@
     <Compile Include="CSharp\CodeRefactorings\RemoveRegionEndRegionDirectivesTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceAssignmentWithPostfixExpressionTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceDirectCastWithSafeCastTest.cs" />
-    <Compile Include="CSharp\CodeRefactorings\ReplaceExplicitTypeWithVarTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceOperatorAssignmentWithAssignmentTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplacePostfixExpressionWithAssignmentTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplacePropertyWithBackingFieldWithAutoPropertyTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceSafeCastWithDirectCastTests.cs" />
-    <Compile Include="CSharp\CodeRefactorings\ReplaceVarWithExplicitTypeTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReplaceWithOperatorAssignmentTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\ReverseDirectionForForLoopTests.cs" />
     <Compile Include="CSharp\CodeRefactorings\SplitIfWithAndConditionInTwoTests.cs" />
