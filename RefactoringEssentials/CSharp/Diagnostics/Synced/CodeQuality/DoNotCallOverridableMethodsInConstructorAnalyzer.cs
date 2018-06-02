@@ -90,7 +90,9 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                             if (n.Ancestors().Any(a => a is AssignmentExpressionSyntax))
                             {
                                 var setterMethodSymbol = propertySymbol.SetMethod;
-                                if ((setterMethodSymbol != null) && (setterMethodSymbol.DeclaredAccessibility == Accessibility.Private))
+                                if (setterMethodSymbol == null)
+                                    return;
+                                if (setterMethodSymbol.DeclaredAccessibility == Accessibility.Private)
                                     return;
                             }
                             else
