@@ -11,6 +11,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
+using Microsoft.CodeAnalysis.CodeStyle;
 
 namespace RefactoringEssentials
 {
@@ -762,14 +763,14 @@ namespace RefactoringEssentials
         {
             return (name.Parent != null) && !(name.Parent is MemberAccessExpressionSyntax) &&
                 !InsideCrefReference(name) && !InsideNameOfExpression(name, semanticModel) &&
-                optionSet.GetOption(SimplificationOptions.PreferIntrinsicPredefinedTypeKeywordInDeclaration, LanguageNames.CSharp);
+                optionSet.GetOption(CodeStyleOptions.PreferIntrinsicPredefinedTypeKeywordInDeclaration, LanguageNames.CSharp).Value;
         }
 
         private static bool PreferPredefinedTypeKeywordInMemberAccess(ExpressionSyntax memberAccess, OptionSet optionSet, SemanticModel semanticModel)
         {
             return (((memberAccess.Parent != null) && (memberAccess.Parent is MemberAccessExpressionSyntax)) || InsideCrefReference(memberAccess)) &&
                 !InsideNameOfExpression(memberAccess, semanticModel) &&
-                optionSet.GetOption(SimplificationOptions.PreferIntrinsicPredefinedTypeKeywordInMemberAccess, LanguageNames.CSharp);
+                optionSet.GetOption(CodeStyleOptions.PreferIntrinsicPredefinedTypeKeywordInMemberAccess, LanguageNames.CSharp).Value;
         }
 
         public static bool IsAliasReplaceableExpression(this ExpressionSyntax expression)

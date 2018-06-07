@@ -14,10 +14,10 @@ using RefactoringEssentials.Util;
 
 namespace RefactoringEssentials.VB.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.VisualBasic, Name = "Check if parameter is Nothing")]
     /// <summary>
     /// Creates a 'If param Is Nothing Then Throw New System.ArgumentNullException();' contruct for a parameter.
     /// </summary>
+    [ExportCodeRefactoringProvider(LanguageNames.VisualBasic, Name = "Check if parameter is Nothing")]
     public class CheckIfParameterIsNothingCodeRefactoringProvider : SpecializedCodeRefactoringProvider<ParameterSyntax>
     {
         protected override IEnumerable<CodeAction> GetActions(Document document, SemanticModel semanticModel, SyntaxNode root, TextSpan span, ParameterSyntax node, CancellationToken cancellationToken)

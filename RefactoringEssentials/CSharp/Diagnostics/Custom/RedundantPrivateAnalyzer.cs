@@ -7,10 +7,10 @@ using Microsoft.CodeAnalysis.Diagnostics;
 
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
-    [DiagnosticAnalyzer(LanguageNames.CSharp)]
     /// <summary>
     /// Finds redundant internal modifiers.
     /// </summary>
+    [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class RedundantPrivateAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

@@ -48,7 +48,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
                 if (lambdaSymbol == null)
                     yield break;
 
-                bool noReturn = false;
                 BlockSyntax body;
                 if (lambdaExpression.Body is BlockSyntax)
                 {

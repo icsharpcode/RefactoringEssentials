@@ -11,7 +11,7 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
     /// <summary>
     /// Introduce format item. Works on strings that contain selections.
-    /// "this is <some> string" => string.Format ("this is {0} string", <some>)
+    /// "this is &lt;some> string" => string.Format ("this is {0} string", &lt;some>)
     /// </summary>
 
     [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Introduce format item")]

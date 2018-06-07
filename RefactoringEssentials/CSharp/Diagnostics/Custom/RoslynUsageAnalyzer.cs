@@ -12,7 +12,9 @@ namespace RefactoringEssentials.CSharp
 {
     // Disabled for now to avoid exceptions in compiler-only case, because this analyzer requires types from Roslyn's Workspaces layer.
     //[DiagnosticAnalyzer(LanguageNames.CSharp)]
+    #pragma warning disable RS1001 // missing DiagnosticAnalyzerAttribute
     public class RoslynUsageAnalyzer : DiagnosticAnalyzer
+    #pragma warning restore RS1001
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(
             CSharpDiagnosticIDs.RoslynReflectionUsageAnalyzerID,
