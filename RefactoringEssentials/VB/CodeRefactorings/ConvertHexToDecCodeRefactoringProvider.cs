@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.VisualBasic;
 namespace RefactoringEssentials.VB.CodeRefactorings
 {
     /// <summary>
-    /// Convert a hex numer to dec. For example: &H10 -> 16
+    /// Convert a hex numer to dec. For example: &amp;H10 -> 16
     /// </summary>
 
     [ExportCodeRefactoringProvider(LanguageNames.VisualBasic, Name = "Convert hex to dec.")]

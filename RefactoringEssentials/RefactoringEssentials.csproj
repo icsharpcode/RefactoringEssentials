@@ -13,6 +13,7 @@
     <FileVersion>5.4.0.0</FileVersion>
     <Version>5.4.0</Version>
     <PackageId>RefactoringEssentials</PackageId>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Samples\**\*</DefaultItemExcludes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NETSTANDARD1_3;NETSTANDARD1_3</DefineConstants>

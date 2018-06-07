@@ -110,6 +110,7 @@ namespace RefactoringEssentials
         /// </summary>
         /// <returns>The all base classes.</returns>
         /// <param name="type">Type.</param>
+        /// <param name="includeSuperType">Whether to include the type as well as its base types.</param>
         public static IEnumerable<INamedTypeSymbol> GetAllBaseClasses(this INamedTypeSymbol type, bool includeSuperType = false)
         {
             if (!includeSuperType)
@@ -126,6 +127,7 @@ namespace RefactoringEssentials
         /// </summary>
         /// <returns>All classes and interfaces.</returns>
         /// <param name="type">Type.</param>
+        /// <param name="includeSuperType">Whether to include the type as well as its base types.</param>
         public static IEnumerable<INamedTypeSymbol> GetAllBaseClassesAndInterfaces(this INamedTypeSymbol type, bool includeSuperType = false)
         {
             if (!includeSuperType)

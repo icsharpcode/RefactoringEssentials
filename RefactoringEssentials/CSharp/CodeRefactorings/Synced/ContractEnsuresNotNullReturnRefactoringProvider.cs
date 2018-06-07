@@ -11,10 +11,10 @@ using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the return value must not be null")]
     /// <summary>
     /// Creates a 'Contract.Ensures(return != null);' contract for a method return value.
     /// </summary>
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the return value must not be null")]
     public class ContractEnsuresNotNullReturnCodeRefactoringProvider : CodeContractsCodeRefactoringProvider
     {
         #region ICodeActionProvider implementation
