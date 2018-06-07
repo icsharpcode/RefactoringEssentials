@@ -7,7 +7,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class ConvertDecToHexTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void TestConvertDecToHexTests()
         {
             string result = RunContextAction(
                 new ConvertDecToHexCodeRefactoringProvider(),

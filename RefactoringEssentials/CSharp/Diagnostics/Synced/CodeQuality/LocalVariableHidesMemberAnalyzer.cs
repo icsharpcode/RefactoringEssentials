@@ -75,6 +75,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (member == null)
                 return false;
             var memberSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(member);
+            if (memberSymbol == null)
+                return false;
             var symbols = nodeContext.SemanticModel.LookupSymbols(member.SpanStart, memberSymbol.GetContainingTypeOrThis());
 
             foreach (var variable in node.Declaration.Variables)
@@ -110,6 +112,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
             if (member == null)
                 return false;
             var memberSymbol = nodeContext.SemanticModel.GetDeclaredSymbol(member);
+            if (memberSymbol == null)
+                return false;
             var symbols = nodeContext.SemanticModel.LookupSymbols(member.SpanStart, memberSymbol.GetContainingTypeOrThis());
 
             var hidingMember = symbols.FirstOrDefault(v => v.Name == node.Identifier.ValueText && ((memberSymbol.IsStatic && v.IsStatic) || !memberSymbol.IsStatic) && !v.IsKind(SymbolKind.Local) && !v.IsKind(SymbolKind.Parameter));

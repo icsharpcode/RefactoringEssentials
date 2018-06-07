@@ -362,7 +362,7 @@ class TestClass
         }
 
         [Fact]
-        public void TestValidType()
+        public void TestValidType_ToSwitchStatement()
         {
             // enum
             Test<ConvertIfStatementToSwitchStatementCodeRefactoringProvider>(@"

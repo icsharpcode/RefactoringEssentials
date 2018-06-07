@@ -69,20 +69,20 @@ namespace RefactoringEssentials.CSharp.CodeFixes
                     diagnostic
                 );
             }
-            var constructor = syntaxNode as MethodDeclarationSyntax;
+            var constructor = syntaxNode as ConstructorDeclarationSyntax;
             if (constructor != null)
             {
                 context.RegisterFixes(
                     new[] {
                         CodeActionFactory.Create (
-                            node.Span,
+                            constructor.Identifier.Span,
                             DiagnosticSeverity.Error,
                             GettextCatalog.GetString ("Fix constructor"),
                             t => Task.FromResult (
                                 document.WithSyntaxRoot (
                                     root.ReplaceNode (
-                                        (SyntaxNode)node,
-                                        node.WithIdentifier (node.AncestorsAndSelf ().OfType<BaseTypeDeclarationSyntax> ().First ().Identifier.WithoutTrivia ()).WithAdditionalAnnotations (Formatter.Annotation)
+                                        (SyntaxNode)constructor,
+                                        constructor.WithIdentifier (constructor.AncestorsAndSelf ().OfType<BaseTypeDeclarationSyntax> ().First ().Identifier.WithoutTrivia ()).WithAdditionalAnnotations (Formatter.Annotation)
                                     )
                                 )
                             )

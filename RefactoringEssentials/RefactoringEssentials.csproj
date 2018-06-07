@@ -13,6 +13,7 @@
     <FileVersion>5.6.0.0</FileVersion>
     <Version>5.6.0</Version>
     <PackageId>RefactoringEssentials</PackageId>
+    <DefaultItemExcludes>$(DefaultItemExcludes);Samples\**\*</DefaultItemExcludes>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DefineConstants>TRACE;DEBUG;NETSTANDARD1_3;NETSTANDARD1_3</DefineConstants>
@@ -21,10 +22,10 @@
     <DefineConstants>TRACE;RELEASE;NETSTANDARD1_3;RE2017</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.3.2" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.3.2" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.3.2" />
-    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.3.2" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="2.6.0-vs-for-mac-62303-01" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="2.6.0-vs-for-mac-62303-01" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic" Version="2.6.0-vs-for-mac-62303-01" />
+    <PackageReference Include="Microsoft.CodeAnalysis.VisualBasic.Workspaces" Version="2.6.0-vs-for-mac-62303-01" />
   </ItemGroup>
   <ItemGroup>
     <None Update="RefactoringEssentials.Library.nuspec">
@@ -43,6 +44,7 @@
   <!-- The InternalVisibleTo fails when building with signing -->
   <ItemGroup Condition="'$(SignAssembly)'=='True'">
     <Compile Remove="Properties\AssemblyInfo.cs" />
+    <Compile Remove="CSharp\CodeRefactorings\Synced\ReplaceVarWithExplicitTypeCodeRefactoringProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSharp\Diagnostics\Synced\ConstraintViolations\InconsistentNamingIssue\" />

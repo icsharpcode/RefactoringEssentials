@@ -10,10 +10,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Change access level")]
     /// <summary>
     /// Changes the access level of an entity declaration
     /// </summary>
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Change access level")]
     public class ChangeAccessModifierAction : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)
@@ -83,9 +83,6 @@ namespace RefactoringEssentials.CSharp.CodeRefactorings
             var containingType = member.ContainingType;
             if (containingType == null)
             {
-                if (member.IsPublic())
-                    result = new[] { Accessibility.Internal };
-
                 result = new[] { Accessibility.Public };
             }
             else if (containingType.IsValueType)

@@ -9,11 +9,11 @@ using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert '==' to 'object.Equals()'")]
     /// <summary>
     /// Convert do...while to while. For instance, { do x++; while (Foo(x)); } becomes { while(Foo(x)) x++; }.
     /// Note that this action will often change the semantics of the code.
     /// </summary>
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Convert '==' to 'object.Equals()'")]
     public class ConvertEqualityOperatorToEqualsCodeRefactoringProvider : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

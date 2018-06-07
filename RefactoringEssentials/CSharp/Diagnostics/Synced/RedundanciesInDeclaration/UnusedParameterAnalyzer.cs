@@ -76,6 +76,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 base.VisitIdentifierName(node);
                 if (!IsTargetOfInvocation(node)) {
                     var mgr = ctx.GetSymbolInfo(node);
+                    if (mgr.Symbol is IDiscardSymbol) // work around for roslyn bug https://github.com/dotnet/roslyn/issues/24206
+                        return;
                     if (mgr.Symbol?.IsKind(SymbolKind.Method) == true)
                         UsedMethods.Add(mgr.Symbol);
                 }
@@ -188,7 +190,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
                 if (node.ParameterList.Parameters.Count == 0)
                     return;
 
-                Analyze(node.ParameterList.Parameters, new SyntaxNode[] { node.Body, node.Initializer }, node.Kind());
+                Analyze(node.ParameterList.Parameters, new SyntaxNode[] { node.Body, node.Initializer, node.ExpressionBody }, node.Kind());
             }
 
             public override void VisitAnonymousMethodExpression(AnonymousMethodExpressionSyntax node)

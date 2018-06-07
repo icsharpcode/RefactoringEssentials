@@ -8,9 +8,6 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace RefactoringEssentials.CSharp.Diagnostics.Custom
 {
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
-    /// <summary>
-    ///
-    /// </summary>
     public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
     {
         static readonly DiagnosticDescriptor descriptor = new DiagnosticDescriptor(

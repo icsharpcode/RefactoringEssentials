@@ -53,7 +53,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeFixes
 }",
                 @"class Foo
 {
-    static Foo(string str) : base (str)
+    static Foo(string str) : base(str)
     {
     }
 }", 0, true);

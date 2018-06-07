@@ -12,10 +12,10 @@ using Microsoft.CodeAnalysis.Formatting;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-	[ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the parameter must not be null")]
     /// <summary>
     /// Creates a 'Contract.Requires(param != null);' contract for a parameter.
     /// </summary>
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Add a Contract to specify the parameter must not be null")]
     public class ContractRequiresNotNullCodeRefactoringProvider : CodeContractsCodeRefactoringProvider
     {
         #region ICodeActionProvider implementation

@@ -32,7 +32,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
 
         /// <summary>
         /// If set, identifiers cannot be suffixed by with any of these values.
-        /// </summary
+        /// </summary>
         public string[] ForbiddenSuffixes { get; set; }
 
         /// <summary>

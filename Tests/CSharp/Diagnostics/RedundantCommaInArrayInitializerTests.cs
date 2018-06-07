@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     public class RedundantCommaInArrayInitializerTests : CSharpDiagnosticTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_RedundantCommaInArrayInitializerAnalyzer()
         {
             var input = @"
 class TestClass

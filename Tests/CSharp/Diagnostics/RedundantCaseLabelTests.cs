@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.Diagnostics
     public class RedundantCaseLabelTests : CSharpDiagnosticTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_RedundantCaseLabel()
         {
             var input = @"
 class TestClass

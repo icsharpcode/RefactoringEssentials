@@ -227,7 +227,7 @@ End Class");
         }
 
         [Fact]
-        public void Equals()
+        public void Equals_InvertLogicalExpressionCodeRefactoringProvider()
         {
             Test<InvertLogicalExpressionCodeRefactoringProvider>(@"
 Class TestClass

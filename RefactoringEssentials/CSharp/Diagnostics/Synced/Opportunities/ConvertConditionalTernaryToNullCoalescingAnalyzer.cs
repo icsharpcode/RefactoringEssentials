@@ -8,8 +8,8 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace RefactoringEssentials.CSharp.Diagnostics
 {
     /// <summary>
-    /// Checks for "a != null ? a : other"<expr>
-    /// Converts to: "a ?? other"<expr>
+    /// Checks for "a != null ? a : other"&lt;expr>
+    /// Converts to: "a ?? other"&lt;expr>
     /// </summary>
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class ConvertConditionalTernaryToNullCoalescingAnalyzer : DiagnosticAnalyzer

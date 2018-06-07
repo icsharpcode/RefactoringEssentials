@@ -6,7 +6,7 @@ namespace RefactoringEssentials.Tests.CSharp.CodeRefactorings
     public class ReplaceSafeCastWithDirectCastTests : CSharpCodeRefactoringTestBase
     {
         [Fact]
-        public void Test()
+        public void Test_ReplaceSafeCastWithDirectCastCodeRefactoringProvider()
         {
             Test<ReplaceSafeCastWithDirectCastCodeRefactoringProvider>(@"
 using System;

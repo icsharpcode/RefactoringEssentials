@@ -25,7 +25,7 @@ End Class";
         }
 
         [Fact]
-        public void Test()
+        public void Test_ReplaceDirectCastWithSafeCastCodeRefactoringProvider()
         {
             TestType("Exception");
         }
