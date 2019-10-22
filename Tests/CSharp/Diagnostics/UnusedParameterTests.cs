@@ -282,5 +282,25 @@ class TestClass {
 }";
             Analyze<UnusedParameterAnalyzer>(input);
         }
+
+        [Fact]
+        public void UnusedParameterInExpressionBodiedConstructor()
+        {
+            var input = @"
+class TestClass {
+    public TestClass(int $i$) => "";
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
+
+        [Fact]
+        public void UsedParameterInExpressionBodiedConstructor()
+        {
+            var input = @"
+class TestClass {
+    public TestClass(int i) => i.ToString();
+}";
+            Analyze<UnusedParameterAnalyzer>(input);
+        }
     }
 }
