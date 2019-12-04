@@ -10,10 +10,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace RefactoringEssentials.CSharp.CodeRefactorings
 {
-    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Change access level")]
     /// <summary>
     /// Changes the access level of an entity declaration
     /// </summary>
+    [ExportCodeRefactoringProvider(LanguageNames.CSharp, Name = "Change access level")]
     public class ChangeAccessModifierAction : CodeRefactoringProvider
     {
         public override async Task ComputeRefactoringsAsync(CodeRefactoringContext context)

@@ -201,6 +201,7 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         /// <summary>
         /// Determine whether a binary expression with a string expression is suitable for replacement.
         /// </summary>
+        /// <param name="nodeContext">Context for the expressions.</param>
         /// <param name="left">A node representing a string expression.</param>
         /// <param name="right">A node to be tested.</param>
         /// <param name="operatorToken">The operator separating the nodes.</param>
@@ -334,8 +335,8 @@ namespace RefactoringEssentials.CSharp.Diagnostics
         /// <summary>
         /// Does the expression look like a test for empty string ("" or string.Empty)?
         /// </summary>
+        /// <param name="nodeContext">Context for the expressions.</param>
         /// <param name="node"></param>
-        /// <returns></returns>
         static bool IsEmptySyntax(SyntaxNodeAnalysisContext nodeContext, ExpressionSyntax node)
         {
             if (!IsStringType(nodeContext, node))
