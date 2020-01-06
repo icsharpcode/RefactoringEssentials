@@ -316,6 +316,20 @@ public class Test {
     }
 }");
         }
-       
+
+        [Fact]
+        public void DoNotWarnOnReadOnlyProperties()
+        {
+            Analyze<DoNotCallOverridableMethodsInConstructorAnalyzer>(@" class Foo
+{
+    Foo()
+    {
+        AutoProperty = 42;
+    }
+
+    public virtual int AutoProperty { get; }
+");
+        }
+
     }
 }
